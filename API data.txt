@@ -1,0 +1,262 @@
+[
+    {
+        "itemName": "Galaxy Z Fold4",
+        "itemId": 1,
+        "itemDesc": "Good",
+        "itemPrice": "₹1,64,999.00",
+        "itemType": "Mobile",
+        "itemDimensions": null,
+        "itemImgUrl": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQTstvtskD5PdyQTf7q2ifqPkSkvZH4yDBsS4pcg7qGlj18NdT-SyemVgOmOgdefOStQ-Syd3ZDJ78neKlOrsxdrPpYZu7RrE1BUd0StI8ta-hgWoUG5icEhw&usqp=CAE",
+        "itemSpec": "Size : 12GB RAM+512GB Storage"
+    },
+    {
+        "itemName": "OnePlus Nord CE 2 5G (Gray Mirror, 8GB RAM, 128GB Storage)",
+        "itemId": 2,
+        "itemDesc": "Good",
+        "itemPrice": "₹24,999.00",
+        "itemType": "Mobile",
+        "itemDimensions": null,
+        "itemImgUrl": "https://m.media-amazon.com/images/I/619n6kxuGsL._SX679_.jpg",
+        "itemSpec": "Size : 6GB RAM+128GB Storage"
+    },
+    {
+        "itemName": "Galaxy F23",
+        "itemId": 3,
+        "itemDesc": "Good",
+        "itemPrice": "₹16,999.00",
+        "itemType": "Mobile",
+        "itemDimensions": null,
+        "itemImgUrl": "https://images.samsung.com/is/image/samsung/p6pim/in/sm-e236blbhins/gallery/in-galaxy-f23-6gb-ram-sm-e236blbhins-531512718?$730_584_PNG$",
+        "itemSpec": "Size : 6GB RAM+128GB Storage"
+    },
+    {
+        "itemName": "POCO M4 5G",
+        "itemId": 4,
+        "itemDesc": "Good",
+        "itemPrice": "₹14,999.00",
+        "itemType": "Mobile",
+        "itemDimensions": null,
+        "itemImgUrl": "https://rukminim1.flixcart.com/image/832/832/l2jcccw0/mobile/i/p/o/-original-imagdu8j9vxscfdh.jpeg?q=70",
+        "itemSpec": "Size : 6GB RAM+128GB Storage"
+    },
+    {
+        "itemName": "iQOO Z6 44W (Raven Black, 6GB RAM, 128GB Storage) | 44W FlashCharge + 5000mAh Battery | FHD+ AMOLED Display | in-Display Fingerprint",
+        "itemId": 5,
+        "itemDesc": "Good",
+        "itemPrice": "₹15,999.00",
+        "itemType": "Mobile",
+        "itemDimensions": null,
+        "itemImgUrl": "https://images-eu.ssl-images-amazon.com/images/I/41Lif4YWC2L._SX300_SY300_QL70_FMwebp_.jpg",
+        "itemSpec": "Size : 6GB RAM+128GB Storage"
+    },
+    {
+        "itemName": "Galaxy F13",
+        "itemId": 6,
+        "itemDesc": "Good",
+        "itemPrice": "₹12,999.00",
+        "itemType": "Mobile",
+        "itemDimensions": null,
+        "itemImgUrl": "https://images.samsung.com/is/image/samsung/p6pim/in/sm-e135flbgins/gallery/in-galaxy-f13-sm-e135flbgins-532859063?$730_584_PNG$",
+        "itemSpec": "Size : 4GB RAM+128GB Storage"
+    },
+    {
+        "itemName": "Redmi Note 11T 5G (Stardust White, 6GB RAM, 128GB ROM)",
+        "itemId": 7,
+        "itemDesc": "Good",
+        "itemPrice": "₹15,999.00",
+        "itemType": "Mobile",
+        "itemDimensions": null,
+        "itemImgUrl": "https://images.samsung.com/is/image/samsung/p6pim/in/sm-e135flbgins/gallery/in-galaxy-f13-sm-e135flbgins-532859063?$730_584_PNG$",
+        "itemSpec": "Size : 6GB RAM+128GB Storage"
+    },
+    {
+        "itemName": "OPPO F21 Pro(Sunset Orange, 8GB RAM, 128 Storage)",
+        "itemId": 8,
+        "itemDesc": "Good",
+        "itemPrice": "₹22,999.00",
+        "itemType": "Mobile",
+        "itemDimensions": null,
+        "itemImgUrl": "https://images-eu.ssl-images-amazon.com/images/I/41zL6EeHU7L._SX300_SY300_QL70_FMwebp_.jpg",
+        "itemSpec": "Size : 8GB RAM+128GB Storage"
+    },
+    {
+        "itemName": "Infinix Note 10 Pro (Nordic Secret, 256 GB)  (8 GB RAM)",
+        "itemId": 9,
+        "itemDesc": "Good",
+        "itemPrice": "₹14,999.00",
+        "itemType": "Mobile",
+        "itemDimensions": null,
+        "itemImgUrl": "https://rukminim1.flixcart.com/image/832/832/kpodocw0/mobile/x/l/k/note-10-pro-infinix-x695-256-8-infinix-original-imag3uy68quzt9zs.jpeg?q=70",
+        "itemSpec": "Size : 8GB RAM+256GB Storage"
+    },
+    {
+        "itemName": "Suzuki Hot Shot Model Carrom Board, 5X2.5-inch (Black)",
+        "itemId": 10,
+        "itemDesc": "Good",
+        "itemPrice": "₹7,000.00",
+        "itemType": "Sports",
+        "itemDimensions": "LxWxH 99.1x 99.1x 5.1Centimeters",
+        "itemImgUrl": "https://m.media-amazon.com/images/I/61UhN1+4XQL._SX679_.jpg",
+        "itemSpec": "Number of Players 4"
+    },
+    {
+        "itemName": "ADULT TENNIS BALL CRICKET",
+        "itemId": 11,
+        "itemDesc": "Good",
+        "itemPrice": "₹2,199.00",
+        "itemType": "Sports",
+        "itemDimensions": "SH- ABOVE 5ft 6in",
+        "itemImgUrl": "https://contents.mediadecathlon.com/p2304425/9bc4b6f2a1cc11666488bfd6d3bfa6a9/p2304425.jpg?format=auto&quality=70&f=650x0",
+        "itemSpec": "Kashmir Willow is sourced from Kashmir. Highly Durable wood offers good ping for tennis ball usage"
+    },
+    {
+        "itemName": "Kids Cricket Tennis Ball Cricket Bat T100 Easy Grey",
+        "itemId": 12,
+        "itemDesc": "Good",
+        "itemPrice": "₹399.00",
+        "itemType": "Sports",
+        "itemDimensions": "1 (3ft 5in - 4ft 3in), 2 - (4 ft 3in - 4in 6ft), 3- (4ft 6in - 4ft 9in)",
+        "itemImgUrl": "https://contents.mediadecathlon.com/p1989789/fbefa13a5422d32ddbd39990966e5732/p1989789.jpg?format=auto&quality=70&f=650x0",
+        "itemSpec": "Single Piece of handle made of Drek Wood. Drek is a highly durable wood making it an ideal component for high impact bearing handles"
+    },
+    {
+        "itemName": "Football Ball Training Size 5 (above 12 years) F100- Yellow",
+        "itemId": 13,
+        "itemDesc": "Good",
+        "itemPrice": "₹299.00",
+        "itemType": "Sports",
+        "itemDimensions": "Size 5 (Above 12 Years)",
+        "itemImgUrl": "https://contents.mediadecathlon.com/p1792797/e4085f705a12076fd9a9c548739ab428/p1792797.jpg?format=auto&quality=70&f=650x0",
+        "itemSpec": "Between 68.5 and 69.5g (Size 5) Between 63.5 and 66g (Size 4) Between 60.5 and 62.5g (Size 3)"
+    },
+    {
+        "itemName": "Kids Football Ball Size 1 Sunny 300 - Turquoise Blue",
+        "itemId": 14,
+        "itemDesc": "Good",
+        "itemPrice": "₹149.00",
+        "itemType": "Sports",
+        "itemDimensions": "Between 470 and 490 mm.",
+        "itemImgUrl": "https://contents.mediadecathlon.com/p2011948/3b41a627a47a8700fccbc52444900d34/p2011948.jpg?format=auto&quality=70&f=650x0",
+        "itemSpec": "Size 1 Below 8 Years"
+    },
+    {
+        "itemName": "BADMINTON RACKET INDICO EXCEL,DOUBLE SHAFT BADMINTON RACKET,SHUTTLE COCK",
+        "itemId": 15,
+        "itemDesc": "Good",
+        "itemPrice": "₹283.00",
+        "itemType": "Sports",
+        "itemDimensions": "Gauge : 0.4m,Length : 28cm",
+        "itemImgUrl": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRX5QAFatJypYn0-d_NadoABCUge-IBdJflPTR1JG6RRY4VHBQrw9LC1aBgdibkNNKBDDsMDrYzah4sbkXTzyvrTpopFt85YQ&usqp=CAY",
+        "itemSpec": "High intensity Nylon indico badminton racket excel 2pcs,4pcs shuttlecock"
+    },
+    {
+        "itemName": "Scorpion Mavis 350 Nylon Shuttlecock-6pcs Nylon Shuttle - Yellow",
+        "itemId": 16,
+        "itemDesc": "Good",
+        "itemPrice": "₹1,199.00",
+        "itemType": "Sports",
+        "itemDimensions": "Gauge : 0.4m,Length : 28cm",
+        "itemImgUrl": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcStWvvz3V2QIa9Bedm5Ei5yfiTZ_e5CBXzGivTD91uK5uS_EfxFMv-zB2ce8EknkGywGeuTCQLT-UcjgXWijHfU5iDYEO3Wwr0otYIcYzTCIJE9X-5pkBGIqg&usqp=CAE",
+        "itemSpec": "High intensity Nylon indico badminton racket excel Slow, 75, Pack of 6 shuttlecock"
+    },
+    {
+        "itemName": "Khankudi's Leaf Printed Green Trendy Shirt For Men",
+        "itemId": 17,
+        "itemDesc": "Good",
+        "itemPrice": "₹649.00",
+        "itemType": "Dresses for men",
+        "itemDimensions": "S 38",
+        "itemImgUrl": "https://images-do.nyc3.cdn.digitaloceanspaces.com/lAVtCJXFVr/product_images/1638351540.AP0015.jpeg",
+        "itemSpec": "Printed"
+    },
+    {
+        "itemName": "Wrinkle Resistant Medium Blue Twill Shirt",
+        "itemId": 18,
+        "itemDesc": "Good",
+        "itemPrice": "₹3490.00",
+        "itemType": "Dresses for men",
+        "itemDimensions": "L 40",
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0536/3594/0515/products/6db42fa4-6435-cb72-f750-a14d1d8ac0f3_Wrinkle-Resistant-Medium-Blue-Twill-Crop01_fa34c009-9005-4cce-945b-c686285a67b5_800x.jpg?v=1660152156",
+        "itemSpec": "100% Egyptian Cotton"
+    },
+    {
+        "itemName": "EDD- MENS SLIM FIT CHECK SHIRT - GREEN",
+        "itemId": 19,
+        "itemDesc": "Good",
+        "itemPrice": "₹1680.00",
+        "itemType": "Dresses for men",
+        "itemDimensions": "Model height 188cm",
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0752/6435/products/3_d8ea692a-1ae6-4b5c-8e4b-12e15825841c_900x.jpg?v=1648053416",
+        "itemSpec": "100% premium Cotton Yarn Dyed Checks"
+    },
+    {
+        "itemName": "Mens Maroon Checks Slim Fit Formal Shirt",
+        "itemId": 20,
+        "itemDesc": "Good",
+        "itemPrice": "₹1399.00",
+        "itemType": "Dresses for men",
+        "itemDimensions": "Xl & XXL",
+        "itemImgUrl": "https://storage.sg.content-cdn.io/cdn-cgi/image/width=600,height=800,quality=90,format=auto,fit=cover,g=top/in-resources/22a79ec5-e694-4d7a-ac5a-85c8fa45b7f1/Images/ProductImages/Source/ITMSH02448WINELS_IT_02.jpg",
+        "itemSpec": "100% premium Cotton Yarn Dyed Checks"
+    },
+    {
+        "itemName": "Mens Dark Blue Printed Slim Fit Casual Shirt",
+        "itemId": 21,
+        "itemDesc": "Good",
+        "itemPrice": "₹1399.00",
+        "itemType": "Dresses for men",
+        "itemDimensions": "Available in S & M & L & Xl & XXL",
+        "itemImgUrl": "https://storage.sg.content-cdn.io/cdn-cgi/image/width=600,height=800,quality=90,format=auto,fit=cover,g=top/in-resources/22a79ec5-e694-4d7a-ac5a-85c8fa45b7f1/Images/ProductImages/Source/ITMSH03064PRUSSIANLS_IT_02.jpg",
+        "itemSpec": "100% premium Cotton Yarn Dyed Checks"
+    },
+    {
+        "itemName": "Yash Gallery Women Yellow Solid Regular Fit Shirt",
+        "itemId": 22,
+        "itemDesc": "Good",
+        "itemPrice": "₹819.00",
+        "itemType": "Dresses For women",
+        "itemDimensions": "Available in M",
+        "itemImgUrl": "https://assetscdn1.paytm.com/images/catalog/product/A/AP/APPYASH-GALLERYAASH129650C14747BC/1578043198772_10.jpg?imwidth=320&impolicy=hq",
+        "itemSpec": "Polyester, 3/4th Sleeves"
+    },
+    {
+        "itemName": "Women NA Fit Striped Spread Collar Casual Shirt",
+        "itemId": 23,
+        "itemDesc": "Good",
+        "itemPrice": "₹919.00",
+        "itemType": "Dresses For women",
+        "itemDimensions": "Available in XS, S, M",
+        "itemImgUrl": "https://rukminim1.flixcart.com/image/800/960/kzfvzww0/shirt/s/6/v/l-a19xwt4029-white-globus-original-imagbfhnmhgpngzb.jpeg?q=50",
+        "itemSpec": "Polyester, 3/4th Sleeves"
+    },
+    {
+        "itemName": "Women Regular Fit Solid Spread Collar Casual Shirt  (Pack of 2)",
+        "itemId": 24,
+        "itemDesc": "Good",
+        "itemPrice": "₹459.00",
+        "itemType": "Dresses For women",
+        "itemDimensions": "Available in all sizes",
+        "itemImgUrl": "https://rukminim1.flixcart.com/image/800/960/xif0q/shirt/a/h/l/xxl-sys-4001-05-funday-fashion-original-imafuvwbqggzzgsa-bb.jpeg?q=50",
+        "itemSpec": "Cotton"
+    },
+    {
+        "itemName": "Women Regular Fit Printed Casual Shirt",
+        "itemId": 25,
+        "itemDesc": "Good",
+        "itemPrice": "₹489.00",
+        "itemType": "Dresses For women",
+        "itemDimensions": "Available in all sizes",
+        "itemImgUrl": "https://rukminim1.flixcart.com/image/800/960/l2arp8w0/top/i/g/g/s-bfss-cliochic-original-imagdz3zqz8xhpup.jpeg?q=50",
+        "itemSpec": "Cotton"
+    },
+    {
+        "itemName": "Women Regular Fit Printed Spread Collar Casual Shirt",
+        "itemId": 26,
+        "itemDesc": "Good",
+        "itemPrice": "₹330.00",
+        "itemType": "Dresses For women",
+        "itemDimensions": "Available in all sizes",
+        "itemImgUrl": "https://assets.ajio.com/medias/sys_master/root/20220107/YKv5/61d73adaaeb2695cdd077284/-473Wx593H-441129510-pink-MODEL.jpg",
+        "itemSpec": "Cotton"
+    }
+]
