@@ -1,0 +1,77 @@
+.signimg {
+    box-shadow: 10px 10px 50px 0px rgb(81, 80, 80);
+}
+
+.signmes {
+    letter-spacing: 2px;
+    font-weight: 700;
+    background: linear-gradient(to left, rgb(9, 210, 232), rgb(10, 9, 10), rgb(4, 146, 254), rgb(9, 221, 232));
+    background-size: 400%;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    animation-direction: reverse;
+    animation: float 10s linear infinite;
+}
+
+@keyframes float {
+    0% {
+        background-position: 400%;
+    }
+
+    100% {
+        background-position: 0%;
+    }
+}
+
+.toast-body {
+    z-index: 10;
+    top: 2%;
+    right: 2%;
+    position: fixed;
+    background-color: rgb(21, 21, 21);
+    color: aliceblue;
+    animation: toast 1 6.5s ease-in-out alternate;
+    font-weight: 700;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+
+.mt-2.pt-2 {
+    justify-content: space-between;
+    text-align: center;
+    position: relative;
+}
+
+@keyframes toast {
+    0% {
+        transform: translateX(140%);
+        opacity: 0.2;
+    }
+
+    20% {
+        transform: translateX(0%);
+        opacity: 1;
+    }
+    70% {
+        transform: translateX(0%);
+        opacity: 1;
+    }
+    100%{
+        transform: translateX(140%);
+        opacity: 0.2;
+    }
+}
+.form-forgot .form-floating{
+margin: 15px 0px 15px 0px;
+}
+.infohi{
+    animation: slow 1 linear alternate 1s
+}
+@keyframes slow {
+    from{
+        transform: scale3d(0,0,0);
+        opacity: 0.6;
+    }to{
+        transform: scale3d(1,1,1);
+        opacity: 1;
+    }
+}

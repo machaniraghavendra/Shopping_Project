@@ -1,0 +1,86 @@
+#right-view {
+    border-left: 1px solid black;
+    border-radius: 0%;
+
+}
+
+.view-img {
+    transition: 0.5s;
+    cursor: zoom-in;
+    height: 100%;
+}
+
+.view-img:hover {
+    transform: scale(1.15);
+}
+
+.view {
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
+    background-color: azure;
+}
+
+.view-buy {
+    float: right;
+}
+
+.row-card {
+    align-items: stretch;    
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.view-more-card {
+    margin-bottom: 2rem;
+    flex-basis: 33.333%;
+    flex-grow: 0;
+    flex-shrink: 0;
+    overflow-x: visible;
+}
+
+.card-img-top {
+    object-fit: fill;
+    width:50%;
+    height:50%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    transition: 0.3s;
+}
+.card-img-top:hover{
+    scale: 1.1;
+}
+#view-img-zoom {
+    width: 50%;
+    height: 100%;
+    position: fixed;
+    background-repeat: no-repeat;
+    top: 0%;
+    border: 3px black dotted;
+    display: none;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 30px 90px;
+    background-size: 130%;
+    background-color: white
+}
+
+@media screen and (max-width:992px) {
+    #view-img-zoom {
+        left: 80%;
+        width: 30%;
+        top: 5%;
+        height: 40%;
+        background-size: 230%;
+    }
+}
+
+@media screen and (max-width:512px) {
+    #view-img-zoom {
+        left: 15%;
+        width: 70%;
+        top: 45%;
+        height: 40%;
+        background-size: 230%;
+    }
+}

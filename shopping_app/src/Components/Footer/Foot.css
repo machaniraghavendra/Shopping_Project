@@ -1,0 +1,29 @@
+.card-text a:nth-child(1) i{
+    animation: jump infinite 1s linear;
+    animation-direction: alternate;
+    animation-delay: 0s;
+}
+.card-text a:nth-child(2) i{
+    animation: jump infinite 1s linear ;
+    animation-direction: alternate;
+    animation-delay: .5s;
+}
+.card-text a:nth-child(3) i{
+    animation: jump infinite 1s linear ;
+    animation-direction: alternate;
+    animation-delay: 1s;
+}
+@keyframes jump {
+    0%{
+        transform: translateY(0px);
+        scale: 1.2;
+    }
+    100%{
+        transform: translateY(-10px);
+        scale: 1;
+    }
+}
+footer div .card{
+  background: linear-gradient(140deg, blue,white);
+  box-shadow: inset 0px 0px 10px 0px black;
+}

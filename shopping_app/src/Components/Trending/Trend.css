@@ -1,0 +1,28 @@
+.card {
+    padding: 10px !important;
+    height: 55vh;
+}
+
+.carousel-inner .card {
+    background-color: azure;
+    padding: 10px !important;
+    height: 60vh;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 16px;
+    width: auto;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+
+.card-img-top {
+    left: 25%;
+    position: relative;
+    width: 50%;
+}
+
+.button-card {
+    position: relative;
+    color: black;
+    text-align: center;
+    background-color: rgb(3, 3, 231);
+    z-index: 10;
+}

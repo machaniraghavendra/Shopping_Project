@@ -1,0 +1,108 @@
+.navbar-expand-lg {
+    width: 100%;
+    background: linear-gradient(-140deg, #B7BECE, #E7F7F4);
+    border: 1px solid black;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+}
+
+.sticky-top {
+    background: linear-gradient(340deg, white, rgb(4, 229, 245));
+    box-shadow: 0px 0px 15px 0px black;
+    z-index: 2;
+}
+
+.fixed-top {
+    background: linear-gradient(-140deg, rgb(8, 183, 236), white);
+    box-shadow: 0px 0px 15px 0px black;
+    height: auto;
+    z-index: 2;
+    transition: .9s;
+    transition-timing-function: 5s cubic-bezier(.65, .4, .47, .62);
+    animation: navbar 0.5s 1 linear alternate;
+}
+
+@keyframes navbar {
+    0% {
+        transform: translateY(-100%);
+        transition: .9s;
+    }
+
+    100% {
+        transform: translateY(0%);
+        transition: .9s;
+    }
+
+}
+
+.fixed-top .container-fluid h1 {
+    color: black;
+}
+
+.second a i,
+.second a svg {
+    font-family: fontAwesome;
+    font-size: 250%;
+    text-decoration: none;
+}
+
+.second {
+    border: 3px rgb(0, 0, 0) solid;
+    border-radius: 20px;
+    background: linear-gradient(140deg, rgb(0, 255, 4), rgb(254, 254, 254) 40%, rgb(3, 188, 249) 60%);
+    box-shadow: rgba(11, 11, 9, 0.56) 0px 22px 20px 2px;
+}
+
+.body {
+    background: linear-gradient(140deg, rgb(8, 0, 255) 67%, black 0%);
+    color: aliceblue;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+}
+
+.container-fluid .row .col-sm-5 .card {
+    background: linear-gradient(140deg, rgb(238, 0, 255) 60%, black 0%);
+    color: azure;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+}
+
+.scroll-up {
+    border-radius: 50%;
+    position: fixed;
+    display: none;
+    z-index: 99;
+    left: 87%;
+    top: 87%;
+    animation: scroll 0.9s 1 linear;
+    animation-direction: alternate;
+}
+
+@keyframes scroll {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.search {
+    color: #020202;
+    transition: .3s;
+    cursor: pointer;
+}
+
+.search:hover {
+    scale: 1.1;
+}
+
+.logout-model {
+    background: rgb(239, 203, 187);
+    box-shadow: inset 0px 0px 15px 0px red;
+    color: #0a0a0a;
+    letter-spacing: 2px;
+}
+
+.user {
+    background-color: rgb(196, 236, 239);
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+}
