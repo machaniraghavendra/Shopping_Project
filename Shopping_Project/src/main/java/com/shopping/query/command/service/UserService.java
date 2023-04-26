@@ -2,6 +2,7 @@ package com.shopping.query.command.service;
 
 import java.util.List;
 
+import com.shopping.query.command.entites.UserDetailDto;
 import com.shopping.query.command.entites.UserEntity;
 import com.shopping.query.command.exceptions.UserAlreadyExistsException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
@@ -10,7 +11,7 @@ public interface UserService {
 
 	String save(UserEntity userEntity) throws UserAlreadyExistsException;
 
-	UserEntity find(String userEmail) throws UserNotFoundException;
+	UserDetailDto find(String userEmail) throws UserNotFoundException;
 
 	List<UserEntity> findall();
 

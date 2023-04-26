@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shopping.query.command.entites.UserDetailDto;
 import com.shopping.query.command.entites.UserEntity;
 import com.shopping.query.command.exceptions.UserAlreadyExistsException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
@@ -44,8 +45,8 @@ public class UserController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<UserEntity> find(@PathVariable("id") String userEmail) throws UserNotFoundException {
-		return new ResponseEntity<UserEntity>(userServiceImpl.find(userEmail), HttpStatus.OK);
+	public ResponseEntity<UserDetailDto> find(@PathVariable("id") String userEmail) throws UserNotFoundException {
+		return new ResponseEntity<UserDetailDto>(userServiceImpl.find(userEmail), HttpStatus.OK);
 	}
 
 	@GetMapping("/")

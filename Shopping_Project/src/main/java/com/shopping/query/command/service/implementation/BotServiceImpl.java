@@ -105,7 +105,7 @@ public class BotServiceImpl implements BotService {
 		OrderDetailsOfUserEntity detailsOfUser = orderRepo.findAll().stream().filter(a -> a.getUuidId().equals(id))
 				.findFirst().orElse(null);
 		if (!Objects.isNull(detailsOfUser)) {
-			ItemEntity entity = (ItemEntity) detailsOfUser.getItemEntity().get(0);
+			ItemEntity entity = (ItemEntity) detailsOfUser.getItemEntity();
 			message = "The order details are " + entity.getItemName() + " of price " + entity.getItemPrice()
 					+ " of type " + entity.getItemType() + " its status is now " + detailsOfUser.getOrderStatus() + " "
 					+ (!detailsOfUser.getOrderStatus().equalsIgnoreCase("cancelled")

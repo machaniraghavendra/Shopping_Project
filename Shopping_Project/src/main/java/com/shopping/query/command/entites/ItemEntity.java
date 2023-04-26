@@ -11,7 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "Items")
+@Table(name = ItemEntity.tableName)
 @Builder
 @Getter
 @Setter
@@ -19,6 +19,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class ItemEntity {
+
+	 static final String tableName= "ITEMS" ;
 
 	@Id
 	private int ItemId;

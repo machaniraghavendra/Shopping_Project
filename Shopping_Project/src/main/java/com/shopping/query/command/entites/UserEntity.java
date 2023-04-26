@@ -15,10 +15,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "UserStory")
+@Table(name = UserEntity.tableName)
 public class UserEntity implements Serializable {
 	private static final long serialVersionUID = 12345L;
 
+	 static final String tableName= "USER_STORY" ;
 	@Id
 	private String UserEmail;
 	private String UserName;

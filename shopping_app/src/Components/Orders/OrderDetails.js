@@ -114,10 +114,9 @@ export default function OrderDetails(props) {
                                             <p className='p-3'><b> Price : {a.itemEntity.map(e => { return (e.itemPrice) })}</b></p>
                                             <h6>Order Details</h6>
                                             <div className='px-3'>
-                                                <p>Ordered on  {a.orderedOn}</p>
-                                                <p>At the time of {a.orderedAt} sec</p>
+                                                <p>Ordered on  <b>{a.orderedOn}</b> at <b>{a.orderedAt}</b> sec</p>
                                                 {a.orderStatus == "cancelled" ? <p className='text-decoration-line-through'>Expected delivery on {a.deliveryDate}</p> :
-                                                    <p>Expected delivery on {a.deliveryDate}</p>}
+                                                    <p>Expected delivery on <b>{a.deliveryDate}</b></p>}
                                             </div>
                                             <h6>Delivery Details</h6>
                                             <div class="container text-center g-3 ">

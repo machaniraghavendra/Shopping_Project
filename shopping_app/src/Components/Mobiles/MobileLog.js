@@ -54,7 +54,7 @@ export default function MobileLog(props) {
                                 return (
                                     <div className=' col row ' key={e.itemId}>&nbsp;
                                         <div className="card " data-aos="fade-up" >
-
+                                        {console.log(e)}
                                             <div className='card-header justify-content-end text-end'>
                                                 <button className='btn  m-2' onClick={() => {
                                                     if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
