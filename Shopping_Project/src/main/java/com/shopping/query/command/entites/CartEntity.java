@@ -23,13 +23,6 @@ public class CartEntity {
 	private int cartId;
 	@Column(name = "itemId")
 	private int ItemId;
-	private String ItemType;
-	private String itemName;
-	private String ItemImgUrl;
-	private String ItemPrice;
-	private String ItemDesc;
-	private String ItemSpec;
-	private String ItemDimensions;
 	private String userId;
 
 }

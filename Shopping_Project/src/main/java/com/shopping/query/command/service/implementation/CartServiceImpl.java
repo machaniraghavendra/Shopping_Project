@@ -1,5 +1,7 @@
 package com.shopping.query.command.service.implementation;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.shopping.query.command.entites.CartEntity;
 import com.shopping.query.command.entites.dto.CartDto;
 import com.shopping.query.command.entites.dto.ItemsDto;
-import com.shopping.query.command.entites.dto.UserDetailDto;
 import com.shopping.query.command.exceptions.ItemAlreadyInCartException;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.ItemNotFoundInCartException;
@@ -35,9 +36,10 @@ public class CartServiceImpl implements CartService {
 
 		String itemName = mapper.itemDtoMapper(cartEntity.getItemId()).getItemName();
 		try {
-			List<CartEntity> listEntity = cartRepo.findAll().stream()
+			List<CartEntity> listEntity = viewall().stream()
 					.filter(a -> a.getUserId().equalsIgnoreCase(cartEntity.getUserId()))
-					.filter(a -> Objects.equals(a.getItemId(), cartEntity.getItemId())).collect(Collectors.toList());
+					.filter(a -> Objects.equals(a.getItemId(), cartEntity.getItemId()))
+					.collect(Collectors.toList());
 			if (!listEntity.isEmpty()) {
 				throw new ItemAlreadyInCartException("The item " + itemName + " already in your cart");
 			} else {
@@ -100,33 +102,56 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public Map<UserDetailDto, ItemsDto> viewall() {
-		Map<UserDetailDto, ItemsDto> listOfItems = new HashMap<>();
-		List<CartEntity> itemEntities = cartRepo.findAll();
-		if (Objects.nonNull(itemEntities)) {
-			itemEntities.forEach(a -> {
-				try {
-					listOfItems.put(mapper.userDetailDtoMapper(a.getUserId()), mapper.itemDtoMapper(a.getItemId()));
-				} catch (UserNotFoundException | ItemNotFoundException e) {
-					e.printStackTrace();
-				}
-			});
-		}
-		return listOfItems;
+	public List<CartEntity> viewall() {
+		return cartRepo.findAll();
 	}
 
-	// public String total() {
-	// int amount=0;
-	// List<CartEntity> list=cartRepo.findAll();
-	// for (CartEntity cartEntity : list) {
-	// amount
-	// +=Integer.parseInt(cartEntity.getItemPrice().substring(1,cartEntity.getItemPrice().length()-3).replaceAll(",",
-	// "").trim());
-	// }
-	// NumberFormat
-	// format=NumberFormat.getCurrencyInstance(Locale.forLanguageTag("hi-IN"));
-	// System.out.println(amount);
-	//// return format.format(amount);
-	// return Integer.toString(amount);
-	// }
+	@Override
+	public List<Map<String, List<ItemsDto>>> viewallMap() throws UserNotFoundException, ItemNotFoundException {
+		List<Map<String, List<ItemsDto>>> list = new ArrayList<>();
+		Map<String, List<ItemsDto>> item = new HashMap<>();
+		List<CartEntity> itemEntities = viewall();
+		if (Objects.nonNull(itemEntities)) {
+			for (int i = 0; i < itemEntities.size(); i++) {
+				String userEmail = mapper.userDetailDtoMapper(itemEntities.get(i).getUserId()).getUserEmail();
+				ItemsDto itemsDto = mapper.itemDtoMapper(itemEntities.get(i).getItemId());
+				if (adder(userEmail).isEmpty()) {
+					item.put(userEmail, Arrays.asList(itemsDto));
+				} else {
+					List<ItemsDto> dtos = adder(userEmail);
+					dtos.add(itemsDto);
+					item.put(userEmail, dtos);
+					item.get(userEmail).remove(itemsDto);
+				}
+			}
+			list.add(item);
+		}
+		return list;
+	}
+
+	private List<ItemsDto> adder(String userId) {
+		List<CartEntity> entities = viewall();
+		return entities.stream().filter(a -> a.getUserId().equalsIgnoreCase(userId)).map(a -> {
+			try {
+				return mapper.itemDtoMapper(a.getItemId());
+			} catch (ItemNotFoundException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}).collect(Collectors.toList());
+	}
+// public String total() {
+// int amount=0;
+// List<CartEntity> list=cartRepo.findAll();
+// for (CartEntity cartEntity : list) {
+// amount
+// +=Integer.parseInt(cartEntity.getItemPrice().substring(1,cartEntity.getItemPrice().length()-3).replaceAll(",",
+// "").trim());
+// }
+// NumberFormat
+// format=NumberFormat.getCurrencyInstance(Locale.forLanguageTag("hi-IN"));
+// System.out.println(amount);
+//// return format.format(amount);
+// return Integer.toString(amount);
+// }
 }

@@ -29,7 +29,7 @@ import io.swagger.annotations.Api;
 public class ItemsController {
 
 	@Autowired
-	ItemService itemService;
+	private ItemService itemService;
 
 	@PostMapping("/")
 	public ResponseEntity<String> save(@RequestBody ItemEntity itemEntity) throws ItemAlreadyException {

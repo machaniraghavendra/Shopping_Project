@@ -6,7 +6,6 @@ import java.util.Map;
 import com.shopping.query.command.entites.CartEntity;
 import com.shopping.query.command.entites.dto.CartDto;
 import com.shopping.query.command.entites.dto.ItemsDto;
-import com.shopping.query.command.entites.dto.UserDetailDto;
 import com.shopping.query.command.exceptions.ItemAlreadyInCartException;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.ItemNotFoundInCartException;
@@ -22,6 +21,7 @@ public interface CartService {
 
 	CartDto find(int cartId) throws ItemNotFoundInCartException, UserNotFoundException, ItemNotFoundException;
 
-	Map<UserDetailDto, ItemsDto> viewall();
+	List<CartEntity> viewall();
 
+	List<Map<String, List<ItemsDto>>> viewallMap() throws UserNotFoundException, ItemNotFoundException;
 }

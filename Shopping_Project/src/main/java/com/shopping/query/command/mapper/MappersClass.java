@@ -37,6 +37,5 @@ public class MappersClass {
 				.ItemDimensions(itemEntity.getItemDimensions()).itemId(itemEntity.getItemId())
 				.ItemImgUrl(itemEntity.getItemImgUrl()).ItemPrice(itemEntity.getItemPrice())
 				.ItemSpec(itemEntity.getItemSpec()).ItemType(itemEntity.getItemType()).build();
-
 	}
 }
