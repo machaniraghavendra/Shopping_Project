@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.shopping.query.command.entites.UserDetailDto;
 import com.shopping.query.command.entites.UserEntity;
+import com.shopping.query.command.entites.dto.UserDetailDto;
 import com.shopping.query.command.exceptions.UserAlreadyExistsException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
 import com.shopping.query.command.repos.UserRepo;

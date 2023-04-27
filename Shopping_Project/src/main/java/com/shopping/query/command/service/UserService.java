@@ -2,7 +2,7 @@ package com.shopping.query.command.service;
 
 import java.util.List;
 
-import com.shopping.query.command.entites.UserDetailDto;
+import com.shopping.query.command.entites.dto.UserDetailDto;
 import com.shopping.query.command.entites.UserEntity;
 import com.shopping.query.command.exceptions.UserAlreadyExistsException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
