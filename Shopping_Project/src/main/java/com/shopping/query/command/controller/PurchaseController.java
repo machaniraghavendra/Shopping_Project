@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.query.command.exceptions.ItemNotFoundException;
+import com.shopping.query.command.service.PurchaseService;
 import com.shopping.query.command.service.implementation.PurchaseImpl;
 
 import io.swagger.annotations.Api;
@@ -22,7 +23,7 @@ import io.swagger.annotations.Api;
 public class PurchaseController {
 
 	@Autowired
-	PurchaseImpl purchaseImpl;
+	private PurchaseService purchaseImpl;
 
 	@GetMapping("/{itemId}")
 	public ResponseEntity<List<Object>> purchaseItem(@PathVariable int itemId) throws ItemNotFoundException {

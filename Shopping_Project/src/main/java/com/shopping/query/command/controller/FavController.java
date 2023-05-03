@@ -24,7 +24,7 @@ import com.shopping.query.command.exceptions.ItemAlreadyInFavException;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.ItemNotFoundInFavException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
-import com.shopping.query.command.service.implementation.FavServiceImpl;
+import com.shopping.query.command.service.FavService;
 
 @RestController
 @RequestMapping("/fav")
@@ -32,7 +32,7 @@ import com.shopping.query.command.service.implementation.FavServiceImpl;
 public class FavController {
 
 	@Autowired
-	private FavServiceImpl favServiceImpl;
+	private FavService favServiceImpl;
 
 	@PostMapping("/")
 	public ResponseEntity<String> save(@RequestBody FavouritesEntity favEntity)

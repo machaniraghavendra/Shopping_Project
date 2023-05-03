@@ -24,7 +24,7 @@ import com.shopping.query.command.exceptions.ItemAlreadyInCartException;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.ItemNotFoundInCartException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
-import com.shopping.query.command.service.implementation.CartServiceImpl;
+import com.shopping.query.command.service.CartService;
 
 @RestController
 @RequestMapping("/cart")
@@ -32,7 +32,7 @@ import com.shopping.query.command.service.implementation.CartServiceImpl;
 public class CartController {
 
 	@Autowired
-	private CartServiceImpl cartServiceImpl;
+	private CartService cartServiceImpl;
 
 	@PostMapping("/")
 	public ResponseEntity<String> save(@RequestBody CartEntity cartEntity)

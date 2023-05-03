@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shopping.query.command.entites.BotEntity;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.service.BotService;
 import com.shopping.query.command.service.implementation.BotServiceImpl;
 
 @RestController
@@ -23,7 +24,7 @@ import com.shopping.query.command.service.implementation.BotServiceImpl;
 public class BotController {
 
 	@Autowired
-	private BotServiceImpl botServiceImpl;
+	private BotService botServiceImpl;
 
 	@PostMapping("/")
 	public void getResponse(@RequestBody BotEntity bot) throws UserNotFoundException, ItemNotFoundException {

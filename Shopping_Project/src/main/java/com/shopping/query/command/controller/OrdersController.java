@@ -21,6 +21,7 @@ import com.shopping.query.command.entites.dto.OrdersDto;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.OrderNotFoundException;
 import com.shopping.query.command.exceptions.OrderWithSameItemExistsException;
+import com.shopping.query.command.service.OrderService;
 import com.shopping.query.command.service.implementation.OrdersServImpl;
 
 import io.swagger.annotations.Api;
@@ -32,7 +33,7 @@ import io.swagger.annotations.Api;
 public class OrdersController {
 
 	@Autowired
-	private OrdersServImpl ordersServImpl;
+	private OrderService ordersServImpl;
 	
 	@PostMapping("/")
 	public ResponseEntity<String> saveOrder(@RequestBody OrdersEntity ordersEntity) throws OrderNotFoundException, ItemNotFoundException, OrderWithSameItemExistsException{

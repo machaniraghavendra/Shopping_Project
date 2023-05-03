@@ -19,7 +19,7 @@ import com.shopping.query.command.entites.UserEntity;
 import com.shopping.query.command.entites.dto.UserDetailDto;
 import com.shopping.query.command.exceptions.UserAlreadyExistsException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
-import com.shopping.query.command.service.implementation.UserServiceImpl;
+import com.shopping.query.command.service.UserService;
 
 @RestController
 @RequestMapping("/user")
@@ -27,7 +27,7 @@ import com.shopping.query.command.service.implementation.UserServiceImpl;
 public class UserController {
 
 	@Autowired
-	private UserServiceImpl userServiceImpl;
+	private UserService userServiceImpl;
 
 	@PostMapping("/")
 	public ResponseEntity<String> save(@RequestBody UserEntity userEntity) throws UserAlreadyExistsException {
