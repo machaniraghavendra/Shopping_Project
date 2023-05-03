@@ -17,7 +17,7 @@ public interface FavService {
 
 	String update(FavouritesEntity favouritesEntity) throws ItemNotFoundInFavException, ItemNotFoundException;
 
-	String delete(int favId) throws ItemNotFoundInFavException, ItemNotFoundException;
+	String delete(String itemName, String userEmail) throws ItemNotFoundInFavException, ItemNotFoundException;
 
 	FavouriteDto find(int favId) throws ItemNotFoundInFavException, UserNotFoundException, ItemNotFoundException;
 
@@ -25,4 +25,6 @@ public interface FavService {
 	
 	List<Map<String, List<ItemsDto>>> viewallMap() throws UserNotFoundException, ItemNotFoundException ;
 
+	List<List<ItemsDto>> getListofFavItemswithUserId(String userId)
+			throws UserNotFoundException, ItemNotFoundException ;
 }

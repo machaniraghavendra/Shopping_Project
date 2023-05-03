@@ -22,6 +22,7 @@ public class PurchaseImpl implements PurchaseService {
 		return value;
 	}
 
+	@Override
 	public List<Object> getItem() {
 		return value;
 	}

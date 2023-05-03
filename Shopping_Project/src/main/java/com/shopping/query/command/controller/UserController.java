@@ -27,7 +27,7 @@ import com.shopping.query.command.service.implementation.UserServiceImpl;
 public class UserController {
 
 	@Autowired
-	UserServiceImpl userServiceImpl;
+	private UserServiceImpl userServiceImpl;
 
 	@PostMapping("/")
 	public ResponseEntity<String> save(@RequestBody UserEntity userEntity) throws UserAlreadyExistsException {

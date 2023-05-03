@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.query.command.entites.CartEntity;
@@ -31,7 +32,7 @@ import com.shopping.query.command.service.implementation.CartServiceImpl;
 public class CartController {
 
 	@Autowired
-	CartServiceImpl cartServiceImpl;
+	private CartServiceImpl cartServiceImpl;
 
 	@PostMapping("/")
 	public ResponseEntity<String> save(@RequestBody CartEntity cartEntity)
@@ -45,10 +46,10 @@ public class CartController {
 		return new ResponseEntity<String>(cartServiceImpl.update(cartEntity), HttpStatus.OK);
 	}
 
-	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable("id") int cartId)
+	@DeleteMapping("/{itemName}")
+	public ResponseEntity<String> delete(@PathVariable("itemName") String itemName, @RequestParam String userEmail)
 			throws ItemNotFoundInCartException, ItemNotFoundException {
-		return new ResponseEntity<String>(cartServiceImpl.delete(cartId), HttpStatus.OK);
+		return new ResponseEntity<String>(cartServiceImpl.delete(itemName, userEmail), HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")
@@ -60,6 +61,11 @@ public class CartController {
 	@GetMapping("/map")
 	public ResponseEntity<List<Map<String, List<ItemsDto>>>> viewallMap() throws UserNotFoundException, ItemNotFoundException {
 		return ResponseEntity.ok(cartServiceImpl.viewallMap());
+	}
+	
+	@GetMapping("/userId/{userid}")
+	public ResponseEntity<List<List<ItemsDto>>> getListofCartItemswithUserId(@PathVariable("userid") String userid) throws UserNotFoundException, ItemNotFoundException {
+		return ResponseEntity.ok(cartServiceImpl.getListofCartItemswithUserId(userid));
 	}
 
 	@GetMapping("/")

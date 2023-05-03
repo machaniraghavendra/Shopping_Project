@@ -2,6 +2,8 @@ package com.shopping.query.command.entites;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -20,8 +22,8 @@ import lombok.ToString;
 public class CartEntity {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int cartId;
-	@Column(name = "itemId")
 	private int ItemId;
 	private String userId;
 

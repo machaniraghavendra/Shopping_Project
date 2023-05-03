@@ -109,4 +109,5 @@ public class UserServiceImpl implements UserService {
 		detailDto.setMobileNumber(entity.getMobileNumber());
 		return detailDto;
 	}
+
 }

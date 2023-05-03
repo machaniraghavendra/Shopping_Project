@@ -17,11 +17,14 @@ public interface CartService {
 
 	String update(CartEntity cartEntity) throws ItemNotFoundInCartException, ItemNotFoundException;
 
-	String delete(int cartId) throws ItemNotFoundInCartException, ItemNotFoundException;
+	String delete(String itemName, String userEmail) throws ItemNotFoundInCartException, ItemNotFoundException;
 
 	CartDto find(int cartId) throws ItemNotFoundInCartException, UserNotFoundException, ItemNotFoundException;
 
 	List<CartEntity> viewall();
 
 	List<Map<String, List<ItemsDto>>> viewallMap() throws UserNotFoundException, ItemNotFoundException;
+
+	List<List<ItemsDto>> getListofCartItemswithUserId(String userId)
+			throws UserNotFoundException, ItemNotFoundException;
 }

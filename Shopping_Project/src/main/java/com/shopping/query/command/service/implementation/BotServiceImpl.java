@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.shopping.query.command.entites.BotEntity;
-import com.shopping.query.command.entites.ItemEntity;
-import com.shopping.query.command.entites.OrderDetailsOfUserEntity;
+import com.shopping.query.command.entites.OrdersEntity;
+import com.shopping.query.command.entites.dto.ItemsDto;
+import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.mapper.MappersClass;
 import com.shopping.query.command.repos.OrderRepo;
 import com.shopping.query.command.service.BotService;
 
@@ -35,16 +37,22 @@ public class BotServiceImpl implements BotService {
 	private static final String SETTING_PAGE_RESPONSE = "Sure! Here is the link tap on it http://localhost:3000/profile/settings";
 	private static final String ERROR_MSGE = "Sorry I can't able to find with your query !";
 
-	private static OrderDetailsServImpl orderDetailsServImpl = new OrderDetailsServImpl();
+	private static OrdersServImpl orderDetailsServImpl = new OrdersServImpl();
 
 	@Autowired
 	private OrderRepo orderRepo;
+
+	@Autowired
+	private MappersClass mappersClass;
+
+	@Autowired
+	private OrdersServImpl ordersServImpl;
 
 	private static List<BotEntity> responses = new ArrayList<>();
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void queryReponse(BotEntity incomeBot) throws UserNotFoundException {
+	public void queryReponse(BotEntity incomeBot) throws UserNotFoundException, ItemNotFoundException {
 		incomeBot.setUserMessage(incomeBot.getUserMessage().trim());
 		if (!StringUtils.isEmpty(incomeBot.getUserMessage())) {
 			if (HI.contains(incomeBot.getUserMessage().toLowerCase())
@@ -90,26 +98,34 @@ public class BotServiceImpl implements BotService {
 		responses.add(incomeBot);
 	}
 
+	@Override
 	public void listClear(String userEmail) {
 		responses
 				.removeAll(responses.stream().filter(a -> a.getUserDetails().getUserEmail().equalsIgnoreCase(userEmail))
 						.collect(Collectors.toList()));
 	}
 
+	@Override
 	public List<BotEntity> viewAllResponse() {
 		return responses;
 	}
 
-	public String getOrderDetailsWithUUID(UUID id) {
+	@Override
+	public String getOrderDetailsWithUUID(UUID id) throws ItemNotFoundException {
 		String message = "";
-		OrderDetailsOfUserEntity detailsOfUser = orderRepo.findAll().stream().filter(a -> a.getUuidId().equals(id))
+		OrdersEntity detailsOfUser = orderRepo.findAll().stream().filter(a -> a.getOrderUUIDId().equals(id))
 				.findFirst().orElse(null);
+		OrdersEntity ordersEntity = new OrdersEntity();
 		if (!Objects.isNull(detailsOfUser)) {
-			ItemEntity entity = (ItemEntity) detailsOfUser.getItemEntity();
+			ordersEntity = ordersServImpl.findByDeliveryDetailId(detailsOfUser.getOrderId());
+		}
+		if (!Objects.isNull(detailsOfUser)) {
+			ItemsDto entity = mappersClass.itemDtoMapper(detailsOfUser.getItemId());
 			message = "The order details are " + entity.getItemName() + " of price " + entity.getItemPrice()
-					+ " of type " + entity.getItemType() + " its status is now " + detailsOfUser.getOrderStatus() + " "
-					+ (!detailsOfUser.getOrderStatus().equalsIgnoreCase("cancelled")
-							? "and to be delivered by " + detailsOfUser.getDeliveryDate()
+					+ " of type " + entity.getItemType() + " its status is now "
+					+ ordersEntity.getOrderStatus() + " "
+					+ (!ordersEntity.getOrderStatus().equalsIgnoreCase("cancelled")
+							? "and to be delivered by " + ordersEntity.getDeliveryDate()
 							: "")
 					+ entity.getItemImgUrl();
 		} else {

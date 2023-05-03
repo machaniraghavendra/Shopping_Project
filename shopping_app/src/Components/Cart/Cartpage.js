@@ -32,7 +32,7 @@ export default function Cartpage(props) {
     var count = 0;
 
     const fetch = () => {
-        axios.get("http://localhost:8083/cart/")
+        axios.get("http://localhost:8083/cart/userId/" + props.user)
             .then((res) => { return (setData(res.data)) })
     }
 
@@ -168,54 +168,50 @@ export default function Cartpage(props) {
 
 
                 <div className='cart-body float-md-left float-lg-right'>
-                    {data.filter(e => e.userId == localStorage.getItem("currentuser")).length == [] ?
+                    {data.length == [] || data.includes(null) ?
                         <div className='container-fluid cart-no'><br></br>
                             <h1>No Items Found in Cart !</h1>
-
                             <img className='img-fluid cart-no-img' src='https://img.freepik.com/free-photo/portrait-sad-woman-holding-shopping-bags-bank-card-isolated-blue-background_1258-80590.jpg?w=900&t=st=1661337619~exp=1661338219~hmac=2216603151e8e22d07a13935e4d02c5b9629f1482b776df503c439b83528628f' width="70%" />
                         </div>
                         :
                         <div className='container-fluid '>
                             <div className="  row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 gap-4 justify-content-center text-center ">
-                                {data.filter(e => e.userId == localStorage.getItem("currentuser")).map(e => {
+                                {data.map(a => {
                                     return (
-                                        <div className=' col row ' key={e.itemId}>&nbsp;
-                                            <div className="card" data-aos="fade-up" >
+                                        a.map(e => {
+                                            return (
+                                                <div className=' col row ' key={e.itemId}>&nbsp;
+                                                    <div className="card" data-aos="fade-up" >
 
-                                                <div className='card-header justify-content-end text-end'>
-                                                    <button className='btn  m-2' onClick={() => {
-                                                        axios.delete("http://localhost:8083/cart/" + e.itemId).then((res) => { return (setInfo(res.data), fetch(), setShowToast(true), timeout()) })
-                                                    }}
-                                                        data-bs-toggle="modal" data-bs-target="#exampleModal2" data-bs-whatever="@mdo"
-                                                    ><i className='fa-solid fa-trash text-danger'></i></button>
-                                                    <button className='btn ' onClick={() => {
-                                                        if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
-                                                            axios.post("http://localhost:8083/fav/", {
-                                                                "itemId": e.itemId,
-                                                                "itemName": e.itemName,
-                                                                "itemDesc": e.itemDesc,
-                                                                "itemPrice": e.itemPrice,
-                                                                "itemType": e.itemType,
-                                                                "itemDimensions": e.itemDimensions,
-                                                                "itemImgUrl": e.itemImgUrl,
-                                                                "itemSpec": e.itemSpec,
-                                                                "userId": localStorage.getItem("currentuser")
-                                                            }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
-                                                        } else {
-                                                            setInfo("Login required !")
-                                                        }
-                                                    }}
-                                                    ><i className="fa-solid fa-heart text-danger"></i> </button>
-                                                </div>
-                                                <img src={e.itemImgUrl} className="card-img-top" alt="..." />
+                                                        <div className='card-header justify-content-end text-end'>
+                                                            <button className='btn  m-2' onClick={() => {
+                                                                axios.delete("http://localhost:8083/cart/" + e.itemName+"?"+"userEmail="+localStorage.getItem("currentuser")).then((res) => { return (setInfo(res.data), fetch(), setShowToast(true), timeout()) })
+                                                            }}
+                                                                data-bs-toggle="modal" data-bs-target="#exampleModal2" data-bs-whatever="@mdo"
+                                                            ><i className='fa-solid fa-trash text-danger'></i></button>
+                                                            <button className='btn ' onClick={() => {
+                                                                if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                                    axios.post("http://localhost:8083/fav/", {
+                                                                       "itemId":e.itemId,
+                                                                        "userId": localStorage.getItem("currentuser")
+                                                                    }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
+                                                                } else {
+                                                                    setInfo("Login required !")
+                                                                }
+                                                            }}
+                                                            ><i className="fa-solid fa-heart text-danger"></i> </button>
+                                                        </div>
+                                                        <img src={e.itemImgUrl} className="card-img-top" alt="..." />
 
-                                                <div className="card-body">
-                                                    <h5 className="card-title text-truncate" id={e.itemName}>{e.itemName}</h5>
-                                                    <p className="card-text text-truncate">{e.itemPrice}</p>
+                                                        <div className="card-body">
+                                                            <h5 className="card-title text-truncate" id={e.itemName}>{e.itemName}</h5>
+                                                            <p className="card-text text-truncate">{e.itemPrice}</p>
+                                                        </div>
+                                                        <Link to={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info'>View More...</Link>
+                                                    </div>
                                                 </div>
-                                                <Link to={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info'>View More...</Link>
-                                            </div>
-                                        </div>
+                                            )
+                                        })
                                     )
                                 })
 
@@ -228,26 +224,32 @@ export default function Cartpage(props) {
                             <div className='card' style={{ height: "10%" }}>
                                 <div className='card-footer'>
                                     <h5>List of products in cart :</h5>
-                                    {data.filter(e => e.userId == localStorage.getItem("currentuser")).map(e => {
-                                        total += parseInt(e.itemPrice.substr(1).replaceAll(",", ""));
-                                        totalAmount = Intl.NumberFormat('hi-IN', { style: "currency", currency: "INR" }).format(total)
+                                    {data.map(a => {
                                         return (
-                                            <div key={e.itemId}>
-                                                <li >
-                                                    {e.itemName} = {e.itemPrice} -&gt;
-                                                    <button className='btn btn-outline-danger m-2' onClick={() => {
-                                                        axios.delete("http://localhost:8083/cart/" + e.itemId).then((res) => { return (setInfo(res.data), fetch(), setShowToast(true), timeout()) })
-                                                    }}
-                                                        data-bs-toggle="modal" data-bs-target="#exampleModal2" data-bs-whatever="@mdo">
-                                                        <i className='fa-solid fa-trash '></i></button>
-                                                    <Link className='btn btn-warning' to={"/purchase"} onClick={() => {
-                                                        axios.get("http://localhost:8083/purchase/" + e.itemId)
-                                                    }}> Buy now</Link>
-                                                </li>&nbsp;
+                                            a.map(e => {
+                                                total += parseInt(e.itemPrice.substr(1).replaceAll(",", ""));
+                                                totalAmount = Intl.NumberFormat('hi-IN', { style: "currency", currency: "INR" }).format(total)
+                                                return (
+                                                    <div key={e.itemId}>
+                                                        <li >
+                                                            {e.itemName} = {e.itemPrice} -&gt;
+                                                            <button className='btn btn-outline-danger m-2' onClick={() => {
+                                                                axios.delete("http://localhost:8083/cart/" + e.itemId).then((res) => { return (setInfo(res.data), fetch(), setShowToast(true), timeout()) })
+                                                            }}
+                                                                data-bs-toggle="modal" data-bs-target="#exampleModal2" data-bs-whatever="@mdo">
+                                                                <i className='fa-solid fa-trash '></i></button>
+                                                            <Link className='btn btn-warning' to={"/purchase"} onClick={() => {
+                                                                axios.get("http://localhost:8083/purchase/" + e.itemId)
+                                                            }}> Buy now</Link>
+                                                        </li>&nbsp;
 
-                                            </div>
+                                                    </div>
+                                                )
+                                            })
                                         )
-                                    })}<br></br>
+                                    })
+                                    }
+                                    <br></br>
                                 </div>
                                 <b className='justify-content-end text-end'> Total products amount =<span className='text-success'> {totalAmount} </span></b>
                             </div>

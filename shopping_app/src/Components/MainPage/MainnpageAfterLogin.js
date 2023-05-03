@@ -17,7 +17,7 @@ export default function MainPageAfterlogin(props) {
 
     const [info, setInfo] = useState("");
 
-    const [what, setWhat] = useState(false);
+    // const [what, setWhat] = useState(false);
 
     const nav = useNavigate();
 
@@ -31,7 +31,7 @@ export default function MainPageAfterlogin(props) {
     }
 
     const currentuser = () => {
-        axios.get("http://localhost:8083/user/id/" + props.user).then(res => { return (setWhat(true)) })
+        // axios.get("http://localhost:8083/user/id/" + props.user).then(res => { return (setWhat(true)) })
         axios.get("http://localhost:8083/user/" + props.user).then(a => { return (setUserName(a.data.userName)) })
 
     }
@@ -47,24 +47,25 @@ export default function MainPageAfterlogin(props) {
             top.classList.add("fixed-top");
             title.innerHTML = ' <img src="https://media.istockphoto.com/vectors/shopping-bag-flat-icon-pixel-perfect-for-mobile-and-web-vector-id1145783156?k=20&m=1145783156&s=612x612&w=0&h=RJdFiHDeaQJt3KbyIfJmWS12iQrD63DUCMWPrFLumwk=" alt="" width="35" height="35" className="d-inline-block align-text-top" />&nbsp;Shopping Mart'
             title2.innerHTML = ""
-            //     extraId.innerHTML = `<button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-            //     <i className="fa-solid fa-user"></i>&nbsp;
-            // </button>;`
         }
         if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 620) {
-                scroll.style.display = "block";
+            scroll.style.display = "block";
             title2.classList.remove("d-none")
         }
         else {
             top.classList.remove("fixed-top");
-                scroll.style.display = "none";
+            scroll.style.display = "none";
             title.innerHTML = "Contents";
         }
     }
-    if (userName == undefined) {
-        localStorage.removeItem("currentuser")
-        localStorage.removeItem("Raghu")
+    const checkPresentUser = () => {
+        if (userName == undefined) {
+            localStorage.removeItem("currentuser")
+            localStorage.removeItem("Raghu")
+        }
     }
+    checkPresentUser();
+
     useEffect(() => {
         sessionStorage.getItem("dark") ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
             : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
@@ -79,7 +80,7 @@ export default function MainPageAfterlogin(props) {
         return (fetch())
     }, [])
 
-    if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser") && what) {
+    if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
         return (
             <div className='container-fluid '>
                 <header>
@@ -217,13 +218,6 @@ export default function MainPageAfterlogin(props) {
                                                         <button className='btn  m-2' onClick={() => {
                                                             axios.post("http://localhost:8083/cart/", {
                                                                 "itemId": e.itemId,
-                                                                "itemName": e.itemName,
-                                                                "itemDesc": e.itemDesc,
-                                                                "itemPrice": e.itemPrice,
-                                                                "itemType": e.itemType,
-                                                                "itemDimensions": e.itemDimensions,
-                                                                "itemImgUrl": e.itemImgUrl,
-                                                                "itemSpec": e.itemSpec,
                                                                 "userId": localStorage.getItem("currentuser")
                                                             }, []).then((res) => { return (setInfo(res.data)) })
                                                         }}
@@ -233,13 +227,6 @@ export default function MainPageAfterlogin(props) {
                                                         <button className='btn ' onClick={() => {
                                                             axios.post("http://localhost:8083/fav/", {
                                                                 "itemId": e.itemId,
-                                                                "itemName": e.itemName,
-                                                                "itemDesc": e.itemDesc,
-                                                                "itemPrice": e.itemPrice,
-                                                                "itemType": e.itemType,
-                                                                "itemDimensions": e.itemDimensions,
-                                                                "itemImgUrl": e.itemImgUrl,
-                                                                "itemSpec": e.itemSpec,
                                                                 "userId": localStorage.getItem("currentuser")
                                                             }, []).then((res) => { return (setInfo(res.data)) })
                                                         }}
@@ -371,7 +358,7 @@ export default function MainPageAfterlogin(props) {
 
                 <ChatBot />
 
-{/* LogOut pop */}
+                {/* LogOut pop */}
                 <div className="modal fade " id="exampleModal3" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog">
                         <div className="modal-content logout-model">

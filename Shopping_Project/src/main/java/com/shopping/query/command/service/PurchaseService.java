@@ -7,4 +7,6 @@ import com.shopping.query.command.exceptions.ItemNotFoundException;
 public interface PurchaseService {
 
 	List<Object> buyNow(int itemId) throws ItemNotFoundException;
+
+	List<Object> getItem();
 }

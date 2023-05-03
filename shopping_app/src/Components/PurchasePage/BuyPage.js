@@ -20,6 +20,8 @@ export default function Buypage(props) {
 
     const nav = useNavigate();
 
+    const [message, setMessage] = useState("");
+
     const getItem = () => {
         axios.get("http://localhost:8083/purchase/").then(a => setItem(a.data));
     }
@@ -75,18 +77,15 @@ export default function Buypage(props) {
         setErrors(errors);
     }
 
-    let itemId = item.map(a => { return (a.itemId) })
+    let itemId ="";
 
     const sendOrderData = (e) => {
         if (details.firstName == "" || details.phoneNumber == "" || details.pincode == "" || details.address == "" || details.paymentOption == "") {
             validate(e)
         } else {
-            axios.post("http://localhost:8083/orders/" + itemId, {
-                "userDetails": {
-                    "userName": user.userName,
-                    "userEmail": user.userEmail,
-                    "mobileNumber": user.mobileNumber
-                },
+            axios.post("http://localhost:8083/orders/" ,{
+                "userId":user.userEmail,
+                "itemId":itemId,
                 "firstName": details.firstName,
                 "lastName": details.lastName,
                 "emailAddress": details.emailAddress,
@@ -96,7 +95,8 @@ export default function Buypage(props) {
                 "paymentType": details.paymentOption,
                 "orderQuantity": details.orderQuantity
             }).then((res) => {
-                if (res.data == "Order placed") {
+                if (res.data==="Saved order") {
+                    setMessage("Order already placed on this item")
                     let pop = document.getElementById("successPop-Parent")
                     pop.classList.remove("d-none")
                     setTimeout(() => {
@@ -105,7 +105,7 @@ export default function Buypage(props) {
                         )
                     }, 3000)
                 }
-            }).catch(() => { return (setShowToast(true), timeout()) })
+            }).catch(() => { return (setMessage("Order not placed due to some error"), setShowToast(true), timeout()) })
         }
     }
     const timeout = () => {
@@ -186,6 +186,7 @@ export default function Buypage(props) {
                         {item.map(itemData => {
                             return (
                                 <div key={itemData.itemId}>
+                                    {itemId=itemData.itemId}
                                     <div className="card-header">
                                         <h4>{itemData.itemName}</h4>
                                     </div>
@@ -299,7 +300,7 @@ export default function Buypage(props) {
                             </div>
                         </div>
                         <div className="text-center">
-                            <button className="btn btn-outline-warning btn-lg  m-auto  orderButton" onClick={(e) => { return(sendOrderData(),validate(e)) }}>Place Order Now</button>
+                            <button className="btn btn-outline-warning btn-lg  m-auto  orderButton" onClick={(e) => { return (sendOrderData(), validate(e)) }}>Place Order Now</button>
                         </div>
                     </section>
                 </div>
@@ -340,7 +341,7 @@ export default function Buypage(props) {
                 {showToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">
                     <div className="d-flex">
                         <div className="toast-body">
-                            <p>Order already placed on this item</p>
+                            <p>{message}</p>
                             <div className="mt-2 pt-2">
                                 <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast">Ok</button>
                             </div>

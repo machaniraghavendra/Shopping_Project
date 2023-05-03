@@ -42,7 +42,6 @@ public class FavServiceImpl implements FavService {
 			if (!favList.isEmpty())
 				throw new ItemAlreadyInFavException("The item " + itemName + " already in your favourites");
 			else {
-				favouritesEntity.setFavId(favouritesEntity.getItemId());
 				favRepo.save(favouritesEntity);
 				return "Added to your Wishlist";
 			}
@@ -69,13 +68,15 @@ public class FavServiceImpl implements FavService {
 	}
 
 	@Override
-	public String delete(int favId) throws ItemNotFoundInFavException, ItemNotFoundException {
-		String itemName = mapper.itemDtoMapper(favId).getItemName();
+	public String delete(String itemName, String userEmail) throws ItemNotFoundInFavException, ItemNotFoundException {
+		Integer itemId = checkandgetlistWithUserId(userEmail).stream()
+				.filter(a -> a.getItemName().equalsIgnoreCase(itemName)).map(a -> a.getItemId()).findFirst().get();
+		FavouritesEntity favEntity = viewall().stream().filter(a -> a.getItemId() == itemId).findFirst().get();
 		try {
-			if (!favRepo.existsById(favId))
-				throw new ItemNotFoundInFavException("The item " + favId + " not exists in your Favourites");
+			if (!favRepo.existsById(favEntity.getFavId()))
+				throw new ItemNotFoundInFavException("The item " + favEntity.getFavId()+ " not exists in your Favourites");
 			else {
-				favRepo.deleteById(favId);
+				favRepo.deleteById(favEntity.getFavId());
 				return "The item " + itemName + " has been removed from your Favourites";
 			}
 		} catch (ItemNotFoundInFavException e) {
@@ -114,10 +115,10 @@ public class FavServiceImpl implements FavService {
 			for (int i = 0; i < itemEntities.size(); i++) {
 				String userEmail = mapper.userDetailDtoMapper(itemEntities.get(i).getUserId()).getUserEmail();
 				ItemsDto itemsDto = mapper.itemDtoMapper(itemEntities.get(i).getItemId());
-				if (adder(userEmail).isEmpty()) {
+				if (checkandgetlistWithUserId(userEmail).isEmpty()) {
 					item.put(userEmail, Arrays.asList(itemsDto));
 				} else {
-					List<ItemsDto> dtos = adder(userEmail);
+					List<ItemsDto> dtos = checkandgetlistWithUserId(userEmail);
 					dtos.add(itemsDto);
 					item.put(userEmail, dtos);
 					item.get(userEmail).remove(itemsDto);
@@ -128,7 +129,7 @@ public class FavServiceImpl implements FavService {
 		return list;
 	}
 
-	private List<ItemsDto> adder(String userId) {
+	private List<ItemsDto> checkandgetlistWithUserId(String userId) {
 		List<FavouritesEntity> entities = viewall();
 		return entities.stream().filter(a -> a.getUserId().equalsIgnoreCase(userId)).map(a -> {
 			try {
@@ -140,4 +141,15 @@ public class FavServiceImpl implements FavService {
 		}).collect(Collectors.toList());
 	}
 
+	public List<List<ItemsDto>> getListofFavItemswithUserId(String userId)
+			throws UserNotFoundException, ItemNotFoundException {
+		return viewallMap().stream().map(a -> {
+			if (a.containsKey(userId)) {
+				return a.get(userId);
+			} else {
+				return null;
+			}
+		}).collect(Collectors.toList());
+	}
+	
 }

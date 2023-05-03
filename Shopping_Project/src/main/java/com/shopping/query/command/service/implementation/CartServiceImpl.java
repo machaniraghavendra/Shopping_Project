@@ -38,12 +38,10 @@ public class CartServiceImpl implements CartService {
 		try {
 			List<CartEntity> listEntity = viewall().stream()
 					.filter(a -> a.getUserId().equalsIgnoreCase(cartEntity.getUserId()))
-					.filter(a -> Objects.equals(a.getItemId(), cartEntity.getItemId()))
-					.collect(Collectors.toList());
+					.filter(a -> Objects.equals(a.getItemId(), cartEntity.getItemId())).collect(Collectors.toList());
 			if (!listEntity.isEmpty()) {
 				throw new ItemAlreadyInCartException("The item " + itemName + " already in your cart");
 			} else {
-				cartEntity.setCartId(cartEntity.getItemId());
 				cartRepo.save(cartEntity);
 				return "Added to your cart";
 			}
@@ -70,19 +68,21 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public String delete(int cartId) throws ItemNotFoundInCartException, ItemNotFoundException {
-		String itemName = mapper.itemDtoMapper(cartId).getItemName();
+	public String delete(String itemName, String userEmail) throws ItemNotFoundInCartException, ItemNotFoundException {
+		Integer itemId = checkandgetlistWithUserId(userEmail).stream()
+				.filter(a -> a.getItemName().equalsIgnoreCase(itemName)).map(a -> a.getItemId()).findFirst().get();
+		CartEntity cartEntity = viewall().stream().filter(a -> a.getItemId() == itemId).findFirst().get();
 		try {
-			if (!cartRepo.existsById(cartId))
+			if (!cartRepo.existsById(cartEntity.getCartId()))
 				throw new ItemNotFoundInCartException("The item " + itemName + " not exists in your cart");
 			else {
-				cartRepo.deleteById(cartId);
+				cartRepo.deleteById(cartEntity.getCartId());
 				return "The item " + itemName + " has been removed from your cart";
 			}
 		} catch (ItemNotFoundInCartException e) {
 			e.printStackTrace();
 		}
-		return "The item " + cartId + " not exists in your cart";
+		return "The item " + itemName + " not exists in your cart";
 	}
 
 	@Override
@@ -115,10 +115,10 @@ public class CartServiceImpl implements CartService {
 			for (int i = 0; i < itemEntities.size(); i++) {
 				String userEmail = mapper.userDetailDtoMapper(itemEntities.get(i).getUserId()).getUserEmail();
 				ItemsDto itemsDto = mapper.itemDtoMapper(itemEntities.get(i).getItemId());
-				if (adder(userEmail).isEmpty()) {
+				if (checkandgetlistWithUserId(userEmail).isEmpty()) {
 					item.put(userEmail, Arrays.asList(itemsDto));
 				} else {
-					List<ItemsDto> dtos = adder(userEmail);
+					List<ItemsDto> dtos = checkandgetlistWithUserId(userEmail);
 					dtos.add(itemsDto);
 					item.put(userEmail, dtos);
 					item.get(userEmail).remove(itemsDto);
@@ -129,7 +129,7 @@ public class CartServiceImpl implements CartService {
 		return list;
 	}
 
-	private List<ItemsDto> adder(String userId) {
+	private List<ItemsDto> checkandgetlistWithUserId(String userId) {
 		List<CartEntity> entities = viewall();
 		return entities.stream().filter(a -> a.getUserId().equalsIgnoreCase(userId)).map(a -> {
 			try {
@@ -138,6 +138,18 @@ public class CartServiceImpl implements CartService {
 				e.printStackTrace();
 			}
 			return null;
+		}).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<List<ItemsDto>> getListofCartItemswithUserId(String userId)
+			throws UserNotFoundException, ItemNotFoundException {
+		return viewallMap().stream().map(a -> {
+			if (a.containsKey(userId)) {
+				return a.get(userId);
+			} else {
+				return null;
+			}
 		}).collect(Collectors.toList());
 	}
 // public String total() {
