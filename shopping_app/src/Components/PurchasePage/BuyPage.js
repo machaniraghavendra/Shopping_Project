@@ -2,7 +2,6 @@ import "../PurchasePage/BuyPage.css"
 import React, { useEffect, useState } from 'react'
 import axios from "axios"
 import { Link, useNavigate } from "react-router-dom";
-import Footer from '../Footer/Footer';
 import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import ChatBot from '../ChatBot/ChatBot';
 
@@ -18,16 +17,53 @@ export default function Buypage(props) {
 
     const [showToast, setShowToast] = useState(false);
 
+    const [showAddressToast, setShowAddressToast] = useState(false);
+
     const nav = useNavigate();
 
+    const [message, setMessage] = useState("");
+
+    const [address, setAddress] = useState([]);
+
     const getItem = () => {
-        axios.get("http://localhost:8083/purchase/").then(a => setItem(a.data));
+        axios.get("http://localhost:8083/purchase/?userId=" + props.user).then(a => setItem(a.data));
     }
 
     const setDetailsValues = (e) => {
         const { name, value } = e.target;
         setDetails({ ...details, [name]: value })
         validate(e)
+    }
+
+    const fetchAddress = () => {
+        axios.get("http://localhost:8083/address/user/" + props.user).then(res => {
+            return (setAddress(res.data))
+        })
+    }
+
+    const saveAddress = () => {
+        axios.post("http://localhost:8083/address/", {
+            "userId": props.user,
+            "deliveryAddress": details.address,
+            "pincode": details.pincode,
+            "phoneNumber": details.phoneNumber,
+            "emailAddress": details.emailAddress,
+            "lastName": details.lastName,
+            "firstName": details.firstName
+        }).then(() => {
+            sendOrderData()
+        })
+    }
+
+    const selectedAddressStore = (a) => {
+        setDetails({
+            firstName: a.firstName,
+            lastName: a.lastName,
+            emailAddress: a.emailAddress,
+            phoneNumber: a.phoneNumber,
+            pincode: a.pincode,
+            address: a.deliveryAddress
+        })
     }
 
     const setPaymentOptions = () => {
@@ -75,18 +111,15 @@ export default function Buypage(props) {
         setErrors(errors);
     }
 
-    let itemId = item.map(a => { return (a.itemId) })
+    let itemId = "";
 
     const sendOrderData = (e) => {
         if (details.firstName == "" || details.phoneNumber == "" || details.pincode == "" || details.address == "" || details.paymentOption == "") {
             validate(e)
         } else {
-            axios.post("http://localhost:8083/orders/" + itemId, {
-                "userDetails": {
-                    "userName": user.userName,
-                    "userEmail": user.userEmail,
-                    "mobileNumber": user.mobileNumber
-                },
+            axios.post("http://localhost:8083/orders/", {
+                "userId": user.userEmail,
+                "itemId": itemId,
                 "firstName": details.firstName,
                 "lastName": details.lastName,
                 "emailAddress": details.emailAddress,
@@ -96,7 +129,8 @@ export default function Buypage(props) {
                 "paymentType": details.paymentOption,
                 "orderQuantity": details.orderQuantity
             }).then((res) => {
-                if (res.data == "Order placed") {
+                if (res.data === "Saved order") {
+                    setMessage("Order already placed on this item")
                     let pop = document.getElementById("successPop-Parent")
                     pop.classList.remove("d-none")
                     setTimeout(() => {
@@ -105,13 +139,36 @@ export default function Buypage(props) {
                         )
                     }, 3000)
                 }
-            }).catch(() => { return (setShowToast(true), timeout()) })
+            }).catch(() => { return (setMessage("Order not placed due to some error"), setShowToast(true), timeout()) })
         }
     }
+
     const timeout = () => {
         setTimeout(() => {
             setShowToast(false);
         }, 4000);
+    }
+
+    const checkAddress = () => {
+        axios.post("http://localhost:8083/orders/check/", {
+            "userId": user.userEmail,
+            "itemId": 1,
+            "firstName": details.firstName,
+            "lastName": details.lastName,
+            "emailAddress": details.emailAddress,
+            "pincode": details.pincode,
+            "deliveryAddress": details.address,
+            "phoneNumber": details.phoneNumber,
+            "paymentType": details.paymentOption,
+            "orderQuantity": details.orderQuantity
+        }).then(res => {
+            if (!res.data) {
+                setShowAddressToast(true)
+            } else {
+                setShowAddressToast(false)
+                sendOrderData();
+            }
+        })
     }
 
     useEffect(() => {
@@ -136,6 +193,7 @@ export default function Buypage(props) {
         }
         axios.get("http://localhost:8083/user/" + props.user).then(a => { return (setUser(a.data)) })
         getItem();
+        fetchAddress();
     }, [])
 
     return (
@@ -182,8 +240,8 @@ export default function Buypage(props) {
 
                 <div className="container-lg d-flex justify-content-center ">
                     <div className="card  card-color">
-
                         {item.map(itemData => {
+                            { itemId = itemData.itemId }
                             return (
                                 <div key={itemData.itemId}>
                                     <div className="card-header">
@@ -192,10 +250,10 @@ export default function Buypage(props) {
                                     <div className="card-body">
                                         <div className="row">
                                             <div className="col-md-6">
-                                                <p>Specifications : {itemData.itemSpec}</p>
-                                                <p>Dimensions : {itemData.itemDimensions}</p>
-                                                <p>Description : {itemData.itemDesc}</p>
-                                                <p>Product type : {itemData.itemType}</p>
+                                                <p>Specifications : {itemData.itemSpec  == null ? "Not mentioned" : itemData.itemSpec}</p>
+                                                <p>Dimensions : {itemData.itemDimensions == null ? "Not mentioned" : itemData.itemDimensions}</p>
+                                                <p>Description : {itemData.itemDesc  == null ? "Not mentioned" : itemData.itemDesc}</p>
+                                                <p>Product type : {itemData.itemType  == null ? "Not mentioned" : itemData.itemType}</p>
                                             </div>
                                             <div className="col-md-6 d-md-block d-none">
                                                 <div className="col-md-4 float-md-end h-auto w-25">
@@ -213,13 +271,35 @@ export default function Buypage(props) {
                             )
                         })}
                     </div>
-
                 </div>
 
                 {/* Form for details */}
                 <div className="container-fluid my-1">
                     <section className="card-color p-3">
-                        <legend >Fill details for delivery : </legend>
+                        <div className="dropdown dropend container-fluid" >
+                            <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Select from your saved address
+                            </button>
+                            <ul className="dropdown-menu bg-secondary text-light container-fluid" style={{ width: "auto" }}>
+                                {
+                                    address.length == 0 ? <p className="px-5"> No address in your list </p> :
+                                        address.map(a => {
+                                            return (
+                                                <li className="dropdown-item" key={a.deliveryAddress} style={{ cursor: "pointer" }}>
+                                                    <div className='container-fluid border m-2 bg-info '>
+                                                        <div className='container-fluid p-2 py-3' onClick={() => { selectedAddressStore(a) }}>
+                                                            Name : {a.firstName + " " + a.lastName},
+                                                            Address : {a.deliveryAddress},
+                                                            Email address : {a.emailAddress},
+                                                            Mobile Number : {a.phoneNumber},
+                                                            Pincode : {a.pincode}
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            )
+                                        })}
+                            </ul>
+                        </div>
                         <div className="row text-black" >
                             <div className="col-md g-4">
                                 <div className="form-floating">
@@ -299,7 +379,13 @@ export default function Buypage(props) {
                             </div>
                         </div>
                         <div className="text-center">
-                            <button className="btn btn-outline-warning btn-lg  m-auto  orderButton" onClick={(e) => { return(sendOrderData(),validate(e)) }}>Place Order Now</button>
+                            <button className="btn btn-outline-warning btn-lg  m-auto  orderButton" onClick={(e) => {
+                                if (details.firstName != "" && details.phoneNumber != "" && details.pincode != "" && details.address != "" && details.paymentOption != "") {
+                                    return (checkAddress())
+                                } else {
+                                    validate()
+                                }
+                            }}>Place Order Now</button>
                         </div>
                     </section>
                 </div>
@@ -337,10 +423,29 @@ export default function Buypage(props) {
                     </div>
                 </div>
 
+                {/* Address popup */}
+                {showAddressToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div className="d-flex">
+                        <div className="toast-body">
+                            <p>Looks like this address not in your saved list want to add ?</p>
+                            <div className="mt-2 pt-2">
+                                <button type="button" className="btn btn-outline-danger" data-bs-dismiss="modal" onClick={() => {
+                                    return (sendOrderData(), setShowAddressToast(false))
+                                }}>No</button>&nbsp;&nbsp;
+                                <button type="button" className="btn btn-outline-success"
+                                    onClick={() => {
+                                        return (saveAddress(), setShowAddressToast(false))
+                                    }}
+                                >Yes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>}
+
                 {showToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">
                     <div className="d-flex">
                         <div className="toast-body">
-                            <p>Order already placed on this item</p>
+                            <p>{message}</p>
                             <div className="mt-2 pt-2">
                                 <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast">Ok</button>
                             </div>

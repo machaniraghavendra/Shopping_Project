@@ -2,6 +2,8 @@ package com.shopping.query.command.entites;
 
 import java.util.UUID;
 
+import com.shopping.query.command.entites.dto.UserDetailDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +23,6 @@ public class BotEntity {
 	private String botMessage;
 	private String userMessagedAt;
 	private String botReturnedAt;
-	private UserEntity userDetails;
+	private UserDetailDto userDetails;
 
 }

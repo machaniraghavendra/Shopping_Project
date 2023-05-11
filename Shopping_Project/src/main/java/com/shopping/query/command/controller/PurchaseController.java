@@ -1,17 +1,17 @@
 package com.shopping.query.command.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.query.command.exceptions.ItemNotFoundException;
-import com.shopping.query.command.service.implementation.PurchaseImpl;
+import com.shopping.query.command.service.PurchaseService;
 
 import io.swagger.annotations.Api;
 
@@ -22,15 +22,15 @@ import io.swagger.annotations.Api;
 public class PurchaseController {
 
 	@Autowired
-	PurchaseImpl purchaseImpl;
+	private PurchaseService purchaseImpl;
 
-	@GetMapping("/{itemId}")
-	public ResponseEntity<List<Object>> purchaseItem(@PathVariable int itemId) throws ItemNotFoundException {
-		return ResponseEntity.ok(purchaseImpl.buyNow(itemId));
+	@PostMapping("/{itemId}")
+	public void purchaseItem(@RequestParam String userId,@PathVariable int itemId) throws ItemNotFoundException {
+		purchaseImpl.buyNow(userId,itemId);
 	}
 
 	@GetMapping("/")
-	public ResponseEntity<List<Object>> getItem() {
-		return ResponseEntity.ok(purchaseImpl.getItem());
+	public ResponseEntity<Object> getItem(@RequestParam String userId) {
+		return ResponseEntity.ok(purchaseImpl.getItem(userId));
 	}
 }

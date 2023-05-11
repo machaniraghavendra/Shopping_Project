@@ -59,8 +59,6 @@ export default function Sports() {
                             return (setInfo("Login required !"), setShowToast(true), timeout())
                           }
                         }}
-                          data-bs-toggle="modal" data-bs-target="#exampleModal2" data-bs-whatever="@mdo"
-
                         ><i className='fa-solid fa-cart-shopping text-info'></i></button>
                         <button className='btn ' onClick={() => {
                           if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
@@ -79,7 +77,6 @@ export default function Sports() {
                             return (setInfo("Login required !"), setShowToast(true), timeout())
                           }
                         }}
-                          data-bs-toggle="modal" data-bs-target="#exampleModal2" data-bs-whatever="@mdo"
                         ><i className="fa-solid fa-heart text-danger"></i> </button>
                       </div>
                       <img src={e.itemImgUrl} className="card-img-top" alt="..." />

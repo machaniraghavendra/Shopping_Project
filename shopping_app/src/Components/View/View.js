@@ -123,13 +123,6 @@ export default function View(props) {
                                         if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
                                             axios.post("http://localhost:8083/cart/", {
                                                 "itemId": item.itemId,
-                                                "itemName": item.itemName,
-                                                "itemDesc": item.itemDesc,
-                                                "itemPrice": item.itemPrice,
-                                                "itemType": item.itemType,
-                                                "itemDimensions": item.itemDimensions,
-                                                "itemImgUrl": item.itemImgUrl,
-                                                "itemSpec": item.itemSpec,
                                                 "userId": localStorage.getItem("currentuser")
                                             }, []).then((res) => { return (setInfo(res.data)) })
                                         } else {
@@ -143,13 +136,6 @@ export default function View(props) {
                                         if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
                                             axios.post("http://localhost:8083/fav/", {
                                                 "itemId": item.itemId,
-                                                "itemName": item.itemName,
-                                                "itemDesc": item.itemDesc,
-                                                "itemPrice": item.itemPrice,
-                                                "itemType": item.itemType,
-                                                "itemDimensions": item.itemDimensions,
-                                                "itemImgUrl": item.itemImgUrl,
-                                                "itemSpec": item.itemSpec,
                                                 "userId": localStorage.getItem("currentuser")
                                             }, []).then((res) => { return (setInfo(res.data)) })
                                         } else {
@@ -172,7 +158,7 @@ export default function View(props) {
                                     <span>Total amount : <b>{item.itemPrice}</b>-&gt;</span>
                                     <Link to={"/purchase"}>
                                         <button className='btn btn-warning' onClick={() => {
-                                            axios.get("http://localhost:8083/purchase/" + item.itemId);
+                                            axios.post("http://localhost:8083/purchase/" + item.itemId + "?userId=" + props.user);
                                         }}>Buy now</button>
                                     </Link>
                                 </div>
@@ -194,20 +180,13 @@ export default function View(props) {
                         )
                     }).map((a) => {
                         return (
-                            <div className="col" key={a.itemId} style={{cursor:"grab",overflowX:"scroll",overflowX:"visible"}}>
+                            <div className="col" key={a.itemId} style={{ cursor: "grab", overflowX: "scroll", overflowX: "visible" }}>
                                 <div className="card view-more-card">
                                     <div className='card-head text-end'>
                                         <button className='btn  m-2' onClick={() => {
                                             if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
                                                 axios.post("http://localhost:8083/cart/", {
                                                     "itemId": a.itemId,
-                                                    "itemName": a.itemName,
-                                                    "itemDesc": a.itemDesc,
-                                                    "itemPrice": a.itemPrice,
-                                                    "itemType": a.itemType,
-                                                    "itemDimensions": a.itemDimensions,
-                                                    "itemImgUrl": a.itemImgUrl,
-                                                    "itemSpec": a.itemSpec,
                                                     "userId": localStorage.getItem("currentuser")
                                                 }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
                                             } else {
@@ -219,13 +198,6 @@ export default function View(props) {
                                             if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
                                                 axios.post("http://localhost:8083/fav/", {
                                                     "itemId": a.itemId,
-                                                    "itemName": a.itemName,
-                                                    "itemDesc": a.itemDesc,
-                                                    "itemPrice": a.itemPrice,
-                                                    "itemType": a.itemType,
-                                                    "itemDimensions": a.itemDimensions,
-                                                    "itemImgUrl": a.itemImgUrl,
-                                                    "itemSpec": a.itemSpec,
                                                     "userId": localStorage.getItem("currentuser")
                                                 }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
                                             } else {

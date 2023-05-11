@@ -1,29 +1,32 @@
 package com.shopping.query.command.entites;
 
+import java.util.UUID;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Entity
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
-@Table(name = "CartDetails")
-public class CartEntity {
+@Entity
+public class AddressEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private int cartId;
-	private int ItemId;
+	private Integer addressId;
 	private String userId;
-
+	private String deliveryAddress;
+	private String pincode;
+	private String phoneNumber;
+	private String emailAddress;
+	private String lastName;
+	private String firstName;
+	private UUID referenceId;
 }

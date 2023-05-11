@@ -1,6 +1,7 @@
 package com.shopping.query.command.service.implementation;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,17 +14,17 @@ public class PurchaseImpl implements PurchaseService {
 
 	@Autowired
 	private ItemServiceImpl itemServImpl;
-	
-	private List<Object> value;
+
+	private Map<String, Object> value=new HashMap<>();
 
 	@Override
-	public List<Object> buyNow(int itemId) throws ItemNotFoundException {
-		value = itemServImpl.find(itemId);
-		return value;
+	public void buyNow(String userId, int itemId) throws ItemNotFoundException {
+		value.put(userId, itemServImpl.find(itemId));
 	}
 
-	public List<Object> getItem() {
-		return value;
+	@Override
+	public Object getItem(String userId) {
+		return value.get(userId);
 	}
 
 }

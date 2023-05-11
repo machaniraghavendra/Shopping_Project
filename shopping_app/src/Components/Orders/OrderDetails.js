@@ -97,21 +97,21 @@ export default function OrderDetails(props) {
                     <div className='card-color p-3'>
                         {order.map(a => {
                             return (
-                                <div key={a.orderId}>
-                                    <small className='text-muted'>Order id : {a.uuidId} &nbsp;<i class="bi bi-clipboard btn btn-sm btn-outline-info" onClick={() => {
-                                        showCopyMessage(a.uuidId)
+                                <div key={a.orderUUIDId}>
+                                    <small className='text-muted'>Order id : {a.orderUUIDId} &nbsp;<i class="bi bi-clipboard btn btn-sm btn-outline-info" onClick={() => {
+                                        showCopyMessage(a.orderUUIDId)
                                     }}></i>&nbsp;<span id='showMessage' className='text-success'></span></small>
 
                                     <div className='row'>
                                         <div className='col-12 col-md-8'>   <hr></hr>
                                             <div className='row'>
-                                                <h4 className='col-6'>{a.itemEntity.map(e => { return (e.itemName) })} </h4>
+                                                <h4 className='col-6'>{a.item.itemName} </h4>
                                                 {a.orderStatus == "success" && <h6 className='text-end col-6 text-success'>Placed</h6>}
                                                 {a.orderStatus == "dispatched" && <h6 className='text-end col-6 text-primary'>Dispatched</h6>}
                                                 {a.orderStatus == "near by hub" && <h6 className='text-end col-6 text-info'>Near by Hub</h6>}
                                                 {a.orderStatus == "cancelled" && <h6 className='text-end col-6 text-danger'>Cancelled</h6>}
                                             </div>
-                                            <p className='p-3'><b> Price : {a.itemEntity.map(e => { return (e.itemPrice) })}</b></p>
+                                            <p className='p-3'><b> Price : {a.item.itemPrice}</b></p>
                                             <h6>Order Details</h6>
                                             <div className='px-3'>
                                                 <p>Ordered on  <b>{a.orderedOn}</b> at <b>{a.orderedAt}</b> sec</p>
@@ -135,7 +135,7 @@ export default function OrderDetails(props) {
                                                 <hr></hr>
                                                 <div className='text-center'>
                                                     <p>Do you want to cancel this order (You can cancel this before reaching to near by hub)? <button className='btn btn-danger btn-sm' onClick={() => {
-                                                        setOrderId(a.orderId);
+                                                        setOrderId(a.orderUUIDId);
                                                         setShowToast(true);
                                                     }}>Cancel Order</button></p>
                                                 </div>
@@ -144,7 +144,7 @@ export default function OrderDetails(props) {
                                             <hr></hr>
                                         </div>
                                         <div className='col-4 text-end w-25 h-25'>
-                                            <img src={a.itemEntity.map(e => { return (e.itemImgUrl) })} className="img-fluid rounded-start d-lg-block d-none float-end " alt={a.itemEntity.map(e => { return (e.itemName) })} />
+                                            <img src={a.item.itemImgUrl} className="img-fluid rounded-start d-lg-block d-none float-end " alt={a.item.itemName} />
                                         </div>
                                     </div>
                                 </div>

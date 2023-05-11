@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
 	
@@ -80,5 +81,27 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(value=UserAlreadyExistsException.class)
 	public ResponseEntity<String> useralreadyexception(UserAlreadyExistsException e){
 		return new ResponseEntity<String>("User already exists ",HttpStatus.OK);
+	}
+
+	@ExceptionHandler(value = AddressAlreadyExistsException.class)
+	public ResponseEntity<TraceableError> addressAlreadyExistsException(AddressAlreadyExistsException e){
+		if (e.getStatusCode() == null) {
+			e.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		TraceableError traceError = TraceableError.builder().errorMessage(e.getMessage())
+				.errorCode(String.valueOf(e.getStatusCode().value())).exceptionType(e.getClass().getSimpleName())
+				.errorDescription(e.getStatusCode().getReasonPhrase()).correlationId(MDC.get("correltionId")).build();
+		return new ResponseEntity<>(traceError, e.getStatusCode());
+	}
+
+	@ExceptionHandler(value = AddressNotFoundException.class)
+	public ResponseEntity<TraceableError> addressNotFoundException(AddressNotFoundException e) {
+		if (e.getStatusCode() == null) {
+			e.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		TraceableError traceError = TraceableError.builder().errorMessage(e.getMessage())
+				.errorCode(String.valueOf(e.getStatusCode().value())).exceptionType(e.getClass().getSimpleName())
+				.errorDescription(e.getStatusCode().getReasonPhrase()).correlationId(MDC.get("correltionId")).build();
+		return new ResponseEntity<>(traceError, e.getStatusCode());
 	}
 }

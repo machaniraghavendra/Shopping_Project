@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.shopping.query.command.entites.UserDetailDto;
 import com.shopping.query.command.entites.UserEntity;
+import com.shopping.query.command.entites.dto.UserDetailDto;
 import com.shopping.query.command.exceptions.UserAlreadyExistsException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
 import com.shopping.query.command.repos.UserRepo;
@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 						+ userEntity.getUserName() + " go to login and enjoy shopping with us !");
 			} else {
 				userRepo.save(userEntity);
-				return "You are signed-up with email " + userEntity.getUserName();
+				return "You are signed-up with name " + userEntity.getUserName();
 			}
 		} catch (UserAlreadyExistsException e) {
 			e.printStackTrace();
@@ -109,4 +109,5 @@ public class UserServiceImpl implements UserService {
 		detailDto.setMobileNumber(entity.getMobileNumber());
 		return detailDto;
 	}
+
 }

@@ -1,4 +1,4 @@
-package com.shopping.query.command.entites;
+package com.shopping.query.command.entites.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

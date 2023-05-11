@@ -54,19 +54,11 @@ export default function MobileLog(props) {
                                 return (
                                     <div className=' col row ' key={e.itemId}>&nbsp;
                                         <div className="card " data-aos="fade-up" >
-                                        {console.log(e)}
                                             <div className='card-header justify-content-end text-end'>
                                                 <button className='btn  m-2' onClick={() => {
                                                     if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
                                                         axios.post("http://localhost:8083/cart/", {
                                                             "itemId": e.itemId,
-                                                            "itemName": e.itemName,
-                                                            "itemDesc": e.itemDesc,
-                                                            "itemPrice": e.itemPrice,
-                                                            "itemType": e.itemType,
-                                                            "itemDimensions": e.itemDimensions,
-                                                            "itemImgUrl": e.itemImgUrl,
-                                                            "itemSpec": e.itemSpec,
                                                             "userId": localStorage.getItem("currentuser")
                                                         }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
                                                     } else {
@@ -78,13 +70,6 @@ export default function MobileLog(props) {
                                                     if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
                                                         axios.post("http://localhost:8083/fav/", {
                                                             "itemId": e.itemId,
-                                                            "itemName": e.itemName,
-                                                            "itemDesc": e.itemDesc,
-                                                            "itemPrice": e.itemPrice,
-                                                            "itemType": e.itemType,
-                                                            "itemDimensions": e.itemDimensions,
-                                                            "itemImgUrl": e.itemImgUrl,
-                                                            "itemSpec": e.itemSpec,
                                                             "userId": localStorage.getItem("currentuser")
                                                         }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
                                                     } else {

@@ -47,13 +47,6 @@ export default function Mobiles() {
                                                     if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
                                                         axios.post("http://localhost:8083/cart/", {
                                                             "itemId": e.itemId,
-                                                            "itemName": e.itemName,
-                                                            "itemDesc": e.itemDesc,
-                                                            "itemPrice": e.itemPrice,
-                                                            "itemType": e.itemType,
-                                                            "itemDimensions": e.itemDimensions,
-                                                            "itemImgUrl": e.itemImgUrl,
-                                                            "itemSpec": e.itemSpec,
                                                             "userId": localStorage.getItem("currentuser")
                                                         }, []).then((res) => { return (setInfo(res.data)) })
                                                     } else {
@@ -65,13 +58,6 @@ export default function Mobiles() {
                                                     if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
                                                         axios.post("http://localhost:8083/fav/", {
                                                             "itemId": e.itemId,
-                                                            "itemName": e.itemName,
-                                                            "itemDesc": e.itemDesc,
-                                                            "itemPrice": e.itemPrice,
-                                                            "itemType": e.itemType,
-                                                            "itemDimensions": e.itemDimensions,
-                                                            "itemImgUrl": e.itemImgUrl,
-                                                            "itemSpec": e.itemSpec,
                                                             "userId": localStorage.getItem("currentuser")
                                                         }, []).then((res) => { return (setInfo(res.data)) })
                                                     } else {

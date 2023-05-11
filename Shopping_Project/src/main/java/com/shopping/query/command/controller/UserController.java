@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shopping.query.command.entites.UserDetailDto;
 import com.shopping.query.command.entites.UserEntity;
+import com.shopping.query.command.entites.dto.UserDetailDto;
 import com.shopping.query.command.exceptions.UserAlreadyExistsException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
-import com.shopping.query.command.service.implementation.UserServiceImpl;
+import com.shopping.query.command.service.UserService;
 
 @RestController
 @RequestMapping("/user")
@@ -27,7 +27,7 @@ import com.shopping.query.command.service.implementation.UserServiceImpl;
 public class UserController {
 
 	@Autowired
-	UserServiceImpl userServiceImpl;
+	private UserService userServiceImpl;
 
 	@PostMapping("/")
 	public ResponseEntity<String> save(@RequestBody UserEntity userEntity) throws UserAlreadyExistsException {

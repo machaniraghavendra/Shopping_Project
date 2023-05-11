@@ -12,11 +12,11 @@ export default function Orders(props) {
     const [orders, setOrders] = useState([]);
 
     const fetchOrders = () => {
-        axios.get("http://localhost:8083/orders/all").then((res) => setOrders(res.data))
+        axios.get("http://localhost:8083/orders/orderWithUser?userId=" + props.user).then((res) => setOrders(res.data))
     }
 
     const viewOrder = (e) => {
-        axios.get("http://localhost:8083/orders/" + e);
+        axios.get("http://localhost:8083/orders/saveorder/" + e);
     }
 
     useEffect(() => {
@@ -85,7 +85,7 @@ export default function Orders(props) {
                 <div className='container my-4'>
                     <h2 className='align-items-center d-flex justify-content-center text-info'>Your Orders </h2>
                     <div className='row rounded-5  '>
-                        {orders.filter(a => a.userDetails.userEmail == user.userEmail).length == 0 ?
+                        {orders.length == 0 ?
                             <div className='container w-100 h-100'>
                                 <div className='text-center card-color p-3 w-50'>
                                     <img src={img} alt="" width="100" height="100" className="d-inline-block align-text-top m-4" />
@@ -94,29 +94,29 @@ export default function Orders(props) {
                                 </div>
                             </div>
                             :
-                            orders.filter(a => {
-                                return (a.userDetails.userEmail == user.userEmail)
-                            }).map(item => {
+                            orders.map(item => {
                                 return (
                                     <div className='col-lg-6 ' key={item.orderId}>
                                         <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
                                             <div className="row g-0" >
                                                 <div className="col-md-4 d-none d-lg-flex justify-content-center">
-                                                    <img src={item.itemEntity.map(a => { return (a.itemImgUrl) })} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt={item.itemEntity.map(a => { return (a.itemName) })} />
+                                                    <img src={item.item.itemImgUrl} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt={item.item.itemName} />
                                                 </div>
                                                 <div className="col-md-8 ">
                                                     <div className="card-body">
-                                                        <Link to={'/orderdetails'} className="link-info  stretched-link" onClick={() => { viewOrder(item.orderId) }}></Link>
+                                                        <Link to={'/orderdetails'} className="link-info  stretched-link" onClick={() => { viewOrder(item.orderUUIDId) }}></Link>
                                                         <div className='row'>
-                                                            <h5 className="card-title float-start col-6 text-truncate">{item.itemEntity.map(a => { return (a.itemName) })} </h5>
+                                                            <h5 className="card-title float-start col-6 text-truncate">{item.item.itemName} </h5>
                                                             {item.orderStatus == "success" && <p className='col-3 text-center text-success'><b>Placed</b></p>}
                                                             {item.orderStatus == "dispatched" && <p className='col-3 text-center text-primary'><b>Dispatched</b></p>}
                                                             {item.orderStatus == "near by hub" && <p className='col-3 text-center text-info'><b>Near by Hub</b></p>}
                                                             {item.orderStatus == "cancelled" && <p className='col-3 text-center text-danger'><b>Cancelled</b></p>}
-                                                            <p className="card-title float-end col-3 text-end"><b>{item.itemEntity.map(a => { return (a.itemPrice) })}</b></p>
+                                                            <p className="card-title float-end col-3 text-end"><b>{item.item.itemPrice}</b></p>
                                                         </div>
                                                         <div className='row py-2'> <p className="card-text">Ordered on {item.orderedOn}</p></div>
-                                                        <div className='row'> <p className="card-text">Expected Delivery on {item.deliveryDate}</p></div>
+                                                        <div className='row'>
+                                                            {item.orderStatus == "cancelled" ? <p className='text-decoration-line-through'>Expected delivery on {item.deliveryDate}</p> :
+                                                                <p>Expected delivery on <b>{item.deliveryDate}</b></p>}</div>
                                                     </div>
                                                 </div>
                                             </div>
