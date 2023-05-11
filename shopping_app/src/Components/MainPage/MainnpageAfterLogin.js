@@ -64,7 +64,9 @@ export default function MainPageAfterlogin(props) {
             localStorage.removeItem("Raghu")
         }
     }
-    checkPresentUser();
+    setTimeout(() => {
+        checkPresentUser();
+    }, 400);
 
     useEffect(() => {
         sessionStorage.getItem("dark") ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"

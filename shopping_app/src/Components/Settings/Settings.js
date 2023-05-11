@@ -20,6 +20,16 @@ export default function Settings(props) {
 
     const [info, setInfo] = useState([]);
 
+    const [address, setAddress] = useState([]);
+
+    const [details, setDetails] = useState({ firstName: "", lastName: "", emailAddress: "", phoneNumber: "", pincode: "", address: "", referenceId: "" });
+
+    const [errors, setErrors] = useState({ firstName: "", phoneNumber: "", pincode: "", address: "", paymentOption: "" });
+
+    const [classname, setClassname] = useState("");
+
+    const [close, setClose] = useState("modals");
+
     const check = () => {
         if (!document.getElementById("flexSwitchCheckChecked").checked) {
             document.getElementById("round").classList.remove("round")
@@ -50,16 +60,139 @@ export default function Settings(props) {
         })
     }
 
+    const fetchAddress = () => {
+        axios.get("http://localhost:8083/address/user/" + props.user).then(res => {
+            return (setAddress(res.data))
+        })
+    }
+
+    const addAddress = (e) => {
+        if (details.firstName == "" || details.phoneNumber == "" || details.pincode == "" || details.address == "") {
+            validateAddress(e)
+            setClose("modals")
+        } else {
+            axios.post("http://localhost:8083/address/", {
+                "userId": props.user,
+                "deliveryAddress": details.address,
+                "pincode": details.pincode,
+                "phoneNumber": details.phoneNumber,
+                "emailAddress": details.emailAddress,
+                "lastName": details.lastName,
+                "firstName": details.firstName
+            }).then((res) => {
+                setClose("modal")
+                setInfo(res.data[0])
+                if (res.data[0] != "Address added") {
+                    setInfo(res.data[0].errorMessage);
+                }
+                setShowToast(true);
+                timeoutAddress();
+                fetchAddress();
+                clearDetails();
+            })
+        }
+    }
+
+    const updateAddress = (e) => {
+        if (details.firstName == "" || details.phoneNumber == "" || details.pincode == "" || details.address == "") {
+            validateAddress(e)
+            setClose("modals")
+        } else {
+            axios.put("http://localhost:8083/address/", {
+                "userId": props.user,
+                "deliveryAddress": details.address,
+                "pincode": details.pincode,
+                "phoneNumber": details.phoneNumber,
+                "emailAddress": details.emailAddress,
+                "lastName": details.lastName,
+                "firstName": details.firstName,
+                "referenceId": details.referenceId
+            }).then((res) => {
+                setClose("modal")
+                setInfo(res.data[0])
+                console.log(res.data[0]);
+                if (res.data[0] != "Address got updated") {
+                    setInfo(res.data[0].errorMessage);
+                }
+                setShowToast(true);
+                timeoutAddress();
+                fetchAddress();
+                clearDetails();
+            })
+        }
+    }
+
+    const deleteAddress = (e) => {
+        axios.delete("http://localhost:8083/address/" + props.user + "/" + e).then(() => { fetchAddress() })
+    }
+
+    const validateAddress = (e) => {
+        e.preventDefault();
+        if (details.firstName == "") {
+            errors.firstName = "First name required"
+        } else {
+            errors.firstName = ""
+        }
+        if (details.phoneNumber == "") {
+            errors.phoneNumber = "Phone Number required"
+        } else {
+            errors.phoneNumber = ""
+        }
+        if (details.pincode == "") {
+            errors.pincode = "Zip code required"
+        } else {
+            errors.pincode = ""
+        }
+        if (details.address == "") {
+            errors.address = "Address required"
+        } else {
+            errors.address = ""
+        }
+        if (details.paymentOption == "") {
+            errors.paymentOption = "Select any one payment type"
+        } else {
+            errors.paymentOption = ""
+        }
+        setErrors(errors);
+    }
+
     const timeout = () => {
         setTimeout(() => {
             setShowToast(false); viewchangename(); viewchangenumber(); currentuser()
         }, 6500);
     }
 
+    const timeoutAddress = () => {
+        setTimeout(() => {
+            setShowToast(false);
+        }, 6500);
+    }
     const set = (e) => {
         const { name, value } = e.target;
         setValue({ ...values, [name]: value });
         setFormErrors(validate(values));
+    }
+
+    const setDetailsValues = (e) => {
+        const { name, value } = e.target;
+        setDetails({ ...details, [name]: value })
+        validateAddress(e)
+    }
+
+    const addDetailsToEdit = (a) => {
+        setDetails({
+            firstName: a.firstName,
+            lastName: a.lastName,
+            emailAddress: a.emailAddress,
+            phoneNumber: a.phoneNumber,
+            pincode: a.pincode,
+            address: a.deliveryAddress,
+            referenceId: a.referenceId
+        })
+    }
+
+    const clearDetails = () => {
+        setDetails({ firstName: "", lastName: "", emailAddress: "", phoneNumber: "", pincode: "", address: "", referenceId: "" });
     }
 
     window.onload = document.title = user.userName + " | Shopping Mart"
@@ -71,7 +204,7 @@ export default function Settings(props) {
     const changenumber = () => {
         document.getElementById("updatenumber").innerHTML = "<a class='nameupdate btn btn-warning'>Update</a>"
     }
-    
+
     const viewchangename = () => {
         document.getElementById("name").classList.toggle("d-block")
         document.getElementById("changename").classList.toggle("bg-dark")
@@ -116,6 +249,8 @@ export default function Settings(props) {
 
     useEffect(() => {
         currentuser();
+        fetchAddress();
+        { sessionStorage.getItem("dark") ? setClassname("modal-content bg-dark text-light") : setClassname("modal-content") }
 
         sessionStorage.getItem("dark") ?
             document.querySelector(".listss").classList.add("text-light") : document.querySelector(".listss").classList.add("text-dark")
@@ -127,7 +262,6 @@ export default function Settings(props) {
 
     }, [])
     if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
-
         return (
             <div className='container-fluid justify-content-center'>
                 < header className='cart-head' >
@@ -240,14 +374,13 @@ export default function Settings(props) {
                                                             axios.put("http://localhost:8083/user/", {
                                                                 "userName": values.userName,
                                                                 "userEmail": user.userEmail,
-                                                                "userId": user.userId,
-                                                                "userPassword": user.userPassword,
                                                                 "mobileNumber": user.mobileNumber
                                                             }).then(res => { setInfo(res.data); })
                                                             return (
                                                                 timeout(),
                                                                 setShowToast(true),
-                                                                setIsSubmit(false)
+                                                                setIsSubmit(false),
+                                                                values.userName = ""
                                                             )
                                                         }
                                                     }}></span>
@@ -266,14 +399,13 @@ export default function Settings(props) {
                                                             axios.put("http://localhost:8083/user/", {
                                                                 "userName": user.userName,
                                                                 "userEmail": user.userEmail,
-                                                                "userId": user.userId,
-                                                                "userPassword": user.userPassword,
                                                                 "mobileNumber": values.mobileNumber
                                                             }).then(res => { setInfo(res.data); })
                                                             return (
                                                                 timeout(),
                                                                 setShowToast(true),
-                                                                setIsSubmit(false)
+                                                                setIsSubmit(false),
+                                                                values.mobileNumber = ""
                                                             )
                                                         }
                                                     }}></span>
@@ -294,12 +426,50 @@ export default function Settings(props) {
                                 </div>
                             </section>
                         </div>
-                        <div className='container data text-light w-75 py-2' >
+                        <div className='container data text-light w-75 py-2 my-3' >
                             <div className="form-switch text-center"  >
                                 <label className="form-check-label" htmlFor="flexSwitchCheckChecked">Dark Mode :</label>
                                 <input className="form-check-input mx-3" type="checkbox" role="switch" onClick={() => { return (check()) }} id="flexSwitchCheckChecked" />
                                 <div className='rounds ' id='round'> </div>
                                 <div className='rounds ' id='round1'> </div>
+                            </div>
+                        </div>
+
+                        <div className='container-md data text-light p-3'>
+                            <h6>Saved Address : </h6><hr></hr>
+                            <div className='address'>
+                                {address.length == 0 ?
+                                    <h6 className='text-center'>No address has been saved</h6>
+                                    :
+                                    address.map((a) => {
+                                        return (
+                                            <div className='container border fst-normal lh-lg m-2' style={{ backgroundColor: "#6A1B9A" }} key={a.deliveryAddress}>
+                                                <span className='editOptionAddress'><i className="bi bi-pencil" data-bs-toggle="modal" data-bs-target="#popupforeditaddress" onClick={() => { addDetailsToEdit(a) }}></i><span className='tooltipAddress'>Edit address</span></span>
+                                                <div className='container p-2 py-3'>
+                                                    <div className='row'>
+                                                        <div className='col-md'>
+                                                            First Name : {a.firstName}<br></br>
+                                                            Last Name : {a.lastName}<br></br>
+                                                            Address : {a.deliveryAddress}<br></br>
+                                                        </div>
+                                                        <div className='col-md'>
+                                                            Pincode : {a.pincode}<br></br>
+                                                            Mobile Number : {a.phoneNumber}<br></br>
+                                                            Email address : {a.emailAddress}<br></br>
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-center deleteButtonofAddress">
+                                                        <span className='my-1 btn btn-sm btn-danger buttonAddress' onClick={() => deleteAddress(a.deliveryAddress)}>  Remove address  </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
+                                <div className='text-center justify-content-center'>
+                                    <button type="button" className="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#popupforaddress">
+                                        Add new address +
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -327,7 +497,181 @@ export default function Settings(props) {
                         </div>
                     </div>
                 </div>
-                <ChatBot/>
+
+                {/* PopUp for address saving */}
+                <div className="modal fade" id="popupforaddress" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable ">
+                        <div className={classname}>
+                            <div className="modal-header">
+                                <h1 className="modal-title fs-5" id="popupforaddressLabel">Fill Address</h1>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                                <section className="card-color p-3">
+                                    <div className="row text-black" >
+                                        <div className='row'>
+                                            <div className="col-md g-4">
+                                                <div className="form-floating">
+                                                    <input className="form-control" name="firstName" placeholder="First name here" type={"text"} id="floatingInput" required
+                                                        onChange={setDetailsValues}
+                                                        value={details.firstName}
+                                                    ></input>
+                                                    <label htmlFor="floatingTextarea">First Name</label>
+                                                    <span className="text-danger">{errors.firstName}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='row'>
+                                            <div className="col-md g-4">
+                                                <div className="form-floating">
+                                                    <input className="form-control" name="lastName" placeholder="Last name here"
+                                                        value={details.lastName}
+                                                        onChange={setDetailsValues} type={"text"} id="floatingInput"></input>
+                                                    <label htmlFor="floatingTextarea">Last Name (Optional)</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='row'>
+                                            <div className="col-md g-4">
+                                                <div className="form-floating">
+                                                    <input className="form-control" name="emailAddress"
+                                                        value={details.emailAddress}
+                                                        onChange={setDetailsValues} placeholder="Email address here" type={"email"} id="floatingInput"></input>
+                                                    <label htmlFor="floatingTextarea">Email address (Optional)</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='row'>
+                                            <div className="col-md g-4">
+                                                <div className="form-floating">
+                                                    <input className="form-control" name="phoneNumber"
+                                                        value={details.phoneNumber}
+                                                        onChange={setDetailsValues} placeholder="Phone number here" type={"text"} id="floatingInput"></input>
+                                                    <label htmlFor="floatingTextarea">Phone number</label>
+                                                    <span className="text-danger">{errors.phoneNumber}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='row'>
+                                            <div className="col-md g-4">
+                                                <div className="form-floating">
+                                                    <textarea className="form-control" name="address"
+                                                        value={details.address}
+                                                        onChange={setDetailsValues} placeholder="Address here" id="floatingTextarea"></textarea>
+                                                    <label htmlFor="floatingTextarea">Address </label>
+                                                    <span className="text-danger">{errors.address}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='row'>
+                                            <div className="col-md g-4">
+                                                <div className="form-floating">
+                                                    <input className="form-control" name="pincode"
+                                                        value={details.pincode}
+                                                        onChange={setDetailsValues} placeholder="Pincode here" id="floatingInput"></input>
+                                                    <label htmlFor="floatingTextarea">Pincode </label>
+                                                    <span className="text-danger">{errors.pincode}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-sm btn-secondary" data-bs-dismiss="modal" onClick={() => { return (clearDetails()) }}>Close</button>
+                                <button type="button" className="btn  btn-sm btn-primary" data-bs-dismiss={close} onClick={(e) => { return (addAddress(e)) }}>Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Popup for edit address */}
+                <div className="modal fade" id="popupforeditaddress" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable ">
+                        <div className={classname}>
+                            <div className="modal-header">
+                                <h1 className="modal-title fs-5" id="popupforaddressLabel">Fill Address</h1>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div className="modal-body">
+                                <section className="card-color p-3">
+                                    <div className="row text-black" >
+                                        <div className='row'>
+                                            <div className="col-md g-4">
+                                                <div className="form-floating">
+                                                    <input className="form-control" name="firstName" placeholder="First name here" type={"text"} id="floatingInput" required
+                                                        onChange={setDetailsValues}
+                                                        value={details.firstName}
+                                                    ></input>
+                                                    <label htmlFor="floatingTextarea">First Name</label>
+                                                    <span className="text-danger">{errors.firstName}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='row'>
+                                            <div className="col-md g-4">
+                                                <div className="form-floating">
+                                                    <input className="form-control" name="lastName" placeholder="Last name here"
+                                                        value={details.lastName}
+                                                        onChange={setDetailsValues} type={"text"} id="floatingInput"></input>
+                                                    <label htmlFor="floatingTextarea">Last Name (Optional)</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='row'>
+                                            <div className="col-md g-4">
+                                                <div className="form-floating">
+                                                    <input className="form-control" name="emailAddress"
+                                                        value={details.emailAddress}
+                                                        onChange={setDetailsValues} placeholder="Email address here" type={"email"} id="floatingInput"></input>
+                                                    <label htmlFor="floatingTextarea">Email address (Optional)</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='row'>
+                                            <div className="col-md g-4">
+                                                <div className="form-floating">
+                                                    <input className="form-control" name="phoneNumber"
+                                                        value={details.phoneNumber}
+                                                        onChange={setDetailsValues} placeholder="Phone number here" type={"text"} id="floatingInput"></input>
+                                                    <label htmlFor="floatingTextarea">Phone number</label>
+                                                    <span className="text-danger">{errors.phoneNumber}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='row'>
+                                            <div className="col-md g-4">
+                                                <div className="form-floating">
+                                                    <textarea className="form-control" name="address"
+                                                        value={details.address}
+                                                        onChange={setDetailsValues} placeholder="Address here" id="floatingTextarea"></textarea>
+                                                    <label htmlFor="floatingTextarea">Address </label>
+                                                    <span className="text-danger">{errors.address}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className='row'>
+                                            <div className="col-md g-4">
+                                                <div className="form-floating">
+                                                    <input className="form-control" name="pincode"
+                                                        value={details.pincode}
+                                                        onChange={setDetailsValues} placeholder="Pincode here" id="floatingInput"></input>
+                                                    <label htmlFor="floatingTextarea">Pincode </label>
+                                                    <span className="text-danger">{errors.pincode}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-sm btn-secondary" data-bs-dismiss="modal" onClick={() => { clearDetails() }}>Close</button>
+                                <button type="button" className="btn  btn-sm btn-primary" data-bs-dismiss={close} onClick={(e) => { return (updateAddress(e)) }}>Update</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ChatBot />
                 <Footer />
                 {showToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">
                     <div className="d-flex">

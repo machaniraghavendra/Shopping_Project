@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 						+ userEntity.getUserName() + " go to login and enjoy shopping with us !");
 			} else {
 				userRepo.save(userEntity);
-				return "You are signed-up with email " + userEntity.getUserName();
+				return "You are signed-up with name " + userEntity.getUserName();
 			}
 		} catch (UserAlreadyExistsException e) {
 			e.printStackTrace();

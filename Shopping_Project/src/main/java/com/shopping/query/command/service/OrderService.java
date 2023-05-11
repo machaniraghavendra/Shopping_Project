@@ -9,9 +9,12 @@ import com.shopping.query.command.entites.dto.OrdersDto;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.OrderNotFoundException;
 import com.shopping.query.command.exceptions.OrderWithSameItemExistsException;
+import com.shopping.query.command.exceptions.UserNotFoundException;
 
 public interface OrderService {
 
+	boolean saveOrderByCheckingAddress(OrdersEntity ordersEntity) throws UserNotFoundException;
+	
 	String saveOrderDetails(OrdersEntity ordersEntity)
 			throws OrderNotFoundException, ItemNotFoundException, OrderWithSameItemExistsException;
 

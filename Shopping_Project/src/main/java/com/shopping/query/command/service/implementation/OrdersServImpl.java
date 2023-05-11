@@ -8,20 +8,25 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.shopping.query.command.entites.AddressEntity;
 import com.shopping.query.command.entites.OrdersEntity;
+import com.shopping.query.command.entites.dto.AddressDto;
 import com.shopping.query.command.entites.dto.OrdersDto;
 import com.shopping.query.command.exceptions.GlobalExceptionHandler;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.OrderNotFoundException;
 import com.shopping.query.command.exceptions.OrderWithSameItemExistsException;
+import com.shopping.query.command.exceptions.UserNotFoundException;
 import com.shopping.query.command.mapper.MappersClass;
 import com.shopping.query.command.repos.OrderRepo;
+import com.shopping.query.command.service.AddressService;
 import com.shopping.query.command.service.OrderService;
 
 @Service
@@ -40,7 +45,21 @@ public class OrdersServImpl implements OrderService {
 	@Autowired
 	private MappersClass mapper;
 
+	@Autowired
+	private AddressService addressService;
+
 	private List<Object> order = new ArrayList<>();
+
+	@Override
+	public boolean saveOrderByCheckingAddress(OrdersEntity ordersEntity) throws UserNotFoundException {
+		AddressDto addressDto = mapper.mapAddressDtoWithOrdersEntity(ordersEntity);
+		Optional<AddressEntity> entity = addressService.getAddressWithUserIdandAddress(
+				addressDto.getUserDetails().getUserEmail(), addressDto.getDeliveryAddress());
+		if (!entity.isEmpty()) {
+			return Boolean.TRUE;
+		}
+		return Boolean.FALSE;
+	}
 
 	@Override
 	public String saveOrderDetails(OrdersEntity ordersEntity)

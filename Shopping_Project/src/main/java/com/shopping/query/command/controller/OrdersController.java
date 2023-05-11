@@ -21,8 +21,8 @@ import com.shopping.query.command.entites.dto.OrdersDto;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.OrderNotFoundException;
 import com.shopping.query.command.exceptions.OrderWithSameItemExistsException;
+import com.shopping.query.command.exceptions.UserNotFoundException;
 import com.shopping.query.command.service.OrderService;
-import com.shopping.query.command.service.implementation.OrdersServImpl;
 
 import io.swagger.annotations.Api;
 
@@ -34,49 +34,54 @@ public class OrdersController {
 
 	@Autowired
 	private OrderService ordersServImpl;
-	
+
 	@PostMapping("/")
-	public ResponseEntity<String> saveOrder(@RequestBody OrdersEntity ordersEntity) throws OrderNotFoundException, ItemNotFoundException, OrderWithSameItemExistsException{
+	public ResponseEntity<String> saveOrder(@RequestBody OrdersEntity ordersEntity)
+			throws OrderNotFoundException, ItemNotFoundException, OrderWithSameItemExistsException {
 		return ResponseEntity.ok(ordersServImpl.saveOrderDetails(ordersEntity));
 	}
-	
+
+	@PostMapping("/check/")
+	public ResponseEntity<Boolean> saveOrderByCheckingAddress(@RequestBody OrdersEntity ordersEntity)
+			throws UserNotFoundException {
+		return ResponseEntity.ok(ordersServImpl.saveOrderByCheckingAddress(ordersEntity));
+	}
+
 	@PutMapping("updateOrder/{id}/{status}")
-	public ResponseEntity<List<Object>> updateOrder(@PathVariable("id") UUID id, @PathVariable("status") String status) throws OrderNotFoundException{
+	public ResponseEntity<List<Object>> updateOrder(@PathVariable("id") UUID id, @PathVariable("status") String status)
+			throws OrderNotFoundException {
 		return ResponseEntity.ok(ordersServImpl.updateOrder(id, status));
 	}
-	
+
 	@GetMapping("/all")
-	public ResponseEntity<List<OrdersEntity>> getAll(){
+	public ResponseEntity<List<OrdersEntity>> getAll() {
 		return ResponseEntity.ok(ordersServImpl.getAllOrders());
 	}
-	
-//	@GetMapping("/{id}")
-//	public ResponseEntity<OrdersEntity> findByDeliveryDetailId(@PathVariable("id") Integer id){
-//		return ResponseEntity.ok(ordersServImpl.findByDeliveryDetailId(id));
-//	}
-	
+
 	@GetMapping("/orderWithUser")
-	public ResponseEntity<List<OrdersDto>> getOrdersofUser(@RequestParam("userId") String userId) throws ItemNotFoundException{
+	public ResponseEntity<List<OrdersDto>> getOrdersofUser(@RequestParam("userId") String userId)
+			throws ItemNotFoundException {
 		return ResponseEntity.ok(ordersServImpl.getOrdersofUser(userId));
 	}
-	
+
 	@GetMapping("/{id}")
-	public ResponseEntity<OrdersDto> findItemDetailsWithId(@PathVariable("id") Integer id) throws ItemNotFoundException{
+	public ResponseEntity<OrdersDto> findItemDetailsWithId(@PathVariable("id") Integer id)
+			throws ItemNotFoundException {
 		return ResponseEntity.ok(ordersServImpl.findItemDetailsWithId(id));
 	}
-	
+
 	@GetMapping("/saveorder/{id}")
-	public ResponseEntity<List<Object>> saveOrderToView(@PathVariable("id") UUID id) throws ItemNotFoundException{
+	public ResponseEntity<List<Object>> saveOrderToView(@PathVariable("id") UUID id) throws ItemNotFoundException {
 		return ResponseEntity.ok(ordersServImpl.saveOrderToView(id));
 	}
-	
+
 	@GetMapping("/")
-	public ResponseEntity<List<Object>> getSavedOrder(){
+	public ResponseEntity<List<Object>> getSavedOrder() {
 		return ResponseEntity.ok(ordersServImpl.getSavedOrder());
 	}
-	
+
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteDetailsWithId(@PathVariable("id") Integer id){
+	public ResponseEntity<String> deleteDetailsWithId(@PathVariable("id") Integer id) {
 		return ResponseEntity.ok(ordersServImpl.deleteDetailsWithId(id));
 	}
 }

@@ -76,7 +76,9 @@
 
     to {
         visibility: visible;
-        position: fixed;left: 50%;top: -50%;
+        position: fixed;
+        left: 50%;
+        top: -50%;
         clip-path: circle(50%);
         transform: scale3d(5, 5, 5);
     }
@@ -92,4 +94,28 @@
     z-index: 10;
     animation: dark 1 ease-out 1.2s alternate;
     transition: all 2s;
+}
+
+.editOptionAddress {
+    position: relative;
+    float: right;
+    padding: 2% 0% 0% 2%;
+    cursor: pointer;
+}
+
+.editOptionAddress .tooltipAddress{
+    position: absolute;
+    display: none;
+    background-color: black;
+    color: aliceblue;
+    padding: 3%;
+    padding-left: 20%;
+    padding-right: 20%;
+    margin: 2%;
+}
+
+.editOptionAddress:hover{
+    .tooltipAddress{
+        display: flex;
+    }
 }

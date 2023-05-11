@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shopping.query.command.entites.OrdersEntity;
+import com.shopping.query.command.entites.AddressEntity;
 import com.shopping.query.command.entites.ItemEntity;
 import com.shopping.query.command.entites.dto.OrdersDto;
+import com.shopping.query.command.entites.dto.AddressDto;
 import com.shopping.query.command.entites.dto.ItemsDto;
 import com.shopping.query.command.entites.dto.UserDetailDto;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
@@ -36,9 +38,9 @@ public class MappersClass {
 		if (Objects.isNull(itemEntity))
 			return new ItemsDto();
 		return ItemsDto.builder().itemName(itemEntity.getItemName()).ItemDesc(itemEntity.getItemDesc())
-				.ItemDimensions(itemEntity.getItemDimensions())
-				.ItemImgUrl(itemEntity.getItemImgUrl()).ItemPrice(itemEntity.getItemPrice()).itemId(itemEntity.getItemId())
-				.ItemSpec(itemEntity.getItemSpec()).ItemType(itemEntity.getItemType()).build();
+				.ItemDimensions(itemEntity.getItemDimensions()).ItemImgUrl(itemEntity.getItemImgUrl())
+				.ItemPrice(itemEntity.getItemPrice()).itemId(itemEntity.getItemId()).ItemSpec(itemEntity.getItemSpec())
+				.ItemType(itemEntity.getItemType()).build();
 	}
 
 	public OrdersDto deliveryDetailsMapper(OrdersEntity ordersEntity) throws ItemNotFoundException {
@@ -53,5 +55,21 @@ public class MappersClass {
 				.orderStatus(ordersEntity.getOrderStatus()).paymentType(ordersEntity.getPaymentType())
 				.phoneNumber(ordersEntity.getPhoneNumber()).pincode(ordersEntity.getPincode())
 				.orderUUIDId(ordersEntity.getOrderUUIDId()).build();
+	}
+
+	public AddressDto addressDtoMapper(AddressEntity addressEntity) throws UserNotFoundException {
+		return AddressDto.builder().deliveryAddress(addressEntity.getDeliveryAddress())
+				.pincode(addressEntity.getPincode()).userDetails(userDetailDtoMapper(addressEntity.getUserId()))
+				.emailAddress(addressEntity.getEmailAddress()).firstName(addressEntity.getFirstName())
+				.lastName(addressEntity.getLastName()).phoneNumber(addressEntity.getPhoneNumber()).referenceId(addressEntity.getReferenceId()).build();
+	}
+	
+	public AddressDto mapAddressDtoWithOrdersEntity(OrdersEntity ordersEntity) throws UserNotFoundException {
+		if (Objects.isNull(ordersEntity)) {
+			return null;
+		}
+		return AddressDto.builder().deliveryAddress(ordersEntity.getDeliveryAddress()).emailAddress(ordersEntity.getEmailAddress())
+				.firstName(ordersEntity.getFirstName()).lastName(ordersEntity.getLastName()).phoneNumber(ordersEntity.getPhoneNumber())
+				.pincode(ordersEntity.getPincode()).userDetails(userDetailDtoMapper(ordersEntity.getUserId())).build();
 	}
 }

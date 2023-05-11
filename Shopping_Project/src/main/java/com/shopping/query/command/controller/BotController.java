@@ -16,7 +16,6 @@ import com.shopping.query.command.entites.BotEntity;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
 import com.shopping.query.command.service.BotService;
-import com.shopping.query.command.service.implementation.BotServiceImpl;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")

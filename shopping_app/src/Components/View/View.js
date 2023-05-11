@@ -158,7 +158,7 @@ export default function View(props) {
                                     <span>Total amount : <b>{item.itemPrice}</b>-&gt;</span>
                                     <Link to={"/purchase"}>
                                         <button className='btn btn-warning' onClick={() => {
-                                            axios.get("http://localhost:8083/purchase/" + item.itemId);
+                                            axios.post("http://localhost:8083/purchase/" + item.itemId + "?userId=" + props.user);
                                         }}>Buy now</button>
                                     </Link>
                                 </div>
@@ -180,7 +180,7 @@ export default function View(props) {
                         )
                     }).map((a) => {
                         return (
-                            <div className="col" key={a.itemId} style={{cursor:"grab",overflowX:"scroll",overflowX:"visible"}}>
+                            <div className="col" key={a.itemId} style={{ cursor: "grab", overflowX: "scroll", overflowX: "visible" }}>
                                 <div className="card view-more-card">
                                     <div className='card-head text-end'>
                                         <button className='btn  m-2' onClick={() => {
