@@ -204,7 +204,7 @@ export default function MainPage() {
                                                 <img src={e.itemImgUrl} className="card-img-top" alt="..." />
                                                 <div className="card-body">
                                                     <h6 className="card-title text-truncate" id={e.itemName}>{e.itemName}</h6>
-                                                    <p className="card-text">{e.itemPrice}</p>
+                                                    <p className="card-text"> ₹{e.itemPrice}</p>
                                                 </div>
                                                 <a href={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info'>View More...</a>
                                             </div>

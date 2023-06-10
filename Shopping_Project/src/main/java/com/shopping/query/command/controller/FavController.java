@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,19 +36,19 @@ public class FavController {
 	@PostMapping("/")
 	public ResponseEntity<String> save(@RequestBody FavouritesEntity favEntity)
 			throws ItemAlreadyInFavException, ItemNotFoundException {
-		return new ResponseEntity<String>(favServiceImpl.save(favEntity), HttpStatus.OK);
+		return ResponseEntity.ok(favServiceImpl.save(favEntity));
 	}
 
 	@PutMapping("/")
 	public ResponseEntity<String> update(@RequestBody FavouritesEntity favEntity)
 			throws ItemNotFoundInFavException, ItemNotFoundException {
-		return new ResponseEntity<String>(favServiceImpl.update(favEntity), HttpStatus.OK);
+		return  ResponseEntity.ok(favServiceImpl.update(favEntity));
 	}
 
 	@DeleteMapping("/{itemName}")
 	public ResponseEntity<String> delete(@PathVariable("itemName") String itemName, @RequestParam String userEmail)
 			throws ItemNotFoundInFavException, ItemNotFoundException {
-		return new ResponseEntity<String>(favServiceImpl.delete(itemName, userEmail), HttpStatus.OK);
+		return  ResponseEntity.ok(favServiceImpl.delete(itemName, userEmail));
 	}
 
 	@GetMapping("/{id}")
@@ -72,7 +71,7 @@ public class FavController {
 
 	@GetMapping("/")
 	public ResponseEntity<List<FavouritesEntity>> viewall() {
-		return new ResponseEntity<List<FavouritesEntity>>(favServiceImpl.viewall(), HttpStatus.OK);
+		return  ResponseEntity.ok(favServiceImpl.viewall());
 	}
 
 }

@@ -4,6 +4,7 @@ import axios from "axios"
 import { Link, useNavigate } from "react-router-dom";
 import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import ChatBot from '../ChatBot/ChatBot';
+import loadingImg from "/Shopping_Project/shopping_app/src/Loading_Card.png";
 
 export default function Buypage(props) {
 
@@ -25,8 +26,12 @@ export default function Buypage(props) {
 
     const [address, setAddress] = useState([]);
 
+    const [fetchDone, setfetchDone] = useState(false);
+
     const getItem = () => {
-        axios.get("http://localhost:8083/purchase/?userId=" + props.user).then(a => setItem(a.data));
+        axios.get("http://localhost:8083/purchase/?userId=" + props.user).then(a => {
+            return (setItem(a.data))
+        });
     }
 
     const setDetailsValues = (e) => {
@@ -176,7 +181,7 @@ export default function Buypage(props) {
             : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
         document.title = "Purchase | Shopping Mart"
         let card = document.getElementsByClassName("card-color");
-        if (sessionStorage.getItem("dark") == "yes") {
+        if (sessionStorage.getItem("dark") == "true") {
             for (const cards of card) {
                 cards.classList.add("bg-dark")
                 cards.classList.add("text-light")
@@ -191,7 +196,13 @@ export default function Buypage(props) {
                 cards.classList.remove("text-light")
             }
         }
-        axios.get("http://localhost:8083/user/" + props.user).then(a => { return (setUser(a.data)) })
+        axios.get("http://localhost:8083/user/" + props.user).then(a => {
+            if (a.status == "200") {
+                getItem();
+                setfetchDone(true);
+            }
+            return (setUser(a.data))
+        });
         getItem();
         fetchAddress();
     }, [])
@@ -217,7 +228,7 @@ export default function Buypage(props) {
                                     <br></br>
                                     <div className="btn-group">
                                         <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                            <i className="fa-solid fa-user"></i>&nbsp; {user.userName}
+                                            {fetchDone ? <span><i className="fa-solid fa-user"></i>&nbsp;{user.userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
                                         </button>
                                         <ul className="dropdown-menu bg-secondary-warning dropdown-menu-lg-end user">
                                             <li><Link className="dropdown-item" to={"/profile/settings"}><i className='fa-solid fa-gear'></i> Settings</Link></li>
@@ -237,41 +248,78 @@ export default function Buypage(props) {
                 </header>
 
                 <br></br>
-
-                <div className="container-lg d-flex justify-content-center ">
-                    <div className="card  card-color">
-                        {item.map(itemData => {
-                            { itemId = itemData.itemId }
-                            return (
-                                <div key={itemData.itemId}>
-                                    <div className="card-header">
-                                        <h4>{itemData.itemName}</h4>
-                                    </div>
-                                    <div className="card-body">
-                                        <div className="row">
-                                            <div className="col-md-6">
-                                                <p>Specifications : {itemData.itemSpec  == null ? "Not mentioned" : itemData.itemSpec}</p>
-                                                <p>Dimensions : {itemData.itemDimensions == null ? "Not mentioned" : itemData.itemDimensions}</p>
-                                                <p>Description : {itemData.itemDesc  == null ? "Not mentioned" : itemData.itemDesc}</p>
-                                                <p>Product type : {itemData.itemType  == null ? "Not mentioned" : itemData.itemType}</p>
-                                            </div>
-                                            <div className="col-md-6 d-md-block d-none">
-                                                <div className="col-md-4 float-md-end h-auto w-25">
-                                                    <img src={itemData.itemImgUrl} className="rounded float-end w-100 h-100" alt={itemData.itemName} />
+                {fetchDone ?
+                    <div className="container-lg d-flex justify-content-center ">
+                        <div className="card  card-color">
+                            {item.map(itemData => {
+                                { itemId = itemData.itemId }
+                                return (
+                                    <div key={itemData.itemId}>
+                                        <div className="card-header">
+                                            <h4>{itemData.itemName}</h4>
+                                        </div>
+                                        <div className="card-body">
+                                            <div className="row">
+                                                <div className="col-md-6">
+                                                    <p>Specifications : {itemData.itemSpec == null ? "Not mentioned" : itemData.itemSpec}</p>
+                                                    <p>Dimensions : {itemData.itemDimensions == null ? "Not mentioned" : itemData.itemDimensions}</p>
+                                                    <p>Description : {itemData.itemDesc == null ? "Not mentioned" : itemData.itemDesc}</p>
+                                                    <p>Product type : {itemData.itemType == null ? "Not mentioned" : itemData.itemType}</p>
+                                                </div>
+                                                <div className="col-md-6 d-md-block d-none">
+                                                    <div className="col-md-4 float-md-end h-auto w-25">
+                                                        <img src={itemData.itemImgUrl} className="rounded float-end w-100 h-100" alt={itemData.itemName} />
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="text-center row my-4">
-                                            <Link to={'/view/' + itemData.itemId + "/" + itemData.itemName} className="btn btn-warning col-sm-4 ">View More</Link>
-                                            <span className="col-sm-4 my-2"></span>
-                                            <h6 className="text-bg-info p-2 m-auto col-sm-4 ">Total amount : {itemData.itemPrice}</h6>
+                                            <div className="text-center row my-4">
+                                                <Link to={'/view/' + itemData.itemId + "/" + itemData.itemName} className="btn btn-warning col-sm-4 ">View More</Link>
+                                                <span className="col-sm-4 my-2"></span>
+                                                <h6 className="text-bg-info p-2 m-auto col-sm-4 ">Total amount :  ₹{itemData.itemPrice}</h6>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )
-                        })}
+                                )
+                            })}
+                        </div>
                     </div>
-                </div>
+                    :
+                    <div className="container-lg d-flex justify-content-center ">
+                        <div className="card  card-color w-100">
+                            <div className="card-header">
+                                <h4>
+                                    <p className="card-text placeholder-glow">
+                                        <span className="placeholder col-7"></span>
+                                    </p>
+                                </h4>
+                            </div>
+                            <div className="card-body">
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <p className="card-text placeholder-glow">
+                                            <span className="placeholder col-7"></span>
+                                            <span className="placeholder col-4"></span>
+                                            <span className="placeholder col-4"></span>
+                                            <span className="placeholder col-6"></span>
+                                            <span className="placeholder col-8"></span>
+                                        </p>
+                                    </div>
+                                    <div className="col-md-6 d-md-block d-none">
+                                        <div className="col-md-4 float-md-end h-auto w-25">
+                                            <img src={loadingImg} className="card-img-top" alt="Loading..." />
+                                        </div>
+                                    </div>
+                                    <div className="text-center row my-4">
+                                        <a className="btn btn-warning col-sm-4 disabled placeholder col-6"></a>
+                                        <span className="col-sm-4 my-2"></span>
+                                        <a className="text-bg-info p-2 m-auto col-sm-4 "></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
 
                 {/* Form for details */}
                 <div className="container-fluid my-1">
@@ -280,19 +328,21 @@ export default function Buypage(props) {
                             <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Select from your saved address
                             </button>
-                            <ul className="dropdown-menu bg-secondary text-light container-fluid" style={{ width: "auto" }}>
+                            <ul className="dropdown-menu bg-dark text-light container-fluid" style={{ width: "auto" }}>
                                 {
                                     address.length == 0 ? <p className="px-5"> No address in your list </p> :
                                         address.map(a => {
                                             return (
                                                 <li className="dropdown-item" key={a.deliveryAddress} style={{ cursor: "pointer" }}>
                                                     <div className='container-fluid border m-2 bg-info '>
-                                                        <div className='container-fluid p-2 py-3' onClick={() => { selectedAddressStore(a) }}>
-                                                            Name : {a.firstName + " " + a.lastName},
-                                                            Address : {a.deliveryAddress},
-                                                            Email address : {a.emailAddress},
-                                                            Mobile Number : {a.phoneNumber},
-                                                            Pincode : {a.pincode}
+                                                        <div className='container-fluid p-2 py-3 ' onClick={() => { selectedAddressStore(a) }}>
+                                                            <span className="text-truncate">
+                                                                Name : {a.firstName + " " + a.lastName},
+                                                                Address : {a.deliveryAddress},
+                                                                Email address : {a.emailAddress},
+                                                                Mobile Number : {a.phoneNumber},
+                                                                Pincode : {a.pincode}
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 </li>

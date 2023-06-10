@@ -1,6 +1,8 @@
 package com.shopping.query.command.service.implementation;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -38,6 +40,7 @@ public class AddressServiceImpl implements AddressService {
 	public List<Object> saveAddress(AddressEntity addressEntity) {
 		result = new ArrayList<>();
 		addressEntity.setReferenceId(UUID.randomUUID());
+		addressEntity.setAddedOn(LocalDate.now());
 		if (!viewAllAddress().isEmpty()) {
 			AddressDto entity = findAddressWithUserId(addressEntity.getUserId(), addressEntity.getDeliveryAddress());
 			try {
@@ -141,6 +144,7 @@ public class AddressServiceImpl implements AddressService {
 	@Override
 	public List<AddressDto> viewAllAddressWithUserId(String userId) {
 		List<AddressEntity> list = viewAllAddress().stream().filter(a -> a.getUserId().equals(userId))
+				.sorted(Comparator.comparing(AddressEntity::getAddedOn,Comparator.reverseOrder()))
 				.collect(Collectors.toList());
 		List<AddressDto> returnList = new ArrayList<>();
 		list.forEach(a -> {

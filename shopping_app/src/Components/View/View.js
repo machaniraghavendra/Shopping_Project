@@ -5,6 +5,7 @@ import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import Footer from '../Footer/Footer';
 import { Link } from 'react-router-dom';
 import ChatBot from '../ChatBot/ChatBot';
+import loadingImg from "/Shopping_Project/shopping_app/src/Loading_Card.png";
 
 export default function View(props) {
 
@@ -20,6 +21,10 @@ export default function View(props) {
 
     const [showToast, setShowToast] = useState(false);
 
+    const [fetchItemDone, setfetchItemDone] = useState(false);
+
+    const [fetchUserDone, setfetchUserDone] = useState(false);
+
     const timeout = () => {
         setTimeout(() => {
             setShowToast(false);
@@ -32,7 +37,12 @@ export default function View(props) {
 
     const getItem = () => {
         axios.get("http://localhost:8083/items/" + num)
-            .then((res) => { setviewItem(res.data) })
+            .then((res) => {
+                if (res.status == "200") {
+                    setfetchItemDone(true)
+                }
+                setviewItem(res.data)
+            })
         similar();
     }
 
@@ -68,7 +78,12 @@ export default function View(props) {
         check();
         sessionStorage.getItem("dark") ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
             : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
-        axios.get("http://localhost:8083/user/" + props.user).then(a => setUserName(a.data.userName));
+        axios.get("http://localhost:8083/user/" + props.user).then(a => {
+            if (a.status == "200") {
+                setfetchUserDone(true)
+            }
+            setUserName(a.data.userName)
+        });
         getItem()
     }, []
     )
@@ -91,7 +106,7 @@ export default function View(props) {
                             <br></br>
                             <div className="btn-group ">
                                 <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                    <i className="fa-solid fa-user"></i>&nbsp; {userName}
+                                    {fetchUserDone ? <span><i className="fa-solid fa-user"></i>&nbsp;{userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
                                 </button>
                                 <ul className="dropdown-menu bg-secondary-warning dropdown-menu-lg-end user">
                                     <li><Link className="dropdown-item" to={"/profile/settings"}><i className='fa-solid fa-gear'></i> Settings</Link></li>
@@ -110,122 +125,215 @@ export default function View(props) {
             </div>
 
             <div className="container bg-light  my-3 view" id="view" data-aos="zoom-in-up">
-                {viewItem.map(item => {
-                    return (
-                        <div className="row " key={item.itemId}>
-                            <div className="col-lg-4 text-center">
-                                <img src={item.itemImgUrl} alt={item.itemName} className="img-fluid mx-auto rounded view-img p-5" id='view-img' onMouseMove={(e) => { zoom(e) }} onMouseOut={() => { zoomout() }} />
-                                <div id='view-img-zoom' style={{ backgroundImage: "url(" + item.itemImgUrl + ")" }}></div>
-                            </div>
-                            <div className="col-lg-8 my-3" id='right-view'>
-                                <div className='text-end'>
-                                    <button className='btn  m-2' onClick={() => {
-                                        if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
-                                            axios.post("http://localhost:8083/cart/", {
-                                                "itemId": item.itemId,
-                                                "userId": localStorage.getItem("currentuser")
-                                            }, []).then((res) => { return (setInfo(res.data)) })
-                                        } else {
-                                            setInfo("Login required")
-                                        }
-                                    }}
-                                        data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo"
-                                    ><i className='fa-solid fa-cart-shopping text-info'></i></button>
-
-                                    <button className='btn ' onClick={() => {
-                                        if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
-                                            axios.post("http://localhost:8083/fav/", {
-                                                "itemId": item.itemId,
-                                                "userId": localStorage.getItem("currentuser")
-                                            }, []).then((res) => { return (setInfo(res.data)) })
-                                        } else {
-                                            setInfo("Login required")
-                                        }
-                                    }}
-                                        data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo"
-                                    ><i className="fa-solid fa-heart text-danger"></i> </button>
-                                </div>
-                                <h4 style={{ letterSpacing: "2px", textTransform: "capitalize" }}>{item.itemName}</h4>
-                                <div className='mx-3'>
-                                    <p>Price : <b>{item.itemPrice}</b></p>
-                                    <p>Specifications : {item.itemSpec}</p>
-                                    {!item.itemDimensions == "" ?
-                                        <p>Dimensions : {item.itemDimensions}</p> : ""}
-                                    <p>Type : {item.itemType}</p>
-                                    <p>Quality : {item.itemDesc}</p>
-                                </div>
-                                <div className='view-buy'>
-                                    <span>Total amount : <b>{item.itemPrice}</b>-&gt;</span>
-                                    <Link to={"/purchase"}>
-                                        <button className='btn btn-warning' onClick={() => {
-                                            axios.post("http://localhost:8083/purchase/" + item.itemId + "?userId=" + props.user);
-                                        }}>Buy now</button>
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
-                    )
-                })}
-            </div>
-
-            <div className='container'>
-                <h3 className='view p-2'>Similar Products </h3>
-                <div className="row row-card row-cols-2 row-cols-md-4 g-4 align-content-center justify-content-center my-3" >
-                    {items.filter(a => {
+                {fetchItemDone ?
+                    viewItem.map(item => {
                         return (
-                            a.itemType == viewItem.map(a => { return (a.itemType) }))
-                    }).filter(a => {
-                        return (
-                            a.itemId != viewItem.map(a => { return (a.itemId) })
-                        )
-                    }).map((a) => {
-                        return (
-                            <div className="col" key={a.itemId} style={{ cursor: "grab", overflowX: "scroll", overflowX: "visible" }}>
-                                <div className="card view-more-card">
-                                    <div className='card-head text-end'>
+                            <div className="row " key={item.itemId}>
+                                <div className="col-lg-4 text-center">
+                                    <img src={item.itemImgUrl} alt={item.itemName} className="img-fluid mx-auto rounded view-img p-5" id='view-img' onMouseMove={(e) => { zoom(e) }} onMouseOut={() => { zoomout() }} />
+                                    <div id='view-img-zoom' style={{ backgroundImage: "url(" + item.itemImgUrl + ")" }}></div>
+                                </div>
+                                <div className="col-lg-8 my-3" id='right-view'>
+                                    <div className='text-end'>
                                         <button className='btn  m-2' onClick={() => {
                                             if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
                                                 axios.post("http://localhost:8083/cart/", {
-                                                    "itemId": a.itemId,
+                                                    "itemId": item.itemId,
                                                     "userId": localStorage.getItem("currentuser")
                                                 }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
                                             } else {
                                                 setInfo("Login required")
                                             }
                                         }}
+                                            data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo"
                                         ><i className='fa-solid fa-cart-shopping text-info'></i></button>
+
                                         <button className='btn ' onClick={() => {
                                             if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
                                                 axios.post("http://localhost:8083/fav/", {
-                                                    "itemId": a.itemId,
+                                                    "itemId": item.itemId,
                                                     "userId": localStorage.getItem("currentuser")
                                                 }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
                                             } else {
-                                                setInfo("Login required !")
+                                                setInfo("Login required")
                                             }
                                         }}
                                         ><i className="fa-solid fa-heart text-danger"></i> </button>
                                     </div>
-                                    <img src={a.itemImgUrl} className="card-img-top " alt={a.itemName} />
-                                    <div className="card-body">
-                                        <h5 className="card-title text-truncate">{a.itemName}</h5>
-                                        <p className="card-text text-truncate">{a.itemPrice}</p>
-                                        <p><b>{a.itemSpec}</b></p>
-                                        <div className='text-center d-flex justify-content-center '>
-                                            <Link to={'/view/' + a.itemId + "/" + a.itemName} className='btn btn-info d-flex'
-                                                onClick={() => {
-                                                    return (
-                                                        window.onload(getItem())
-                                                    )
-                                                }}>View More...</Link>
-                                        </div>
+                                    <h4 style={{ letterSpacing: "2px", textTransform: "capitalize" }}>{item.itemName}</h4>
+                                    <div className='mx-3'>
+                                        <p>Price : <b> ₹{item.itemPrice}</b></p>
+                                        <p>Specifications : {item.itemSpec}</p>
+                                        {!item.itemDimensions == "" ?
+                                            <p>Dimensions : {item.itemDimensions}</p> : ""}
+                                        <p>Type : {item.itemType}</p>
+                                        <p>Quality : {item.itemDesc}</p>
+                                    </div>
+                                    <div className='view-buy'>
+                                        <span>Total amount : <b> ₹{item.itemPrice}</b>-&gt;</span>
+                                        <Link to={"/purchase"}>
+                                            <button className='btn btn-warning' onClick={() => {
+                                                axios.post("http://localhost:8083/purchase/" + item.itemId + "?userId=" + props.user);
+                                            }}>Buy now</button>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>
-
                         )
-                    })}
-                </div>
+                    })
+                    :
+                    <div className="row ">
+                        <div className="col-lg-4 text-center">
+                            <img src={loadingImg} alt="loading..." className="img-fluid mx-auto rounded view-img p-5" id='view-img' onMouseMove={(e) => { zoom(e) }} onMouseOut={() => { zoomout() }} />
+                            <div id='view-img-zoom' style={{ backgroundImage: "url(" + loadingImg + ")" }}></div>
+                        </div>
+                        <div className='col-lg-8 my-5'>
+                            <h5 className="card-title placeholder-glow">
+                                <span className="placeholder col-6"></span>
+                            </h5>
+                            <p className="card-text placeholder-glow">
+                                <span className="placeholder col-7"></span>
+                                <span className="placeholder col-4"></span>
+                                <span className="placeholder col-4"></span>
+                                <span className="placeholder col-6"></span>
+                                <span className="placeholder col-8"></span>
+                            </p>
+                            <div className='text-end '>
+                                <a className="btn btn-warning disabled placeholder col-6"></a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div className='container'>
+                <h3 className='view p-2'>Similar Products </h3>
+                {fetchItemDone ?
+                    <div className="row row-card row-cols-2 row-cols-md-4 g-4 align-content-center justify-content-center my-3" >
+                        {items.filter(a => {
+                            return (
+                                a.itemType == viewItem.map(a => { return (a.itemType) }))
+                        }).filter(a => {
+                            return (
+                                a.itemId != viewItem.map(a => { return (a.itemId) })
+                            )
+                        }).map((a) => {
+                            return (
+                                <div className="col" key={a.itemId} style={{ overflowX: "scroll", overflowX: "visible" }}>
+                                    <div className="card view-more-card">
+                                        <div className='card-head text-end'>
+                                            <button className='btn  m-2' onClick={() => {
+                                                if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                    axios.post("http://localhost:8083/cart/", {
+                                                        "itemId": a.itemId,
+                                                        "userId": localStorage.getItem("currentuser")
+                                                    }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
+                                                } else {
+                                                    setInfo("Login required")
+                                                }
+                                            }}
+                                            ><i className='fa-solid fa-cart-shopping text-info'></i></button>
+                                            <button className='btn ' onClick={() => {
+                                                if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                    axios.post("http://localhost:8083/fav/", {
+                                                        "itemId": a.itemId,
+                                                        "userId": localStorage.getItem("currentuser")
+                                                    }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
+                                                } else {
+                                                    setInfo("Login required !")
+                                                }
+                                            }}
+                                            ><i className="fa-solid fa-heart text-danger"></i> </button>
+                                        </div>
+                                        <img src={a.itemImgUrl} className="card-img-top " alt={a.itemName} />
+                                        <div className="card-body ">
+                                            <h5 className="card-title text-truncate">{a.itemName}</h5>
+                                            <p className="card-text text-truncate"> ₹{a.itemPrice}</p>
+                                            <p><b>{a.itemSpec}</b></p>
+                                            <div className='text-center d-flex justify-content-center '>
+                                                <Link to={'/view/' + a.itemId + "/" + a.itemName} className='btn btn-info d-flex '
+                                                    onClick={() => {
+                                                        return (
+                                                            window.onload(getItem())
+                                                        )
+                                                    }}>View More...</Link>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            )
+                        })}
+                    </div>
+                    :
+                    <div className='container-fluid'>
+                        <div className="row row-card row-cols-2 row-cols-md-4 g-4 align-content-center justify-content-center my-3" >                            <div className="card" aria-hidden="true">
+                            <img src={loadingImg} className="card-img-top" alt="..." />
+                            <div className="card-body">
+                                <h5 className="card-title placeholder-glow">
+                                    <span className="placeholder col-6"></span>
+                                </h5>
+                                <p className="card-text placeholder-glow">
+                                    <span className="placeholder col-7"></span>
+                                    <span className="placeholder col-4"></span>
+                                    <span className="placeholder col-4"></span>
+                                    <span className="placeholder col-6"></span>
+                                    <span className="placeholder col-8"></span>
+                                </p>
+                                <a className="btn btn-primary disabled placeholder col-6"></a>
+                            </div>
+                        </div>
+                            <div className="card" aria-hidden="true">
+                                <img src={loadingImg} className="card-img-top" alt="..." />
+                                <div className="card-body">
+                                    <h5 className="card-title placeholder-glow">
+                                        <span className="placeholder col-6"></span>
+                                    </h5>
+                                    <p className="card-text placeholder-glow">
+                                        <span className="placeholder col-7"></span>
+                                        <span className="placeholder col-4"></span>
+                                        <span className="placeholder col-4"></span>
+                                        <span className="placeholder col-6"></span>
+                                        <span className="placeholder col-8"></span>
+                                    </p>
+                                    <a className="btn btn-primary disabled placeholder col-6"></a>
+                                </div>
+                            </div>
+                            <div className="card" aria-hidden="true">
+                                <img src={loadingImg} className="card-img-top" alt="..." />
+                                <div className="card-body">
+                                    <h5 className="card-title placeholder-glow">
+                                        <span className="placeholder col-6"></span>
+                                    </h5>
+                                    <p className="card-text placeholder-glow">
+                                        <span className="placeholder col-7"></span>
+                                        <span className="placeholder col-4"></span>
+                                        <span className="placeholder col-4"></span>
+                                        <span className="placeholder col-6"></span>
+                                        <span className="placeholder col-8"></span>
+                                    </p>
+                                    <a className="btn btn-primary disabled placeholder col-6"></a>
+                                </div>
+                            </div>
+                            <div className="card" aria-hidden="true">
+                                <img src={loadingImg} className="card-img-top" alt="..." />
+                                <div className="card-body">
+                                    <h5 className="card-title placeholder-glow">
+                                        <span className="placeholder col-6"></span>
+                                    </h5>
+                                    <p className="card-text placeholder-glow">
+                                        <span className="placeholder col-7"></span>
+                                        <span className="placeholder col-4"></span>
+                                        <span className="placeholder col-4"></span>
+                                        <span className="placeholder col-6"></span>
+                                        <span className="placeholder col-8"></span>
+                                    </p>
+                                    <a className="btn btn-primary disabled placeholder col-6"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
 
             {showToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">
@@ -243,18 +351,6 @@ export default function View(props) {
                 <Footer />
             </footer>
 
-            <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <div className="modal-content">
-                        <div className="modal-body">
-                            <h4>{info}</h4>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <ChatBot />
 
             {/* Logout popup */}

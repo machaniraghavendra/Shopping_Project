@@ -14,5 +14,6 @@ public class UserDetailDto {
 	private String userEmail;
 	private String userName;
 	private String mobileNumber;
+	private boolean darkModeEnabled;
 
 }

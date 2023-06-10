@@ -1,5 +1,6 @@
 package com.shopping.query.command.entites.dto;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -21,4 +22,5 @@ public class AddressDto {
 	private String firstName;
 	private UUID referenceId;
 	private UserDetailDto userDetails;
+	private LocalDate addedOn;
 }

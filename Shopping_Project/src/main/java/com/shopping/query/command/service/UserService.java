@@ -20,4 +20,6 @@ public interface UserService {
 	String update(UserEntity userEntity) throws UserNotFoundException;
 
 	boolean check(String userEmail, String Password);
+	
+	boolean getTheme(String userEmail);
 }

@@ -17,7 +17,7 @@ export default function MainPageAfterlogin(props) {
 
     const [info, setInfo] = useState("");
 
-    // const [what, setWhat] = useState(false);
+    const [fetchDone, setfetchDone] = useState(false);
 
     const nav = useNavigate();
 
@@ -31,9 +31,11 @@ export default function MainPageAfterlogin(props) {
     }
 
     const currentuser = () => {
-        // axios.get("http://localhost:8083/user/id/" + props.user).then(res => { return (setWhat(true)) })
-        axios.get("http://localhost:8083/user/" + props.user).then(a => { return (setUserName(a.data.userName)) })
-
+        axios.get("http://localhost:8083/user/" + props.user).then(a => { 
+          if (a.status == "200") {
+            setfetchDone(true)
+        }    
+        return (setUserName(a.data.userName)) })
     }
 
     const check = () => {
@@ -69,7 +71,7 @@ export default function MainPageAfterlogin(props) {
     }, 400);
 
     useEffect(() => {
-        sessionStorage.getItem("dark") ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
+        sessionStorage.getItem("dark") =="true"? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
             : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
         window.onscroll = () => check();
         currentuser();
@@ -100,7 +102,7 @@ export default function MainPageAfterlogin(props) {
                                     <br></br>
                                     <div className="btn-group">
                                         <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                            <i className="fa-solid fa-user"></i>&nbsp; {userName}
+                                        {fetchDone ? <span><i className="fa-solid fa-user"></i>&nbsp;{userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
                                         </button>
                                         <ul className="dropdown-menu bg-secondary-warning dropdown-menu-lg-end user">
                                             <li><Link className="dropdown-item" to={"/profile/settings"}><i className='fa-solid fa-gear'></i> Settings</Link></li>
@@ -164,7 +166,6 @@ export default function MainPageAfterlogin(props) {
                                             </ul>
                                         </div>
                                         <div className="extraId"></div>
-
                                     </div>
                                 </div>
                             </div>
@@ -173,7 +174,6 @@ export default function MainPageAfterlogin(props) {
                 </header>
 
                 <hr />
-
 
                 <div className="modal fade " id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog modal-fullscreen-lg-down modal-dialog-scrollable modal-lg ">
@@ -238,7 +238,7 @@ export default function MainPageAfterlogin(props) {
                                                     <img src={e.itemImgUrl} className="card-img-top" alt="..." />
                                                     <div className="card-body">
                                                         <h6 className="card-title text-truncate" id={e.itemName}>{e.itemName}</h6>
-                                                        <p className="card-text">{e.itemPrice}</p>
+                                                        <p className="card-text"> ₹{e.itemPrice}</p>
                                                     </div>
                                                     <a href={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info' >View More...</a>
                                                 </div>

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import "../Cart/Cart.css"
 import Footer from '../Footer/Footer';
 import ChatBot from '../ChatBot/ChatBot';
+import loadingImg from "/Shopping_Project/shopping_app/src/Loading_Card.png";
 
 export default function Cartpage(props) {
 
@@ -22,6 +23,8 @@ export default function Cartpage(props) {
 
     const [showToast, setShowToast] = useState(false);
 
+    const [fetchDone, setfetchDone] = useState(false);
+
     const timeout = () => {
         setTimeout(() => {
             setShowToast(false);
@@ -33,7 +36,12 @@ export default function Cartpage(props) {
 
     const fetch = () => {
         axios.get("http://localhost:8083/cart/userId/" + props.user)
-            .then((res) => { return (setData(res.data)) })
+            .then((res) => {
+                if (res.status == "200") {
+                    setfetchDone(true)
+                }
+                return (setData(res.data))
+            })
     }
 
     setTimeout(() => {
@@ -85,14 +93,14 @@ export default function Cartpage(props) {
                             </button>
                             <i className="fa-thin fa-arrow-left btn m-1 d-none d-lg-block" style={{ fontFamily: "fontAwesome" }} onClick={() => { return (window.history.back()) }}></i>
                             <Link to="/mart" className='nav-link' >  <h1 className="navbar-brand" >
-                                <img src={img} alt="" width="30" height="30" className="d-inline-block align-text-top" />
+                                <img src={img} alt="Shopping mart" width="30" height="30" className="d-inline-block align-text-top" />
                                 &nbsp;Shopping Mart
                             </h1></Link><br></br>
                             <div className="collapse navbar-collapse justify-content-end gap-2" id="navbarTogglerDemo03">
                                 <br></br>
                                 <div className="btn-group">
                                     <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                        <i className="fa-solid fa-user"></i>&nbsp; {userName}
+                                        {fetchDone ? <span><i className="fa-solid fa-user"></i>&nbsp;{userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
                                     </button>
                                     <ul className="dropdown-menu bg-secondary-warning dropdown-menu-lg-end user">
                                         <li><Link className="dropdown-item" to={"/profile/settings"}><i className='fa-solid fa-gear'></i> Settings</Link></li>
@@ -143,10 +151,7 @@ export default function Cartpage(props) {
                 </div>
             </header >
 
-
             <div className='container-fluid middle'>
-
-
                 <div className='cart-aside d-lg-block'>
                     <aside className=' '>
                         <div className="offcanvas-lg offcanvas-start alert alert-info" tabIndex="-1" id="offcanvasResponsive" aria-labelledby="offcanvasResponsiveLabel">
@@ -166,97 +171,134 @@ export default function Cartpage(props) {
                     </aside>
                 </div>
 
-
                 <div className='cart-body float-md-left float-lg-right'>
-                    {data.length == [] || data.includes(null) ?
-                        <div className='container-fluid cart-no'><br></br>
-                            <h1>No Items Found in Cart !</h1>
-                            <img className='img-fluid cart-no-img' src='https://img.freepik.com/free-photo/portrait-sad-woman-holding-shopping-bags-bank-card-isolated-blue-background_1258-80590.jpg?w=900&t=st=1661337619~exp=1661338219~hmac=2216603151e8e22d07a13935e4d02c5b9629f1482b776df503c439b83528628f' width="70%" />
-                        </div>
-                        :
-                        <div className='container-fluid '>
-                            <div className="  row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 gap-4 justify-content-center text-center ">
-                                {data.map(a => {
-                                    return (
-                                        a.map(e => {
-                                            return (
-                                                <div className=' col row ' key={e.itemId}>&nbsp;
-                                                    <div className="card" data-aos="fade-up" >
-
-                                                        <div className='card-header justify-content-end text-end'>
-                                                            <button className='btn  m-2' onClick={() => {
-                                                                axios.delete("http://localhost:8083/cart/" + e.itemName+"?"+"userEmail="+localStorage.getItem("currentuser")).then((res) => { return (setInfo(res.data), fetch(), setShowToast(true), timeout()) })
-                                                            }}
-                                                                data-bs-toggle="modal" data-bs-target="#exampleModal2" data-bs-whatever="@mdo"
-                                                            ><i className='fa-solid fa-trash text-danger'></i></button>
-                                                            <button className='btn ' onClick={() => {
-                                                                if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
-                                                                    axios.post("http://localhost:8083/fav/", {
-                                                                       "itemId":e.itemId,
-                                                                        "userId": localStorage.getItem("currentuser")
-                                                                    }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
-                                                                } else {
-                                                                    setInfo("Login required !")
-                                                                }
-                                                            }}
-                                                            ><i className="fa-solid fa-heart text-danger"></i> </button>
-                                                        </div>
-                                                        <img src={e.itemImgUrl} className="card-img-top" alt="..." />
-
-                                                        <div className="card-body">
-                                                            <h5 className="card-title text-truncate" id={e.itemName}>{e.itemName}</h5>
-                                                            <p className="card-text text-truncate">{e.itemPrice}</p>
-                                                        </div>
-                                                        <Link to={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info'>View More...</Link>
-                                                    </div>
-                                                </div>
-                                            )
-                                        })
-                                    )
-                                })
-
-                                }
-
-
-
-                            </div><br></br>
-                            &nbsp;
-                            <div className='card' style={{ height: "10%" }}>
-                                <div className='card-footer'>
-                                    <h5>List of products in cart :</h5>
+                    {fetchDone ?
+                        data.length == [] || data.includes(null) ?
+                            <div className='container-fluid cart-no'><br></br>
+                                <h1>No Items Found in Cart !</h1>
+                                <img className='img-fluid cart-no-img' src='https://img.freepik.com/free-photo/portrait-sad-woman-holding-shopping-bags-bank-card-isolated-blue-background_1258-80590.jpg?w=900&t=st=1661337619~exp=1661338219~hmac=2216603151e8e22d07a13935e4d02c5b9629f1482b776df503c439b83528628f' width="70%" />
+                            </div>
+                            :
+                            <div className='container-fluid '>
+                                <div className="  row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 gap-4 justify-content-center text-center ">
                                     {data.map(a => {
                                         return (
                                             a.map(e => {
-                                                total += parseInt(e.itemPrice.substr(1).replaceAll(",", ""));
-                                                totalAmount = Intl.NumberFormat('hi-IN', { style: "currency", currency: "INR" }).format(total)
                                                 return (
-                                                    <div key={e.itemId}>
-                                                        <li >
-                                                            {e.itemName} = {e.itemPrice} -&gt;
-                                                            <button className='btn btn-outline-danger m-2' onClick={() => {
-                                                                axios.delete("http://localhost:8083/cart/" + e.itemId).then((res) => { return (setInfo(res.data), fetch(), setShowToast(true), timeout()) })
-                                                            }}
-                                                                data-bs-toggle="modal" data-bs-target="#exampleModal2" data-bs-whatever="@mdo">
-                                                                <i className='fa-solid fa-trash '></i></button>
-                                                            <Link className='btn btn-warning' to={"/purchase"} onClick={() => {
-                                                                axios.get("http://localhost:8083/purchase/" + e.itemId)
-                                                            }}> Buy now</Link>
-                                                        </li>&nbsp;
+                                                    <div className=' col row ' key={e.itemId}>&nbsp;
+                                                        <div className="card" data-aos="fade-up" >
 
+                                                            <div className='card-header justify-content-end text-end'>
+                                                                <button className='btn  m-2' onClick={() => {
+                                                                    setfetchDone(false);
+                                                                    axios.delete("http://localhost:8083/cart/" + e.itemName + "?" + "userEmail=" + localStorage.getItem("currentuser")).then((res) => { return (setInfo(res.data), fetch(), setShowToast(true), timeout()) })
+                                                                }}
+                                                                    data-bs-toggle="modal" data-bs-target="#exampleModal2" data-bs-whatever="@mdo"
+                                                                ><i className='fa-solid fa-trash text-danger'></i></button>
+                                                                <button className='btn ' onClick={() => {
+                                                                    if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                                        axios.post("http://localhost:8083/fav/", {
+                                                                            "itemId": e.itemId,
+                                                                            "userId": localStorage.getItem("currentuser")
+                                                                        }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
+                                                                    } else {
+                                                                        setInfo("Login required !")
+                                                                    }
+                                                                }}
+                                                                ><i className="fa-solid fa-heart text-danger"></i> </button>
+                                                            </div>
+                                                            <img src={e.itemImgUrl} className="card-img-top" alt="..." />
+
+                                                            <div className="card-body">
+                                                                <h5 className="card-title text-truncate" id={e.itemName}>{e.itemName}</h5>
+                                                                <p className="card-text text-truncate"> ₹{e.itemPrice}</p>
+                                                            </div>
+                                                            <Link to={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info'>View More...</Link>
+                                                        </div>
                                                     </div>
                                                 )
                                             })
                                         )
                                     })
+
                                     }
-                                    <br></br>
+
+                                </div><br></br>
+                                &nbsp;
+                                <div className='card' style={{ height: "10%" }}>
+                                    <div className='card-footer'>
+                                        <h5>List of products in cart :</h5>
+                                        {data.map(a => {
+                                            return (
+                                                a.map(e => {
+                                                    total += parseInt(e.itemPrice.substr(1).replaceAll(",", ""));
+                                                    totalAmount = Intl.NumberFormat('hi-IN', { style: "currency", currency: "INR" }).format(total)
+                                                    return (
+                                                        <div key={e.itemId}>
+                                                            <li >
+                                                                {e.itemName} =  ₹{e.itemPrice} -&gt;
+                                                                <button className='btn btn-outline-danger m-2' onClick={() => {
+                                                                    setfetchDone(false);
+                                                                    axios.delete("http://localhost:8083/cart/" + e.itemName + "?" + "userEmail=" + localStorage.getItem("currentuser")).then((res) => { return (setInfo(res.data), fetch(), setShowToast(true), timeout()) })
+                                                                }}
+                                                                    data-bs-toggle="modal" data-bs-target="#exampleModal2" data-bs-whatever="@mdo">
+                                                                    <i className='fa-solid fa-trash '></i></button>
+                                                                <Link className='btn btn-warning' to={"/purchase"} onClick={() => {
+                                                                    axios.post("http://localhost:8083/purchase/" + e.itemId + "?userId=" + props.user);
+                                                                }}> Buy now</Link>
+                                                            </li>&nbsp;
+
+                                                        </div>
+                                                    )
+                                                })
+                                            )
+                                        })
+                                        }
+                                        <br></br>
+                                    </div>
+                                    <b className='justify-content-end text-end'> Total products amount =<span className='text-success'> {totalAmount} </span></b>
                                 </div>
-                                <b className='justify-content-end text-end'> Total products amount =<span className='text-success'> {totalAmount} </span></b>
+
                             </div>
-
+                        :
+                        <div className='container-fluid'>
+                            <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 gap-4 justify-content-center text-center ">
+                                <div className="card" aria-hidden="true">
+                                    <img src={loadingImg} className="card-img-top" alt="..." />
+                                    <div className="card-body">
+                                        <h5 className="card-title placeholder-glow">
+                                            <span className="placeholder col-6"></span>
+                                        </h5>
+                                        <p className="card-text placeholder-glow">
+                                            <span className="placeholder col-7"></span>
+                                            <span className="placeholder col-4"></span>
+                                            <span className="placeholder col-4"></span>
+                                            <span className="placeholder col-6"></span>
+                                            <span className="placeholder col-8"></span>
+                                        </p>
+                                        <a className="btn btn-primary disabled placeholder col-6"></a>
+                                    </div>
+                                </div>
+                                <div className="card" aria-hidden="true">
+                                    <img src={loadingImg} className="card-img-top" alt="..." />
+                                    <div className="card-body">
+                                        <h5 className="card-title placeholder-glow">
+                                            <span className="placeholder col-6"></span>
+                                        </h5>
+                                        <p className="card-text placeholder-glow">
+                                            <span className="placeholder col-7"></span>
+                                            <span className="placeholder col-4"></span>
+                                            <span className="placeholder col-4"></span>
+                                            <span className="placeholder col-6"></span>
+                                            <span className="placeholder col-8"></span>
+                                        </p>
+                                        <a className="btn btn-primary disabled placeholder col-6"></a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    }<br></br>
-
+                    }
+                    <br></br>
                 </div>
             </div>
             {/* Footer */}
@@ -316,54 +358,56 @@ export default function Cartpage(props) {
                                 </div>
                             </form>
                             <div className="row row-cols-1 row-cols-sm-3 row-cols-md-4 row-cols-lg-3 gap-4 justify-content-center text-center ">
-                                {data.filter((val) => {
-                                    if (search == "") {
-                                        count = 0;
-                                        return null;
+                                {
+                                    data.map(a => {
+                                        if (data.length > 0 && a != null) {
+                                            return (
+                                                a.filter((val) => {
+                                                    if (search == "") {
+                                                        count = 0;
+                                                        return null;
+                                                    }
+                                                    if (val.itemName.toLowerCase().includes(search.toLowerCase())) {
+                                                        return val
+                                                    }
+                                                }).map((e) => {
+                                                    count++;
+                                                    return (
+                                                        <div className=' col row ' key={e.itemId}>&nbsp;
+                                                            <div className="card " data-aos="fade-up" >
+                                                                <div className='card-header justify-content-end text-end'>
+                                                                    <button className='btn  m-2' onClick={() => {
+                                                                        setfetchDone(false);
+                                                                        axios.delete("http://localhost:8083/cart/" + e.itemName + "?" + "userEmail=" + localStorage.getItem("currentuser")).then((res) => { return (setInfo(res.data), fetch(), setShowToast(true), timeout(), setSearch("")) })
+                                                                    }}
+                                                                        data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-whatever="@mdo"
+                                                                    ><i className='fa-solid fa-trash text-danger'></i></button>
+                                                                    <button className='btn ' onClick={() => {
+                                                                        if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                                            axios.post("http://localhost:8083/fav/", {
+                                                                                "itemId": e.itemId,
+                                                                                "userId": localStorage.getItem("currentuser")
+                                                                            }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
+                                                                        } else {
+                                                                            setInfo("Login required !")
+                                                                        }
+                                                                    }}
+                                                                    ><i className="fa-solid fa-heart text-danger"></i> </button>
+                                                                </div>
+                                                                <img src={e.itemImgUrl} className="card-img-top" alt="..." />
+                                                                <div className="card-body">
+                                                                    <h6 className="card-title text-truncate" id={e.itemName}>{e.itemName}</h6>
+                                                                    <p className="card-text">{e.itemPrice}</p>
+                                                                </div>
+                                                                <a href={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info' >View More...</a>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                })
+                                            )
+                                        }
                                     }
-                                    if (val.itemName.toLowerCase().includes(search.toLowerCase())) {
-                                        return val
-                                    }
-                                }).filter(val => val.userId == localStorage.getItem("currentuser")).map((e) => {
-                                    count++;
-                                    return (
-                                        <div className=' col row ' key={e.itemId}>&nbsp;
-                                            <div className="card " data-aos="fade-up" >
-                                                <div className='card-header justify-content-end text-end'>
-                                                    <button className='btn  m-2' onClick={() => {
-                                                        axios.delete("http://localhost:8083/cart/" + e.itemId).then((res) => { return (setInfo(res.data), fetch(), setFindvalue(count)) })
-                                                    }}><i className='fa-solid fa-trash text-danger'></i>
-                                                    </button>
-                                                    <button className='btn ' onClick={() => {
-                                                        if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
-                                                            axios.post("http://localhost:8083/fav/", {
-                                                                "itemId": e.itemId,
-                                                                "itemName": e.itemName,
-                                                                "itemDesc": e.itemDesc,
-                                                                "itemPrice": e.itemPrice,
-                                                                "itemType": e.itemType,
-                                                                "itemDimensions": e.itemDimensions,
-                                                                "itemImgUrl": e.itemImgUrl,
-                                                                "itemSpec": e.itemSpec,
-                                                                "userId": localStorage.getItem("currentuser")
-                                                            }, []).then((res) => { return (setInfo(res.data)) })
-                                                        } else {
-                                                            setInfo("Login required !")
-                                                        }
-                                                    }}
-                                                        data-bs-toggle="modal" data-bs-target="#exampleModal2" data-bs-whatever="@mdo"
-                                                    ><i className="fa-solid fa-heart text-danger"></i> </button>
-                                                </div>
-                                                <img src={e.itemImgUrl} className="card-img-top" alt="..." />
-                                                <div className="card-body">
-                                                    <h6 className="card-title" id={e.itemName}>{e.itemName}</h6>
-                                                    <p className="card-text">{e.itemPrice}</p>
-                                                </div>
-                                                <a href={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info'>View More...</a>
-                                            </div>
-                                        </div>
                                     )
-                                })
                                 }
                             </div>
                         </div>

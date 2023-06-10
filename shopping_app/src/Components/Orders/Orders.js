@@ -4,6 +4,7 @@ import axios from "axios"
 import { Link, useNavigate } from "react-router-dom";
 import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import ChatBot from '../ChatBot/ChatBot';
+import loadingImg from "/Shopping_Project/shopping_app/src/Loading_Card.png";
 
 export default function Orders(props) {
 
@@ -11,8 +12,15 @@ export default function Orders(props) {
 
     const [orders, setOrders] = useState([]);
 
+    const [fetchDone, setfetchDone] = useState(false);
+
     const fetchOrders = () => {
-        axios.get("http://localhost:8083/orders/orderWithUser?userId=" + props.user).then((res) => setOrders(res.data))
+        axios.get("http://localhost:8083/orders/orderWithUser?userId=" + props.user).then((res) => {
+            if (res.status == "200") {
+                setfetchDone(true)
+            }
+            setOrders(res.data);
+        })
     }
 
     const viewOrder = (e) => {
@@ -26,14 +34,15 @@ export default function Orders(props) {
         axios.get("http://localhost:8083/user/" + props.user).then(a => { return (setUser(a.data)) })
         fetchOrders()
         let card = document.getElementsByClassName("card-color");
-        if (sessionStorage.getItem("dark") == "yes") {
+        if (sessionStorage.getItem("dark") == "true") {
             for (const cards of card) {
                 cards.classList.add("bg-dark")
                 cards.classList.add("text-light")
                 cards.classList.remove("bg-light")
                 cards.classList.remove("text-dark")
             }
-        } else {
+        }
+        if (!sessionStorage.getItem("dark") == "true") {
             for (const cards of card) {
                 cards.classList.remove("bg-dark")
                 cards.classList.add("bg-light")
@@ -64,7 +73,7 @@ export default function Orders(props) {
                                     <br></br>
                                     <div className="btn-group">
                                         <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                            <i className="fa-solid fa-user"></i>&nbsp; {user.userName}
+                                            {fetchDone ? <span><i className="fa-solid fa-user"></i>&nbsp;{user.userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
                                         </button>
                                         <ul className="dropdown-menu bg-secondary-warning dropdown-menu-lg-end user">
                                             <li><Link className="dropdown-item" to={"/profile/settings"}><i className='fa-solid fa-gear'></i> Settings</Link></li>
@@ -84,48 +93,173 @@ export default function Orders(props) {
                 </header>
                 <div className='container my-4'>
                     <h2 className='align-items-center d-flex justify-content-center text-info'>Your Orders </h2>
-                    <div className='row rounded-5  '>
-                        {orders.length == 0 ?
-                            <div className='container w-100 h-100'>
-                                <div className='text-center card-color p-3 w-50'>
-                                    <img src={img} alt="" width="100" height="100" className="d-inline-block align-text-top m-4" />
-                                    <h5>No orders Found</h5>
-                                    <Link to={"/mart"} className="btn btn-outline-primary m-2 ">View products</Link>
+                    {fetchDone ?
+                        <div className='row rounded-5 justify-content-center d-flex g-3 '>
+                            {orders.length == 0 ?
+                                <div className='container justify-content-center d-flex g-3 w-100 h-100 '>
+                                    <div className='text-center card-color p-3 w-50'>
+                                        <img src={img} alt="" width="100" height="100" className="d-inline-block align-text-top m-4" />
+                                        <h5>No orders Found</h5>
+                                        <Link to={"/mart"} className="btn btn-outline-primary m-2 ">View products</Link>
+                                    </div>
                                 </div>
-                            </div>
-                            :
-                            orders.map(item => {
-                                return (
-                                    <div className='col-lg-6 ' key={item.orderId}>
-                                        <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
-                                            <div className="row g-0" >
-                                                <div className="col-md-4 d-none d-lg-flex justify-content-center">
-                                                    <img src={item.item.itemImgUrl} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt={item.item.itemName} />
-                                                </div>
-                                                <div className="col-md-8 ">
-                                                    <div className="card-body">
-                                                        <Link to={'/orderdetails'} className="link-info  stretched-link" onClick={() => { viewOrder(item.orderUUIDId) }}></Link>
-                                                        <div className='row'>
-                                                            <h5 className="card-title float-start col-6 text-truncate">{item.item.itemName} </h5>
-                                                            {item.orderStatus == "success" && <p className='col-3 text-center text-success'><b>Placed</b></p>}
-                                                            {item.orderStatus == "dispatched" && <p className='col-3 text-center text-primary'><b>Dispatched</b></p>}
-                                                            {item.orderStatus == "near by hub" && <p className='col-3 text-center text-info'><b>Near by Hub</b></p>}
-                                                            {item.orderStatus == "cancelled" && <p className='col-3 text-center text-danger'><b>Cancelled</b></p>}
-                                                            <p className="card-title float-end col-3 text-end"><b>{item.item.itemPrice}</b></p>
+                                :
+                                orders.map(item => {
+                                    return (
+                                        <div className='col-lg-6 ' key={item.orderId}>
+                                            <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                                <div className="row g-0" >
+                                                    <div className="col-md-4 d-none d-lg-flex justify-content-center">
+                                                        <img src={item.item.itemImgUrl} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt={item.item.itemName} />
+                                                    </div>
+                                                    <div className="col-md-8 ">
+                                                        <div className="card-body">
+                                                            <Link to={'/orderdetails'} className="link-info  stretched-link" onClick={() => { viewOrder(item.orderUUIDId) }}></Link>
+                                                            <div className='row'>
+                                                                <h5 className="card-title float-start col-6 text-truncate">{item.item.itemName} </h5>
+                                                                {item.orderStatus == "success" && <p className='col-3 text-center text-success'><b>Placed</b></p>}
+                                                                {item.orderStatus == "dispatched" && <p className='col-3 text-center text-primary'><b>Dispatched</b></p>}
+                                                                {item.orderStatus == "near by hub" && <p className='col-3 text-center text-info'><b>Near by Hub</b></p>}
+                                                                {item.orderStatus == "cancelled" && <p className='col-3 text-center text-danger'><b>Cancelled</b></p>}
+                                                                <p className="card-title float-end col-3 text-end"><b> ₹{item.item.itemPrice}</b></p>
+                                                            </div>
+                                                            <div className='row py-2'> <p className="card-text">Ordered on {item.orderedOn}</p></div>
+                                                            <div className='row'>
+                                                                {item.orderStatus == "cancelled" ? <p className='text-decoration-line-through'>Expected delivery on {item.deliveryDate}</p> :
+                                                                    <p>Expected delivery on <b>{item.deliveryDate}</b></p>}</div>
                                                         </div>
-                                                        <div className='row py-2'> <p className="card-text">Ordered on {item.orderedOn}</p></div>
-                                                        <div className='row'>
-                                                            {item.orderStatus == "cancelled" ? <p className='text-decoration-line-through'>Expected delivery on {item.deliveryDate}</p> :
-                                                                <p>Expected delivery on <b>{item.deliveryDate}</b></p>}</div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    )
+                                })
+                            }
+                        </div>
+                        :
+                        <div class="row g-4">
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                    <div className="row g-0" >
+                                        <div className="col-md-4 d-none d-lg-flex justify-content-center">
+                                            <img src={loadingImg} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt="loading..." />
+                                        </div>
+                                        <div className="col-md-8 ">
+                                            <div className="card-body">
+                                                <p className="card-text placeholder-glow">
+                                                    <span className="placeholder col-7"></span>
+                                                    <span className="placeholder col-4"></span>
+                                                    <span className="placeholder col-4"></span>
+                                                    <span className="placeholder col-6"></span>
+                                                    <span className="placeholder col-8"></span>
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
-                                )
-                            })
-                        }
-                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                    <div className="row g-0" >
+                                        <div className="col-md-4 d-none d-lg-flex justify-content-center">
+                                            <img src={loadingImg} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt="loading..." />
+                                        </div>
+                                        <div className="col-md-8 ">
+                                            <div className="card-body">
+                                                <p className="card-text placeholder-glow">
+                                                    <span className="placeholder col-7"></span>
+                                                    <span className="placeholder col-4"></span>
+                                                    <span className="placeholder col-4"></span>
+                                                    <span className="placeholder col-6"></span>
+                                                    <span className="placeholder col-8"></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                    <div className="row g-0" >
+                                        <div className="col-md-4 d-none d-lg-flex justify-content-center">
+                                            <img src={loadingImg} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt="loading..." />
+                                        </div>
+                                        <div className="col-md-8 ">
+                                            <div className="card-body">
+                                                <p className="card-text placeholder-glow">
+                                                    <span className="placeholder col-7"></span>
+                                                    <span className="placeholder col-4"></span>
+                                                    <span className="placeholder col-4"></span>
+                                                    <span className="placeholder col-6"></span>
+                                                    <span className="placeholder col-8"></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                    <div className="row g-0" >
+                                        <div className="col-md-4 d-none d-lg-flex justify-content-center">
+                                            <img src={loadingImg} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt="loading..." />
+                                        </div>
+                                        <div className="col-md-8 ">
+                                            <div className="card-body">
+                                                <p className="card-text placeholder-glow">
+                                                    <span className="placeholder col-7"></span>
+                                                    <span className="placeholder col-4"></span>
+                                                    <span className="placeholder col-4"></span>
+                                                    <span className="placeholder col-6"></span>
+                                                    <span className="placeholder col-8"></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                    <div className="row g-0" >
+                                        <div className="col-md-4 d-none d-lg-flex justify-content-center">
+                                            <img src={loadingImg} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt="loading..." />
+                                        </div>
+                                        <div className="col-md-8 ">
+                                            <div className="card-body">
+                                                <p className="card-text placeholder-glow">
+                                                    <span className="placeholder col-7"></span>
+                                                    <span className="placeholder col-4"></span>
+                                                    <span className="placeholder col-4"></span>
+                                                    <span className="placeholder col-6"></span>
+                                                    <span className="placeholder col-8"></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 mb-3 mb-sm-0">
+                                <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                    <div className="row g-0" >
+                                        <div className="col-md-4 d-none d-lg-flex justify-content-center">
+                                            <img src={loadingImg} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt="loading..." />
+                                        </div>
+                                        <div className="col-md-8 ">
+                                            <div className="card-body">
+                                                <p className="card-text placeholder-glow">
+                                                    <span className="placeholder col-7"></span>
+                                                    <span className="placeholder col-4"></span>
+                                                    <span className="placeholder col-4"></span>
+                                                    <span className="placeholder col-6"></span>
+                                                    <span className="placeholder col-8"></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
 
                 {/* Logout popup */}
