@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,40 +36,42 @@ public class CartController {
 	@PostMapping("/")
 	public ResponseEntity<String> save(@RequestBody CartEntity cartEntity)
 			throws ItemAlreadyInCartException, ItemNotFoundException {
-		return new ResponseEntity<String>(cartServiceImpl.save(cartEntity), HttpStatus.OK);
+		return ResponseEntity.ok(cartServiceImpl.save(cartEntity));
 	}
 
 	@PutMapping("/")
 	public ResponseEntity<String> update(@RequestBody CartEntity cartEntity)
 			throws ItemNotFoundInCartException, ItemNotFoundException {
-		return new ResponseEntity<String>(cartServiceImpl.update(cartEntity), HttpStatus.OK);
+		return ResponseEntity.ok(cartServiceImpl.update(cartEntity));
 	}
 
 	@DeleteMapping("/{itemName}")
 	public ResponseEntity<String> delete(@PathVariable("itemName") String itemName, @RequestParam String userEmail)
 			throws ItemNotFoundInCartException, ItemNotFoundException {
-		return new ResponseEntity<String>(cartServiceImpl.delete(itemName, userEmail), HttpStatus.OK);
+		return ResponseEntity.ok(cartServiceImpl.delete(itemName, userEmail));
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<CartDto> find(@PathVariable("id") int cartId)
 			throws ItemNotFoundInCartException, UserNotFoundException, ItemNotFoundException {
-		return new ResponseEntity<CartDto>(cartServiceImpl.find(cartId), HttpStatus.OK);
+		return ResponseEntity.ok(cartServiceImpl.find(cartId));
 	}
 
 	@GetMapping("/map")
-	public ResponseEntity<List<Map<String, List<ItemsDto>>>> viewallMap() throws UserNotFoundException, ItemNotFoundException {
+	public ResponseEntity<List<Map<String, List<ItemsDto>>>> viewallMap()
+			throws UserNotFoundException, ItemNotFoundException {
 		return ResponseEntity.ok(cartServiceImpl.viewallMap());
 	}
-	
+
 	@GetMapping("/userId/{userid}")
-	public ResponseEntity<List<List<ItemsDto>>> getListofCartItemswithUserId(@PathVariable("userid") String userid) throws UserNotFoundException, ItemNotFoundException {
+	public ResponseEntity<List<List<ItemsDto>>> getListofCartItemswithUserId(@PathVariable("userid") String userid)
+			throws UserNotFoundException, ItemNotFoundException {
 		return ResponseEntity.ok(cartServiceImpl.getListofCartItemswithUserId(userid));
 	}
 
 	@GetMapping("/")
 	public ResponseEntity<List<CartEntity>> viewall() {
-		return new ResponseEntity<List<CartEntity>>(cartServiceImpl.viewall(), HttpStatus.OK);
+		return ResponseEntity.ok(cartServiceImpl.viewall());
 	}
 
 }

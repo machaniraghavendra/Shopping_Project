@@ -21,41 +21,70 @@ import Settings from "./Components/Settings/Settings";
 import Buypage from "./Components/PurchasePage/BuyPage";
 import Orders from "./Components/Orders/Orders";
 import OrderDetails from "./Components/Orders/OrderDetails";
+import LoadingPage from "./Components/Error/LoadingPage";
 
 function App() {
   let user = localStorage.getItem("currentuser");
 
   const [userPresent, setUserPresent] = useState(false);
 
+  const [fetchUserDone, setfetchUserDone] = useState(false);
+
   const currentuser = () => {
-    axios.get("http://localhost:8083/user/id/" + user).then(() => {
+    axios.get("http://localhost:8083/user/id/" + user).then((res) => {
+      if (res.status == "200") {
+        setfetchUserDone(true)
+      }
       return (setUserPresent(true))
     }).catch(() => { setUserPresent(false) })
   }
 
   currentuser();
-
-  if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser") && userPresent) {
-
-    return (
-      <div className="App">
+  if (fetchUserDone) {
+    if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser") && userPresent) {
+      return (
+        <div className="App">
+          <Router>
+            <Routes>
+              <Route path="/login" element={<Login user={user} />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/cart" element={<Cartpage user={user} />} />
+              <Route path="/wishlist" element={<Wishlist user={user} />} />
+              <Route path="/login/forgot/password" element={<ForgotPass user={user} />} />
+              <Route path="/view/*" element={<View user={user} />} />
+              <Route path="/purchase" element={<Buypage user={user} />} />
+              <Route path="/profile/settings" element={<Settings user={user} />} />
+              <Route path="/orders" element={<Orders user={user} />} />
+              <Route path="/orderdetails" element={<OrderDetails user={user} />} />
+              <Route path="/mart" element={
+                <>
+                  <MainpageAfterLog user={user} />
+                  <Trending />
+                  <MobileLog />
+                  <Sports />
+                  <Shirts />
+                  <Footer />
+                </>
+              } />
+              <Route path="/*" element={<ErrorPage />} />
+            </Routes>
+          </Router>
+        </div>
+      )
+    }
+    else {
+      return (
         <Router>
           <Routes>
-            <Route path="/login" element={<Login user={user} />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
-            <Route path="/cart" element={<Cartpage user={user} />} />
-            <Route path="/wishlist" element={<Wishlist user={user} />} />
             <Route path="/login/forgot/password" element={<ForgotPass user={user} />} />
-            <Route path="/view/*" element={<View user={user} />} />
-            <Route path="/purchase" element={<Buypage user={user} />} />
-            <Route path="/profile/settings" element={<Settings user={user} />} />
-            <Route path="/orders" element={<Orders user={user} />} />
-            <Route path="/orderdetails" element={<OrderDetails user={user} />} />
-            <Route path="/mart" element={
+            <Route path="/mart" element={<MainpageAfterLog user={user} />} />
+            <Route path="/" element={
               <>
-                <MainpageAfterLog user={user} />
+                <MainPage />
                 <Trending />
-                <MobileLog />
+                <Mobiles />
                 <Sports />
                 <Shirts />
                 <Footer />
@@ -64,28 +93,13 @@ function App() {
             <Route path="/*" element={<ErrorPage />} />
           </Routes>
         </Router>
-      </div>
-    )
-  }
-  else {
+      )
+    }
+  } else {
     return (
       <Router>
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/login/forgot/password" element={<ForgotPass user={user} />} />
-          <Route path="/mart" element={<MainpageAfterLog user={user} />} />
-          <Route path="/" element={
-            <>
-              <MainPage />
-              <Trending />
-              <Mobiles />
-              <Sports />
-              <Shirts />
-              <Footer />
-            </>
-          } />
-          <Route path="/*" element={<ErrorPage />} />
+          <Route path="/*" element={<LoadingPage />} />
         </Routes>
       </Router>
     )

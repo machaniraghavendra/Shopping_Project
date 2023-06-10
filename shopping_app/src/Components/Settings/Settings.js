@@ -30,7 +30,14 @@ export default function Settings(props) {
 
     const [close, setClose] = useState("modals");
 
-    const check = () => {
+    const [theme, setTheme] = useState();
+
+    const [fetchDone, setfetchDone] = useState(false);
+
+    const [fetchAddressDone, setfetchAddressDone] = useState(false);
+
+    const check = (mode) => {
+        updateTheme(mode)
         if (!document.getElementById("flexSwitchCheckChecked").checked) {
             document.getElementById("round").classList.remove("round")
             document.getElementById("round1").classList.add("round-light")
@@ -46,22 +53,45 @@ export default function Settings(props) {
             document.getElementById("round").classList.add("round")
             setTimeout(() => {
                 document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
-                sessionStorage.setItem("dark", "yes")
                 document.getElementById("flexSwitchCheckChecked").checked = true
+                sessionStorage.setItem("dark", theme)
                 document.querySelector(".listss").classList.add("text-light")
                 document.querySelector(".listss").classList.remove("text-dark")
             }, 500);
         }
     }
 
+    const updateTheme = (mode) => {
+        axios.put("http://localhost:8083/user/", {
+            "userEmail": props.user,
+            "userName": user.userName,
+            "mobileNumber": user.mobileNumber,
+            "darkModeEnabled": mode
+        }).then(getTheme());
+    }
+
+    const getTheme = () => {
+        axios.get("http://localhost:8083/user/theme/" + props.user).then((a) => {
+            if (a.data == true) {
+                sessionStorage.setItem("dark", a.data);
+            }
+        })
+    }
+
     const currentuser = () => {
         axios.get("http://localhost:8083/user/" + props.user).then(res => {
+            if (res.status == "200") {
+                setfetchDone(true)
+            }
             return (setUser(res.data))
         })
     }
 
     const fetchAddress = () => {
         axios.get("http://localhost:8083/address/user/" + props.user).then(res => {
+            if (res.status == "200") {
+                setfetchAddressDone(true)
+            }
             return (setAddress(res.data))
         })
     }
@@ -250,12 +280,14 @@ export default function Settings(props) {
     useEffect(() => {
         currentuser();
         fetchAddress();
-        { sessionStorage.getItem("dark") ? setClassname("modal-content bg-dark text-light") : setClassname("modal-content") }
+        axios.get("http://localhost:8083/user/theme/" + props.user).then(a => setTheme(a.data));
+        getTheme();
+        { sessionStorage.getItem("dark") == "true" ? setClassname("modal-content bg-dark text-light") : setClassname("modal-content") }
 
-        sessionStorage.getItem("dark") ?
+        sessionStorage.getItem("dark") == "true" ?
             document.querySelector(".listss").classList.add("text-light") : document.querySelector(".listss").classList.add("text-dark")
 
-        sessionStorage.getItem("dark") ?
+        sessionStorage.getItem("dark") == "true" ?
             document.getElementById("flexSwitchCheckChecked").checked = true && (document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)")
             :
             document.getElementById("flexSwitchCheckChecked").checked = false && (document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))")
@@ -281,7 +313,7 @@ export default function Settings(props) {
                                     <br></br>
                                     <div className="btn-group">
                                         <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                            <i className="fa-solid fa-user"></i>&nbsp;{user.userName}
+                                            {fetchDone ? <span><i className="fa-solid fa-user"></i>&nbsp;{user.userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
                                         </button>
                                         <ul className="navbar-nav me-auto mb-2 mb-lg-0  ">
                                             <div className="container-fluid text-center">
@@ -336,7 +368,8 @@ export default function Settings(props) {
 
                                     </div>
                                     <div className='offcanvas-footer down my-3 d-lg-none '>
-                                        <h5>Name : {user.userName}</h5>
+                                        <h5>Name :  {fetchDone ? <span> {user.userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
+                                        </h5>
                                         <button className="btn btn-outline-danger  justify-content-end " data-bs-toggle="modal" data-bs-target="#exampleModal3" data-bs-whatever="@fat"
                                         ><i className="fa-solid fa-power-off"></i>
                                         </button>
@@ -356,14 +389,33 @@ export default function Settings(props) {
                                         <div className="col">
                                             <div className='row text-center text-light gy-2'>
                                                 <div className='col'>
-                                                    <p>Name : <b>{user.userName}</b></p>
+                                                    <p>Name : <b>
+                                                        {fetchDone ?
+                                                            <span> {user.userName}</span>
+                                                            :
+                                                            <span className="placeholder-glow">
+                                                                <span className="placeholder w-50"></span>
+                                                            </span>}
+                                                    </b></p>
                                                     <a className='btn btn-outline-warning text-light' id='changename' onClick={viewchangename}>Change</a>
                                                 </div>
                                                 <div className='col'>
-                                                    <p> Email : <b>{user.userEmail}</b></p>
+                                                    <p> Email : <b>
+                                                        {fetchDone ?
+                                                            <span> {user.userEmail}</span>
+                                                            :
+                                                            <span className="placeholder-glow">
+                                                                <span className="placeholder w-50"></span>
+                                                            </span>}</b></p>
                                                 </div>
                                                 <div className='col'>
-                                                    <p>Ph.No : <b>{user.mobileNumber}</b></p>
+                                                    <p>Ph.No : <b>
+                                                        {fetchDone ?
+                                                            <span> {user.mobileNumber}</span>
+                                                            :
+                                                            <span className="placeholder-glow">
+                                                                <span className="placeholder w-50"></span>
+                                                            </span>}</b></p>
                                                     <a className='btn btn-outline-warning text-light' id='changenumber' onClick={viewchangenumber}>Change</a>
                                                 </div>
                                             </div><hr></hr>
@@ -429,7 +481,7 @@ export default function Settings(props) {
                         <div className='container data text-light w-75 py-2 my-3' >
                             <div className="form-switch text-center"  >
                                 <label className="form-check-label" htmlFor="flexSwitchCheckChecked">Dark Mode :</label>
-                                <input className="form-check-input mx-3" type="checkbox" role="switch" onClick={() => { return (check()) }} id="flexSwitchCheckChecked" />
+                                <input className="form-check-input mx-3" type="checkbox" role="switch" onClick={(a) => { return (check(a.target.checked)) }} id="flexSwitchCheckChecked" checked={theme} />
                                 <div className='rounds ' id='round'> </div>
                                 <div className='rounds ' id='round1'> </div>
                             </div>
@@ -438,33 +490,61 @@ export default function Settings(props) {
                         <div className='container-md data text-light p-3'>
                             <h6>Saved Address : </h6><hr></hr>
                             <div className='address'>
-                                {address.length == 0 ?
-                                    <h6 className='text-center'>No address has been saved</h6>
-                                    :
-                                    address.map((a) => {
-                                        return (
-                                            <div className='container border fst-normal lh-lg m-2' style={{ backgroundColor: "#6A1B9A" }} key={a.deliveryAddress}>
-                                                <span className='editOptionAddress'><i className="bi bi-pencil" data-bs-toggle="modal" data-bs-target="#popupforeditaddress" onClick={() => { addDetailsToEdit(a) }}></i><span className='tooltipAddress'>Edit address</span></span>
-                                                <div className='container p-2 py-3'>
-                                                    <div className='row'>
-                                                        <div className='col-md'>
-                                                            First Name : {a.firstName}<br></br>
-                                                            Last Name : {a.lastName}<br></br>
-                                                            Address : {a.deliveryAddress}<br></br>
+                                {fetchAddressDone ?
+                                    address.length == 0 ?
+                                        <h6 className='text-center'>No address has been saved</h6>
+                                        :
+                                        address.map((a) => {
+                                            return (
+                                                <div className='container border fst-normal lh-lg m-2' style={{ backgroundColor: "#6A1B9A" }} key={a.deliveryAddress}>
+                                                    <span className='editOptionAddress'><i className="bi bi-pencil" data-bs-toggle="modal" data-bs-target="#popupforeditaddress" onClick={() => { addDetailsToEdit(a) }}></i><span className='tooltipAddress'>Edit address</span></span>
+                                                    <div className='container p-2 py-3'>
+                                                        <div className='row'>
+                                                            <div className='col-md'>
+                                                                First Name : {a.firstName}<br></br>
+                                                                Last Name : {a.lastName}<br></br>
+                                                                Address : {a.deliveryAddress}<br></br>
+                                                            </div>
+                                                            <div className='col-md'>
+                                                                Pincode : {a.pincode}<br></br>
+                                                                Mobile Number : {a.phoneNumber}<br></br>
+                                                                Email address : {a.emailAddress}<br></br>
+                                                            </div>
                                                         </div>
-                                                        <div className='col-md'>
-                                                            Pincode : {a.pincode}<br></br>
-                                                            Mobile Number : {a.phoneNumber}<br></br>
-                                                            Email address : {a.emailAddress}<br></br>
+                                                        <div className="text-center deleteButtonofAddress">
+                                                            <span className='my-1 btn btn-sm btn-danger buttonAddress' onClick={() => deleteAddress(a.deliveryAddress)}>  Remove address  </span>
                                                         </div>
-                                                    </div>
-                                                    <div className="text-center deleteButtonofAddress">
-                                                        <span className='my-1 btn btn-sm btn-danger buttonAddress' onClick={() => deleteAddress(a.deliveryAddress)}>  Remove address  </span>
                                                     </div>
                                                 </div>
+                                            )
+                                        }) :
+                                    <div className='card h-50' style={{ backgroundColor: "#6A1B9A" }} >
+                                        <div className='row'>
+                                            <p className="card-text placeholder-glow">
+                                                <span className="placeholder col-7"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-6"></span>
+                                                <span className="placeholder col-8"></span>
+                                            </p>
+                                            <div className="text-center deleteButtonofAddress">
+                                                <a className="btn  btn-danger  disabled placeholder col-6"></a>
                                             </div>
-                                        )
-                                    })}
+                                        </div>
+                                        <div className='row'>
+                                            <p className="card-text placeholder-glow">
+                                                <span className="placeholder col-7"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-6"></span>
+                                                <span className="placeholder col-8"></span>
+                                            </p>
+                                            <div className="text-center deleteButtonofAddress">
+                                                <a className="btn  btn-danger  disabled placeholder col-6"></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
                                 <div className='text-center justify-content-center'>
                                     <button type="button" className="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#popupforaddress">
                                         Add new address +
@@ -499,7 +579,7 @@ export default function Settings(props) {
                 </div>
 
                 {/* PopUp for address saving */}
-                <div className="modal fade" id="popupforaddress" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div className="modal fade" id="popupforaddress" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable ">
                         <div className={classname}>
                             <div className="modal-header">

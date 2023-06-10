@@ -1,6 +1,8 @@
 package com.shopping.query.command.service.implementation;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -80,6 +82,10 @@ public class UserServiceImpl implements UserService {
 			if (!(userRepo.existsById(userEntity.getUserName()) || userRepo.existsById(userEntity.getUserEmail()))) {
 				throw new UserNotFoundException("The user " + userEntity.getUserEmail() + " does not exists");
 			} else {
+				UserEntity presentUserEntity = getUserEntity(userEntity.getUserEmail());
+				if (Objects.isNull(userEntity.getUserPassword())) {
+					userEntity.setUserPassword(presentUserEntity.getUserPassword());
+				}
 				userRepo.save(userEntity);
 				return "You are profile has been updated with " + userEntity.getUserName();
 			}
@@ -107,7 +113,19 @@ public class UserServiceImpl implements UserService {
 		detailDto.setUserEmail(entity.getUserEmail());
 		detailDto.setUserName(entity.getUserName());
 		detailDto.setMobileNumber(entity.getMobileNumber());
+		detailDto.setDarkModeEnabled(entity.isDarkModeEnabled());
 		return detailDto;
+	}
+
+	private UserEntity getUserEntity(String userEmail) {
+		return findall().stream().filter(a -> a.getUserEmail().equalsIgnoreCase(userEmail)).findFirst().get();
+	}
+
+	@Override
+	public boolean getTheme(String userEmail) {
+		if (userRepo.existsById(userEmail))
+			return userRepo.findById(userEmail).get().isDarkModeEnabled();
+		return false;
 	}
 
 }

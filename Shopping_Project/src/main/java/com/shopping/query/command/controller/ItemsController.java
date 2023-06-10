@@ -33,36 +33,36 @@ public class ItemsController {
 
 	@PostMapping("/")
 	public ResponseEntity<String> save(@RequestBody ItemEntity itemEntity) throws ItemAlreadyException {
-		return new ResponseEntity<String>(itemService.save(itemEntity), HttpStatus.OK);
+		return new ResponseEntity<>(itemService.save(itemEntity), HttpStatus.OK);
 	}
 
 	@PostMapping("/all")
 	public ResponseEntity<String> saveall(@RequestBody List<ItemEntity> itemEntity) throws ItemAlreadyException {
-		return new ResponseEntity<String>(itemService.saveAll(itemEntity), HttpStatus.OK);
+		return new ResponseEntity<>(itemService.saveAll(itemEntity), HttpStatus.OK);
 	}
 
 	@PutMapping("/")
 	public ResponseEntity<String> update(@RequestBody ItemEntity itemEntity) throws ItemNotFoundException {
-		return new ResponseEntity<String>(itemService.update(itemEntity), HttpStatus.OK);
+		return new ResponseEntity<>(itemService.update(itemEntity), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable("id") int itemId) throws ItemNotFoundException {
-		return new ResponseEntity<String>(itemService.delete(itemId), HttpStatus.OK);
+		return new ResponseEntity<>(itemService.delete(itemId), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/")
 	public ResponseEntity<String> deleteAll() throws ItemNotFoundException {
-		return new ResponseEntity<String>(itemService.deleteAll(), HttpStatus.OK);
+		return new ResponseEntity<>(itemService.deleteAll(), HttpStatus.OK);
 	}
 
 	@GetMapping("/{id}")
 	public ResponseEntity<List<Object>> find(@PathVariable("id") int itemId) throws ItemNotFoundException {
-		return new ResponseEntity<List<Object>>(itemService.find(itemId), HttpStatus.OK);
+		return new ResponseEntity<>(itemService.find(itemId), HttpStatus.OK);
 	}
 
 	@GetMapping("/")
 	public ResponseEntity<List<ItemEntity>> viewall() {
-		return new ResponseEntity<List<ItemEntity>>(itemService.viewall(), HttpStatus.OK);
+		return new ResponseEntity<>(itemService.viewall(), HttpStatus.OK);
 	}
 }

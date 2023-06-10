@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Footer from '../Footer/Footer';
 import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import ChatBot from '../ChatBot/ChatBot';
+import loadingImg from "/Shopping_Project/shopping_app/src/Loading_Card.png";
 
 export default function OrderDetails(props) {
 
@@ -16,10 +17,14 @@ export default function OrderDetails(props) {
 
     const [orderId, setOrderId] = useState("");
 
+    const [fetchDone, setfetchDone] = useState(false);
+
     const nav = useNavigate();
 
     const fetchOrders = () => {
-        axios.get("http://localhost:8083/orders/").then((res) => { setOrder(res.data) });
+        axios.get("http://localhost:8083/orders/").then((res) => {
+            setOrder(res.data)
+        });
     }
 
     const showCopyMessage = (e) => {
@@ -34,10 +39,16 @@ export default function OrderDetails(props) {
         sessionStorage.getItem("dark") ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
             : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
         document.title = "Orders | Shopping Mart"
-        axios.get("http://localhost:8083/user/" + props.user).then(a => { return (setUser(a.data)) })
+        axios.get("http://localhost:8083/user/" + props.user).then(a => {
+            if (a.status == "200") {
+                setfetchDone(true)
+                fetchOrders()
+            }
+            return (setUser(a.data))
+        })
         fetchOrders()
         let card = document.getElementsByClassName("card-color");
-        if (sessionStorage.getItem("dark") == "yes") {
+        if (sessionStorage.getItem("dark") == "true") {
             for (const cards of card) {
                 cards.classList.add("bg-dark")
                 cards.classList.add("text-light")
@@ -75,7 +86,7 @@ export default function OrderDetails(props) {
                                     <br></br>
                                     <div className="btn-group">
                                         <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                            <i className="fa-solid fa-user"></i>&nbsp; {user.userName}
+                                            {fetchDone ? <span><i className="fa-solid fa-user"></i>&nbsp;{user.userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
                                         </button>
                                         <ul className="dropdown-menu bg-secondary-warning dropdown-menu-lg-end user">
                                             <li><Link className="dropdown-item" to={"/profile/settings"}><i className='fa-solid fa-gear'></i> Settings</Link></li>
@@ -94,63 +105,111 @@ export default function OrderDetails(props) {
                     </div>
                 </header>
                 <div className='container my-4'>
-                    <div className='card-color p-3'>
-                        {order.map(a => {
-                            return (
-                                <div key={a.orderUUIDId}>
-                                    <small className='text-muted'>Order id : {a.orderUUIDId} &nbsp;<i class="bi bi-clipboard btn btn-sm btn-outline-info" onClick={() => {
-                                        showCopyMessage(a.orderUUIDId)
-                                    }}></i>&nbsp;<span id='showMessage' className='text-success'></span></small>
-
-                                    <div className='row'>
-                                        <div className='col-12 col-md-8'>   <hr></hr>
-                                            <div className='row'>
-                                                <h4 className='col-6'>{a.item.itemName} </h4>
-                                                {a.orderStatus == "success" && <h6 className='text-end col-6 text-success'>Placed</h6>}
-                                                {a.orderStatus == "dispatched" && <h6 className='text-end col-6 text-primary'>Dispatched</h6>}
-                                                {a.orderStatus == "near by hub" && <h6 className='text-end col-6 text-info'>Near by Hub</h6>}
-                                                {a.orderStatus == "cancelled" && <h6 className='text-end col-6 text-danger'>Cancelled</h6>}
-                                            </div>
-                                            <p className='p-3'><b> Price : {a.item.itemPrice}</b></p>
-                                            <h6>Order Details</h6>
-                                            <div className='px-3'>
-                                                <p>Ordered on  <b>{a.orderedOn}</b> at <b>{a.orderedAt}</b> sec</p>
-                                                {a.orderStatus == "cancelled" ? <p className='text-decoration-line-through'>Expected delivery on {a.deliveryDate}</p> :
-                                                    <p>Expected delivery on <b>{a.deliveryDate}</b></p>}
-                                            </div>
-                                            <h6>Delivery Details</h6>
-                                            <div class="container text-center g-3 ">
-                                                <div class="row">
-                                                    <div class="col"> <p><b>Name</b> : {a.firstName + " " + a.lastName}</p>  </div>
-                                                    {a.emailAddress != "" && <div class="col">  <p><b>Email address</b> : {a.emailAddress}</p></div>}
-                                                    <div class="col">  <p><b>Mobile Number</b> : {a.phoneNumber}</p></div>
-                                                </div>
+                    {fetchDone ?
+                        <div className='card-color p-3'>
+                            {order.map(a => {
+                                return (
+                                    <div key={a.orderUUIDId}>
+                                        <small className='text-muted'>Order id : {a.orderUUIDId} &nbsp;<i class="bi bi-clipboard btn btn-sm btn-outline-info" onClick={() => {
+                                            showCopyMessage(a.orderUUIDId)
+                                        }}></i>&nbsp;<span id='showMessage' className='text-success'></span></small>
+                                        <div className='row'>
+                                            <div className='col-12 col-md-8'>   <hr></hr>
                                                 <div className='row'>
-                                                    {a.pincode != null && <div class="col"> <p><b>Pincode</b> : {a.pincode}</p></div>}
-                                                    {a.orderQuantity != null && <div class="col">  <p><b>Quantity</b> : {a.orderQuantity}</p></div>}
-                                                    {a.paymentType != null && <div class="col"> <p><b>Payment type</b> : {a.paymentType.toUpperCase()}</p></div>}
+                                                    <h4 className='col-6'>{a.item.itemName} </h4>
+                                                    {a.orderStatus == "success" && <h6 className='text-end col-6 text-success'>Placed</h6>}
+                                                    {a.orderStatus == "dispatched" && <h6 className='text-end col-6 text-primary'>Dispatched</h6>}
+                                                    {a.orderStatus == "near by hub" && <h6 className='text-end col-6 text-info'>Near by Hub</h6>}
+                                                    {a.orderStatus == "cancelled" && <h6 className='text-end col-6 text-danger'>Cancelled</h6>}
                                                 </div>
-                                            </div>
-                                            {a.orderStatus != "cancelled" && a.orderStatus != "near by hub" && <>
+                                                <p className='p-3'><b> Price :  ₹{a.item.itemPrice}</b></p>
+                                                <h6>Order Details</h6>
+                                                <div className='px-3'>
+                                                    <p>Ordered on  <b>{a.orderedOn}</b> at <b>{a.orderedAt}</b> sec</p>
+                                                    {a.orderStatus == "cancelled" ? <p className='text-decoration-line-through'>Expected delivery on {a.deliveryDate}</p> :
+                                                        <p>Expected delivery on <b>{a.deliveryDate}</b></p>}
+                                                </div>
+                                                <h6>Delivery Details</h6>
+                                                <div class="container text-center g-3 ">
+                                                    <div class="row">
+                                                        <div class="col"> <p><b>Name</b> : {a.firstName + " " + a.lastName}</p>  </div>
+                                                        {a.emailAddress != "" && <div class="col">  <p><b>Email address</b> : {a.emailAddress}</p></div>}
+                                                        <div class="col">  <p><b>Mobile Number</b> : {a.phoneNumber}</p></div>
+                                                    </div>
+                                                    <div className='row'>
+                                                        {a.pincode != null && <div class="col"> <p><b>Pincode</b> : {a.pincode}</p></div>}
+                                                        {a.orderQuantity != null && <div class="col">  <p><b>Quantity</b> : {a.orderQuantity}</p></div>}
+                                                        {a.paymentType != null && <div class="col"> <p><b>Payment type</b> : {a.paymentType.toUpperCase()}</p></div>}
+                                                    </div>
+                                                </div>
+                                                {a.orderStatus != "cancelled" && a.orderStatus != "near by hub" && <>
+                                                    <hr></hr>
+                                                    <div className='text-center'>
+                                                        <p>Do you want to cancel this order (You can cancel this before reaching to near by hub)? <button className='btn btn-danger btn-sm' onClick={() => {
+                                                            setOrderId(a.orderUUIDId);
+                                                            setShowToast(true);
+                                                        }}>Cancel Order</button></p>
+                                                    </div>
+                                                </>
+                                                }
                                                 <hr></hr>
-                                                <div className='text-center'>
-                                                    <p>Do you want to cancel this order (You can cancel this before reaching to near by hub)? <button className='btn btn-danger btn-sm' onClick={() => {
-                                                        setOrderId(a.orderUUIDId);
-                                                        setShowToast(true);
-                                                    }}>Cancel Order</button></p>
-                                                </div>
-                                            </>
-                                            }
-                                            <hr></hr>
-                                        </div>
-                                        <div className='col-4 text-end w-25 h-25'>
-                                            <img src={a.item.itemImgUrl} className="img-fluid rounded-start d-lg-block d-none float-end " alt={a.item.itemName} />
+                                            </div>
+                                            <div className='col-4 text-end w-25 h-25'>
+                                                <img src={a.item.itemImgUrl} className="img-fluid rounded-start d-lg-block d-none float-end " alt={a.item.itemName} />
+                                            </div>
                                         </div>
                                     </div>
+                                )
+                            })}
+                        </div>
+                        :
+                        <div className='card-color p-3'>
+                            <div className='row'>
+                                <div className='col-12 col-md-8'>
+                                    <div className="card-body">
+                                        <p className="card-text placeholder-glow">
+                                            <span className="placeholder col-7"></span>
+                                            <span className="placeholder col-4"></span>
+                                            <span className="placeholder col-4"></span>
+                                            <span className="placeholder col-6"></span>
+                                            <span className="placeholder col-8"></span>
+                                        </p>
+                                        <p className="card-text placeholder-glow">
+                                            <span className="placeholder col-7"></span>
+                                            <span className="placeholder col-4"></span>
+                                            <span className="placeholder col-4"></span>
+                                            <span className="placeholder col-6"></span>
+                                            <span className="placeholder col-8"></span>
+                                        </p>
+                                        <p className="card-text placeholder-glow">
+                                            <span className="placeholder col-7"></span>
+                                            <span className="placeholder col-4"></span>
+                                            <span className="placeholder col-4"></span>
+                                            <span className="placeholder col-6"></span>
+                                            <span className="placeholder col-8"></span>
+                                        </p>
+                                        <p className="card-text placeholder-glow">
+                                            <span className="placeholder col-7"></span>
+                                            <span className="placeholder col-4"></span>
+                                            <span className="placeholder col-4"></span>
+                                            <span className="placeholder col-6"></span>
+                                            <span className="placeholder col-8"></span>
+                                        </p>
+                                        <p className="card-text placeholder-glow">
+                                            <span className="placeholder col-7"></span>
+                                            <span className="placeholder col-4"></span>
+                                            <span className="placeholder col-4"></span>
+                                            <span className="placeholder col-6"></span>
+                                            <span className="placeholder col-8"></span>
+                                        </p>
+                                    </div>
                                 </div>
-                            )
-                        })}
-                    </div>
+                                <div className='col-4 text-end w-25 h-25'>
+                                    <img src={loadingImg} className="card-img-top" alt="..." />
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
 
                 <Footer />
