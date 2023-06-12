@@ -34,6 +34,36 @@ export default function Buypage(props) {
         });
     }
 
+    const sendOrderData = (e) => {
+        if (details.firstName == "" || details.phoneNumber == "" || details.pincode == "" || details.address == "" || details.paymentOption == "") {
+            validate(e)
+        } else {
+            axios.post("http://localhost:8083/orders/", {
+                "userId": user.userEmail,
+                "itemId": itemId,
+                "firstName": details.firstName,
+                "lastName": details.lastName,
+                "emailAddress": details.emailAddress,
+                "pincode": details.pincode,
+                "deliveryAddress": details.address,
+                "phoneNumber": details.phoneNumber,
+                "paymentType": details.paymentOption,
+                "orderQuantity": details.orderQuantity
+            }).then((res) => {
+                if (res.data === "Saved order") {
+                    setMessage("Order already placed on this item")
+                    let pop = document.getElementById("successPop-Parent")
+                    pop.classList.remove("d-none")
+                    setTimeout(() => {
+                        return (
+                            nav("/orders")
+                        )
+                    }, 3000)
+                }
+            }).catch(() => { return (setMessage("Order not placed due to some error"), setShowToast(true), timeout()) })
+        }
+    }
+
     const setDetailsValues = (e) => {
         const { name, value } = e.target;
         setDetails({ ...details, [name]: value })
@@ -60,6 +90,38 @@ export default function Buypage(props) {
         })
     }
 
+    const checkAddress = () => {
+        axios.post("http://localhost:8083/orders/check/", {
+            "userId": user.userEmail,
+            "itemId": 1,
+            "firstName": details.firstName,
+            "lastName": details.lastName,
+            "emailAddress": details.emailAddress,
+            "pincode": details.pincode,
+            "deliveryAddress": details.address,
+            "phoneNumber": details.phoneNumber,
+            "paymentType": details.paymentOption,
+            "orderQuantity": details.orderQuantity
+        }).then(res => {
+            if (!res.data) {
+                setShowAddressToast(true)
+            } else {
+                setShowAddressToast(false)
+                sendOrderData();
+            }
+        })
+    }
+
+    const fetchUser = () => {
+        axios.get("http://localhost:8083/user/" + props.user).then(a => {
+            if (a.status == "200") {
+                getItem();
+                setfetchDone(true);
+            }
+            return (setUser(a.data))
+        });
+    }
+
     const selectedAddressStore = (a) => {
         setDetails({
             firstName: a.firstName,
@@ -71,13 +133,8 @@ export default function Buypage(props) {
         })
     }
 
-    const setPaymentOptions = () => {
-        let options = document.getElementsByName("paymentButtons")
-        for (let i = 0; i <= options.length; i++) {
-            if (options[i].checked) {
-                details.paymentOption = options[i].value
-            }
-        }
+    const setPaymentOptions = (type) => {
+        details.paymentOption = type;
     }
 
     var number = 1;
@@ -118,62 +175,10 @@ export default function Buypage(props) {
 
     let itemId = "";
 
-    const sendOrderData = (e) => {
-        if (details.firstName == "" || details.phoneNumber == "" || details.pincode == "" || details.address == "" || details.paymentOption == "") {
-            validate(e)
-        } else {
-            axios.post("http://localhost:8083/orders/", {
-                "userId": user.userEmail,
-                "itemId": itemId,
-                "firstName": details.firstName,
-                "lastName": details.lastName,
-                "emailAddress": details.emailAddress,
-                "pincode": details.pincode,
-                "deliveryAddress": details.address,
-                "phoneNumber": details.phoneNumber,
-                "paymentType": details.paymentOption,
-                "orderQuantity": details.orderQuantity
-            }).then((res) => {
-                if (res.data === "Saved order") {
-                    setMessage("Order already placed on this item")
-                    let pop = document.getElementById("successPop-Parent")
-                    pop.classList.remove("d-none")
-                    setTimeout(() => {
-                        return (
-                            nav("/orders")
-                        )
-                    }, 3000)
-                }
-            }).catch(() => { return (setMessage("Order not placed due to some error"), setShowToast(true), timeout()) })
-        }
-    }
-
     const timeout = () => {
         setTimeout(() => {
             setShowToast(false);
         }, 4000);
-    }
-
-    const checkAddress = () => {
-        axios.post("http://localhost:8083/orders/check/", {
-            "userId": user.userEmail,
-            "itemId": 1,
-            "firstName": details.firstName,
-            "lastName": details.lastName,
-            "emailAddress": details.emailAddress,
-            "pincode": details.pincode,
-            "deliveryAddress": details.address,
-            "phoneNumber": details.phoneNumber,
-            "paymentType": details.paymentOption,
-            "orderQuantity": details.orderQuantity
-        }).then(res => {
-            if (!res.data) {
-                setShowAddressToast(true)
-            } else {
-                setShowAddressToast(false)
-                sendOrderData();
-            }
-        })
     }
 
     useEffect(() => {
@@ -196,14 +201,7 @@ export default function Buypage(props) {
                 cards.classList.remove("text-light")
             }
         }
-        axios.get("http://localhost:8083/user/" + props.user).then(a => {
-            if (a.status == "200") {
-                getItem();
-                setfetchDone(true);
-            }
-            return (setUser(a.data))
-        });
-        getItem();
+        fetchUser();
         fetchAddress();
     }, [])
 
@@ -411,11 +409,11 @@ export default function Buypage(props) {
                             <div className="col-6">
                                 <h6>Payment Options : <span className="mx-3 text-danger" style={{ fontSize: "10px" }}>{errors.paymentOption}</span></h6>
                                 <div className="px-3" >
-                                    <input className="form-check-input" type={"radio"} name={"paymentButtons"} id="payment_cards" onClick={setPaymentOptions} value={"cards"}></input>
+                                    <input className="form-check-input" type={"radio"} name={"paymentButtons"} id="payment_cards" onClick={() => { setPaymentOptions("Cards") }} value={"cards"}></input>
                                     <label className="form-check-label" htmlFor="payment_cards" >&nbsp;Cards</label><br></br>
-                                    <input className="form-check-input" type={"radio"} name={"paymentButtons"} id="payment_cod" onClick={setPaymentOptions} value={"cod"} ></input>
+                                    <input className="form-check-input" type={"radio"} name={"paymentButtons"} id="payment_cod" onClick={() => { setPaymentOptions("COD") }} value={"cod"} ></input>
                                     <label className="form-check-label" htmlFor="payment_cod" >&nbsp;Cash On Delivery</label><br></br>
-                                    <input className="form-check-input" type={"radio"} name={"paymentButtons"} id="payment_upi" onClick={setPaymentOptions} value={"upi"}></input>
+                                    <input className="form-check-input" type={"radio"} name={"paymentButtons"} id="payment_upi" onClick={() => { setPaymentOptions("UPI") }} value={"upi"}></input>
                                     <label className="form-check-label" htmlFor="payment_upi" >&nbsp;UPI</label><br></br>
                                 </div>
                             </div>

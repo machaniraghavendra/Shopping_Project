@@ -110,7 +110,7 @@ export default function OrderDetails(props) {
                             {order.map(a => {
                                 return (
                                     <div key={a.orderUUIDId}>
-                                        <small className='text-muted'>Order id : {a.orderUUIDId} &nbsp;<i class="bi bi-clipboard btn btn-sm btn-outline-info" onClick={() => {
+                                        <small className='text-muted'>Order id : {a.orderUUIDId} &nbsp;<i className="bi bi-clipboard btn btn-sm btn-outline-info" onClick={() => {
                                             showCopyMessage(a.orderUUIDId)
                                         }}></i>&nbsp;<span id='showMessage' className='text-success'></span></small>
                                         <div className='row'>
@@ -130,16 +130,16 @@ export default function OrderDetails(props) {
                                                         <p>Expected delivery on <b>{a.deliveryDate}</b></p>}
                                                 </div>
                                                 <h6>Delivery Details</h6>
-                                                <div class="container text-center g-3 ">
-                                                    <div class="row">
-                                                        <div class="col"> <p><b>Name</b> : {a.firstName + " " + a.lastName}</p>  </div>
-                                                        {a.emailAddress != "" && <div class="col">  <p><b>Email address</b> : {a.emailAddress}</p></div>}
-                                                        <div class="col">  <p><b>Mobile Number</b> : {a.phoneNumber}</p></div>
+                                                <div className="container text-center g-3 ">
+                                                    <div className="row">
+                                                        <div className="col"> <p><b>Name</b> : {a.firstName + " " + a.lastName}</p>  </div>
+                                                        {a.emailAddress != "" && <div className="col">  <p><b>Email address</b> : {a.emailAddress}</p></div>}
+                                                        <div className="col">  <p><b>Mobile Number</b> : {a.phoneNumber}</p></div>
                                                     </div>
                                                     <div className='row'>
-                                                        {a.pincode != null && <div class="col"> <p><b>Pincode</b> : {a.pincode}</p></div>}
-                                                        {a.orderQuantity != null && <div class="col">  <p><b>Quantity</b> : {a.orderQuantity}</p></div>}
-                                                        {a.paymentType != null && <div class="col"> <p><b>Payment type</b> : {a.paymentType.toUpperCase()}</p></div>}
+                                                        {a.pincode != null && <div className="col"> <p><b>Pincode</b> : {a.pincode}</p></div>}
+                                                        {a.orderQuantity != null && <div className="col">  <p><b>Quantity</b> : {a.orderQuantity}</p></div>}
+                                                        {a.paymentType != null && <div className="col"> <p><b>Payment type</b> : {a.paymentType.toUpperCase()}</p></div>}
                                                     </div>
                                                 </div>
                                                 {a.orderStatus != "cancelled" && a.orderStatus != "near by hub" && <>
