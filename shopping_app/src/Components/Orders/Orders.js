@@ -106,7 +106,7 @@ export default function Orders(props) {
                                 :
                                 orders.map(item => {
                                     return (
-                                        <div className='col-lg-6 ' key={item.orderId}>
+                                        <div className='col-lg-6 ' key={item.item.itemId}>
                                             <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
                                                 <div className="row g-0" >
                                                     <div className="col-md-4 d-none d-lg-flex justify-content-center">
@@ -137,8 +137,8 @@ export default function Orders(props) {
                             }
                         </div>
                         :
-                        <div class="row g-4">
-                            <div class="col-sm-6 mb-3 mb-sm-0">
+                        <div className="row g-4">
+                            <div className="col-sm-6 mb-3 mb-sm-0">
                                 <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
                                     <div className="row g-0" >
                                         <div className="col-md-4 d-none d-lg-flex justify-content-center">
@@ -158,7 +158,7 @@ export default function Orders(props) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 mb-3 mb-sm-0">
+                            <div className="col-sm-6 mb-3 mb-sm-0">
                                 <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
                                     <div className="row g-0" >
                                         <div className="col-md-4 d-none d-lg-flex justify-content-center">
@@ -178,7 +178,7 @@ export default function Orders(props) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 mb-3 mb-sm-0">
+                            <div className="col-sm-6 mb-3 mb-sm-0">
                                 <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
                                     <div className="row g-0" >
                                         <div className="col-md-4 d-none d-lg-flex justify-content-center">
@@ -198,7 +198,7 @@ export default function Orders(props) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 mb-3 mb-sm-0">
+                            <div className="col-sm-6 mb-3 mb-sm-0">
                                 <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
                                     <div className="row g-0" >
                                         <div className="col-md-4 d-none d-lg-flex justify-content-center">
@@ -218,7 +218,7 @@ export default function Orders(props) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 mb-3 mb-sm-0">
+                            <div className="col-sm-6 mb-3 mb-sm-0">
                                 <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
                                     <div className="row g-0" >
                                         <div className="col-md-4 d-none d-lg-flex justify-content-center">
@@ -238,7 +238,7 @@ export default function Orders(props) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6 mb-3 mb-sm-0">
+                            <div className="col-sm-6 mb-3 mb-sm-0">
                                 <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
                                     <div className="row g-0" >
                                         <div className="col-md-4 d-none d-lg-flex justify-content-center">

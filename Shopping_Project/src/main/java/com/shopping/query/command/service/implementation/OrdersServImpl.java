@@ -167,8 +167,8 @@ public class OrdersServImpl implements OrderService {
 	@Override
 	public List<OrdersDto> getOrdersofUser(String userId) {
 		List<OrdersEntity> ordersEntities = getAllOrders().stream().filter(a -> a.getUserId().equalsIgnoreCase(userId))
-				.sorted(Comparator.comparing(OrdersEntity::getOrderedOn, Comparator.reverseOrder()))
 				.sorted(Comparator.comparing(OrdersEntity::getOrderedAt, Comparator.reverseOrder()))
+				.sorted(Comparator.comparing(OrdersEntity::getOrderedOn, Comparator.reverseOrder()))
 				.collect(Collectors.toList());
 		List<OrdersDto> list = new ArrayList<>();
 

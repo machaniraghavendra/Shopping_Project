@@ -286,7 +286,7 @@ export default function Settings(props) {
 
         sessionStorage.getItem("dark") == "true" ?
             document.querySelector(".listss").classList.add("text-light") : document.querySelector(".listss").classList.add("text-dark")
-
+            
         sessionStorage.getItem("dark") == "true" ?
             document.getElementById("flexSwitchCheckChecked").checked = true && (document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)")
             :

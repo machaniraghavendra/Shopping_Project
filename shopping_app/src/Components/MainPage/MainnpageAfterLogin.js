@@ -31,11 +31,12 @@ export default function MainPageAfterlogin(props) {
     }
 
     const currentuser = () => {
-        axios.get("http://localhost:8083/user/" + props.user).then(a => { 
-          if (a.status == "200") {
-            setfetchDone(true)
-        }    
-        return (setUserName(a.data.userName)) })
+        axios.get("http://localhost:8083/user/" + props.user).then(a => {
+            if (a.status == "200") {
+                setfetchDone(true)
+            }
+            return (setUserName(a.data.userName))
+        })
     }
 
     const check = () => {
@@ -44,36 +45,44 @@ export default function MainPageAfterlogin(props) {
         let title2 = document.querySelector(".check .container-fluid h2");
         let extraId = document.querySelector(".extraId");
         let scroll = document.querySelector(".scroll-up");
-
-        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 220) {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 220 && window.location.href.includes("mart")) {
             top.classList.add("fixed-top");
             title.innerHTML = ' <img src="https://media.istockphoto.com/vectors/shopping-bag-flat-icon-pixel-perfect-for-mobile-and-web-vector-id1145783156?k=20&m=1145783156&s=612x612&w=0&h=RJdFiHDeaQJt3KbyIfJmWS12iQrD63DUCMWPrFLumwk=" alt="" width="35" height="35" className="d-inline-block align-text-top" />&nbsp;Shopping Mart'
             title2.innerHTML = ""
         }
-        if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 620) {
+        if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 620 && window.location.href.includes("mart")) {
             scroll.style.display = "block";
             title2.classList.remove("d-none")
         }
         else {
-            top.classList.remove("fixed-top");
-            scroll.style.display = "none";
-            title.innerHTML = "Contents";
+            setTimeout(() => {
+                if (window.location.href.includes("mart")) {
+                    top.classList.remove("fixed-top");
+                    scroll.style.display = "none";
+                    title.innerHTML = "Contents";
+                }
+            }, 500);
         }
     }
+
+    window.onscroll = () => {
+        check()
+    }
+
     const checkPresentUser = () => {
         if (userName == undefined) {
             localStorage.removeItem("currentuser")
             localStorage.removeItem("Raghu")
         }
     }
+
     setTimeout(() => {
         checkPresentUser();
     }, 400);
 
     useEffect(() => {
-        sessionStorage.getItem("dark") =="true"? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
+        sessionStorage.getItem("dark") == "true" ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
             : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
-        window.onscroll = () => check();
         currentuser();
         document.title = "Mart | Shopping Mart"
         setTimeout(() => {
@@ -102,7 +111,7 @@ export default function MainPageAfterlogin(props) {
                                     <br></br>
                                     <div className="btn-group">
                                         <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                        {fetchDone ? <span><i className="fa-solid fa-user"></i>&nbsp;{userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
+                                            {fetchDone ? <span><i className="fa-solid fa-user"></i>&nbsp;{userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
                                         </button>
                                         <ul className="dropdown-menu bg-secondary-warning dropdown-menu-lg-end user">
                                             <li><Link className="dropdown-item" to={"/profile/settings"}><i className='fa-solid fa-gear'></i> Settings</Link></li>
