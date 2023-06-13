@@ -1,7 +1,6 @@
 import "../ChatBot/chatBot.css"
 import axios from "axios"
 import { React, Component } from "react";
-import { Link } from "react-router-dom";
 
 class ChatBot extends Component {
     constructor(props) {

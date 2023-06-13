@@ -16,6 +16,10 @@ export default function SignUp() {
 
     const [showToast, setShowToast] = useState(false);
 
+    const [error, setError] = useState(false);
+
+    const [errorMessage, setErrorMessage] = useState("");
+
     const nav = useNavigate();
 
     const set = (e) => {
@@ -28,11 +32,18 @@ export default function SignUp() {
         if (isSubmit == true) {
             if (formErrors.userName == "" && formErrors.userEmail == "" && formErrors.mobileNumber == "" && formErrors.password == "") {
                 axios.post("http://localhost:8083/user/", user)
-                    .then(res => { return (setInfo(res.data), setIsSubmit(false), setShowToast(true), timeout()) })
+                    .then(res => { return (setInfo(res.data), setIsSubmit(false), setShowToast(true), timeout()) }).catch((error) => {
+                        setError(true);
+                        if (error.response.data === undefined) {
+                            setErrorMessage("Something went wrong")
+                        } else {
+                            setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                        }
+                    })
             }
         }
     }
-    
+
     const timeout = () => {
         setTimeout(() => {
             setShowToast(false);
@@ -89,9 +100,9 @@ export default function SignUp() {
         }
         return errors;
     }
-useEffect(()=>{
-    document.title = "Sign | Shopping Mart"
-})
+    useEffect(() => {
+        document.title = "Sign | Shopping Mart"
+    })
     return (
         <section className="  position-absolute" style={{ backgroundColor: "#9A616D", width: "100%", height: "100%" }}>
             <div className='container-fluid  h-100 vh-10' style={{ backgroundColor: "#9A616D" }}>
@@ -196,14 +207,28 @@ useEffect(()=>{
                     <div className="toast-body">
                         {info}
                         <div className="mt-2 pt-2">
-                            <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={()=>{nav("/login")}}>Ok</button>
+                            <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { nav("/login") }}>Ok</button>
                         </div>
                     </div>
 
                 </div>
             </div>}
 
-
+            {/* Error pop */}
+            {error && <>
+                <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div className="d-flex">
+                        <div className="toast-body text-danger text-center">
+                            <h6>Error !</h6>
+                            {errorMessage}
+                            <div className="mt-2 pt-2">
+                                <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { setError(false); setErrorMessage("") }}>Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>
+            }
         </section>
     )
 }

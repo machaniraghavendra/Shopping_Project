@@ -16,16 +16,26 @@ export default function MainPage() {
 
     const [info, setInfo] = useState("");
 
+    const [error, setError] = useState(false);
+
+    const [errorMessage, setErrorMessage] = useState("");
 
     var count = 0;
-    
+
     const fetch = () => {
         axios.get("http://localhost:8083/items/")
-            .then((res) => { return (setData(res.data)) })
+            .then((res) => { return (setData(res.data)) }).catch((error) => {
+                setError(true);
+                if (error.response.data === undefined) {
+                    setErrorMessage("Something went wrong")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
+            })
     }
 
     setTimeout(() => {
-        window.onload= document.querySelector(".check .container-fluid h1").innerHTML = "Contents";
+        window.onload = document.querySelector(".check .container-fluid h1").innerHTML = "Contents";
     }, 100);
 
     const check = () => {
@@ -179,7 +189,7 @@ export default function MainPage() {
                                                         if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
                                                             axios.post("http://localhost:8083/cart/", {
                                                                 "itemId": e.itemId,
-                                                                "userId":localStorage.getItem("currentuser")
+                                                                "userId": localStorage.getItem("currentuser")
                                                             }, []).then((res) => { return (setInfo(res.data)) })
                                                         } else {
                                                             setInfo("Login required")
@@ -192,7 +202,7 @@ export default function MainPage() {
                                                         if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
                                                             axios.post("http://localhost:8083/fav/", {
                                                                 "itemId": e.itemId,
-                                                                "userId":localStorage.getItem("currentuser")
+                                                                "userId": localStorage.getItem("currentuser")
                                                             }, []).then((res) => { return (setInfo(res.data)) })
                                                         } else {
                                                             setInfo("Login required !")
@@ -320,6 +330,22 @@ export default function MainPage() {
                     }}>
                     <h4><i className="fa-solid fa-angle-up"></i></h4></button>
             </div>
+
+            {/* Error pop */}
+            {error && <>
+                <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div className="d-flex">
+                        <div className="toast-body text-danger text-center">
+                            <h6>Error !</h6>
+                            {errorMessage}
+                            <div className="mt-2 pt-2">
+                                <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { setError(false); setErrorMessage("") }}>Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>
+            }F
         </div >
     )
 }

@@ -20,6 +20,10 @@ export default function ForgotPass(props) {
 
     const [userInfo, setuserInfo] = useState([]);
 
+    const [error, setError] = useState(false);
+
+    const [errorMessage, setErrorMessage] = useState("");
+
     const check = () => {
 
         if (isSubmit == true) {
@@ -40,6 +44,14 @@ export default function ForgotPass(props) {
                                 .catch(() => { return (setInfo("Email is not signed with us, please sign up again !"), setShowToast(true), timeout()) })
                         )
                     })
+                        .catch((error) => {
+                            setError(true);
+                            if (error.response.data === undefined) {
+                                setErrorMessage("Something went wrong")
+                            } else {
+                                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                            }
+                        })
                 } else {
                     return (
                         setInfo("The new and conform password's are not matched"), setShowToast(true), timeout()
@@ -67,7 +79,14 @@ export default function ForgotPass(props) {
     const set = (e) => {
         const { name, value } = e.target
         setValues({ ...values, [name]: value })
-        axios.get("http://localhost:8083/user/" + values.userEmail).then(res => { return (setuserInfo(res.data)) })
+        axios.get("http://localhost:8083/user/" + values.userEmail).then(res => { return (setuserInfo(res.data)) }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
         document.getElementById("loginbtn").classList.remove("d-none");
     }
 
@@ -179,6 +198,22 @@ export default function ForgotPass(props) {
 
                 </div>
             </div>}
+
+            {/* Error pop */}
+            {error && <>
+                <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div className="d-flex">
+                        <div className="toast-body text-danger text-center">
+                            <h6>Error !</h6>
+                            {errorMessage}
+                            <div className="mt-2 pt-2">
+                                <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { setError(false); setErrorMessage("") }}>Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>
+            }
 
         </section>
     )

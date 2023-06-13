@@ -11,9 +11,20 @@ export default function Mobiles() {
 
     const [showToast, setShowToast] = useState(false);
 
+    const [error, setError] = useState(false);
+
+    const [errorMessage, setErrorMessage] = useState("");
+
     const fetch = () => {
         axios.get("http://localhost:8083/items/")
-            .then((res) => { return (setMobiles(res.data)) })
+            .then((res) => { return (setMobiles(res.data)) }) .catch((error) => {
+                setError(true);
+                if (error.response.data === undefined) {
+                    setErrorMessage("Something went wrong")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
+            })
     }
 
     const timeout = () => {
@@ -48,7 +59,14 @@ export default function Mobiles() {
                                                         axios.post("http://localhost:8083/cart/", {
                                                             "itemId": e.itemId,
                                                             "userId": localStorage.getItem("currentuser")
-                                                        }, []).then((res) => { return (setInfo(res.data)) })
+                                                        }, []).then((res) => { return (setInfo(res.data)) }) .catch((error) => {
+                                                            setError(true);
+                                                            if (error.response.data === undefined) {
+                                                                setErrorMessage("Something went wrong")
+                                                            } else {
+                                                                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                            }
+                                                        })
                                                     } else {
                                                         return (setInfo("Login required !"), setShowToast(true), timeout())
                                                     }
@@ -59,7 +77,14 @@ export default function Mobiles() {
                                                         axios.post("http://localhost:8083/fav/", {
                                                             "itemId": e.itemId,
                                                             "userId": localStorage.getItem("currentuser")
-                                                        }, []).then((res) => { return (setInfo(res.data)) })
+                                                        }, []).then((res) => { return (setInfo(res.data)) }) .catch((error) => {
+                                                            setError(true);
+                                                            if (error.response.data === undefined) {
+                                                                setErrorMessage("Something went wrong")
+                                                            } else {
+                                                                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                            }
+                                                        })
                                                     } else {
                                                         return (setInfo("Login required !"), setShowToast(true), timeout())
                                                     }
@@ -95,6 +120,22 @@ export default function Mobiles() {
                     </div>
                 </div>
             </div>}
+
+              {/* Error pop */}
+              {error && <>
+                <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div className="d-flex">
+                        <div className="toast-body text-danger text-center">
+                            <h6>Error !</h6>
+                            {errorMessage}
+                            <div className="mt-2 pt-2">
+                                <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { setError(false); setErrorMessage("") }}>Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>
+            }
         </div>
     )
 }

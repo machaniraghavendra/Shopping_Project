@@ -1,4 +1,4 @@
-.loader {
+.loader , .loa{
     margin: auto;
     border: 10px solid #EAF0F6;
     border-radius: 50%;
@@ -14,6 +14,11 @@
     justify-content: center;
     display: flex;
     margin: auto;
+}
+
+.reload{
+    position: fixed;
+    top: 60%;
 }
 
 @keyframes spinner {

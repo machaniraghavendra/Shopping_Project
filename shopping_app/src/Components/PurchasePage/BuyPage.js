@@ -28,10 +28,21 @@ export default function Buypage(props) {
 
     const [fetchDone, setfetchDone] = useState(false);
 
+    const [error, setError] = useState(false);
+
+    const [errorMessage, setErrorMessage] = useState("");
+
     const getItem = () => {
         axios.get("http://localhost:8083/purchase/?userId=" + props.user).then(a => {
             return (setItem(a.data))
-        });
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
     }
 
     const sendOrderData = (e) => {
@@ -61,6 +72,14 @@ export default function Buypage(props) {
                     }, 3000)
                 }
             }).catch(() => { return (setMessage("Order not placed due to some error"), setShowToast(true), timeout()) })
+                .catch((error) => {
+                    setError(true);
+                    if (error.response.data === undefined) {
+                        setErrorMessage("Something went wrong")
+                    } else {
+                        setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                    }
+                })
         }
     }
 
@@ -73,6 +92,13 @@ export default function Buypage(props) {
     const fetchAddress = () => {
         axios.get("http://localhost:8083/address/user/" + props.user).then(res => {
             return (setAddress(res.data))
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
         })
     }
 
@@ -87,6 +113,13 @@ export default function Buypage(props) {
             "firstName": details.firstName
         }).then(() => {
             sendOrderData()
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
         })
     }
 
@@ -109,6 +142,13 @@ export default function Buypage(props) {
                 setShowAddressToast(false)
                 sendOrderData();
             }
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
         })
     }
 
@@ -119,7 +159,14 @@ export default function Buypage(props) {
                 setfetchDone(true);
             }
             return (setUser(a.data))
-        });
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
     }
 
     const selectedAddressStore = (a) => {
@@ -182,11 +229,11 @@ export default function Buypage(props) {
     }
 
     useEffect(() => {
-        sessionStorage.getItem("dark") ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
+        sessionStorage.getItem("dark") === "true" ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
             : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
         document.title = "Purchase | Shopping Mart"
         let card = document.getElementsByClassName("card-color");
-        if (sessionStorage.getItem("dark") == "true") {
+        if (sessionStorage.getItem("dark") === "true") {
             for (const cards of card) {
                 cards.classList.add("bg-dark")
                 cards.classList.add("text-light")
@@ -502,6 +549,22 @@ export default function Buypage(props) {
                 </div>}
                 <br></br>
             </div>
+
+            {/* Error pop */}
+            {error && <>
+                <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div className="d-flex">
+                        <div className="toast-body text-danger text-center">
+                            <h6>Error !</h6>
+                            {errorMessage}
+                            <div className="mt-2 pt-2">
+                                <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { setError(false); setErrorMessage("") }}>Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>
+            }
             <ChatBot />
         </div>
     )

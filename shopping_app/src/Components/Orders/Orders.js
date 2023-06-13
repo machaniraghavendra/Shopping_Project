@@ -14,12 +14,23 @@ export default function Orders(props) {
 
     const [fetchDone, setfetchDone] = useState(false);
 
+    const [error, setError] = useState(false);
+
+    const [errorMessage, setErrorMessage] = useState("");
+
     const fetchOrders = () => {
         axios.get("http://localhost:8083/orders/orderWithUser?userId=" + props.user).then((res) => {
             if (res.status == "200") {
                 setfetchDone(true)
             }
             setOrders(res.data);
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
         })
     }
 
@@ -31,7 +42,14 @@ export default function Orders(props) {
         sessionStorage.getItem("dark") ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
             : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
         document.title = "Orders | Shopping Mart"
-        axios.get("http://localhost:8083/user/" + props.user).then(a => { return (setUser(a.data)) })
+        axios.get("http://localhost:8083/user/" + props.user).then(a => { return (setUser(a.data)) }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
         fetchOrders()
         let card = document.getElementsByClassName("card-color");
         if (sessionStorage.getItem("dark") == "true") {
@@ -287,6 +305,21 @@ export default function Orders(props) {
                     </div>
                 </div>
             </div>
+            {/* Error pop */}
+            {error && <>
+                <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div className="d-flex">
+                        <div className="toast-body text-danger text-center">
+                            <h6>Error !</h6>
+                            {errorMessage}
+                            <div className="mt-2 pt-2">
+                                <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { setError(false); setErrorMessage("") }}>Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>
+            }
             <ChatBot />
         </div>
     )
