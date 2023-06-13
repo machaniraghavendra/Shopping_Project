@@ -30,20 +30,25 @@ export default function Settings(props) {
 
     const [close, setClose] = useState("modals");
 
-    const [theme, setTheme] = useState();
+    const [theme, setTheme] = useState(false);
 
     const [fetchDone, setfetchDone] = useState(false);
 
     const [fetchAddressDone, setfetchAddressDone] = useState(false);
 
+    const [error, setError] = useState(false);
+
+    const [errorMessage, setErrorMessage] = useState("");
+
     const check = (mode) => {
-        updateTheme(mode)
+        getTheme(mode)
+        // updateTheme(mode)
         if (!document.getElementById("flexSwitchCheckChecked").checked) {
             document.getElementById("round").classList.remove("round")
             document.getElementById("round1").classList.add("round-light")
             setTimeout(() => {
                 document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
-                sessionStorage.removeItem("dark")
+                // sessionStorage.removeItem("dark")
                 document.getElementById("flexSwitchCheckChecked").checked = false
                 document.querySelector(".listss").classList.add("text-dark")
                 document.querySelector(".listss").classList.remove("text-light")
@@ -54,7 +59,7 @@ export default function Settings(props) {
             setTimeout(() => {
                 document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
                 document.getElementById("flexSwitchCheckChecked").checked = true
-                sessionStorage.setItem("dark", theme)
+                // sessionStorage.setItem("dark", theme)
                 document.querySelector(".listss").classList.add("text-light")
                 document.querySelector(".listss").classList.remove("text-dark")
             }, 500);
@@ -70,12 +75,14 @@ export default function Settings(props) {
         }).then(getTheme());
     }
 
-    const getTheme = () => {
-        axios.get("http://localhost:8083/user/theme/" + props.user).then((a) => {
-            if (a.data == true) {
-                sessionStorage.setItem("dark", a.data);
-            }
-        })
+    const getTheme = (mode) => {
+        sessionStorage.setItem("dark", mode);
+        setTheme(mode);
+        // axios.get("http://localhost:8083/user/theme/" + props.user).then((a) => {
+        //     if (a.data == true) {
+        //         // sessionStorage.setItem("dark", a.data);
+        //     }
+        // })
     }
 
     const currentuser = () => {
@@ -84,6 +91,13 @@ export default function Settings(props) {
                 setfetchDone(true)
             }
             return (setUser(res.data))
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
         })
     }
 
@@ -93,6 +107,13 @@ export default function Settings(props) {
                 setfetchAddressDone(true)
             }
             return (setAddress(res.data))
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
         })
     }
 
@@ -119,6 +140,13 @@ export default function Settings(props) {
                 timeoutAddress();
                 fetchAddress();
                 clearDetails();
+            }).catch((error) => {
+                setError(true);
+                if (error.response.data === undefined) {
+                    setErrorMessage("Something went wrong")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
             })
         }
     }
@@ -148,12 +176,26 @@ export default function Settings(props) {
                 timeoutAddress();
                 fetchAddress();
                 clearDetails();
+            }).catch((error) => {
+                setError(true);
+                if (error.response.data === undefined) {
+                    setErrorMessage("Something went wrong")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
             })
         }
     }
 
     const deleteAddress = (e) => {
-        axios.delete("http://localhost:8083/address/" + props.user + "/" + e).then(() => { fetchAddress() })
+        axios.delete("http://localhost:8083/address/" + props.user + "/" + e).then(() => { fetchAddress() }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
     }
 
     const validateAddress = (e) => {
@@ -280,13 +322,20 @@ export default function Settings(props) {
     useEffect(() => {
         currentuser();
         fetchAddress();
-        axios.get("http://localhost:8083/user/theme/" + props.user).then(a => setTheme(a.data));
-        getTheme();
+        axios.get("http://localhost:8083/user/theme/" + props.user).then(a => setTheme(a.data)).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        });
+        getTheme(sessionStorage.getItem("dark") === "true" ? true : false);
         { sessionStorage.getItem("dark") == "true" ? setClassname("modal-content bg-dark text-light") : setClassname("modal-content") }
 
         sessionStorage.getItem("dark") == "true" ?
             document.querySelector(".listss").classList.add("text-light") : document.querySelector(".listss").classList.add("text-dark")
-            
+
         sessionStorage.getItem("dark") == "true" ?
             document.getElementById("flexSwitchCheckChecked").checked = true && (document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)")
             :
@@ -341,7 +390,7 @@ export default function Settings(props) {
                     </div>
                 </header>
                 <div className="row container-fluid my-3">
-                    <div className="col-sm-4">
+                    <div className="col-lg-4">
                         <div className='col cart-aside d-lg-block'>
                             <aside className=' '>
                                 <div className="offcanvas-lg offcanvas-start alert alert-info" tabIndex="-1" id="offcanvasResponsive" aria-labelledby="offcanvasResponsiveLabel">
@@ -378,7 +427,7 @@ export default function Settings(props) {
                             </aside>
                         </div>
                     </div>
-                    <div className="col-sm-8">
+                    <div className="col-lg-8">
                         <div className="my-3 col float-md-left float-lg-right">
                             <figure className='text-center'>
                                 <i className='fa-solid fa-user userCircle'></i>
@@ -427,7 +476,14 @@ export default function Settings(props) {
                                                                 "userName": values.userName,
                                                                 "userEmail": user.userEmail,
                                                                 "mobileNumber": user.mobileNumber
-                                                            }).then(res => { setInfo(res.data); })
+                                                            }).then(res => { setInfo(res.data); }).catch((error) => {
+                                                                setError(true);
+                                                                if (error.response.data === undefined) {
+                                                                    setErrorMessage("Something went wrong")
+                                                                } else {
+                                                                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                                }
+                                                            })
                                                             return (
                                                                 timeout(),
                                                                 setShowToast(true),
@@ -452,7 +508,14 @@ export default function Settings(props) {
                                                                 "userName": user.userName,
                                                                 "userEmail": user.userEmail,
                                                                 "mobileNumber": values.mobileNumber
-                                                            }).then(res => { setInfo(res.data); })
+                                                            }).then(res => { setInfo(res.data); }).catch((error) => {
+                                                                setError(true);
+                                                                if (error.response.data === undefined) {
+                                                                    setErrorMessage("Something went wrong")
+                                                                } else {
+                                                                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                                }
+                                                            })
                                                             return (
                                                                 timeout(),
                                                                 setShowToast(true),
@@ -481,7 +544,7 @@ export default function Settings(props) {
                         <div className='container data text-light w-75 py-2 my-3' >
                             <div className="form-switch text-center"  >
                                 <label className="form-check-label" htmlFor="flexSwitchCheckChecked">Dark Mode :</label>
-                                <input className="form-check-input mx-3" type="checkbox" role="switch" onClick={(a) => { return (check(a.target.checked)) }} id="flexSwitchCheckChecked" checked={theme} />
+                                <input className="form-check-input mx-3" type="checkbox" role="switch" onClick={(a) => { return (check(a.target.checked)) }} id="flexSwitchCheckChecked" checked={sessionStorage.getItem("dark") === "true" ? true : false} />
                                 <div className='rounds ' id='round'> </div>
                                 <div className='rounds ' id='round1'> </div>
                             </div>
@@ -768,6 +831,22 @@ export default function Settings(props) {
                         </div>
                     </div>
                 </div>}
+
+                {/* Error pop */}
+                {error && <>
+                    <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div className="d-flex">
+                            <div className="toast-body text-danger text-center">
+                                <h6>Error !</h6>
+                                {errorMessage}
+                                <div className="mt-2 pt-2">
+                                    <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { setError(false); setErrorMessage("") }}>Ok</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+                }
             </div >
         )
     } else {

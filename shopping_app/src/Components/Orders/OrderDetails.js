@@ -19,11 +19,22 @@ export default function OrderDetails(props) {
 
     const [fetchDone, setfetchDone] = useState(false);
 
+    const [error, setError] = useState(false);
+
+    const [errorMessage, setErrorMessage] = useState("");
+
     const nav = useNavigate();
 
     const fetchOrders = () => {
         axios.get("http://localhost:8083/orders/").then((res) => {
             setOrder(res.data)
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
         });
     }
 
@@ -45,6 +56,13 @@ export default function OrderDetails(props) {
                 fetchOrders()
             }
             return (setUser(a.data))
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
         })
         fetchOrders()
         let card = document.getElementsByClassName("card-color");
@@ -223,6 +241,13 @@ export default function OrderDetails(props) {
                                     onClick={() => {
                                         axios.put("http://localhost:8083/orders/updateOrder/" + orderId + "/" + "cancelled").then(() => {
                                             nav("/orders")
+                                        }).catch((error) => {
+                                            setError(true);
+                                            if (error.response.data === undefined) {
+                                                setErrorMessage("Something went wrong")
+                                            } else {
+                                                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                            }
                                         });
                                         setShowToast(false);
                                     }}
@@ -260,7 +285,21 @@ export default function OrderDetails(props) {
                     </div>
                 </div>
             </div>
-
+            {/* Error pop */}
+            {error && <>
+                <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div className="d-flex">
+                        <div className="toast-body text-danger text-center">
+                            <h6>Error !</h6>
+                            {errorMessage}
+                            <div className="mt-2 pt-2">
+                                <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { setError(false); setErrorMessage("") }}>Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>
+            }
             <ChatBot />
 
         </div>

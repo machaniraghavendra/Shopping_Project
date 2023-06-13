@@ -18,9 +18,13 @@ export default function Login(props) {
 
     const [userName, setUserName] = useState([]);
 
-    const[what,setWhat]=useState(false);
+    const [what, setWhat] = useState(false);
 
     const nav = useNavigate();
+
+    const [error, setError] = useState(false);
+
+    const [errorMessage, setErrorMessage] = useState("");
 
     const set = (e) => {
         const { name, value } = e.target;
@@ -29,7 +33,14 @@ export default function Login(props) {
     }
 
     const userCheck = () => {
-        axios.get("http://localhost:8083/user/" + user.userEmail).then((res) => { return (setUserName(res.data)) })
+        axios.get("http://localhost:8083/user/" + user.userEmail).then((res) => { return (setUserName(res.data)) }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
     }
 
     const check = () => {
@@ -38,12 +49,20 @@ export default function Login(props) {
                 axios.get("http://localhost:8083/user/" + user.userEmail + "/" + user.userPassword)
                     .then(res => {
                         if (res.data) {
-                            { localStorage.setItem("Raghu", "raghu") ;localStorage.setItem("currentuser", userName.userEmail)};
+                            { localStorage.setItem("Raghu", "raghu"); localStorage.setItem("currentuser", userName.userEmail) };
                             if (localStorage.getItem("Raghu")) {
                                 return (setInfo(""),
                                     setShowToast(true), timeout(),
-                                    axios.get("http://localhost:8083/user/id/"+props.user).then(res=>{return(setWhat(true))}),
-                                    
+                                    axios.get("http://localhost:8083/user/id/" + props.user).then(res => { return (setWhat(true)) })
+                                        .catch((error) => {
+                                            setError(true);
+                                            if (error.response.data === undefined) {
+                                                setErrorMessage("Something went wrong")
+                                            } else {
+                                                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                            }
+                                        }),
+
                                     setTimeout(() => {
                                         return (
                                             window.location.reload(),
@@ -56,6 +75,14 @@ export default function Login(props) {
                         if (!res.data) {
                             return ((setInfo("You don't have account with us , if already created check password once !"),
                                 setShowToast(true), timeout()))
+                        }
+                    })
+                    .catch((error) => {
+                        setError(true);
+                        if (error.response.data === undefined) {
+                            setErrorMessage("Something went wrong")
+                        } else {
+                            setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
                         }
                     })
             }
@@ -103,13 +130,13 @@ export default function Login(props) {
 
     useEffect(() => {
         document.title = "Login | Shopping Mart"
-        if (localStorage.getItem("currentuser")&&localStorage.getItem("Raghu")) {
-                nav("/mart")
+        if (localStorage.getItem("currentuser") && localStorage.getItem("Raghu")) {
+            nav("/mart")
         }
     }, [])
 
 
-    if (localStorage.getItem("Raghu")&&localStorage.getItem("currentuser")) {
+    if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
         return (
             <section className="vh-100 py-5 position-absolute" style={{ backgroundColor: "BLACK", width: "100%", height: "100%" }}>
                 <div className='container-fluid justify-content-center text-center text-light'>
@@ -123,7 +150,7 @@ export default function Login(props) {
                     </h1>
                 </div>
             </section>)
-    }else {
+    } else {
         return (
             <section className="vh-100 py-5 position-absolute" style={{ backgroundColor: "#9A616D", width: "100%", height: "100%" }}>
 
@@ -211,6 +238,22 @@ export default function Login(props) {
                         </div>
                     </div>
                 </div>}
+
+                {/* Error pop */}
+                {error && <>
+                    <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div className="d-flex">
+                            <div className="toast-body text-danger text-center">
+                                <h6>Error !</h6>
+                                {errorMessage}
+                                <div className="mt-2 pt-2">
+                                    <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { setError(false); setErrorMessage("") }}>Ok</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+                }
             </section>
         )
     }

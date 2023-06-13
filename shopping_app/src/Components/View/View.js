@@ -25,6 +25,10 @@ export default function View(props) {
 
     const [fetchUserDone, setfetchUserDone] = useState(false);
 
+    const [error, setError] = useState(false);
+
+    const [errorMessage, setErrorMessage] = useState("");
+
     const timeout = () => {
         setTimeout(() => {
             setShowToast(false);
@@ -32,7 +36,14 @@ export default function View(props) {
     }
 
     const similar = () => {
-        axios.get("http://localhost:8083/items/").then(res => { return (setItems(res.data)) })
+        axios.get("http://localhost:8083/items/").then(res => { return (setItems(res.data)) }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
     }
 
     const getItem = () => {
@@ -42,6 +53,13 @@ export default function View(props) {
                     setfetchItemDone(true)
                 }
                 setviewItem(res.data)
+            }).catch((error) => {
+                setError(true);
+                if (error.response.data === undefined) {
+                    setErrorMessage("Something went wrong")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
             })
         similar();
     }
@@ -49,7 +67,7 @@ export default function View(props) {
     const check = () => {
         let darks = document.getElementsByClassName("view")
         for (const dark of darks) {
-            if (sessionStorage.getItem("dark")) {
+            if (sessionStorage.getItem("dark")==="true") {
                 dark.classList.add("bg-dark")
                 dark.classList.add("text-light")
             } else {
@@ -76,13 +94,20 @@ export default function View(props) {
 
     useEffect(() => {
         check();
-        sessionStorage.getItem("dark") ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
+        sessionStorage.getItem("dark") ==="true"? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
             : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
         axios.get("http://localhost:8083/user/" + props.user).then(a => {
             if (a.status == "200") {
                 setfetchUserDone(true)
             }
             setUserName(a.data.userName)
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
         });
         getItem()
     }, []
@@ -140,7 +165,14 @@ export default function View(props) {
                                                 axios.post("http://localhost:8083/cart/", {
                                                     "itemId": item.itemId,
                                                     "userId": localStorage.getItem("currentuser")
-                                                }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
+                                                }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
+                                                    setError(true);
+                                                    if (error.response.data === undefined) {
+                                                        setErrorMessage("Something went wrong")
+                                                    } else {
+                                                        setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                    }
+                                                })
                                             } else {
                                                 setInfo("Login required")
                                             }
@@ -153,7 +185,14 @@ export default function View(props) {
                                                 axios.post("http://localhost:8083/fav/", {
                                                     "itemId": item.itemId,
                                                     "userId": localStorage.getItem("currentuser")
-                                                }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
+                                                }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
+                                                    setError(true);
+                                                    if (error.response.data === undefined) {
+                                                        setErrorMessage("Something went wrong")
+                                                    } else {
+                                                        setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                    }
+                                                })
                                             } else {
                                                 setInfo("Login required")
                                             }
@@ -173,7 +212,14 @@ export default function View(props) {
                                         <span>Total amount : <b> ₹{item.itemPrice}</b>-&gt;</span>
                                         <Link to={"/purchase"}>
                                             <button className='btn btn-warning' onClick={() => {
-                                                axios.post("http://localhost:8083/purchase/" + item.itemId + "?userId=" + props.user);
+                                                axios.post("http://localhost:8083/purchase/" + item.itemId + "?userId=" + props.user).catch((error) => {
+                                                    setError(true);
+                                                    if (error.response.data === undefined) {
+                                                        setErrorMessage("Something went wrong")
+                                                    } else {
+                                                        setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                    }
+                                                });
                                             }}>Buy now</button>
                                         </Link>
                                     </div>
@@ -227,7 +273,14 @@ export default function View(props) {
                                                     axios.post("http://localhost:8083/cart/", {
                                                         "itemId": a.itemId,
                                                         "userId": localStorage.getItem("currentuser")
-                                                    }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
+                                                    }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
+                                                        setError(true);
+                                                        if (error.response.data === undefined) {
+                                                            setErrorMessage("Something went wrong")
+                                                        } else {
+                                                            setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                        }
+                                                    })
                                                 } else {
                                                     setInfo("Login required")
                                                 }
@@ -238,7 +291,14 @@ export default function View(props) {
                                                     axios.post("http://localhost:8083/fav/", {
                                                         "itemId": a.itemId,
                                                         "userId": localStorage.getItem("currentuser")
-                                                    }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
+                                                    }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
+                                                        setError(true);
+                                                        if (error.response.data === undefined) {
+                                                            setErrorMessage("Something went wrong")
+                                                        } else {
+                                                            setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                        }
+                                                    })
                                                 } else {
                                                     setInfo("Login required !")
                                                 }
@@ -377,6 +437,22 @@ export default function View(props) {
                     </div>
                 </div>
             </div>
+
+            {/* Error pop */}
+            {error && <>
+                <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div className="d-flex">
+                        <div className="toast-body text-danger text-center">
+                            <h6>Error !</h6>
+                            {errorMessage}
+                            <div className="mt-2 pt-2">
+                                <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { setError(false); setErrorMessage("") }}>Ok</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>
+            }
         </div>
 
     )
