@@ -4,7 +4,7 @@ import axios from "axios"
 import { Link, useNavigate } from "react-router-dom";
 import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import ChatBot from '../ChatBot/ChatBot';
-import loadingImg from "/Shopping_Project/shopping_app/src/Loading_Card.png";
+import loadingImg from "/Shopping_Project/shopping_app/src/Components/Loading_Card.png";
 
 export default function Buypage(props) {
 

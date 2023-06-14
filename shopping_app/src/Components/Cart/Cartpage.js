@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import "../Cart/Cart.css"
 import Footer from '../Footer/Footer';
 import ChatBot from '../ChatBot/ChatBot';
-import loadingImg from "/Shopping_Project/shopping_app/src/Loading_Card.png";
+import loadingImg from "/Shopping_Project/shopping_app/src/Components/Loading_Card.png";
 
 export default function Cartpage(props) {
 

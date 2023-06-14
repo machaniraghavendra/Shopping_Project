@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import "../Sports/Sport.css"
 import { Link } from 'react-router-dom';
-import loadingImg from "/Shopping_Project/shopping_app/src/Loading_Card.png";
+import loadingImg from "/Shopping_Project/shopping_app/src/Components/Loading_Card.png";
 
 export default function Sports() {
 
