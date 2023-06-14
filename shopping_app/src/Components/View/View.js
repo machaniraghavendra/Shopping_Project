@@ -5,7 +5,7 @@ import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import Footer from '../Footer/Footer';
 import { Link } from 'react-router-dom';
 import ChatBot from '../ChatBot/ChatBot';
-import loadingImg from "/Shopping_Project/shopping_app/src/Components/Loading_Card.png";
+import loadingImg from "../Resources/Loading_Card.png";
 
 export default function View(props) {
 
