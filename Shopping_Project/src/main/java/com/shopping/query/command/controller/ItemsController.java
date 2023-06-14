@@ -23,7 +23,7 @@ import com.shopping.query.command.service.ItemService;
 import io.swagger.annotations.Api;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RequestMapping("/items/")
 @Api(tags = "Items", description = "Gives all items data")
 public class ItemsController {

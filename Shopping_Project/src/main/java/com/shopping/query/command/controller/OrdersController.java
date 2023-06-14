@@ -27,7 +27,7 @@ import com.shopping.query.command.service.OrderService;
 import io.swagger.annotations.Api;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RequestMapping("/orders/")
 @Api(tags = "Order Details", description = "Gives all order data")
 public class OrdersController {

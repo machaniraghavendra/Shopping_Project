@@ -18,7 +18,7 @@ import com.shopping.query.command.exceptions.UserNotFoundException;
 import com.shopping.query.command.service.BotService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RequestMapping("/bot/")
 public class BotController {
 
