@@ -15,7 +15,7 @@ import com.shopping.query.command.service.PurchaseService;
 
 import io.swagger.annotations.Api;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/purchase")
 @Api(tags = "Which item wants to purchase", description = "Shows the item which you want to purchase")

@@ -27,7 +27,7 @@ import com.shopping.query.command.service.CartService;
 
 @RestController
 @RequestMapping("/cart")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 public class CartController {
 
 	@Autowired
