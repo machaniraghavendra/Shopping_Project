@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import "../Mobiles/Mob.css";
+import "./Mob.css";
 import axios from "axios";
 import { Link } from 'react-router-dom';
 

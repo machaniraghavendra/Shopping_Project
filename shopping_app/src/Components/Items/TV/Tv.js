@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import axios from "axios";
-import "../Sports/Sport.css"
 import { Link } from 'react-router-dom';
-import loadingImg from "../Resources/Loading_Card.png";
+import "./Tv.css"
+import loadingImg from "/Shopping_Project/shopping_app/src/Components/Resources/Loading_Card.png";
 
-export default function Sports() {
+export default function TV() {
 
-  const [sports, setSports] = useState([]);
+  const [TV, setTV] = useState([]);
 
   const [info, setInfo] = useState("");
 
@@ -17,6 +17,8 @@ export default function Sports() {
   const [error, setError] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState("");
+
+  var i = 0;
 
   const timeout = () => {
     setTimeout(() => {
@@ -30,7 +32,7 @@ export default function Sports() {
         if (res.status == "200") {
           setfetchDone(true)
         }
-        return (setSports(res.data))
+        return (setTV(res.data))
       }).catch((error) => {
         setError(true);
         if (error.response.data === undefined) {
@@ -47,73 +49,75 @@ export default function Sports() {
 
   return (
     <div className='container-fluid'>
-      <h2 id='Sports' className='dark'>Sports  <i className="fa-thin fa-baseball" style={{ fontFamily: "fontAwesome" }}></i></h2>
+      <h2 id='TV' className='dark'>Television  <i className="bi bi-tv" style={{ fontFamily: "fontAwesome" }}></i></h2>
       {fetchDone ?
-
-        sports.length == [] || !sports.map(e => { e.itemType.toLowerCase().includes("Sports".toLowerCase()) }) ?
+        TV.length == [] || !TV.map(e => { e.itemType.toLowerCase().includes("TV".toLowerCase()) }) ?
           <div className='container-fluid justify-content-center text-center'>
             <h1>No Items Found !</h1>
           </div>
           :
-          <div className='container-fluid justify-content-center text-center' id="back-card-bg-sports">
+          <div className='container-fluid justify-content-center text-center' id="back-card-bg-TV">
             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gap-4 justify-content-center text-center">
-              {sports.map(e => {
-                if (e.itemType.toLowerCase().includes("sports".toLowerCase())) {
-                  return (
-                    <div className='col row' key={e.itemId}>&nbsp;
-                      <div className="card" data-aos="fade-right">
-                        <div className='card-header justify-content-end text-end'>
-                          <button className='btn  m-2' onClick={() => {
-                            if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
-                              axios.post("http://localhost:8083/cart/", {
-                                "itemId": e.itemId,
-                                "userId": localStorage.getItem("currentuser")
-                              }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
-                                setError(true);
-                                if (error.response.data === undefined) {
-                                  setErrorMessage("Something went wrong")
-                                } else {
-                                  setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-                                }
-                              })
-                            } else {
-                              return (setInfo("Login required !"), setShowToast(true), timeout())
-                            }
-                          }}
-                          ><i className='fa-solid fa-cart-shopping text-info'></i></button>
-                          <button className='btn ' onClick={() => {
-                            if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
-                              axios.post("http://localhost:8083/fav/", {
-                                "itemId": e.itemId,
-                                "userId": localStorage.getItem("currentuser")
-                              }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
-                                setError(true);
-                                if (error.response.data === undefined) {
-                                  setErrorMessage("Something went wrong")
-                                } else {
-                                  setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-                                }
-                              })
-                            } else {
-                              return (setInfo("Login required !"), setShowToast(true), timeout())
-                            }
-                          }}
-                          ><i className="fa-solid fa-heart text-danger"></i> </button>
+              {TV.map(e => {
+                if (e.itemType.toLowerCase().includes("TV".toLowerCase())) {
+                  i++;
+                  if (i <= 4) {
+                    return (
+                      <div className='col row' key={e.itemId}>&nbsp;
+                        <div className="card" data-aos="fade-right">
+                          <div className='card-header justify-content-end text-end'>
+                            <button className='btn  m-2' onClick={() => {
+                              if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                axios.post("http://localhost:8083/cart/", {
+                                  "itemId": e.itemId,
+                                  "userId": localStorage.getItem("currentuser")
+                                }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
+                                  setError(true);
+                                  if (error.response.data === undefined) {
+                                    setErrorMessage("Something went wrong")
+                                  } else {
+                                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                  }
+                                })
+                              } else {
+                                return (setInfo("Login required !"), setShowToast(true), timeout())
+                              }
+                            }}
+                            ><i className='fa-solid fa-cart-shopping text-info'></i></button>
+                            <button className='btn ' onClick={() => {
+                              if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                axios.post("http://localhost:8083/fav/", {
+                                  "itemId": e.itemId,
+                                  "userId": localStorage.getItem("currentuser")
+                                }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
+                                  setError(true);
+                                  if (error.response.data === undefined) {
+                                    setErrorMessage("Something went wrong")
+                                  } else {
+                                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                  }
+                                })
+                              } else {
+                                return (setInfo("Login required !"), setShowToast(true), timeout())
+                              }
+                            }}
+                            ><i className="fa-solid fa-heart text-danger"></i> </button>
+                          </div>
+                          <img src={e.itemImgUrl} className="card-img-top" alt="..." />
+                          <div className="card-body">
+                            <h6 className="card-title text-truncate" id={e.itemName}>{e.itemName}</h6>
+                            <p className="card-text text-truncate"><b>Price : </b> ₹{e.itemPrice}</p>
+                          </div>
+                          <Link to={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info'>View More...</Link>
                         </div>
-                        <img src={e.itemImgUrl} className="card-img-top" alt="..." />
-                        <div className="card-body">
-                          <h6 className="card-title text-truncate" id={e.itemName}>{e.itemName}</h6>
-                          <p className="card-text text-truncate"><b>Price : </b> ₹{e.itemPrice}</p>
-                        </div>
-                        <Link to={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info'>View More...</Link>
                       </div>
-                    </div>
-                  )
+                    )
+                  }
                 }
               })
               }
             </div><br></br>
-            <Link className='btn btn-info' to={"/sports"}>View More Items....</Link><br></br>
+            <Link className='btn btn-info' to={'/viewmore/Tv'}>View More Television's....</Link><br></br>
             &nbsp;
           </div>
         :

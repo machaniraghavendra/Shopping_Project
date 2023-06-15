@@ -177,7 +177,6 @@ export default function View(props) {
                                                 setInfo("Login required")
                                             }
                                         }}
-                                            data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo"
                                         ><i className='fa-solid fa-cart-shopping text-info'></i></button>
 
                                         <button className='btn ' onClick={() => {
@@ -255,7 +254,7 @@ export default function View(props) {
             <div className='container'>
                 <h3 className='view p-2'>Similar Products </h3>
                 {fetchItemDone ?
-                    <div className="row row-card row-cols-2 row-cols-md-4 g-4 align-content-center justify-content-center my-3" >
+                    <div className="row  row-card row-cols-2 row-cols-md-4 g-4 align-content-center text-center my-3" >
                         {items.filter(a => {
                             return (
                                 a.itemType == viewItem.map(a => { return (a.itemType) }))

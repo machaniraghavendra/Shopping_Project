@@ -159,6 +159,9 @@ export default function OrderDetails(props) {
                                                         {a.orderQuantity != null && <div className="col">  <p><b>Quantity</b> : {a.orderQuantity}</p></div>}
                                                         {a.paymentType != null && <div className="col"> <p><b>Payment type</b> : {a.paymentType.toUpperCase()}</p></div>}
                                                     </div>
+                                                    <div className='row'>
+                                                        {a.deliveryAddress != null && <div className="col"> <p><b>Delivery Address</b> : {a.deliveryAddress}</p></div>}
+                                                    </div>
                                                 </div>
                                                 {a.orderStatus != "cancelled" && a.orderStatus != "near by hub" && <>
                                                     <hr></hr>
