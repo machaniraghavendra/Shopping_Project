@@ -4,16 +4,16 @@ import Footer from './Components/Footer/Footer';
 import Login from "./Components/Login/Login";
 import SignUp from "./Components/Login/SignUp";
 import MainPage from './Components/MainPage/Mainpage';
-import Mobiles from './Components/Mobiles/Mobiles';
-import Shirts from './Components/Shirts/Shirts';
-import Sports from './Components/Sports/Sports';
+import Mobiles from './Components/Items/Mobiles/Mobiles';
+import Shirts from './Components/Items/Shirts/Shirts';
+import Sports from './Components/Items/Sports/Sports';
 import Trending from './Components/Trending/Trending';
 import MainpageAfterLog from "./Components/MainPage/MainnpageAfterLogin"
 import ErrorPage from "./Components/Error/ErrorPage";
 import Cartpage from "./Components/Cart/Cartpage";
 import Wishlist from "./Components/WishList/Wishlist";
 import ForgotPass from "./Components/Login/ForgotPass";
-import MobileLog from "./Components/Mobiles/MobileLog";
+import MobileLog from "./Components/Items/Mobiles/MobileLog";
 import View from "./Components/View/View";
 import { useState } from "react";
 import axios from "axios";
@@ -22,6 +22,14 @@ import Buypage from "./Components/PurchasePage/BuyPage";
 import Orders from "./Components/Orders/Orders";
 import OrderDetails from "./Components/Orders/OrderDetails";
 import LoadingPage from "./Components/Error/LoadingPage";
+import SmartWatches from "./Components/Items/SmartWatches/SmartWatches";
+import Watches from "./Components/Items/Watches/watches";
+import Cameras from "./Components/Items/Cameras/Cameras";
+import MusicalInstruments from "./Components/Items/MusicalItems/MusicalItems";
+import Books from "./Components/Items/Books/Books";
+import TV from "./Components/Items/TV/Tv";
+import Headfones from "./Components/Items/Headfones/Headfones";
+import ViewMoreItems from "./Components/View/ViewMoreItems";
 
 function App() {
   let user = localStorage.getItem("currentuser");
@@ -56,6 +64,7 @@ function App() {
               <Route path="/profile/settings" element={<Settings user={user} />} />
               <Route path="/orders" element={<Orders user={user} />} />
               <Route path="/orderdetails" element={<OrderDetails user={user} />} />
+              <Route path="/viewmore/*" element={<ViewMoreItems user={user} />} />
               <Route path="/mart" element={
                 <>
                   <MainpageAfterLog user={user} />
@@ -63,6 +72,13 @@ function App() {
                   <MobileLog />
                   <Sports />
                   <Shirts />
+                  <SmartWatches />
+                  <Watches />
+                  <Cameras />
+                  <MusicalInstruments />
+                  <Books />
+                  <TV />
+                  <Headfones />
                   <Footer />
                 </>
               } />

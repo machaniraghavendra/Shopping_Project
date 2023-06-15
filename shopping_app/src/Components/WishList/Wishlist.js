@@ -53,9 +53,9 @@ export default function Wishlist(props) {
         } else {
           setErrorMessage(
             error.response.data.message +
-              " of status = '" +
-              error.response.data.status +
-              "'"
+            " of status = '" +
+            error.response.data.status +
+            "'"
           );
         }
       });
@@ -98,9 +98,9 @@ export default function Wishlist(props) {
   useEffect(() => {
     sessionStorage.getItem("dark") === "true"
       ? (document.body.style =
-          " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)")
+        " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)")
       : (document.body.style =
-          "background: radial-gradient( #f5ff37, rgb(160, 255, 97))");
+        "background: radial-gradient( #f5ff37, rgb(160, 255, 97))");
     window.onscroll = () => check();
     document.title = "WishList | Shopping Mart";
     axios
@@ -115,9 +115,9 @@ export default function Wishlist(props) {
         } else {
           setErrorMessage(
             error.response.data.message +
-              " of status = '" +
-              error.response.data.status +
-              "'"
+            " of status = '" +
+            error.response.data.status +
+            "'"
           );
         }
       });
@@ -354,10 +354,10 @@ export default function Wishlist(props) {
                                   axios
                                     .delete(
                                       "http://localhost:8083/fav/" +
-                                        e.itemName +
-                                        "?" +
-                                        "userEmail=" +
-                                        localStorage.getItem("currentuser")
+                                      e.itemName +
+                                      "?" +
+                                      "userEmail=" +
+                                      localStorage.getItem("currentuser")
                                     )
                                     .then((res) => {
                                       return (
@@ -374,16 +374,13 @@ export default function Wishlist(props) {
                                       } else {
                                         setErrorMessage(
                                           error.response.data.message +
-                                            " of status = '" +
-                                            error.response.data.status +
-                                            "'"
+                                          " of status = '" +
+                                          error.response.data.status +
+                                          "'"
                                         );
                                       }
                                     });
                                 }}
-                                data-bs-toggle="modal"
-                                data-bs-target="#exampleModal2"
-                                data-bs-whatever="@mdo"
                               >
                                 <i className="fa-solid fa-trash text-danger"></i>
                               </button>
@@ -420,9 +417,9 @@ export default function Wishlist(props) {
                                         } else {
                                           setErrorMessage(
                                             error.response.data.message +
-                                              " of status = '" +
-                                              error.response.data.status +
-                                              "'"
+                                            " of status = '" +
+                                            error.response.data.status +
+                                            "'"
                                           );
                                         }
                                       });
@@ -489,10 +486,10 @@ export default function Wishlist(props) {
                                   axios
                                     .delete(
                                       "http://localhost:8083/fav/" +
-                                        e.itemName +
-                                        "?" +
-                                        "userEmail=" +
-                                        localStorage.getItem("currentuser")
+                                      e.itemName +
+                                      "?" +
+                                      "userEmail=" +
+                                      localStorage.getItem("currentuser")
                                     )
                                     .then((res) => {
                                       return (
@@ -509,9 +506,9 @@ export default function Wishlist(props) {
                                       } else {
                                         setErrorMessage(
                                           error.response.data.message +
-                                            " of status = '" +
-                                            error.response.data.status +
-                                            "'"
+                                          " of status = '" +
+                                          error.response.data.status +
+                                          "'"
                                         );
                                       }
                                     });
@@ -529,9 +526,9 @@ export default function Wishlist(props) {
                                   axios
                                     .post(
                                       "http://localhost:8083/purchase/" +
-                                        e.itemId +
-                                        "?userId=" +
-                                        props.user
+                                      e.itemId +
+                                      "?userId=" +
+                                      props.user
                                     )
                                     .catch((error) => {
                                       setError(true);
@@ -540,9 +537,9 @@ export default function Wishlist(props) {
                                       } else {
                                         setErrorMessage(
                                           error.response.data.message +
-                                            " of status = '" +
-                                            error.response.data.status +
-                                            "'"
+                                          " of status = '" +
+                                          error.response.data.status +
+                                          "'"
                                         );
                                       }
                                     });
@@ -774,10 +771,10 @@ export default function Wishlist(props) {
                                     axios
                                       .delete(
                                         "http://localhost:8083/fav/" +
-                                          e.itemName +
-                                          "?" +
-                                          "userEmail=" +
-                                          localStorage.getItem("currentuser")
+                                        e.itemName +
+                                        "?" +
+                                        "userEmail=" +
+                                        localStorage.getItem("currentuser")
                                       )
                                       .then((res) => {
                                         return (
@@ -796,9 +793,9 @@ export default function Wishlist(props) {
                                         } else {
                                           setErrorMessage(
                                             error.response.data.message +
-                                              " of status = '" +
-                                              error.response.data.status +
-                                              "'"
+                                            " of status = '" +
+                                            error.response.data.status +
+                                            "'"
                                           );
                                         }
                                       });
@@ -846,9 +843,9 @@ export default function Wishlist(props) {
                                           } else {
                                             setErrorMessage(
                                               error.response.data.message +
-                                                " of status = '" +
-                                                error.response.data.status +
-                                                "'"
+                                              " of status = '" +
+                                              error.response.data.status +
+                                              "'"
                                             );
                                           }
                                         });

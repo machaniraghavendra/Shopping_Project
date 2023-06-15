@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import "../Shirts/shirt.css"
 import axios from "axios";
 import { Link } from 'react-router-dom';
 import loadingImg from "../Resources/Loading_Card.png";
+import Footer from '../Footer/Footer';
+import ChatBot from '../ChatBot/ChatBot';
 
-export default function Shirts() {
+export default function ViewMoreItems(props) {
 
-    const [shirt, setShirts] = useState([]);
+    const [items, setItems] = useState([]);
 
     const [info, setInfo] = useState("");
 
@@ -18,19 +19,21 @@ export default function Shirts() {
 
     const [errorMessage, setErrorMessage] = useState("");
 
-    const timeout = () => {
-        setTimeout(() => {
-            setShowToast(false);
-        }, 4000);
-    }
+    const [itemType, setItemType] = useState("");
+
+    const [search, setSearch] = useState("");
+
+    const [filters, setfilters] = useState("");
 
     const fetch = () => {
         axios.get("http://localhost:8083/items/")
             .then((res) => {
                 if (res.status == "200") {
-                    setfetchDone(true)
-                } return (setShirts(res.data))
-            }) .catch((error) => {
+                    setfetchDone(true);
+                    getPlaceholder()
+                }
+                return (setItems(res.data))
+            }).catch((error) => {
                 setError(true);
                 if (error.response.data === undefined) {
                     setErrorMessage("Something went wrong")
@@ -40,42 +43,141 @@ export default function Shirts() {
             })
     }
 
+    const getItemTypefromUrl = () => {
+        if (window.location.href.includes("%")) {
+            setItemType(window.location.href.substring(window.location.href.lastIndexOf("/")).replace("/", "").replaceAll("%20", " "));
+        } else {
+            setItemType(window.location.href.substring(window.location.href.lastIndexOf("/")).replace("/", ""));
+        }
+    }
+
+    const timeout = () => {
+        setTimeout(() => {
+            setShowToast(false);
+        }, 4000);
+    }
+
+    const getPlaceholder = () => {
+        if (window.location.pathname.includes("/viewmore")) {
+            // let searchbar = document.getElementById("viewSearchbar");
+            // let getIndex = Math.floor(Math.random() * items.length)
+            // fetchDone ? searchbar.placeholder = items[getIndex].itemName : searchbar.placeholder = "Search..."
+        }
+    }
+    setInterval(getPlaceholder, 5000);
+
+    const check = () => {
+        let dark = document.querySelectorAll(".dark")
+        for (const darks of dark) {
+            if (sessionStorage.getItem("dark") === "true") {
+                darks.classList.add("text-light")
+            } else {
+                darks.classList.add("text-dark")
+            }
+        }
+    }
+
     useEffect(() => {
+        getPlaceholder();
+        check();
+        getItemTypefromUrl();
         return (fetch())
     }, [])
 
     return (
-        <div className='container-fluid'>
-            <h2 id='Dresses' className='dark'>Dresses <i className="fa-duotone fa-shirt" style={{ fontFamily: "fontAwesome" }}></i></h2>
+        <div className='container-fluid'> 
+            <div className='bg-info row'>
+                <div className='col-3'>
+                    <span className='fs-5'>
+                        <i className="fa-thin fa-arrow-left btn m-1" style={{ fontFamily: "fontAwesome" }} onClick={() => { return (window.history.back()) }}></i>
+                        <span id='items' className='dark  fw-semibold'>{itemType.toUpperCase()} </span>
+                    </span>
+                </div>
+                <div className='col-2 justify-content-center align-items-center text-center'>
+                    <div><input type='search' className='form-control form-control-sm w-75 ' id="viewSearchbar" placeholder='Search...'
+                        onChange={(a) => {
+                            setSearch(a.target.value)
+                        }}
+                    /></div>
+                </div>
+                <div className='col-7 align-items-center text-center d-grid gap-2'>
+                    <div className="btn-group gap-1" role="group" >
+                        <input type="radio" className="btn-check btn-sm" name="btnradio" id="all" autoComplete="off" onClick={() => setfilters("")} checked />
+                        <label className="btn btn-outline-warning text-dark" htmlFor="all">All</label>
+
+                        <input type="radio" className="btn-check btn-sm" name="btnradio" id="500" autoComplete="off" onClick={() => setfilters("500")} />
+                        <label className="btn btn-outline-warning text-dark" htmlFor="500">&lt;500</label>
+                        
+                        <input type="radio" className="btn-check btn-sm" name="btnradio" id="1000" autoComplete="off" onClick={() => setfilters("1000")} />
+                        <label className="btn btn-outline-warning text-dark" htmlFor="1000">&lt;1000</label>
+
+                        <input type="radio" className="btn-check btn-sm" name="btnradio" id="5000" autoComplete="off" onClick={() => setfilters("5000")} />
+                        <label className="btn btn-outline-warning text-dark" htmlFor="5000">&lt;5000</label>
+
+                        <input type="radio" className="btn-check btn-sm" name="btnradio" id="10000" autoComplete="off" onClick={() => { setfilters("10000") }} />
+                        <label className="btn btn-outline-warning text-dark" htmlFor="10000">&lt;10000</label>
+
+                        <input type="radio" className="btn-check btn-sm" name="btnradio" id="50000" autoComplete="off" onClick={() => setfilters("50000")} />
+                        <label className="btn btn-outline-warning text-dark" htmlFor="50000">&lt;50000</label>
+
+                        <input type="radio" className="btn-check btn-sm" name="btnradio" id="100000" autoComplete="off" onClick={() => setfilters("100000")} />
+                        <label className="btn btn-outline-warning text-dark" htmlFor="100000">&lt;100000</label>
+
+                        <input type="radio" className="btn-check btn-sm" name="btnradio" id=">100000" autoComplete="off" onClick={() => setfilters(">100000")} />
+                        <label className="btn btn-outline-warning text-dark" htmlFor=">100000">&gt;100000</label>
+                    </div>
+                </div>
+            </div>
             {fetchDone ?
-                shirt.length == [] || !shirt.map(e => { e.itemType.toLowerCase().includes("Dresses".toLowerCase()) }) ?
+                items.length == [] || !items.map(e => { e.itemType.toLowerCase().includes(itemType.toLowerCase()) }) ?
                     <div className='container-fluid justify-content-center text-center'>
                         <h1>No Items Found !</h1>
                     </div>
                     :
-                    <>
-                        <div className='container-fluid justify-content-center text-center' id='back-card-bg-menshirts'>
-                            <h2 id='Shirts-men' className='m-3'>Shirts For Men</h2>
-                            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gap-4 justify-content-center text-center">
-                                {shirt.map(e => {
-                                    if (e.itemType.toLowerCase().includes("Dresses for men".toLowerCase())) {
+                    <div className='container-fluid justify-content-center text-center' id='back-card-bg-' >
+                        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gap-4 justify-content-center text-center ">
+                            {items
+                                .filter(a => {
+                                    if (search === "") {
+                                        return a;
+                                    }
+                                    if (a.itemName.toLowerCase().includes(search.toLowerCase())) {
+                                        return a;
+                                    }
+                                })
+                                .filter(a => {
+                                    if (filters === "") {
+                                        return a;
+                                    }
+                                    if (parseInt(filters) > parseInt(a.itemPrice.replaceAll(",", ""))) {
+                                        return a;
+                                    }
+                                    if (filters === ">100000") {
+                                        if (parseInt(filters.replace(">","")) < parseInt(a.itemPrice.replaceAll(",", ""))) {
+                                            return a;
+                                        }
+                                    }
+                                })
+                                .map((e) => {
+                                    if (e.itemType.toLowerCase().includes(itemType.toLowerCase())) {
                                         return (
-                                            <div className='col row' key={e.itemId}>
-                                                <div className="card" data-aos="zoom-in-right">
+                                            <div className=' col row ' key={e.itemId}>&nbsp;
+                                                <div className="card " data-aos="fade-up" >
                                                     <div className='card-header justify-content-end text-end'>
                                                         <button className='btn  m-2' onClick={() => {
                                                             if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
                                                                 axios.post("http://localhost:8083/cart/", {
                                                                     "itemId": e.itemId,
                                                                     "userId": localStorage.getItem("currentuser")
-                                                                }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }) .catch((error) => {
-                                                                    setError(true);
-                                                                    if (error.response.data === undefined) {
-                                                                        setErrorMessage("Something went wrong")
-                                                                    } else {
-                                                                        setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-                                                                    }
-                                                                })
+                                                                }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
+                                                                    .catch((error) => {
+                                                                        setError(true);
+                                                                        if (error.response.data === undefined) {
+                                                                            setErrorMessage("Something went wrong")
+                                                                        } else {
+                                                                            setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                                        }
+                                                                    })
                                                             } else {
                                                                 return (setInfo("Login required !"), setShowToast(true), timeout())
                                                             }
@@ -86,104 +188,40 @@ export default function Shirts() {
                                                                 axios.post("http://localhost:8083/fav/", {
                                                                     "itemId": e.itemId,
                                                                     "userId": localStorage.getItem("currentuser")
-                                                                }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }) .catch((error) => {
-                                                                    setError(true);
-                                                                    if (error.response.data === undefined) {
-                                                                        setErrorMessage("Something went wrong")
-                                                                    } else {
-                                                                        setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-                                                                    }
-                                                                })
+                                                                }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
+                                                                    .catch((error) => {
+                                                                        setError(true);
+                                                                        if (error.response.data === undefined) {
+                                                                            setErrorMessage("Something went wrong")
+                                                                        } else {
+                                                                            setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                                        }
+                                                                    })
                                                             } else {
                                                                 return (setInfo("Login required !"), setShowToast(true), timeout())
                                                             }
                                                         }}
-                                                            data-bs-toggle="modal" data-bs-target="#exampleModal4" data-bs-whatever="@mdo"
                                                         ><i className="fa-solid fa-heart text-danger"></i> </button>
                                                     </div>
-                                                    <img src={e.itemImgUrl} className="card-img-top" alt="..." />
-                                                    <div className="card-body">
-                                                        <h6 className="card-title text-truncate">{e.itemName}</h6>
-                                                        <p className="card-text text-truncate"><b>Price : </b> ₹{e.itemPrice}</p>
-                                                    </div>
-                                                    <Link to={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info'>View More...</Link>
+                                                    <img src={e.itemImgUrl} className="card-img-top" alt={e.itemName} />
 
-                                                </div>
-                                            </div>
-                                        )
-                                    }
-                                })
-                                }
-                            </div><br></br>
-                            <Link className='btn btn-info' to={"/men-dresses"}>View More Men Dresses....</Link><br></br>
-                            &nbsp;
-                        </div>
-                        <br ></br>
-                        <div className='container-fluid justify-content-center text-center' id='back-card-bg-womenshirts'>
-                            <h2 id='Shirts-women' className='m-3'>Shirts For Women</h2>
-                            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gap-4 justify-content-center text-center">
-                                {shirt.map(e => {
-                                    if (e.itemType.toLowerCase().includes("Dresses for Women".toLowerCase())) {
-                                        return (
-                                            <div className='col row' key={e.itemId}>
-                                                <div className="card" data-aos="zoom-in-right">
-                                                    <div className='card-header justify-content-end text-end'>
-                                                        <button className='btn  m-2' onClick={() => {
-                                                            if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
-                                                                axios.post("http://localhost:8083/cart/", {
-                                                                    "itemId": e.itemId,
-                                                                    "userId": localStorage.getItem("currentuser")
-                                                                }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }) .catch((error) => {
-                                                                    setError(true);
-                                                                    if (error.response.data === undefined) {
-                                                                        setErrorMessage("Something went wrong")
-                                                                    } else {
-                                                                        setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-                                                                    }
-                                                                })
-                                                            } else {
-                                                                return (setInfo("Login required !"), setShowToast(true), timeout())
-                                                            }
-                                                        }}
-                                                        ><i className='fa-solid fa-cart-shopping text-info'></i></button>
-                                                        <button className='btn' onClick={() => {
-                                                            if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
-                                                                axios.post("http://localhost:8083/fav/", {
-                                                                    "itemId": e.itemId,
-                                                                    "userId": localStorage.getItem("currentuser")
-                                                                }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }) .catch((error) => {
-                                                                    setError(true);
-                                                                    if (error.response.data === undefined) {
-                                                                        setErrorMessage("Something went wrong")
-                                                                    } else {
-                                                                        setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-                                                                    }
-                                                                })
-                                                            } else {
-                                                                return (setInfo("Login required !"), setShowToast(true), timeout())
-                                                            }
-                                                        }}
-                                                        ><i className="fa-solid fa-heart text-danger"></i> </button>
-                                                    </div>
-                                                    <img src={e.itemImgUrl} className="card-img-top" alt="..." />
                                                     <div className="card-body">
                                                         <h6 className="card-title text-truncate" id={e.itemName}>{e.itemName}</h6>
-                                                        <p className="card-text"><b>Price : </b> ₹{e.itemPrice}</p>
+                                                        <p className="card-text text-truncate"> ₹{e.itemPrice}</p>
                                                     </div>
-                                                    <Link to={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info'>View More...</Link>
+                                                    <div className='card-footer fixed-bottom'>
+                                                        <Link to={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info'>View More...</Link>
+                                                    </div>
                                                 </div>
                                             </div>
                                         )
                                     }
                                 })
-                                }
-                            </div><br></br>
-                            <Link className='btn btn-info' to={"/women-dresses"}>View More Women Dresses....</Link><br></br>
-                            &nbsp;
-                        </div>
-                    </>
+                            }
+                        </div><br></br>
+                    </div>
                 :
-                <div className='container-fluid justify-content-center text-center' id='back-card-bg-mob' >
+                <div className='container-fluid justify-content-center text-center' id='back-card-bg-m' >
                     <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gap-4 justify-content-center text-center ">
                         <div className=' col row '>
                             <div className="card " data-aos="fade-up" >
@@ -276,7 +314,9 @@ export default function Shirts() {
                     </div>
                 </div>
             }
-            < hr />
+            <hr />
+            <ChatBot />
+            <Footer />
             {showToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">
                 <div className="d-flex">
                     <div className="toast-body ">
@@ -288,8 +328,8 @@ export default function Shirts() {
                 </div>
             </div>}
 
-              {/* Error pop */}
-              {error && <>
+            {/* Error pop */}
+            {error && <>
                 <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
                     <div className="d-flex">
                         <div className="toast-body text-danger text-center">
@@ -306,3 +346,4 @@ export default function Shirts() {
         </div>
     )
 }
+

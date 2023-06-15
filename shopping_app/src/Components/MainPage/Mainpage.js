@@ -280,25 +280,13 @@ export default function MainPage() {
                             <i className="fa-thin fa-baseball"></i><br></br>Sports
                         </a></div>
                         <div className="col"><a href="/mart" className="text-decoration-none text-dark">
-                            <i className="fa-thin fa-bicycle"></i><br></br>Bi-Cycles
-                        </a></div>
-                        <div className="col"><a href="/mart" className="text-decoration-none text-dark">
                             <i className="fa-thin fa-camera"></i><br></br>Cameras
-                        </a></div>
-                        <div className="col"><a href="/mart" className="text-decoration-none text-dark">
-                            <i className="fa-solid fa-child-dress"></i><br></br>Children Dress
-                        </a></div>
-                        <div className="col"><a href="/mart" className="text-decoration-none text-dark">
-                            <i className="fa-solid fa-school"></i><br></br>Education
                         </a></div>
                         <div className="col"><a href="/mart" className="text-decoration-none text-dark">
                             <i className="fa-solid fa-guitar"></i><br></br>Musical Items
                         </a></div>
                         <div className="col"><a href="/mart" className="text-decoration-none text-dark">
                             <i className="fa-solid fa-book-open"></i><br></br>Books
-                        </a></div>
-                        <div className="col"><a href="/mart" className="text-decoration-none text-dark">
-                            <i className="fa-solid fa-gamepad"></i><br></br>Video Games
                         </a></div>
                         <div className="col"><a href="/mart" className="text-decoration-none text-dark">
                             <i className="fa-solid fa-tv"></i><br></br>TV

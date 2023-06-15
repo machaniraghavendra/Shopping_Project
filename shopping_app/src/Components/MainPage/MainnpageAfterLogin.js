@@ -48,7 +48,7 @@ export default function MainPageAfterlogin(props) {
                 setfetchDone(true)
             }
             return (setUserName(a.data.userName))
-        }) .catch((error) => {
+        }).catch((error) => {
             setError(true);
             if (error.response.data === undefined) {
                 setErrorMessage("Something went wrong")
@@ -64,24 +64,26 @@ export default function MainPageAfterlogin(props) {
         let title2 = document.querySelector(".check .container-fluid h2");
         let extraId = document.querySelector(".extraId");
         let scroll = document.querySelector(".scroll-up");
-        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 220 && window.location.href.includes("mart")) {
-            top.classList.add("fixed-top");
-            title.innerHTML = ' <img src="https://media.istockphoto.com/vectors/shopping-bag-flat-icon-pixel-perfect-for-mobile-and-web-vector-id1145783156?k=20&m=1145783156&s=612x612&w=0&h=RJdFiHDeaQJt3KbyIfJmWS12iQrD63DUCMWPrFLumwk=" alt="" width="35" height="35" className="d-inline-block align-text-top" />&nbsp;Shopping Mart'
-            title2.innerHTML = ""
-        }
-        if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 620 && window.location.href.includes("mart")) {
-            scroll.style.display = "block";
-            title2.classList.remove("d-none")
-        }
-        else {
-            setTimeout(() => {
-                if (window.location.href.includes("mart")) {
-                    top.classList.remove("fixed-top");
-                    scroll.style.display = "none";
-                    title.innerHTML = "Contents";
-                }
-            }, 500);
-        }
+        setTimeout(() => {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 220 && (window.location.pathname) === ("/mart")) {
+                top.classList.add("fixed-top");
+                title.innerHTML = ' <img src="https://media.istockphoto.com/vectors/shopping-bag-flat-icon-pixel-perfect-for-mobile-and-web-vector-id1145783156?k=20&m=1145783156&s=612x612&w=0&h=RJdFiHDeaQJt3KbyIfJmWS12iQrD63DUCMWPrFLumwk=" alt="" width="35" height="35" className="d-inline-block align-text-top" />&nbsp;Shopping Mart'
+                title2.innerHTML = ""
+            }
+            if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 620 && (window.location.pathname) === ("/mart")) {
+                scroll.style.display = "block";
+                title2.classList.remove("d-none")
+            }
+            else {
+                setTimeout(() => {
+                    if ((window.location.pathname) === ("/mart")) {
+                        top.classList.remove("fixed-top");
+                        scroll.style.display = "none";
+                        title.innerHTML = "Contents";
+                    }
+                }, 500);
+            }
+        }, 500);
     }
 
     window.onscroll = () => {
@@ -191,6 +193,13 @@ export default function MainPageAfterlogin(props) {
                                                         <li className="dropdown-item"><a className="dropdown-item" type="button" href="#Shirts-women"><i className="fa-solid fa-shirt"></i>Women Shirts</a></li>
                                                     </ul>
                                                 </li>
+                                                <li><a className="dropdown-item" type="button" href="#Smart-watches "><i className="bi bi-smartwatch"></i> Smart watches</a></li>
+                                                <li><a className="dropdown-item" type="button" href="#watches"><i className="bi bi-watch"></i> Watches</a></li>
+                                                <li><a className="dropdown-item" type="button" href="#Cameras"><i className="fa-solid fa-camera"></i> Cameras</a></li>
+                                                <li><a className="dropdown-item" type="button" href="#musicalInstruments"><i className="fa-solid fa-guitar"></i> Musical Instruments</a></li>
+                                                <li><a className="dropdown-item" type="button" href="#Books"><i className="fa-solid fa-book"></i> Books</a></li>
+                                                <li><a className="dropdown-item" type="button" href="#TV"><i className="fa-solid fa-tv"></i> Television</a></li>
+                                                <li><a className="dropdown-item" type="button" href="#Headfones"><i className="fa-solid fa-headphones"></i> Headfones</a></li>
                                             </ul>
                                         </div>
                                         <div className="extraId"></div>
@@ -319,43 +328,31 @@ export default function MainPageAfterlogin(props) {
                             <div className="col"><a href="#Shirts-women" className="text-decoration-none text-dark">
                                 <i className="fa-thin fa-shirt"></i><br></br>Shirts-Women
                             </a></div>
-                            <div className="col"><a href="#" className="text-decoration-none text-dark">
+                            <div className="col"><a href="#Smart-watches" className="text-decoration-none text-dark">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" className="bi bi-smartwatch" viewBox="0 0 16 16">
                                     <path d="M9 5a.5.5 0 0 0-1 0v3H6a.5.5 0 0 0 0 1h2.5a.5.5 0 0 0 .5-.5V5z" />
                                     <path d="M4 1.667v.383A2.5 2.5 0 0 0 2 4.5v7a2.5 2.5 0 0 0 2 2.45v.383C4 15.253 4.746 16 5.667 16h4.666c.92 0 1.667-.746 1.667-1.667v-.383a2.5 2.5 0 0 0 2-2.45V8h.5a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 0-.5-.5H14v-.5a2.5 2.5 0 0 0-2-2.45v-.383C12 .747 11.254 0 10.333 0H5.667C4.747 0 4 .746 4 1.667zM4.5 3h7A1.5 1.5 0 0 1 13 4.5v7a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 3 11.5v-7A1.5 1.5 0 0 1 4.5 3z" />
                                 </svg><br></br>Smart Watches
                             </a></div>
-                            <div className="col"><a href="#" className="text-decoration-none text-dark">
+                            <div className="col"><a href="#watches" className="text-decoration-none text-dark">
                                 <i className="bi bi-watch" style={{ fontSize: "25px" }}></i><br></br>Watches
                             </a></div>
                             <div className="col"><a href="#Sports" className="text-decoration-none text-dark">
                                 <i className="fa-thin fa-baseball"></i><br></br>Sports
                             </a></div>
-                            <div className="col"><a href="" className="text-decoration-none text-dark">
-                                <i className="fa-thin fa-bicycle"></i><br></br>Bi-Cycles
-                            </a></div>
-                            <div className="col"><a href="" className="text-decoration-none text-dark">
+                            <div className="col"><a href="#Cameras" className="text-decoration-none text-dark">
                                 <i className="fa-thin fa-camera"></i><br></br>Cameras
                             </a></div>
-                            <div className="col"><a href="#" className="text-decoration-none text-dark">
-                                <i className="fa-solid fa-child-dress"></i><br></br>Children Dress
-                            </a></div>
-                            <div className="col"><a href="#" className="text-decoration-none text-dark">
-                                <i className="fa-solid fa-school"></i><br></br>Education
-                            </a></div>
-                            <div className="col"><a href="#" className="text-decoration-none text-dark">
+                            <div className="col"><a href="#musicalInstruments" className="text-decoration-none text-dark">
                                 <i className="fa-solid fa-guitar"></i><br></br>Musical Items
                             </a></div>
-                            <div className="col"><a href="#" className="text-decoration-none text-dark">
+                            <div className="col"><a href="#Books" className="text-decoration-none text-dark">
                                 <i className="fa-solid fa-book-open"></i><br></br>Books
                             </a></div>
-                            <div className="col"><a href="#" className="text-decoration-none text-dark">
-                                <i className="fa-solid fa-gamepad"></i><br></br>Video Games
-                            </a></div>
-                            <div className="col"><a href="#" className="text-decoration-none text-dark">
+                            <div className="col"><a href="#TV" className="text-decoration-none text-dark">
                                 <i className="fa-solid fa-tv"></i><br></br>TV
                             </a></div>
-                            <div className="col"><a href="#" className="text-decoration-none text-dark">
+                            <div className="col"><a href="#Headfones" className="text-decoration-none text-dark">
                                 <i className="fa-solid fa-headphones"></i><br></br>Headfones
                             </a></div>
                         </div>

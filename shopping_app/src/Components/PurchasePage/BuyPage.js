@@ -295,7 +295,7 @@ export default function Buypage(props) {
                 <br></br>
                 {fetchDone ?
                     <div className="container-lg d-flex justify-content-center ">
-                        <div className="card  card-color">
+                        <div className="card  card-color w-100">
                             {item.map(itemData => {
                                 { itemId = itemData.itemId }
                                 return (

@@ -220,7 +220,6 @@ export default function Cartpage(props) {
                                                                         }
                                                                     })
                                                                 }}
-                                                                    data-bs-toggle="modal" data-bs-target="#exampleModal2" data-bs-whatever="@mdo"
                                                                 ><i className='fa-solid fa-trash text-danger'></i></button>
                                                                 <button className='btn ' onClick={() => {
                                                                     if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
