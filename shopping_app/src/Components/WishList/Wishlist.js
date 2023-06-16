@@ -478,7 +478,7 @@ export default function Wishlist(props) {
                         return (
                           <div key={e.itemId}>
                             <li>
-                              {e.itemName} = {e.itemPrice} -&gt;
+                              {e.itemName} = ₹{e.itemPrice} -&gt;
                               <button
                                 className="btn btn-outline-danger m-2"
                                 onClick={() => {

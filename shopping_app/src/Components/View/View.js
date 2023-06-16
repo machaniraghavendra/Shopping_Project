@@ -202,10 +202,10 @@ export default function View(props) {
                                     <div className='mx-3'>
                                         <p>Price : <b> ₹{item.itemPrice}</b></p>
                                         <p>Specifications : {item.itemSpec}</p>
-                                        {!item.itemDimensions == "" ?
-                                            <p>Dimensions : {item.itemDimensions}</p> : ""}
+                                        {item.itemDimensions != "null" &&
+                                            <p>Dimensions : {item.itemDimensions}</p> }
                                         <p>Type : {item.itemType}</p>
-                                        <p>Quality : {item.itemDesc}</p>
+                                        <p>Description : {item.itemDesc}</p>
                                     </div>
                                     <div className='view-buy'>
                                         <span>Total amount : <b> ₹{item.itemPrice}</b>-&gt;</span>
@@ -308,7 +308,7 @@ export default function View(props) {
                                         <div className="card-body ">
                                             <h5 className="card-title text-truncate">{a.itemName}</h5>
                                             <p className="card-text text-truncate"> ₹{a.itemPrice}</p>
-                                            <p><b>{a.itemSpec}</b></p>
+                                            <p className='card-text text-truncate'><b>{a.itemSpec}</b></p>
                                             <div className='text-center d-flex justify-content-center '>
                                                 <Link to={'/view/' + a.itemId + "/" + a.itemName} className='btn btn-info d-flex '
                                                     onClick={() => {

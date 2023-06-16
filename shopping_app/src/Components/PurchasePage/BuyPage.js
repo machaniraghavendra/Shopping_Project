@@ -313,7 +313,7 @@ export default function Buypage(props) {
                                                 </div>
                                                 <div className="col-md-6 d-md-block d-none">
                                                     <div className="col-md-4 float-md-end h-auto w-25">
-                                                        <img src={itemData.itemImgUrl} className="rounded float-end w-100 h-100" alt={itemData.itemName} />
+                                                        <img src={itemData.itemImgUrl} className="rounded float-end w-50 h-100 d-block" alt={itemData.itemName} style={{marginLeft:"auto",marginRight:"auto"}}/>
                                                     </div>
                                                 </div>
                                             </div>

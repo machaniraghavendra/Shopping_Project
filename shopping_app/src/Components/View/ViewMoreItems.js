@@ -30,7 +30,6 @@ export default function ViewMoreItems(props) {
             .then((res) => {
                 if (res.status == "200") {
                     setfetchDone(true);
-                    getPlaceholder()
                 }
                 return (setItems(res.data))
             }).catch((error) => {
@@ -57,14 +56,14 @@ export default function ViewMoreItems(props) {
         }, 4000);
     }
 
-    const getPlaceholder = () => {
-        if (window.location.pathname.includes("/viewmore")) {
-            // let searchbar = document.getElementById("viewSearchbar");
-            // let getIndex = Math.floor(Math.random() * items.length)
-            // fetchDone ? searchbar.placeholder = items[getIndex].itemName : searchbar.placeholder = "Search..."
-        }
-    }
-    setInterval(getPlaceholder, 5000);
+    // const getPlaceholder = () => {
+    //     if (window.location.pathname.includes("/viewmore")) {
+    //         // let searchbar = document.getElementById("viewSearchbar");
+    //         // let getIndex = Math.floor(Math.random() * items.length)
+    //         // fetchDone ? searchbar.placeholder = items[getIndex].itemName : searchbar.placeholder = "Search..."
+    //     }
+    // }
+    // setInterval(getPlaceholder, 5000);
 
     const check = () => {
         let dark = document.querySelectorAll(".dark")
@@ -78,23 +77,24 @@ export default function ViewMoreItems(props) {
     }
 
     useEffect(() => {
-        getPlaceholder();
+        sessionStorage.getItem("dark") === "true" ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
+            : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
         check();
         getItemTypefromUrl();
         return (fetch())
     }, [])
 
     return (
-        <div className='container-fluid'> 
-            <div className='bg-info row'>
+        <div className='container-fluid'>
+            <div className='row text-light p-2 viewbg'>
                 <div className='col-3'>
                     <span className='fs-5'>
-                        <i className="fa-thin fa-arrow-left btn m-1" style={{ fontFamily: "fontAwesome" }} onClick={() => { return (window.history.back()) }}></i>
-                        <span id='items' className='dark  fw-semibold'>{itemType.toUpperCase()} </span>
+                        <i className="fa-thin fa-arrow-left btn mx-2 btn-light" style={{ fontFamily: "fontAwesome" }} onClick={() => { return (window.history.back()) }}></i>
+                        <span id='items' className='dark  fw-semibold'>{itemType.toUpperCase()}S</span>
                     </span>
                 </div>
-                <div className='col-2 justify-content-center align-items-center text-center'>
-                    <div><input type='search' className='form-control form-control-sm w-75 ' id="viewSearchbar" placeholder='Search...'
+                <div className='col-2 justify-content-start '>
+                    <div><input type='search' className='form-control form-control-sm w-100 ' id="viewSearchbar" placeholder='Search...'
                         onChange={(a) => {
                             setSearch(a.target.value)
                         }}
@@ -102,29 +102,29 @@ export default function ViewMoreItems(props) {
                 </div>
                 <div className='col-7 align-items-center text-center d-grid gap-2'>
                     <div className="btn-group gap-1" role="group" >
-                        <input type="radio" className="btn-check btn-sm" name="btnradio" id="all" autoComplete="off" onClick={() => setfilters("")} checked />
-                        <label className="btn btn-outline-warning text-dark" htmlFor="all">All</label>
+                        <input type="radio" className="btn-check btn-sm" name="btnradio" id="all" autoComplete="off" onClick={() => setfilters("")} checked={filters === "" && true} />
+                        <label className="btn btn-outline-light " htmlFor="all">All</label>
 
                         <input type="radio" className="btn-check btn-sm" name="btnradio" id="500" autoComplete="off" onClick={() => setfilters("500")} />
-                        <label className="btn btn-outline-warning text-dark" htmlFor="500">&lt;500</label>
-                        
+                        <label className="btn btn-outline-warning " htmlFor="500">&lt;500</label>
+
                         <input type="radio" className="btn-check btn-sm" name="btnradio" id="1000" autoComplete="off" onClick={() => setfilters("1000")} />
-                        <label className="btn btn-outline-warning text-dark" htmlFor="1000">&lt;1000</label>
+                        <label className="btn btn-outline-warning " htmlFor="1000">&lt;1000</label>
 
                         <input type="radio" className="btn-check btn-sm" name="btnradio" id="5000" autoComplete="off" onClick={() => setfilters("5000")} />
-                        <label className="btn btn-outline-warning text-dark" htmlFor="5000">&lt;5000</label>
+                        <label className="btn btn-outline-warning " htmlFor="5000">&lt;5000</label>
 
                         <input type="radio" className="btn-check btn-sm" name="btnradio" id="10000" autoComplete="off" onClick={() => { setfilters("10000") }} />
-                        <label className="btn btn-outline-warning text-dark" htmlFor="10000">&lt;10000</label>
+                        <label className="btn btn-outline-warning " htmlFor="10000">&lt;10000</label>
 
                         <input type="radio" className="btn-check btn-sm" name="btnradio" id="50000" autoComplete="off" onClick={() => setfilters("50000")} />
-                        <label className="btn btn-outline-warning text-dark" htmlFor="50000">&lt;50000</label>
+                        <label className="btn btn-outline-warning " htmlFor="50000">&lt;50000</label>
 
                         <input type="radio" className="btn-check btn-sm" name="btnradio" id="100000" autoComplete="off" onClick={() => setfilters("100000")} />
-                        <label className="btn btn-outline-warning text-dark" htmlFor="100000">&lt;100000</label>
+                        <label className="btn btn-outline-warning " htmlFor="100000">&lt;100000</label>
 
                         <input type="radio" className="btn-check btn-sm" name="btnradio" id=">100000" autoComplete="off" onClick={() => setfilters(">100000")} />
-                        <label className="btn btn-outline-warning text-dark" htmlFor=">100000">&gt;100000</label>
+                        <label className="btn btn-outline-warning " htmlFor=">100000">&gt;100000</label>
                     </div>
                 </div>
             </div>
@@ -153,7 +153,7 @@ export default function ViewMoreItems(props) {
                                         return a;
                                     }
                                     if (filters === ">100000") {
-                                        if (parseInt(filters.replace(">","")) < parseInt(a.itemPrice.replaceAll(",", ""))) {
+                                        if (parseInt(filters.replace(">", "")) < parseInt(a.itemPrice.replaceAll(",", ""))) {
                                             return a;
                                         }
                                     }
