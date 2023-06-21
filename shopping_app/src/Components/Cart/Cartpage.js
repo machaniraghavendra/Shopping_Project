@@ -19,7 +19,7 @@ export default function Cartpage(props) {
 
     const [info, setInfo] = useState("");
 
-    const [userName, setUserName] = useState("");
+    const [user, setUser] = useState([]);
 
     const [showToast, setShowToast] = useState(false);
 
@@ -87,7 +87,7 @@ export default function Cartpage(props) {
         window.onscroll = () => check();
         document.title = "Cart | Shopping Mart"
         axios.get("http://localhost:8083/user/" + props.user).then(a => {
-            return (setUserName(a.data.userName))
+            return (setUser(a.data))
         }).catch((error) => {
             setError(true);
             if (error.response.data === undefined) {
@@ -120,7 +120,15 @@ export default function Cartpage(props) {
                                 <br></br>
                                 <div className="btn-group">
                                     <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                        {fetchDone ? <span><i className="fa-solid fa-user"></i>&nbsp;{userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
+                                        {fetchDone ?
+                                            <span>{user.profileImgUrl ?
+                                                <img src={user.profileImgUrl} width={25} height={25} />
+                                                : <i className="fa-solid fa-user"></i>}&nbsp;{user.userName}
+                                            </span>
+                                            :
+                                            <span className="placeholder-glow">
+                                                <span className="placeholder col-12"></span>
+                                            </span>}
                                     </button>
                                     <ul className="dropdown-menu bg-secondary-warning dropdown-menu-lg-end user">
                                         <li><Link className="dropdown-item" to={"/profile/settings"}><i className='fa-solid fa-gear'></i> Settings</Link></li>
@@ -187,6 +195,13 @@ export default function Cartpage(props) {
                                     </li>
                                 </ul>
                             </div>
+                            <div className='offcanvas-footer down my-3 d-lg-none '>
+                                        <h5>Name :  {fetchDone ? <span> {user.userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
+                                        </h5>
+                                        <button className="btn btn-outline-danger  justify-content-end " data-bs-toggle="modal" data-bs-target="#exampleModal3" data-bs-whatever="@fat"
+                                        ><i className="fa-solid fa-power-off"></i>
+                                        </button>
+                                    </div>
                         </div>
                     </aside>
                 </div>

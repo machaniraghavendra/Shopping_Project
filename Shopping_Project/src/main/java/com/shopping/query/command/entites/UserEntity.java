@@ -2,6 +2,7 @@ package com.shopping.query.command.entites;
 
 import java.io.Serializable;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -25,5 +26,7 @@ public class UserEntity implements Serializable {
 	private String userName;
 	private String userPassword;
 	private String mobileNumber;
+	@Column(length = 23000)
+	private String profileImgUrl;
 	private boolean darkModeEnabled;
 }

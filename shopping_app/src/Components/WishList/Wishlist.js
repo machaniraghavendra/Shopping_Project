@@ -17,7 +17,7 @@ export default function Wishlist(props) {
 
   const [info, setInfo] = useState("");
 
-  const [userName, setUserName] = useState("");
+  const [user, setUser] = useState([]);
 
   const [showToast, setShowToast] = useState(false);
 
@@ -106,7 +106,7 @@ export default function Wishlist(props) {
     axios
       .get("http://localhost:8083/user/" + props.user)
       .then((a) => {
-        return setUserName(a.data.userName);
+        return setUser(a.data);
       })
       .catch((error) => {
         setError(true);
@@ -183,15 +183,15 @@ export default function Wishlist(props) {
                     data-bs-display="static"
                     aria-expanded="false"
                   >
-                    {fetchDone ? (
-                      <span>
-                        <i className="fa-solid fa-user"></i>&nbsp;{userName}
+                    {fetchDone ?
+                      <span>{user.profileImgUrl ?
+                        <img src={user.profileImgUrl} width={25} height={25} />
+                        : <i className="fa-solid fa-user"></i>}&nbsp;{user.userName}
                       </span>
-                    ) : (
+                      :
                       <span className="placeholder-glow">
-                        <span className="placeholder col-12"></span>{" "}
-                      </span>
-                    )}
+                        <span className="placeholder col-12"></span>
+                      </span>}
                   </button>
                   <ul className="dropdown-menu bg-secondary-warning dropdown-menu-lg-end user">
                     <li>
@@ -322,6 +322,13 @@ export default function Wishlist(props) {
                     </Link>
                   </li>
                 </ul>
+              </div>
+              <div className='offcanvas-footer down my-3 d-lg-none '>
+                <h5>Name :  {fetchDone ? <span> {user.userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
+                </h5>
+                <button className="btn btn-outline-danger  justify-content-end " data-bs-toggle="modal" data-bs-target="#exampleModal3" data-bs-whatever="@fat"
+                ><i className="fa-solid fa-power-off"></i>
+                </button>
               </div>
             </div>
           </aside>

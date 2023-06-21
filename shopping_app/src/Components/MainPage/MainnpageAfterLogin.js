@@ -29,6 +29,9 @@ export default function MainPageAfterlogin(props) {
 
     const [userName, setUserName] = useState("");
 
+    const [user, setUser] = useState([]);
+
+
     const fetch = () => {
         axios.get("http://localhost:8083/items/")
             .then((res) => { return (setData(res.data)) })
@@ -47,7 +50,7 @@ export default function MainPageAfterlogin(props) {
             if (a.status == "200") {
                 setfetchDone(true)
             }
-            return (setUserName(a.data.userName))
+            return (setUserName(a.data.userName),setUser(a.data))
         }).catch((error) => {
             setError(true);
             if (error.response.data === undefined) {
@@ -132,8 +135,15 @@ export default function MainPageAfterlogin(props) {
                                     <br></br>
                                     <div className="btn-group">
                                         <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                            {fetchDone ? <span><i className="fa-solid fa-user"></i>&nbsp;{userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
-                                        </button>
+                                        {fetchDone ?
+                                            <span>{user.profileImgUrl ?
+                                                <img src={user.profileImgUrl} width={25} height={25} />
+                                                : <i className="fa-solid fa-user"></i>}&nbsp;{user.userName}
+                                            </span>
+                                            :
+                                            <span className="placeholder-glow">
+                                                <span className="placeholder col-12"></span>
+                                            </span>}                                        </button>
                                         <ul className="dropdown-menu bg-secondary-warning dropdown-menu-lg-end user">
                                             <li><Link className="dropdown-item" to={"/profile/settings"}><i className='fa-solid fa-gear'></i> Settings</Link></li>
                                             <li>

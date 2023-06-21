@@ -273,8 +273,15 @@ export default function Buypage(props) {
                                     <br></br>
                                     <div className="btn-group">
                                         <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                            {fetchDone ? <span><i className="fa-solid fa-user"></i>&nbsp;{user.userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
-                                        </button>
+                                            {fetchDone ?
+                                                <span>{user.profileImgUrl ?
+                                                    <img src={user.profileImgUrl} width={25} height={25} />
+                                                    : <i className="fa-solid fa-user"></i>}&nbsp;{user.userName}
+                                                </span>
+                                                :
+                                                <span className="placeholder-glow">
+                                                    <span className="placeholder col-12"></span>
+                                                </span>}                                        </button>
                                         <ul className="dropdown-menu bg-secondary-warning dropdown-menu-lg-end user">
                                             <li><Link className="dropdown-item" to={"/profile/settings"}><i className='fa-solid fa-gear'></i> Settings</Link></li>
                                             <li>
@@ -306,14 +313,14 @@ export default function Buypage(props) {
                                         <div className="card-body">
                                             <div className="row">
                                                 <div className="col-md-6">
-                                                    <p>Specifications : {itemData.itemSpec == null ? "Not mentioned" : itemData.itemSpec}</p>
-                                                    <p>Dimensions : {itemData.itemDimensions == null ? "Not mentioned" : itemData.itemDimensions}</p>
+                                                    {itemData.itemSpec != null || itemData.itemSpec != "" && <p>Specifications :  {itemData.itemSpec}</p>}
+                                                    {itemData.itemDimensions != null || itemData.itemDimensions != "" && <p>Dimensions :  {itemData.itemDimensions}</p>}
                                                     <p>Description : {itemData.itemDesc == null ? "Not mentioned" : itemData.itemDesc}</p>
                                                     <p>Product type : {itemData.itemType == null ? "Not mentioned" : itemData.itemType}</p>
                                                 </div>
                                                 <div className="col-md-6 d-md-block d-none">
                                                     <div className="col-md-4 float-md-end h-auto w-25">
-                                                        <img src={itemData.itemImgUrl} className="rounded float-end w-50 h-100 d-block" alt={itemData.itemName} style={{marginLeft:"auto",marginRight:"auto"}}/>
+                                                        <img src={itemData.itemImgUrl} className="rounded float-end w-50 h-100 d-block" alt={itemData.itemName} style={{ marginLeft: "auto", marginRight: "auto" }} />
                                                     </div>
                                                 </div>
                                             </div>

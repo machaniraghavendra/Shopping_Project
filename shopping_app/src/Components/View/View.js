@@ -15,7 +15,7 @@ export default function View(props) {
 
     const [info, setInfo] = useState("");
 
-    const [userName, setUserName] = useState([]);
+    const [user, setUser] = useState([]);
 
     const [items, setItems] = useState([]);
 
@@ -67,7 +67,7 @@ export default function View(props) {
     const check = () => {
         let darks = document.getElementsByClassName("view")
         for (const dark of darks) {
-            if (sessionStorage.getItem("dark")==="true") {
+            if (sessionStorage.getItem("dark") === "true") {
                 dark.classList.add("bg-dark")
                 dark.classList.add("text-light")
             } else {
@@ -85,22 +85,39 @@ export default function View(props) {
         var posY = e.offsetY ? (e.offsetY) : e.pageY - imgs.offsetTop - 100;
         imgsover.style.backgroundPosition = (-posX) + "px " + (-posY) + "px";
     }
+
     const zoomout = () => {
         var imgsover = document.getElementById("view-img-zoom");
         imgsover.style.display = "none"
+    }
+
+    const scrollLeft = () => {
+        let scrollLeft = document.getElementById("viewsimilarscroll")
+        window.scrollTo({
+            left: scrollLeft.scrollLeft -= 345,
+            behavior: 'smooth'
+        })
+    }
+
+    const scrollRight = () => {
+        let scrollRight = document.getElementById("viewsimilarscroll")
+        window.scrollTo({
+            left: scrollRight.scrollLeft += 345,
+            behavior: 'smooth'
+        })
     }
 
     window.onload = document.title = viewItem.map(a => { return (a.itemName) }) + " | Shopping Mart";
 
     useEffect(() => {
         check();
-        sessionStorage.getItem("dark") ==="true"? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
+        sessionStorage.getItem("dark") === "true" ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
             : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
         axios.get("http://localhost:8083/user/" + props.user).then(a => {
             if (a.status == "200") {
                 setfetchUserDone(true)
             }
-            setUserName(a.data.userName)
+            setUser(a.data)
         }).catch((error) => {
             setError(true);
             if (error.response.data === undefined) {
@@ -131,7 +148,15 @@ export default function View(props) {
                             <br></br>
                             <div className="btn-group ">
                                 <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                    {fetchUserDone ? <span><i className="fa-solid fa-user"></i>&nbsp;{userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
+                                    {fetchUserDone ?
+                                        <span>{user.profileImgUrl ?
+                                            <img src={user.profileImgUrl} width={25} height={25} />
+                                            : <i className="fa-solid fa-user"></i>}&nbsp;{user.userName}
+                                        </span>
+                                        :
+                                        <span className="placeholder-glow">
+                                            <span className="placeholder col-12"></span>
+                                        </span>}
                                 </button>
                                 <ul className="dropdown-menu bg-secondary-warning dropdown-menu-lg-end user">
                                     <li><Link className="dropdown-item" to={"/profile/settings"}><i className='fa-solid fa-gear'></i> Settings</Link></li>
@@ -201,9 +226,9 @@ export default function View(props) {
                                     <h4 style={{ letterSpacing: "2px", textTransform: "capitalize" }}>{item.itemName}</h4>
                                     <div className='mx-3'>
                                         <p>Price : <b> ₹{item.itemPrice}</b></p>
-                                        <p>Specifications : {item.itemSpec}</p>
-                                        {item.itemDimensions != "null" &&
-                                            <p>Dimensions : {item.itemDimensions}</p> }
+                                        {item.itemSpec!=""&& <p>Specifications : {item.itemSpec}</p>}
+                                        {item.itemDimensions != "null" ||item.itemDimensions != "" &&
+                                            <p>Dimensions : {item.itemDimensions}</p>}
                                         <p>Type : {item.itemType}</p>
                                         <p>Description : {item.itemDesc}</p>
                                     </div>
@@ -250,144 +275,178 @@ export default function View(props) {
                     </div>
                 }
             </div>
-
             <div className='container'>
                 <h3 className='view p-2'>Similar Products </h3>
                 {fetchItemDone ?
-                    <div className="row  row-card row-cols-2 row-cols-md-4 g-4 align-content-center text-center my-3" >
-                        {items.filter(a => {
-                            return (
-                                a.itemType == viewItem.map(a => { return (a.itemType) }))
-                        }).filter(a => {
-                            return (
-                                a.itemId != viewItem.map(a => { return (a.itemId) })
-                            )
-                        }).map((a) => {
-                            return (
-                                <div className="col" key={a.itemId} style={{ overflowX: "scroll", overflowX: "visible" }}>
-                                    <div className="card view-more-card">
-                                        <div className='card-head text-end'>
-                                            <button className='btn  m-2' onClick={() => {
-                                                if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
-                                                    axios.post("http://localhost:8083/cart/", {
-                                                        "itemId": a.itemId,
-                                                        "userId": localStorage.getItem("currentuser")
-                                                    }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
-                                                        setError(true);
-                                                        if (error.response.data === undefined) {
-                                                            setErrorMessage("Something went wrong")
+                    <div className='container'>
+                        <div className='d-flex justify-content-between align-items-center'>
+                            <span style={{ zIndex: "1" }}>
+                                <span className='bg-warning text-dark btn btn-sm h-100 py-5 ' id='scrollleftbutton' onClick={() => { scrollLeft() }}><i className="bi bi-chevron-left "></i></span>
+                            </span>
+                            <div className="row row-card row-cols-2 row-cols-md-4 g-4 align-content-center text-center my-3" id="viewsimilarscroll">
+                                {items.filter(a => {
+                                    return (
+                                        a.itemType == viewItem.map(a => { return (a.itemType) }))
+                                }).filter(a => {
+                                    return (
+                                        a.itemId != viewItem.map(a => { return (a.itemId) })
+                                    )
+                                }).map((a) => {
+                                    return (
+                                        <div className="col" key={a.itemId} style={{ overflowX: "scroll", overflowX: "visible" }}>
+                                            <div className="card view-more-card">
+                                                <div className='card-head text-end'>
+                                                    <button className='btn  m-2' onClick={() => {
+                                                        if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                            axios.post("http://localhost:8083/cart/", {
+                                                                "itemId": a.itemId,
+                                                                "userId": localStorage.getItem("currentuser")
+                                                            }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
+                                                                setError(true);
+                                                                if (error.response.data === undefined) {
+                                                                    setErrorMessage("Something went wrong")
+                                                                } else {
+                                                                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                                }
+                                                            })
                                                         } else {
-                                                            setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                            setInfo("Login required")
                                                         }
-                                                    })
-                                                } else {
-                                                    setInfo("Login required")
-                                                }
-                                            }}
-                                            ><i className='fa-solid fa-cart-shopping text-info'></i></button>
-                                            <button className='btn ' onClick={() => {
-                                                if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
-                                                    axios.post("http://localhost:8083/fav/", {
-                                                        "itemId": a.itemId,
-                                                        "userId": localStorage.getItem("currentuser")
-                                                    }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
-                                                        setError(true);
-                                                        if (error.response.data === undefined) {
-                                                            setErrorMessage("Something went wrong")
+                                                    }}
+                                                    ><i className='fa-solid fa-cart-shopping text-info'></i></button>
+                                                    <button className='btn ' onClick={() => {
+                                                        if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                            axios.post("http://localhost:8083/fav/", {
+                                                                "itemId": a.itemId,
+                                                                "userId": localStorage.getItem("currentuser")
+                                                            }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
+                                                                setError(true);
+                                                                if (error.response.data === undefined) {
+                                                                    setErrorMessage("Something went wrong")
+                                                                } else {
+                                                                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                                }
+                                                            })
                                                         } else {
-                                                            setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                            setInfo("Login required !")
                                                         }
-                                                    })
-                                                } else {
-                                                    setInfo("Login required !")
-                                                }
-                                            }}
-                                            ><i className="fa-solid fa-heart text-danger"></i> </button>
-                                        </div>
-                                        <img src={a.itemImgUrl} className="card-img-top " alt={a.itemName} />
-                                        <div className="card-body ">
-                                            <h5 className="card-title text-truncate">{a.itemName}</h5>
-                                            <p className="card-text text-truncate"> ₹{a.itemPrice}</p>
-                                            <p className='card-text text-truncate'><b>{a.itemSpec}</b></p>
-                                            <div className='text-center d-flex justify-content-center '>
-                                                <Link to={'/view/' + a.itemId + "/" + a.itemName} className='btn btn-info d-flex '
-                                                    onClick={() => {
-                                                        return (
-                                                            window.onload(getItem())
-                                                        )
-                                                    }}>View More...</Link>
+                                                    }}
+                                                    ><i className="fa-solid fa-heart text-danger"></i> </button>
+                                                </div>
+                                                <img src={a.itemImgUrl} className="card-img-top " alt={a.itemName} />
+                                                <div className="card-body ">
+                                                    <h5 className="card-title text-truncate">{a.itemName}</h5>
+                                                    <p className="card-text text-truncate"> ₹{a.itemPrice}</p>
+                                                    <p className='card-text text-truncate'><b>{a.itemSpec}</b></p>
+                                                    <div className='text-center d-flex justify-content-center '>
+                                                        <Link to={'/view/' + a.itemId + "/" + a.itemName} className='btn btn-info d-flex '
+                                                            onClick={() => {
+                                                                return (
+                                                                    window.onload(getItem())
+                                                                )
+                                                            }}>View More...</Link>
+                                                    </div>
+                                                </div>
                                             </div>
+                                        </div>
+
+                                    )
+                                })}
+                            </div>
+                            <span style={{ zIndex: "1" }}>
+                                <span className='bg-warning text-dark justify-content-end text-end align-content-end float-end btn btn-sm py-5' id="scrollRightButton" onClick={() => { scrollRight() }}><i className="bi bi-chevron-right"></i></span>
+                            </span>
+                        </div>
+                    </div>
+                    :
+                    <div className='container-fluid justify-content-center text-center' id='back-card-bg-m' >
+                        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gap-4 justify-content-center text-center ">
+                            <div className=' col row '>
+                                <div className="card " data-aos="fade-up" >
+                                    <div className='card-header justify-content-end text-center'>
+                                        <div className="card-body">
+                                            <img src={loadingImg} className="card-img-top" alt="..." />
+                                            <p className="card-text placeholder-glow">
+                                                <span className="placeholder col-7"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-6"></span>
+                                                <span className="placeholder col-8"></span>
+                                                <span className="placeholder col-7"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-6"></span>
+                                                <span className="placeholder col-8"></span>
+                                            </p>
+                                            <a className="btn btn-primary disabled placeholder col-6"></a>
                                         </div>
                                     </div>
                                 </div>
-
-                            )
-                        })}
-                    </div>
-                    :
-                    <div className='container-fluid'>
-                        <div className="row row-card row-cols-2 row-cols-md-4 g-4 align-content-center justify-content-center my-3" >                            <div className="card" aria-hidden="true">
-                            <img src={loadingImg} className="card-img-top" alt="..." />
-                            <div className="card-body">
-                                <h5 className="card-title placeholder-glow">
-                                    <span className="placeholder col-6"></span>
-                                </h5>
-                                <p className="card-text placeholder-glow">
-                                    <span className="placeholder col-7"></span>
-                                    <span className="placeholder col-4"></span>
-                                    <span className="placeholder col-4"></span>
-                                    <span className="placeholder col-6"></span>
-                                    <span className="placeholder col-8"></span>
-                                </p>
-                                <a className="btn btn-primary disabled placeholder col-6"></a>
                             </div>
-                        </div>
-                            <div className="card" aria-hidden="true">
-                                <img src={loadingImg} className="card-img-top" alt="..." />
-                                <div className="card-body">
-                                    <h5 className="card-title placeholder-glow">
-                                        <span className="placeholder col-6"></span>
-                                    </h5>
-                                    <p className="card-text placeholder-glow">
-                                        <span className="placeholder col-7"></span>
-                                        <span className="placeholder col-4"></span>
-                                        <span className="placeholder col-4"></span>
-                                        <span className="placeholder col-6"></span>
-                                        <span className="placeholder col-8"></span>
-                                    </p>
-                                    <a className="btn btn-primary disabled placeholder col-6"></a>
+                            <div className=' col row '>
+                                <div className="card " data-aos="fade-up" >
+                                    <div className='card-header justify-content-end text-center'>
+                                        <div className="card-body">
+                                            <img src={loadingImg} className="card-img-top" alt="..." />
+                                            <p className="card-text placeholder-glow">
+                                                <span className="placeholder col-7"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-6"></span>
+                                                <span className="placeholder col-8"></span>
+                                                <span className="placeholder col-7"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-6"></span>
+                                                <span className="placeholder col-8"></span>
+                                            </p>
+                                            <a className="btn btn-primary disabled placeholder col-6"></a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="card" aria-hidden="true">
-                                <img src={loadingImg} className="card-img-top" alt="..." />
-                                <div className="card-body">
-                                    <h5 className="card-title placeholder-glow">
-                                        <span className="placeholder col-6"></span>
-                                    </h5>
-                                    <p className="card-text placeholder-glow">
-                                        <span className="placeholder col-7"></span>
-                                        <span className="placeholder col-4"></span>
-                                        <span className="placeholder col-4"></span>
-                                        <span className="placeholder col-6"></span>
-                                        <span className="placeholder col-8"></span>
-                                    </p>
-                                    <a className="btn btn-primary disabled placeholder col-6"></a>
+                            <div className=' col row '>
+                                <div className="card " data-aos="fade-up" >
+                                    <div className='card-header justify-content-end text-center'>
+                                        <div className="card-body">
+                                            <img src={loadingImg} className="card-img-top" alt="..." />
+                                            <p className="card-text placeholder-glow">
+                                                <span className="placeholder col-7"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-6"></span>
+                                                <span className="placeholder col-8"></span>
+                                                <span className="placeholder col-7"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-6"></span>
+                                                <span className="placeholder col-8"></span>
+                                            </p>
+                                            <a className="btn btn-primary disabled placeholder col-6"></a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="card" aria-hidden="true">
-                                <img src={loadingImg} className="card-img-top" alt="..." />
-                                <div className="card-body">
-                                    <h5 className="card-title placeholder-glow">
-                                        <span className="placeholder col-6"></span>
-                                    </h5>
-                                    <p className="card-text placeholder-glow">
-                                        <span className="placeholder col-7"></span>
-                                        <span className="placeholder col-4"></span>
-                                        <span className="placeholder col-4"></span>
-                                        <span className="placeholder col-6"></span>
-                                        <span className="placeholder col-8"></span>
-                                    </p>
-                                    <a className="btn btn-primary disabled placeholder col-6"></a>
+                            <div className=' col row '>
+                                <div className="card " data-aos="fade-up" >
+                                    <div className='card-header justify-content-end text-center'>
+                                        <div className="card-body">
+                                            <img src={loadingImg} className="card-img-top" alt="..." />
+                                            <p className="card-text placeholder-glow">
+                                                <span className="placeholder col-7"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-6"></span>
+                                                <span className="placeholder col-8"></span>
+                                                <span className="placeholder col-7"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-6"></span>
+                                                <span className="placeholder col-8"></span>
+                                            </p>
+                                            <a className="btn btn-primary disabled placeholder col-6"></a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

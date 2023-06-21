@@ -47,7 +47,7 @@ export default function OrderDetails(props) {
     }
 
     useEffect(() => {
-        sessionStorage.getItem("dark") ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
+        sessionStorage.getItem("dark") === "true" ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
             : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
         document.title = "Orders | Shopping Mart"
         axios.get("http://localhost:8083/user/" + props.user).then(a => {
@@ -66,7 +66,7 @@ export default function OrderDetails(props) {
         })
         fetchOrders()
         let card = document.getElementsByClassName("card-color");
-        if (sessionStorage.getItem("dark") == "true") {
+        if (sessionStorage.getItem("dark") === "true") {
             for (const cards of card) {
                 cards.classList.add("bg-dark")
                 cards.classList.add("text-light")
@@ -176,7 +176,9 @@ export default function OrderDetails(props) {
                                                 <hr></hr>
                                             </div>
                                             <div className='col-4 text-end w-25 h-25'>
-                                                <img src={a.item.itemImgUrl} className="img-fluid rounded-start d-lg-block d-none float-end " alt={a.item.itemName} />
+                                                <Link to={'/view/' + a.item.itemId + "/" + a.item.itemName} className=''>
+                                                    <img src={a.item.itemImgUrl} className="img-fluid rounded-start d-lg-block d-none float-end " alt={a.item.itemName} />
+                                                </Link>
                                             </div>
                                         </div>
                                     </div>

@@ -124,11 +124,11 @@ export default function Orders(props) {
                                 :
                                 orders.map(item => {
                                     return (
-                                        <div className='col-lg-6 ' key={item.item.itemId}>
+                                        <div className='col-lg-6' key={item.item.itemId}>
                                             <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
                                                 <div className="row g-0" >
                                                     <div className="col-md-4 d-none d-lg-flex justify-content-center">
-                                                        <img src={item.item.itemImgUrl} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt={item.item.itemName} />
+                                                        <img src={item.item.itemImgUrl} className="img-fluid rounded-start d-lg-block d-none w-25 h-100 d-block" alt={item.item.itemName} style={{marginLeft:"auto",marginRight:"auto"}}/>
                                                     </div>
                                                     <div className="col-md-8 ">
                                                         <div className="card-body">
