@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import loadingImg from "../Resources/Loading_Card.png";
 import Footer from '../Footer/Footer';
 import ChatBot from '../ChatBot/ChatBot';
+import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 
 export default function ViewMoreItems(props) {
 
@@ -25,6 +26,10 @@ export default function ViewMoreItems(props) {
 
     const [filters, setfilters] = useState("");
 
+    const [user, setUser] = useState([]);
+
+    let i = 0;
+
     const fetch = () => {
         axios.get("http://localhost:8083/items/")
             .then((res) => {
@@ -42,6 +47,22 @@ export default function ViewMoreItems(props) {
             })
     }
 
+    const currentuser = () => {
+        axios.get("http://localhost:8083/user/" + props.user).then(res => {
+            if (res.status == "200") {
+                setfetchDone(true)
+            }
+            return (setUser(res.data))
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
+    }
+
     const getItemTypefromUrl = () => {
         if (window.location.href.includes("%")) {
             setItemType(window.location.href.substring(window.location.href.lastIndexOf("/")).replace("/", "").replaceAll("%20", " "));
@@ -56,31 +77,11 @@ export default function ViewMoreItems(props) {
         }, 4000);
     }
 
-    // const getPlaceholder = () => {
-    //     if (window.location.pathname.includes("/viewmore")) {
-    //         // let searchbar = document.getElementById("viewSearchbar");
-    //         // let getIndex = Math.floor(Math.random() * items.length)
-    //         // fetchDone ? searchbar.placeholder = items[getIndex].itemName : searchbar.placeholder = "Search..."
-    //     }
-    // }
-    // setInterval(getPlaceholder, 5000);
-
-    const check = () => {
-        let dark = document.querySelectorAll(".dark")
-        for (const darks of dark) {
-            if (sessionStorage.getItem("dark") === "true") {
-                darks.classList.add("text-light")
-            } else {
-                darks.classList.add("text-dark")
-            }
-        }
-    }
-
     useEffect(() => {
         sessionStorage.getItem("dark") === "true" ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
             : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
-        check();
         getItemTypefromUrl();
+        currentuser();
         return (fetch())
     }, [])
 
@@ -90,41 +91,69 @@ export default function ViewMoreItems(props) {
                 <div className='col-3'>
                     <span className='fs-5'>
                         <i className="fa-thin fa-arrow-left btn mx-2 btn-light" style={{ fontFamily: "fontAwesome" }} onClick={() => { return (window.history.back()) }}></i>
-                        <span id='items' className='dark  fw-semibold'>{itemType.toUpperCase()}S</span>
+                        <span id='items' className='dark fw-semibold'>{itemType.toUpperCase()}'S</span>
                     </span>
                 </div>
-                <div className='col-2 justify-content-start '>
+                <div className='col-1'>
                     <div><input type='search' className='form-control form-control-sm w-100 ' id="viewSearchbar" placeholder='Search...'
                         onChange={(a) => {
                             setSearch(a.target.value)
                         }}
                     /></div>
                 </div>
-                <div className='col-7 align-items-center text-center d-grid gap-2'>
-                    <div className="btn-group gap-1" role="group" >
-                        <input type="radio" className="btn-check btn-sm" name="btnradio" id="all" autoComplete="off" onClick={() => setfilters("")} checked={filters === "" && true} />
+                <div className='col-7'>
+                    <div className="d-flex gap-2 justify-content-center btn-group-sm gap-2" role="group" >
+                        <input type="radio" className="btn-check " name="btnradio" id="all" autoComplete="off" onClick={() => setfilters("")} checked={filters === "" && true} />
                         <label className="btn btn-outline-light " htmlFor="all">All</label>
 
-                        <input type="radio" className="btn-check btn-sm" name="btnradio" id="500" autoComplete="off" onClick={() => setfilters("500")} />
-                        <label className="btn btn-outline-warning " htmlFor="500">&lt;500</label>
+                        <input type="radio" className="btn-check " name="btnradio" id="500" autoComplete="off" onClick={() => setfilters("500")} />
+                        <label className="btn btn-outline-warning " htmlFor="500">Below 500</label>
 
-                        <input type="radio" className="btn-check btn-sm" name="btnradio" id="1000" autoComplete="off" onClick={() => setfilters("1000")} />
-                        <label className="btn btn-outline-warning " htmlFor="1000">&lt;1000</label>
+                        <input type="radio" className="btn-check " name="btnradio" id="1000" autoComplete="off" onClick={() => setfilters("1000")} />
+                        <label className="btn btn-outline-warning " htmlFor="1000">Below 1,000</label>
 
-                        <input type="radio" className="btn-check btn-sm" name="btnradio" id="5000" autoComplete="off" onClick={() => setfilters("5000")} />
-                        <label className="btn btn-outline-warning " htmlFor="5000">&lt;5000</label>
+                        <input type="radio" className="btn-check " name="btnradio" id="5000" autoComplete="off" onClick={() => setfilters("5000")} />
+                        <label className="btn btn-outline-warning " htmlFor="5000">Below 5,000</label>
 
-                        <input type="radio" className="btn-check btn-sm" name="btnradio" id="10000" autoComplete="off" onClick={() => { setfilters("10000") }} />
-                        <label className="btn btn-outline-warning " htmlFor="10000">&lt;10000</label>
+                        <input type="radio" className="btn-check " name="btnradio" id="10000" autoComplete="off" onClick={() => { setfilters("10000") }} />
+                        <label className="btn btn-outline-warning " htmlFor="10000">Below 10,000</label>
 
-                        <input type="radio" className="btn-check btn-sm" name="btnradio" id="50000" autoComplete="off" onClick={() => setfilters("50000")} />
-                        <label className="btn btn-outline-warning " htmlFor="50000">&lt;50000</label>
+                        <input type="radio" className="btn-check " name="btnradio" id="50000" autoComplete="off" onClick={() => setfilters("50000")} />
+                        <label className="btn btn-outline-warning " htmlFor="50000">Below 50,000</label>
 
-                        <input type="radio" className="btn-check btn-sm" name="btnradio" id="100000" autoComplete="off" onClick={() => setfilters("100000")} />
-                        <label className="btn btn-outline-warning " htmlFor="100000">&lt;100000</label>
+                        <input type="radio" className="btn-check " name="btnradio" id="100000" autoComplete="off" onClick={() => setfilters("100000")} />
+                        <label className="btn btn-outline-warning " htmlFor="100000">Below 1,00,000</label>
 
-                        <input type="radio" className="btn-check btn-sm" name="btnradio" id=">100000" autoComplete="off" onClick={() => setfilters(">100000")} />
-                        <label className="btn btn-outline-warning " htmlFor=">100000">&gt;100000</label>
+                        <input type="radio" className="btn-check " name="btnradio" id=">100000" autoComplete="off" onClick={() => setfilters(">100000")} />
+                        <label className="btn btn-outline-warning " htmlFor=">100000">Above 1,000,00</label>
+                    </div>
+                </div>
+                <div className='col-1'>
+                    <div className="justify-content-around d-flex">
+                        <div className="btn-group btn-group-sm">
+                            <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                                {fetchDone ?
+                                    <span className='text-light'>{user.profileImgUrl ?
+                                        <img src={user.profileImgUrl} width={25} height={25} />
+                                        :
+                                        <i className="fa-solid fa-user"></i>}
+                                    </span>
+                                    :
+                                    <span className="placeholder-glow">
+                                        <span className="placeholder col-12"></span>
+                                    </span>}
+                            </button>
+                            <ul className="dropdown-menu bg-secondary-warning dropdown-menu-lg-end user">
+                                <li><Link className="dropdown-item" to={"/profile/settings"}><i className='fa-solid fa-gear'></i> Settings</Link></li>
+                                <li>
+                                    <a className="dropdown-item text-center">
+                                        <button className="btn btn-outline-danger  justify-content-end " data-bs-toggle="modal" data-bs-target="#exampleModal3" data-bs-whatever="@fat"
+                                        ><i className="fa-solid fa-power-off"></i> Sign out
+                                        </button>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -139,27 +168,34 @@ export default function ViewMoreItems(props) {
                             {items
                                 .filter(a => {
                                     if (search === "") {
+                                        i = 0;
                                         return a;
                                     }
                                     if (a.itemName.toLowerCase().includes(search.toLowerCase())) {
+                                        i = 0;
                                         return a;
                                     }
                                 })
                                 .filter(a => {
                                     if (filters === "") {
+                                        i = 0;
                                         return a;
                                     }
                                     if (parseInt(filters) > parseInt(a.itemPrice.replaceAll(",", ""))) {
+                                        i = 0;
                                         return a;
                                     }
                                     if (filters === ">100000") {
                                         if (parseInt(filters.replace(">", "")) < parseInt(a.itemPrice.replaceAll(",", ""))) {
+                                            i = 0;
                                             return a;
                                         }
                                     }
-                                })
+                                }
+                                )
                                 .map((e) => {
                                     if (e.itemType.toLowerCase().includes(itemType.toLowerCase())) {
+                                        i++
                                         return (
                                             <div className=' col row ' key={e.itemId}>&nbsp;
                                                 <div className="card " data-aos="fade-up" >
@@ -219,6 +255,9 @@ export default function ViewMoreItems(props) {
                                 })
                             }
                         </div><br></br>
+                        {i == 0 && <h4 className='text-info '>
+                            <img src={img} width={35} height={35} /> No items found !
+                        </h4>}
                     </div>
                 :
                 <div className='container-fluid justify-content-center text-center' id='back-card-bg-m' >
@@ -315,8 +354,11 @@ export default function ViewMoreItems(props) {
                 </div>
             }
             <hr />
+
             <ChatBot />
+
             <Footer />
+
             {showToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">
                 <div className="d-flex">
                     <div className="toast-body ">
@@ -328,6 +370,31 @@ export default function ViewMoreItems(props) {
                 </div>
             </div>}
 
+            {/* Logout pop */}
+            <div className="modal fade " id="exampleModal3" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content logout-model">
+                        <div className="modal-header">
+                            <h5 className="modal-title " id="exampleModalLabel"><img src={img} alt="" width="30" height="30" className="d-inline-block align-text-top" /> Shopping mart</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body text-center">
+                            <h5>Conform to logout</h5>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-outline-success" data-bs-dismiss="modal">No</button>
+                            <button type="button" className="btn btn-outline-danger"
+                                onClick={() => {
+                                    return (localStorage.removeItem("currentuser"),
+                                        localStorage.removeItem("Raghu"),
+                                        window.location.reload())
+                                }}
+                            >Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             {/* Error pop */}
             {error && <>
                 <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">

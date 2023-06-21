@@ -66,8 +66,8 @@
 }
 .viewbg{
     background-color:rgb(99, 57, 1)
-    /* backdrop-filter: trasparent(10%); */
 }
+
 @media screen and (max-width:992px) {
     #view-img-zoom {
         left: 80%;

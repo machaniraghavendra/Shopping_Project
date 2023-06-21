@@ -5,6 +5,7 @@ import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import { Link } from "react-router-dom";
 import Footer from '../Footer/Footer';
 import ChatBot from '../ChatBot/ChatBot';
+import ProfilePictureEdit from './ProfilePictureEdit';
 
 export default function Settings(props) {
 
@@ -71,6 +72,7 @@ export default function Settings(props) {
             "userEmail": props.user,
             "userName": user.userName,
             "mobileNumber": user.mobileNumber,
+            "profileImgUrl": user.profileImgUrl,
             "darkModeEnabled": mode
         }).then(getTheme());
     }
@@ -342,6 +344,7 @@ export default function Settings(props) {
             document.getElementById("flexSwitchCheckChecked").checked = false && (document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))")
 
     }, [])
+
     if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
         return (
             <div className='container-fluid justify-content-center'>
@@ -362,7 +365,13 @@ export default function Settings(props) {
                                     <br></br>
                                     <div className="btn-group">
                                         <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                            {fetchDone ? <span><i className="fa-solid fa-user"></i>&nbsp;{user.userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
+                                            {fetchDone ?
+                                                <span>{user.profileImgUrl ? <img src={user.profileImgUrl} width={25} height={25} />
+                                                    : <i className="fa-solid fa-user"></i>}&nbsp;{user.userName}
+                                                </span>
+                                                : <span className="placeholder-glow">
+                                                    <span className="placeholder col-12"></span>
+                                                </span>}
                                         </button>
                                         <ul className="navbar-nav me-auto mb-2 mb-lg-0  ">
                                             <div className="container-fluid text-center">
@@ -429,9 +438,29 @@ export default function Settings(props) {
                     </div>
                     <div className="col-lg-8">
                         <div className="my-3 col float-md-left float-lg-right">
-                            <figure className='text-center'>
-                                <i className='fa-solid fa-user userCircle'></i>
-                            </figure>
+                            <div>
+                                {fetchDone ?
+                                    user.profileImgUrl ?
+                                        <figure className='text-center'>
+                                            <span className='position-relative'>
+                                                <img className="image img-fluid position-absolute" width="200" height="200" style={{ backgroundImage: 'url(' + user.profileImgUrl + ')' }} />
+                                                <img className="image-over img-fluid position-relative" width="180" height="180" src={user.profileImgUrl} data-bs-toggle="modal" data-bs-target="#profileModal" />
+                                            </span>
+                                        </figure>
+                                        :
+                                        <figure className='text-center '>
+                                            <i className='fa-solid fa-user userCircle position-relative ' data-bs-toggle="modal" data-bs-target="#profileModal">
+                                                <i className="bi bi-camera text-light bg-dark p-2 position-absolute justify-content-center d-flex fs-5" style={{ zIndex: "1", left: "37%", top: "79%" }}></i>
+                                            </i>
+                                        </figure>
+                                    :
+                                    <figure className='text-center '>
+                                        <i className='fa-solid fa-user userCircle position-relative ' data-bs-toggle="modal" data-bs-target="#profileModal">
+                                            <i className="bi bi-camera text-light bg-dark p-2 position-absolute justify-content-center d-flex fs-5" style={{ zIndex: "1", left: "37%", top: "79%" }}></i>
+                                        </i>
+                                    </figure>
+                                }
+                            </div>
                             <section>
                                 <div className='container-md data p-2'>
                                     <div className="row ">
@@ -475,6 +504,7 @@ export default function Settings(props) {
                                                             axios.put("http://localhost:8083/user/", {
                                                                 "userName": values.userName,
                                                                 "userEmail": user.userEmail,
+                                                                "profileImgUrl":user.profileImgUrl,
                                                                 "mobileNumber": user.mobileNumber
                                                             }).then(res => { setInfo(res.data); }).catch((error) => {
                                                                 setError(true);
@@ -507,6 +537,7 @@ export default function Settings(props) {
                                                             axios.put("http://localhost:8083/user/", {
                                                                 "userName": user.userName,
                                                                 "userEmail": user.userEmail,
+                                                                "profileImgUrl":user.profileImgUrl,
                                                                 "mobileNumber": values.mobileNumber
                                                             }).then(res => { setInfo(res.data); }).catch((error) => {
                                                                 setError(true);
@@ -617,6 +648,8 @@ export default function Settings(props) {
                         </div>
                     </div>
                 </div>
+
+                {/* Logout Pop */}
                 <div className="modal fade " id="exampleModal3" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog">
                         <div className="modal-content logout-model">
@@ -847,7 +880,17 @@ export default function Settings(props) {
                     </div>
                 </>
                 }
+
+                {/* Profile edit modal */}
+                <div className="modal fade" id="profileModal" tabIndex="-1" aria-labelledby="profileModal" aria-hidden="true">
+                    <div className="modal-dialog ">
+                        <div className='modal-content bg-dark text-light'>
+                            {fetchDone && <ProfilePictureEdit user={user} />}
+                        </div>
+                    </div>
+                </div>
             </div >
+
         )
     } else {
         return (

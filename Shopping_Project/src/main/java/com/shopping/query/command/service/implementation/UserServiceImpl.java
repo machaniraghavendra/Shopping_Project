@@ -2,7 +2,6 @@ package com.shopping.query.command.service.implementation;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -113,6 +112,7 @@ public class UserServiceImpl implements UserService {
 		detailDto.setUserEmail(entity.getUserEmail());
 		detailDto.setUserName(entity.getUserName());
 		detailDto.setMobileNumber(entity.getMobileNumber());
+		detailDto.setProfileImgUrl(entity.getProfileImgUrl());
 		detailDto.setDarkModeEnabled(entity.isDarkModeEnabled());
 		return detailDto;
 	}
