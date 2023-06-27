@@ -16,7 +16,7 @@ export default function Mobiles() {
     const [errorMessage, setErrorMessage] = useState("");
 
     const fetch = () => {
-        axios.get("http://localhost:8083/items/")
+        axios.get("http://localhost:8083/items/type?type=Mobile")
             .then((res) => { return (setMobiles(res.data)) }) .catch((error) => {
                 setError(true);
                 if (error.response.data === undefined) {

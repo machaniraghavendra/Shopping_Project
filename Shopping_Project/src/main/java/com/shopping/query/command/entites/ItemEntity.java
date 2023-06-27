@@ -20,7 +20,7 @@ import lombok.ToString;
 @ToString
 public class ItemEntity {
 
-	 static final String tableName= "ITEMS" ;
+	static final String tableName = "ITEMS";
 
 	@Id
 	private int ItemId;
@@ -31,5 +31,6 @@ public class ItemEntity {
 	private String ItemDesc;
 	private String ItemSpec;
 	private String ItemDimensions;
+	private boolean isTrending;
 
 }

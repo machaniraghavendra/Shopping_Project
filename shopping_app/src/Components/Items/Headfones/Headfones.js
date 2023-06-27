@@ -27,7 +27,7 @@ export default function Headfones() {
   }
 
   const fetch = () => {
-    axios.get("http://localhost:8083/items/")
+    axios.get("http://localhost:8083/items/type?type=headfones")
       .then((res) => {
         if (res.status == "200") {
           setfetchDone(true)

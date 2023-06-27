@@ -30,8 +30,8 @@ export default function ViewMoreItems(props) {
 
     let i = 0;
 
-    const fetch = () => {
-        axios.get("http://localhost:8083/items/")
+    const fetch = (type) => {
+        axios.get("http://localhost:8083/items/type?type=" + type)
             .then((res) => {
                 if (res.status == "200") {
                     setfetchDone(true);
@@ -64,10 +64,13 @@ export default function ViewMoreItems(props) {
     }
 
     const getItemTypefromUrl = () => {
+        let type = window.location.href.substring(window.location.href.lastIndexOf("/")).replace("/", "")
         if (window.location.href.includes("%")) {
-            setItemType(window.location.href.substring(window.location.href.lastIndexOf("/")).replace("/", "").replaceAll("%20", " "));
+            setItemType(type.replaceAll("%20", " "));
+            fetch(type.replaceAll("%20", " "))
         } else {
-            setItemType(window.location.href.substring(window.location.href.lastIndexOf("/")).replace("/", ""));
+            setItemType(type);
+            fetch(type)
         }
     }
 
@@ -82,7 +85,6 @@ export default function ViewMoreItems(props) {
             : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
         getItemTypefromUrl();
         currentuser();
-        return (fetch())
     }, [])
 
     return (
@@ -394,7 +396,7 @@ export default function ViewMoreItems(props) {
                     </div>
                 </div>
             </div>
-            
+
             {/* Error pop */}
             {error && <>
                 <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">

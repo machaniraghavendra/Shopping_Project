@@ -2,15 +2,21 @@ package com.shopping.query.command.service.implementation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.shopping.query.command.entites.ItemEntity;
+import com.shopping.query.command.entites.dto.ItemsDto;
 import com.shopping.query.command.exceptions.GlobalExceptionHandler;
 import com.shopping.query.command.exceptions.ItemAlreadyException;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
+import com.shopping.query.command.mapper.MappersClass;
 import com.shopping.query.command.repos.ItemsRepo;
 import com.shopping.query.command.service.ItemService;
 
@@ -21,6 +27,8 @@ public class ItemServiceImpl implements ItemService {
 	private ItemsRepo itemsRepo;
 
 	private GlobalExceptionHandler globalExceptionHandler;
+
+	private MappersClass mappersClass = new MappersClass();
 
 	@Override
 	public String save(ItemEntity itemEntity) throws ItemAlreadyException {
@@ -43,8 +51,11 @@ public class ItemServiceImpl implements ItemService {
 			if (!itemsRepo.existsById(itemEntity.getItemId()))
 				throw new ItemNotFoundException("The item " + itemEntity.getItemName() + " not exists");
 			else {
-				itemsRepo.save(itemEntity);
-				return "Updated !";
+				if ((getTrendingItems().isEmpty() || getTrendingItems().size() < 9) || !itemEntity.isTrending()) {
+					itemsRepo.save(itemEntity);
+					return "Updated !";
+				}
+				return "Trending items are enough more";
 			}
 		} catch (ItemNotFoundException e) {
 			e.printStackTrace();
@@ -111,6 +122,39 @@ public class ItemServiceImpl implements ItemService {
 	public String deleteAll() {
 		itemsRepo.deleteAll();
 		return "Deleted the all Items";
+	}
+
+	@Override
+	public List<ItemsDto> getItemsByType(String itemType) {
+		List<ItemsDto> itemsOfGivenType = new ArrayList<>();
+		if (!itemType.isEmpty() && Objects.nonNull(itemType)) {
+			Optional.ofNullable(viewall()).ifPresentOrElse(items -> {
+				items.stream().filter(item -> item.getItemType().toLowerCase().contains(itemType.trim().toLowerCase()))
+						.collect(Collectors.toList()).forEach(i -> {
+							try {
+								itemsOfGivenType.add(mappersClass.itemDtoMapperByEntity(i));
+							} catch (ItemNotFoundException e) {
+								globalExceptionHandler.itemNotFoundException(e);
+							}
+						});
+			}, null);
+		}
+		return itemsOfGivenType;
+	}
+
+	@Override
+	public List<ItemsDto> getTrendingItems() {
+		List<ItemsDto> itemsOfTrending = new ArrayList<>();
+		Optional.ofNullable(viewall()).ifPresentOrElse(items -> {
+			items.stream().filter(item -> item.isTrending()).collect(Collectors.toList()).forEach(i -> {
+				try {
+					itemsOfTrending.add(mappersClass.itemDtoMapperByEntity(i));
+				} catch (ItemNotFoundException e) {
+					globalExceptionHandler.itemNotFoundException(e);
+				}
+			});
+		}, null);
+		return itemsOfTrending;
 	}
 
 }

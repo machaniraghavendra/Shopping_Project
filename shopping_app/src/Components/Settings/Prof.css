@@ -18,8 +18,8 @@
     transition: 0.5s;
     background-repeat: no-repeat;
     background-size: cover;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 60px 40px -7px;
 }
-
 .image-over{
     padding: 10px;
     border-radius: 50%;

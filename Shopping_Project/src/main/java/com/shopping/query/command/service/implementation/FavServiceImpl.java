@@ -33,7 +33,7 @@ public class FavServiceImpl implements FavService {
 
 	@Override
 	public String save(FavouritesEntity favouritesEntity) throws ItemAlreadyInFavException, ItemNotFoundException {
-		String itemName = mapper.itemDtoMapper(favouritesEntity.getItemId()).getItemName();
+		String itemName = mapper.itemDtoMapperById(favouritesEntity.getItemId()).getItemName();
 		try {
 			List<FavouritesEntity> favList = viewall().stream()
 					.filter(a -> a.getUserId().equalsIgnoreCase(favouritesEntity.getUserId()))
@@ -53,7 +53,7 @@ public class FavServiceImpl implements FavService {
 
 	@Override
 	public String update(FavouritesEntity favouritesEntity) throws ItemNotFoundInFavException, ItemNotFoundException {
-		String itemName = mapper.itemDtoMapper(favouritesEntity.getItemId()).getItemName();
+		String itemName = mapper.itemDtoMapperById(favouritesEntity.getItemId()).getItemName();
 		try {
 			if (!favRepo.existsById(favouritesEntity.getItemId()))
 				throw new ItemNotFoundInFavException("The item " + itemName + " not exists in your Favourites");
@@ -93,7 +93,7 @@ public class FavServiceImpl implements FavService {
 			else {
 				FavouritesEntity entity= favRepo.findById(favId).get();
 				return FavouriteDto.builder().user(mapper.userDetailDtoMapper(entity.getUserId()))
-						.item(mapper.itemDtoMapper(entity.getItemId())).build();
+						.item(mapper.itemDtoMapperById(entity.getItemId())).build();
 			}
 		} catch (ItemNotFoundInFavException e) {
 			e.printStackTrace();
@@ -114,7 +114,7 @@ public class FavServiceImpl implements FavService {
 		if (Objects.nonNull(itemEntities)) {
 			for (int i = 0; i < itemEntities.size(); i++) {
 				String userEmail = mapper.userDetailDtoMapper(itemEntities.get(i).getUserId()).getUserEmail();
-				ItemsDto itemsDto = mapper.itemDtoMapper(itemEntities.get(i).getItemId());
+				ItemsDto itemsDto = mapper.itemDtoMapperById(itemEntities.get(i).getItemId());
 				if (checkandgetlistWithUserId(userEmail).isEmpty()) {
 					item.put(userEmail, Arrays.asList(itemsDto));
 				} else {
@@ -133,7 +133,7 @@ public class FavServiceImpl implements FavService {
 		List<FavouritesEntity> entities = viewall();
 		return entities.stream().filter(a -> a.getUserId().equalsIgnoreCase(userId)).map(a -> {
 			try {
-				return mapper.itemDtoMapper(a.getItemId());
+				return mapper.itemDtoMapperById(a.getItemId());
 			} catch (ItemNotFoundException e) {
 				e.printStackTrace();
 			}
