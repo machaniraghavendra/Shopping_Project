@@ -19,6 +19,8 @@ export default function View(props) {
 
     const [items, setItems] = useState([]);
 
+    const [interesteditems, setInterestedItems] = useState([]);
+
     const [showToast, setShowToast] = useState(false);
 
     const [fetchItemDone, setfetchItemDone] = useState(false);
@@ -46,11 +48,12 @@ export default function View(props) {
         })
     }
 
-    const getItem = () => {
+    const getItem = (click) => {
         axios.get("http://localhost:8083/items/" + num)
             .then((res) => {
                 if (res.status == "200") {
-                    setfetchItemDone(true)
+                    setfetchItemDone(true);
+                    click && window.location.reload()
                 }
                 setviewItem(res.data)
             }).catch((error) => {
@@ -62,6 +65,33 @@ export default function View(props) {
                 }
             })
         similar();
+    }
+
+    const getInterests = () => {
+        axios.get("http://localhost:8083/items/historyget?user=" + props.user).then(res => {
+            if (res.status == "200") {
+                setInterestedItems(res.data)
+            }
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
+    }
+
+    const addIntoInterest = (id) => {
+        axios.post("http://localhost:8083/items/history?user=" + localStorage.getItem("currentuser") + "&id=" + id)
+            .catch((error) => {
+                setError(true);
+                if (error.response.data === undefined) {
+                    setErrorMessage("Something went wrong")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
+            })
     }
 
     const check = () => {
@@ -126,7 +156,8 @@ export default function View(props) {
                 setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
             }
         });
-        getItem()
+        getItem();
+        getInterests();
     }, []
     )
 
@@ -226,8 +257,8 @@ export default function View(props) {
                                     <h4 style={{ letterSpacing: "2px", textTransform: "capitalize" }}>{item.itemName}</h4>
                                     <div className='mx-3'>
                                         <p>Price : <b> ₹{item.itemPrice}</b></p>
-                                        {item.itemSpec!=""&& <p>Specifications : {item.itemSpec}</p>}
-                                        {item.itemDimensions != "null" ||item.itemDimensions != "" &&
+                                        {item.itemSpec != "" && <p>Specifications : {item.itemSpec}</p>}
+                                        {item.itemDimensions != "null" || item.itemDimensions != "" &&
                                             <p>Dimensions : {item.itemDimensions}</p>}
                                         <p>Type : {item.itemType}</p>
                                         <p>Description : {item.itemDesc}</p>
@@ -341,8 +372,9 @@ export default function View(props) {
                                                     <div className='text-center d-flex justify-content-center '>
                                                         <Link to={'/view/' + a.itemId + "/" + a.itemName} className='btn btn-info d-flex '
                                                             onClick={() => {
+                                                                addIntoInterest(a.itemId);
                                                                 return (
-                                                                    window.onload(getItem())
+                                                                    getItem(true)
                                                                 )
                                                             }}>View More...</Link>
                                                     </div>
@@ -454,6 +486,180 @@ export default function View(props) {
                 }
             </div>
 
+            <div className='container'>
+                <h3 className='view p-2'>Your Interests </h3>
+                {fetchItemDone ?
+                    <div className='container'>
+                        <div className="row row-card row-cols-2 row-cols-md-4 g-4 align-content-center text-center my-3" id="viewsimilarscroll">
+                            {interesteditems.length != 0 ?
+                                interesteditems
+                                    .filter(a => {
+                                        return (
+                                            a.itemId != viewItem.map(a => { return (a.itemId) })
+                                        )
+                                    })
+                                    .map((a) => {
+                                        return (
+                                            <div className="col" key={a.itemId} style={{ overflowX: "scroll", overflowX: "visible" }}>
+                                                <div className="card view-more-card">
+                                                    <div className='card-head text-end'>
+                                                        <button className='btn  m-2' onClick={() => {
+                                                            if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                                axios.post("http://localhost:8083/cart/", {
+                                                                    "itemId": a.itemId,
+                                                                    "userId": localStorage.getItem("currentuser")
+                                                                }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
+                                                                    setError(true);
+                                                                    if (error.response.data === undefined) {
+                                                                        setErrorMessage("Something went wrong")
+                                                                    } else {
+                                                                        setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                                    }
+                                                                })
+                                                            } else {
+                                                                setInfo("Login required")
+                                                            }
+                                                        }}
+                                                        ><i className='fa-solid fa-cart-shopping text-info'></i></button>
+                                                        <button className='btn ' onClick={() => {
+                                                            if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                                axios.post("http://localhost:8083/fav/", {
+                                                                    "itemId": a.itemId,
+                                                                    "userId": localStorage.getItem("currentuser")
+                                                                }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
+                                                                    setError(true);
+                                                                    if (error.response.data === undefined) {
+                                                                        setErrorMessage("Something went wrong")
+                                                                    } else {
+                                                                        setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                                    }
+                                                                })
+                                                            } else {
+                                                                setInfo("Login required !")
+                                                            }
+                                                        }}
+                                                        ><i className="fa-solid fa-heart text-danger"></i> </button>
+                                                    </div>
+                                                    <img src={a.itemImgUrl} className="card-img-top " alt={a.itemName} />
+                                                    <div className="card-body ">
+                                                        <h5 className="card-title text-truncate">{a.itemName}</h5>
+                                                        <p className="card-text text-truncate"> ₹{a.itemPrice}</p>
+                                                        <p className='card-text text-truncate'><b>{a.itemSpec}</b></p>
+                                                        <div className='text-center d-flex justify-content-center '>
+                                                            <Link to={'/view/' + a.itemId + "/" + a.itemName} className='btn btn-info d-flex '
+                                                                onClick={() => {
+                                                                    addIntoInterest(a.itemId);
+                                                                    return (
+                                                                        getItem(true)
+                                                                    )
+                                                                }}>View More...</Link>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    })
+                                :
+                                <div className='h6 view'>No interests found browse more...</div>
+                            }
+                        </div>
+                    </div>
+                    :
+                    <div className='container-fluid justify-content-center text-center' id='back-card-bg-m' >
+                        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gap-4 justify-content-center text-center ">
+                            <div className=' col row '>
+                                <div className="card " data-aos="fade-up" >
+                                    <div className='card-header justify-content-end text-center'>
+                                        <div className="card-body">
+                                            <img src={loadingImg} className="card-img-top" alt="..." />
+                                            <p className="card-text placeholder-glow">
+                                                <span className="placeholder col-7"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-6"></span>
+                                                <span className="placeholder col-8"></span>
+                                                <span className="placeholder col-7"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-6"></span>
+                                                <span className="placeholder col-8"></span>
+                                            </p>
+                                            <a className="btn btn-primary disabled placeholder col-6"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className=' col row '>
+                                <div className="card " data-aos="fade-up" >
+                                    <div className='card-header justify-content-end text-center'>
+                                        <div className="card-body">
+                                            <img src={loadingImg} className="card-img-top" alt="..." />
+                                            <p className="card-text placeholder-glow">
+                                                <span className="placeholder col-7"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-6"></span>
+                                                <span className="placeholder col-8"></span>
+                                                <span className="placeholder col-7"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-6"></span>
+                                                <span className="placeholder col-8"></span>
+                                            </p>
+                                            <a className="btn btn-primary disabled placeholder col-6"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className=' col row '>
+                                <div className="card " data-aos="fade-up" >
+                                    <div className='card-header justify-content-end text-center'>
+                                        <div className="card-body">
+                                            <img src={loadingImg} className="card-img-top" alt="..." />
+                                            <p className="card-text placeholder-glow">
+                                                <span className="placeholder col-7"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-6"></span>
+                                                <span className="placeholder col-8"></span>
+                                                <span className="placeholder col-7"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-6"></span>
+                                                <span className="placeholder col-8"></span>
+                                            </p>
+                                            <a className="btn btn-primary disabled placeholder col-6"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className=' col row '>
+                                <div className="card " data-aos="fade-up" >
+                                    <div className='card-header justify-content-end text-center'>
+                                        <div className="card-body">
+                                            <img src={loadingImg} className="card-img-top" alt="..." />
+                                            <p className="card-text placeholder-glow">
+                                                <span className="placeholder col-7"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-6"></span>
+                                                <span className="placeholder col-8"></span>
+                                                <span className="placeholder col-7"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-4"></span>
+                                                <span className="placeholder col-6"></span>
+                                                <span className="placeholder col-8"></span>
+                                            </p>
+                                            <a className="btn btn-primary disabled placeholder col-6"></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
             {showToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">
                 <div className="d-flex">
                     <div className="toast-body">
@@ -465,6 +671,7 @@ export default function View(props) {
                 </div>
             </div>}
 
+            <br></br>
             <footer>
                 <Footer />
             </footer>

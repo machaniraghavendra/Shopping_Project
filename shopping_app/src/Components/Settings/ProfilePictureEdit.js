@@ -57,7 +57,6 @@ export default function ProfilePictureEdit(props) {
                     <div className="d-flex justify-content-end gap-4">
                         <a className="btn btnm yes btn-success" onClick={() => {
                             if (conform == true) {
-                                { localStorage.setItem("profile", store) }
                                 setConform(false);
                                 updateImgUrl()
                                 return (setConform(false), toggle())

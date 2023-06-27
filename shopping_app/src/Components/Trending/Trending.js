@@ -39,6 +39,18 @@ export default function Trending() {
                 }
             })
     }
+    
+    const addIntoInterest = (id) => {
+        axios.post("http://localhost:8083/items/history?user=" + localStorage.getItem("currentuser") + "&id=" + id)
+        .catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
+    }
 
     const cartAdd = (id) => {
         if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
@@ -114,7 +126,7 @@ export default function Trending() {
                                         <div className="card-body">
                                             <h5 className="card-title text-truncate">{trendingItems[0].itemName}</h5>
                                             <p className="card-text">₹{trendingItems[0].itemPrice}</p>
-                                            <Link to={'/view/' + trendingItems[0].itemId + "/" + trendingItems[0].itemName} className='btn btn-info'>View More...</Link>
+                                            <Link to={'/view/' + trendingItems[0].itemId + "/" + trendingItems[0].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[0].itemId) }}>View More...</Link>
                                             <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[0].itemId) }}>Add to Cart</button>
                                             <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[0].itemId) }}>Add to Wishlist</button>
                                         </div>
@@ -127,7 +139,7 @@ export default function Trending() {
                                         <div className="card-body">
                                             <h5 className="card-title text-truncate">{trendingItems[1].itemName}</h5>
                                             <p className="card-text">₹{trendingItems[1].itemPrice}</p>
-                                            <Link to={'/view/' + trendingItems[1].itemId + "/" + trendingItems[1].itemName} className='btn btn-info'>View More...</Link>
+                                            <Link to={'/view/' + trendingItems[1].itemId + "/" + trendingItems[1].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[1].itemId) }}>View More...</Link>
                                             <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[1].itemId) }}>Add to Cart</button>
                                             <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[1].itemId) }}>Add to Wishlist</button>
                                         </div>
@@ -140,7 +152,7 @@ export default function Trending() {
                                         <div className="card-body">
                                             <h5 className="card-title text-truncate">{trendingItems[2].itemName}</h5>
                                             <p className="card-text">₹{trendingItems[2].itemPrice}</p>
-                                            <Link to={'/view/' + trendingItems[2].itemId + "/" + trendingItems[2].itemName} className='btn btn-info'>View More...</Link>
+                                            <Link to={'/view/' + trendingItems[2].itemId + "/" + trendingItems[2].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[2].itemId) }}>View More...</Link>
                                             <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[2].itemId) }}>Add to Cart</button>
                                             <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[2].itemId) }}>Add to Wishlist</button>
                                         </div>
@@ -157,7 +169,7 @@ export default function Trending() {
                                         <div className="card-body">
                                             <h5 className="card-title text-truncate">{trendingItems[3].itemName}</h5>
                                             <p className="card-text">₹{trendingItems[3].itemPrice}</p>
-                                            <Link to={'/view/' + trendingItems[3].itemId + "/" + trendingItems[3].itemName} className='btn btn-info'>View More...</Link>
+                                            <Link to={'/view/' + trendingItems[3].itemId + "/" + trendingItems[3].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[3].itemId) }}>View More...</Link>
                                             <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[3].itemId) }}>Add to Cart</button>
                                             <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[3].itemId) }}>Add to Wishlist</button>
                                         </div>
@@ -170,7 +182,7 @@ export default function Trending() {
                                         <div className="card-body">
                                             <h5 className="card-title text-truncate">{trendingItems[4].itemName}</h5>
                                             <p className="card-text">₹{trendingItems[4].itemPrice}</p>
-                                            <Link to={'/view/' + trendingItems[4].itemId + "/" + trendingItems[4].itemName} className='btn btn-info'>View More...</Link>
+                                            <Link to={'/view/' + trendingItems[4].itemId + "/" + trendingItems[4].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[4].itemId) }}>View More...</Link>
                                             <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[4].itemId) }}>Add to Cart</button>
                                             <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[4].itemId) }}>Add to Wishlist</button>
                                         </div>
@@ -183,7 +195,7 @@ export default function Trending() {
                                         <div className="card-body">
                                             <h5 className="card-title text-truncate">{trendingItems[5].itemName}</h5>
                                             <p className="card-text">₹{trendingItems[5].itemPrice}</p>
-                                            <Link to={'/view/' + trendingItems[5].itemId + "/" + trendingItems[5].itemName} className='btn btn-info'>View More...</Link>
+                                            <Link to={'/view/' + trendingItems[5].itemId + "/" + trendingItems[5].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[5].itemId) }}>View More...</Link>
                                             <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[5].itemId) }}>Add to Cart</button>
                                             <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[5].itemId) }}>Add to Wishlist</button>
                                         </div>
@@ -200,7 +212,7 @@ export default function Trending() {
                                         <div className="card-body">
                                             <h5 className="card-title text-truncate">{trendingItems[6].itemName}</h5>
                                             <p className="card-text">₹{trendingItems[6].itemPrice}</p>
-                                            <Link to={'/view/' + trendingItems[6].itemId + "/" + trendingItems[6].itemName} className='btn btn-info'>View More...</Link>
+                                            <Link to={'/view/' + trendingItems[6].itemId + "/" + trendingItems[6].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[6].itemId) }}>View More...</Link>
                                             <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[6].itemId) }}>Add to Cart</button>
                                             <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[6].itemId) }}>Add to Wishlist</button>
                                         </div>
@@ -213,7 +225,7 @@ export default function Trending() {
                                         <div className="card-body">
                                             <h5 className="card-title text-truncate">{trendingItems[7].itemName}</h5>
                                             <p className="card-text">₹{trendingItems[7].itemPrice}</p>
-                                            <Link to={'/view/' + trendingItems[7].itemId + "/" + trendingItems[7].itemName} className='btn btn-info'>View More...</Link>
+                                            <Link to={'/view/' + trendingItems[7].itemId + "/" + trendingItems[7].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[7].itemId) }}>View More...</Link>
                                             <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[7].itemId) }}>Add to Cart</button>
                                             <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[7].itemId) }}>Add to Wishlist</button>
                                         </div>
@@ -226,7 +238,7 @@ export default function Trending() {
                                         <div className="card-body">
                                             <h5 className="card-title text-truncate">{trendingItems[8].itemName}</h5>
                                             <p className="card-text">₹{trendingItems[8].itemPrice}</p>
-                                            <Link to={'/view/' + trendingItems[8].itemId + "/" + trendingItems[8].itemName} className='btn btn-info'>View More...</Link>
+                                            <Link to={'/view/' + trendingItems[8].itemId + "/" + trendingItems[8].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[8].itemId) }}>View More...</Link>
                                             <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[8].itemId) }}>Add to Cart</button>
                                             <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[8].itemId) }}>Add to Wishlist</button>
                                         </div>

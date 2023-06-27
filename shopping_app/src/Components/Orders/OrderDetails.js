@@ -103,8 +103,14 @@ export default function OrderDetails(props) {
                                 <div className="collapse navbar-collapse justify-content-end gap-2" id="navbarTogglerDemo03">
                                     <br></br>
                                     <div className="btn-group">
-                                        <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                            {fetchDone ? <span><i className="fa-solid fa-user"></i>&nbsp;{user.userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
+                                    <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                                            {fetchDone ?
+                                                <span>{user.profileImgUrl ? <img src={user.profileImgUrl} width={25} height={25} />
+                                                    : <i className="fa-solid fa-user"></i>}&nbsp;{user.userName}
+                                                </span>
+                                                : <span className="placeholder-glow">
+                                                    <span className="placeholder col-12"></span>
+                                                </span>}
                                         </button>
                                         <ul className="dropdown-menu bg-secondary-warning dropdown-menu-lg-end user">
                                             <li><Link className="dropdown-item" to={"/profile/settings"}><i className='fa-solid fa-gear'></i> Settings</Link></li>
@@ -140,7 +146,7 @@ export default function OrderDetails(props) {
                                                     {a.orderStatus == "near by hub" && <h6 className='text-end col-6 text-info'>Near by Hub</h6>}
                                                     {a.orderStatus == "cancelled" && <h6 className='text-end col-6 text-danger'>Cancelled</h6>}
                                                 </div>
-                                                <p className='p-3'><b> Price :  ₹{a.item.itemPrice}</b></p>
+                                                <p className='p-3 h6'><b> Price :  ₹{a.item.itemPrice}</b></p>
                                                 <h6>Order Details</h6>
                                                 <div className='px-3'>
                                                     <p>Ordered on  <b>{a.orderedOn}</b> at <b>{a.orderedAt}</b> sec</p>

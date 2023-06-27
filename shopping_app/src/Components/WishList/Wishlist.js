@@ -61,6 +61,19 @@ export default function Wishlist(props) {
       });
   };
 
+
+  const addIntoInterest = (id) => {
+    axios.post("http://localhost:8083/items/history?user=" + localStorage.getItem("currentuser") + "&id=" + id)
+      .catch((error) => {
+        setError(true);
+        if (error.response.data === undefined) {
+          setErrorMessage("Something went wrong")
+        } else {
+          setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+        }
+      })
+  }
+
   setTimeout(() => {
     window.onload = document.querySelector(
       ".check .container-fluid h1"
@@ -459,6 +472,7 @@ export default function Wishlist(props) {
                             <Link
                               to={"/view/" + e.itemId + "/" + e.itemName}
                               className="btn btn-info"
+                              onClick={() => { addIntoInterest(e.itemId) }}
                             >
                               View More...
                             </Link>

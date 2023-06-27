@@ -38,21 +38,9 @@ export default function Orders(props) {
         axios.get("http://localhost:8083/orders/saveorder/" + e);
     }
 
-    useEffect(() => {
-        sessionStorage.getItem("dark") ==="true"? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
-            : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
-        document.title = "Orders | Shopping Mart"
-        axios.get("http://localhost:8083/user/" + props.user).then(a => { return (setUser(a.data)) }).catch((error) => {
-            setError(true);
-            if (error.response.data === undefined) {
-                setErrorMessage("Something went wrong")
-            } else {
-                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-            }
-        })
-        fetchOrders()
+    const check = () => {
         let card = document.getElementsByClassName("card-color");
-        if (sessionStorage.getItem("dark") ==="true") {
+        if (sessionStorage.getItem("dark") === "true") {
             for (const cards of card) {
                 cards.classList.add("bg-dark")
                 cards.classList.add("text-light")
@@ -68,6 +56,28 @@ export default function Orders(props) {
                 cards.classList.remove("text-light")
             }
         }
+    }
+
+    setTimeout(() => {
+        if (fetchDone) {
+            check();
+        }
+    }, 10);
+
+    useEffect(() => {
+        sessionStorage.getItem("dark") === "true" ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
+            : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
+        document.title = "Orders | Shopping Mart"
+        axios.get("http://localhost:8083/user/" + props.user).then(a => { return (setUser(a.data)) }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
+        fetchOrders()
+
     }, []);
 
     return (
@@ -91,7 +101,13 @@ export default function Orders(props) {
                                     <br></br>
                                     <div className="btn-group">
                                         <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                            {fetchDone ? <span><i className="fa-solid fa-user"></i>&nbsp;{user.userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
+                                            {fetchDone ?
+                                                <span>{user.profileImgUrl ? <img src={user.profileImgUrl} width={25} height={25} />
+                                                    : <i className="fa-solid fa-user"></i>}&nbsp;{user.userName}
+                                                </span>
+                                                : <span className="placeholder-glow">
+                                                    <span className="placeholder col-12"></span>
+                                                </span>}
                                         </button>
                                         <ul className="dropdown-menu bg-secondary-warning dropdown-menu-lg-end user">
                                             <li><Link className="dropdown-item" to={"/profile/settings"}><i className='fa-solid fa-gear'></i> Settings</Link></li>
@@ -128,7 +144,7 @@ export default function Orders(props) {
                                             <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
                                                 <div className="row g-0" >
                                                     <div className="col-md-4 d-none d-lg-flex justify-content-center">
-                                                        <img src={item.item.itemImgUrl} className="img-fluid rounded-start d-lg-block d-none w-25 h-100 d-block" alt={item.item.itemName} style={{marginLeft:"auto",marginRight:"auto"}}/>
+                                                        <img src={item.item.itemImgUrl} className="img-fluid rounded-start d-lg-block d-none w-25 h-100 d-block" alt={item.item.itemName} style={{ marginLeft: "auto", marginRight: "auto" }} />
                                                     </div>
                                                     <div className="col-md-8 ">
                                                         <div className="card-body">

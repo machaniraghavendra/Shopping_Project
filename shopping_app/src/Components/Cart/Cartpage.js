@@ -55,6 +55,18 @@ export default function Cartpage(props) {
             })
     }
 
+    const addIntoInterest = (id) => {
+        axios.post("http://localhost:8083/items/history?user=" + localStorage.getItem("currentuser") + "&id=" + id)
+        .catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
+    }
+
     setTimeout(() => {
         window.onload = document.querySelector(".check .container-fluid h1").innerHTML = "Contents";
     }, 100);
@@ -257,7 +269,7 @@ export default function Cartpage(props) {
                                                                 <h5 className="card-title text-truncate" id={e.itemName}>{e.itemName}</h5>
                                                                 <p className="card-text text-truncate"> ₹{e.itemPrice}</p>
                                                             </div>
-                                                            <Link to={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info'>View More...</Link>
+                                                            <Link to={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info' onClick={() => { addIntoInterest(e.itemId) }}>View More...</Link>
                                                         </div>
                                                     </div>
                                                 )

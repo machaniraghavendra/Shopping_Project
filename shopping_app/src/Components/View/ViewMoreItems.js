@@ -47,6 +47,18 @@ export default function ViewMoreItems(props) {
             })
     }
 
+    const addIntoInterest = (id) => {
+        axios.post("http://localhost:8083/items/history?user=" + localStorage.getItem("currentuser") + "&id=" + id)
+        .catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
+    }
+
     const currentuser = () => {
         axios.get("http://localhost:8083/user/" + props.user).then(res => {
             if (res.status == "200") {
@@ -248,7 +260,7 @@ export default function ViewMoreItems(props) {
                                                         <p className="card-text text-truncate"> ₹{e.itemPrice}</p>
                                                     </div>
                                                     <div className='card-footer fixed-bottom'>
-                                                        <Link to={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info'>View More...</Link>
+                                                        <Link to={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info' onClick={() => { addIntoInterest(e.itemId) }}>View More...</Link>
                                                     </div>
                                                 </div>
                                             </div>

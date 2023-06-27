@@ -1,6 +1,7 @@
 package com.shopping.query.command.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -76,5 +77,16 @@ public class ItemsController {
 	@GetMapping("/trending")
 	public ResponseEntity<List<ItemsDto>> getTrendingItems() {
 		return new ResponseEntity<>(itemService.getTrendingItems(), HttpStatus.OK);
+	}
+
+	@PostMapping("/history")
+	public ResponseEntity<Map<String, List<ItemsDto>>> viewedHistory(@RequestParam("user") String user,
+			@RequestParam("id") int id) throws ItemNotFoundException {
+		return new ResponseEntity<>(itemService.viewedHistory(user, id), HttpStatus.OK);
+	}
+
+	@GetMapping("/historyget")
+	public ResponseEntity<List<ItemsDto>> getHistory(@RequestParam("user") String user) throws ItemNotFoundException {
+		return new ResponseEntity<>(itemService.getViewedHistory(user), HttpStatus.OK);
 	}
 }

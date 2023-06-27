@@ -241,6 +241,7 @@ export default function Settings(props) {
             setShowToast(false);
         }, 6500);
     }
+    
     const set = (e) => {
         const { name, value } = e.target;
         setValue({ ...values, [name]: value });

@@ -1,7 +1,11 @@
 package com.shopping.query.command.service.implementation;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -9,7 +13,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import com.shopping.query.command.entites.ItemEntity;
 import com.shopping.query.command.entites.dto.ItemsDto;
@@ -29,6 +32,8 @@ public class ItemServiceImpl implements ItemService {
 	private GlobalExceptionHandler globalExceptionHandler;
 
 	private MappersClass mappersClass = new MappersClass();
+
+	private Map<String, List<ItemsDto>> history = new HashMap<>();
 
 	@Override
 	public String save(ItemEntity itemEntity) throws ItemAlreadyException {
@@ -153,8 +158,55 @@ public class ItemServiceImpl implements ItemService {
 					globalExceptionHandler.itemNotFoundException(e);
 				}
 			});
-		}, null);
+		}, () -> Collections.emptyList());
 		return itemsOfTrending;
+	}
+
+	@Override
+	public Map<String, List<ItemsDto>> viewedHistory(String userEmail, int itemId) throws ItemNotFoundException {
+		List<ItemsDto> items = new ArrayList<>();
+		if (!(userEmail.isEmpty() && Objects.isNull(userEmail)) && itemId > 0) {
+			if (history.isEmpty() || !history.containsKey(userEmail)) {
+				items.add(mappersClass.itemDtoMapperByEntity((ItemEntity) find(itemId).get(0)));
+				history.put(userEmail, items);
+			} else {
+				if (!history.get(userEmail).isEmpty()) {
+					if (history.get(userEmail).size() < 5) {
+						if (!history.get(userEmail)
+								.contains(mappersClass.itemDtoMapperByEntity((ItemEntity) find(itemId).get(0)))) {
+							history.get(userEmail)
+									.add(mappersClass.itemDtoMapperByEntity((ItemEntity) find(itemId).get(0)));
+						}
+					} else {
+						if (!history.get(userEmail)
+								.contains(mappersClass.itemDtoMapperByEntity((ItemEntity) find(itemId).get(0)))) {
+							history.get(userEmail).remove(0);
+							history.get(userEmail)
+									.add(mappersClass.itemDtoMapperByEntity((ItemEntity) find(itemId).get(0)));
+						}
+					}
+				}
+			}
+		}
+		return history;
+	}
+
+	@Override
+	public List<ItemsDto> getViewedHistory(String userEmail) {
+		if (history.isEmpty() && userEmail.isEmpty()) {
+			return Collections.emptyList();
+		} else {
+			if (history.containsKey(userEmail)) {
+				if (history.get(userEmail).isEmpty()) {
+					return Collections.emptyList();
+				} else {
+					return history.get(userEmail).stream()
+							.sorted(Comparator.comparing(ItemsDto::getItemPrice, Comparator.reverseOrder()))
+							.collect(Collectors.toList());
+				}
+			}
+			return Collections.emptyList();
+		}
 	}
 
 }

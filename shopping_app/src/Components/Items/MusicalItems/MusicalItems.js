@@ -43,6 +43,19 @@ export default function MusicalInstruments() {
       })
   }
 
+
+  const addIntoInterest = (id) => {
+    axios.post("http://localhost:8083/items/history?user=" + localStorage.getItem("currentuser") + "&id=" + id)
+    .catch((error) => {
+        setError(true);
+        if (error.response.data === undefined) {
+            setErrorMessage("Something went wrong")
+        } else {
+            setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+        }
+    })
+}
+
   useEffect(() => {
     return (fetch())
   }, [])
@@ -108,7 +121,7 @@ export default function MusicalInstruments() {
                             <h6 className="card-title text-truncate" id={e.itemName}>{e.itemName}</h6>
                             <p className="card-text text-truncate"><b>Price : </b> ₹{e.itemPrice}</p>
                           </div>
-                          <Link to={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info'>View More...</Link>
+                          <Link to={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info' onClick={() => { addIntoInterest(e.itemId) }}>View More...</Link>
                         </div>
                       </div>
                     )

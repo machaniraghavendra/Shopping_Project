@@ -37,6 +37,18 @@ export default function MobileLog(props) {
             })
     }
 
+    const addIntoInterest = (id) => {
+        axios.post("http://localhost:8083/items/history?user=" + localStorage.getItem("currentuser") + "&id=" + id)
+            .catch((error) => {
+                setError(true);
+                if (error.response.data === undefined) {
+                    setErrorMessage("Something went wrong")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
+            })
+    }
+
     const timeout = () => {
         setTimeout(() => {
             setShowToast(false);
@@ -123,7 +135,7 @@ export default function MobileLog(props) {
                                                         <h6 className="card-title text-truncate" id={e.itemName}>{e.itemName}</h6>
                                                         <p className="card-text text-truncate"> ₹{e.itemPrice}</p>
                                                     </div>
-                                                    <Link to={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info'>View More...</Link>
+                                                    <Link to={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info' onClick={() => { addIntoInterest(e.itemId) }}>View More...</Link>
                                                 </div>
                                             </div>
                                         )
@@ -229,9 +241,6 @@ export default function MobileLog(props) {
                     </div>
                 </div>
             }
-
-
-
             <hr />
 
             {showToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">
