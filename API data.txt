@@ -2,781 +2,859 @@
     {
         "itemName": "Galaxy Z Fold4",
         "itemDesc": "Good",
-        "itemDimensions": "null",
-        "itemImgUrl": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQTstvtskD5PdyQTf7q2ifqPkSkvZH4yDBsS4pcg7qGlj18NdT-SyemVgOmOgdefOStQ-Syd3ZDJ78neKlOrsxdrPpYZu7RrE1BUd0StI8ta-hgWoUG5icEhw&usqp=CAE",
-        "itemPrice": "1,64,999.00",
+        "itemSpec": "Size : 12GB RAM+512GB Storage",
         "itemType": "Mobile",
+        "itemPrice": "1,64,999.00",
+        "itemDimensions": "null",
+        "trending": false,
         "itemId": 1,
-        "itemSpec": "Size : 12GB RAM+512GB Storage"
+        "itemImgUrl": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQTstvtskD5PdyQTf7q2ifqPkSkvZH4yDBsS4pcg7qGlj18NdT-SyemVgOmOgdefOStQ-Syd3ZDJ78neKlOrsxdrPpYZu7RrE1BUd0StI8ta-hgWoUG5icEhw&usqp=CAE"
     },
     {
         "itemName": "OnePlus Nord CE 2 5G (Gray Mirror, 8GB RAM, 128GB Storage)",
         "itemDesc": "Good",
-        "itemDimensions": "null",
-        "itemImgUrl": "https://m.media-amazon.com/images/I/619n6kxuGsL._SX679_.jpg",
-        "itemPrice": "24,999.00",
+        "itemSpec": "Size : 6GB RAM+128GB Storage",
         "itemType": "Mobile",
+        "itemPrice": "24,999.00",
+        "itemDimensions": "null",
+        "trending": false,
         "itemId": 2,
-        "itemSpec": "Size : 6GB RAM+128GB Storage"
+        "itemImgUrl": "https://m.media-amazon.com/images/I/619n6kxuGsL._SX679_.jpg"
     },
     {
         "itemName": "Galaxy F23",
         "itemDesc": "Good",
-        "itemDimensions": "null",
-        "itemImgUrl": "https://images.samsung.com/is/image/samsung/p6pim/in/sm-e236blbhins/gallery/in-galaxy-f23-6gb-ram-sm-e236blbhins-531512718?$730_584_PNG$",
-        "itemPrice": "16,999.00",
+        "itemSpec": "Size : 6GB RAM+128GB Storage",
         "itemType": "Mobile",
+        "itemPrice": "16,999.00",
+        "itemDimensions": "null",
+        "trending": false,
         "itemId": 3,
-        "itemSpec": "Size : 6GB RAM+128GB Storage"
+        "itemImgUrl": "https://images.samsung.com/is/image/samsung/p6pim/in/sm-e236blbhins/gallery/in-galaxy-f23-6gb-ram-sm-e236blbhins-531512718?$730_584_PNG$"
     },
     {
         "itemName": "POCO M4 5G",
         "itemDesc": "Good",
-        "itemDimensions": "null",
-        "itemImgUrl": "https://rukminim1.flixcart.com/image/832/832/l2jcccw0/mobile/i/p/o/-original-imagdu8j9vxscfdh.jpeg?q=70",
-        "itemPrice": "14,999.00",
+        "itemSpec": "Size : 6GB RAM+128GB Storage",
         "itemType": "Mobile",
+        "itemPrice": "14,999.00",
+        "itemDimensions": "null",
+        "trending": false,
         "itemId": 4,
-        "itemSpec": "Size : 6GB RAM+128GB Storage"
+        "itemImgUrl": "https://rukminim1.flixcart.com/image/832/832/l2jcccw0/mobile/i/p/o/-original-imagdu8j9vxscfdh.jpeg?q=70"
     },
     {
         "itemName": "iQOO Z6 44W (Raven Black, 6GB RAM, 128GB Storage) | 44W FlashCharge + 5000mAh Battery | FHD+ AMOLED Display | in-Display Fingerprint",
         "itemDesc": "Good",
-        "itemDimensions": "null",
-        "itemImgUrl": "https://images-eu.ssl-images-amazon.com/images/I/41Lif4YWC2L._SX300_SY300_QL70_FMwebp_.jpg",
-        "itemPrice": "15,999.00",
+        "itemSpec": "Size : 6GB RAM+128GB Storage",
         "itemType": "Mobile",
+        "itemPrice": "15,999.00",
+        "itemDimensions": "null",
+        "trending": false,
         "itemId": 5,
-        "itemSpec": "Size : 6GB RAM+128GB Storage"
+        "itemImgUrl": "https://images-eu.ssl-images-amazon.com/images/I/41Lif4YWC2L._SX300_SY300_QL70_FMwebp_.jpg"
     },
     {
         "itemName": "Galaxy F13",
         "itemDesc": "Good",
-        "itemDimensions": "null",
-        "itemImgUrl": "https://images.samsung.com/is/image/samsung/p6pim/in/sm-e135flbgins/gallery/in-galaxy-f13-sm-e135flbgins-532859063?$730_584_PNG$",
-        "itemPrice": "12,999.00",
+        "itemSpec": "Size : 4GB RAM+128GB Storage",
         "itemType": "Mobile",
+        "itemPrice": "12,999.00",
+        "itemDimensions": "null",
+        "trending": false,
         "itemId": 6,
-        "itemSpec": "Size : 4GB RAM+128GB Storage"
+        "itemImgUrl": "https://images.samsung.com/is/image/samsung/p6pim/in/sm-e135flbgins/gallery/in-galaxy-f13-sm-e135flbgins-532859063?$730_584_PNG$"
     },
     {
         "itemName": "Redmi Note 11T 5G (Stardust White, 6GB RAM, 128GB ROM)",
         "itemDesc": "Good",
-        "itemDimensions": "null",
-        "itemImgUrl": "https://images.samsung.com/is/image/samsung/p6pim/in/sm-e135flbgins/gallery/in-galaxy-f13-sm-e135flbgins-532859063?$730_584_PNG$",
-        "itemPrice": "15,999.00",
+        "itemSpec": "Size : 6GB RAM+128GB Storage",
         "itemType": "Mobile",
+        "itemPrice": "15,999.00",
+        "itemDimensions": "null",
+        "trending": true,
         "itemId": 7,
-        "itemSpec": "Size : 6GB RAM+128GB Storage"
+        "itemImgUrl": "https://images.samsung.com/is/image/samsung/p6pim/in/sm-e135flbgins/gallery/in-galaxy-f13-sm-e135flbgins-532859063?$730_584_PNG$"
     },
     {
         "itemName": "OPPO F21 Pro(Sunset Orange, 8GB RAM, 128 Storage)",
         "itemDesc": "Good",
-        "itemDimensions": "null",
-        "itemImgUrl": "https://images-eu.ssl-images-amazon.com/images/I/41zL6EeHU7L._SX300_SY300_QL70_FMwebp_.jpg",
-        "itemPrice": "22,999.00",
+        "itemSpec": "Size : 8GB RAM+128GB Storage",
         "itemType": "Mobile",
+        "itemPrice": "22,999.00",
+        "itemDimensions": "null",
+        "trending": false,
         "itemId": 8,
-        "itemSpec": "Size : 8GB RAM+128GB Storage"
+        "itemImgUrl": "https://images-eu.ssl-images-amazon.com/images/I/41zL6EeHU7L._SX300_SY300_QL70_FMwebp_.jpg"
     },
     {
         "itemName": "Infinix Note 10 Pro (Nordic Secret, 256 GB)  (8 GB RAM)",
         "itemDesc": "Good",
-        "itemDimensions": "null",
-        "itemImgUrl": "https://rukminim1.flixcart.com/image/832/832/kpodocw0/mobile/x/l/k/note-10-pro-infinix-x695-256-8-infinix-original-imag3uy68quzt9zs.jpeg?q=70",
-        "itemPrice": "14,999.00",
+        "itemSpec": "Size : 8GB RAM+256GB Storage",
         "itemType": "Mobile",
+        "itemPrice": "14,999.00",
+        "itemDimensions": "null",
+        "trending": false,
         "itemId": 9,
-        "itemSpec": "Size : 8GB RAM+256GB Storage"
+        "itemImgUrl": "https://rukminim1.flixcart.com/image/832/832/kpodocw0/mobile/x/l/k/note-10-pro-infinix-x695-256-8-infinix-original-imag3uy68quzt9zs.jpeg?q=70"
     },
     {
         "itemName": "Suzuki Hot Shot Model Carrom Board, 5X2.5-inch (Black)",
         "itemDesc": "Good",
-        "itemDimensions": "LxWxH 99.1x 99.1x 5.1Centimeters",
-        "itemImgUrl": "https://m.media-amazon.com/images/I/61UhN1+4XQL._SX679_.jpg",
-        "itemPrice": "7,000.00",
+        "itemSpec": "Number of Players 4",
         "itemType": "Sports",
+        "itemPrice": "7,000.00",
+        "itemDimensions": "LxWxH 99.1x 99.1x 5.1Centimeters",
+        "trending": false,
         "itemId": 10,
-        "itemSpec": "Number of Players 4"
+        "itemImgUrl": "https://m.media-amazon.com/images/I/61UhN1+4XQL._SX679_.jpg"
     },
     {
         "itemName": "ADULT TENNIS BALL CRICKET",
         "itemDesc": "Good",
-        "itemDimensions": "SH- ABOVE 5ft 6in",
-        "itemImgUrl": "https://contents.mediadecathlon.com/p2304425/9bc4b6f2a1cc11666488bfd6d3bfa6a9/p2304425.jpg?format=auto&quality=70&f=650x0",
-        "itemPrice": "2,199.00",
+        "itemSpec": "Kashmir Willow is sourced from Kashmir. Highly Durable wood offers good ping for tennis ball usage",
         "itemType": "Sports",
+        "itemPrice": "2,199.00",
+        "itemDimensions": "SH- ABOVE 5ft 6in",
+        "trending": false,
         "itemId": 11,
-        "itemSpec": "Kashmir Willow is sourced from Kashmir. Highly Durable wood offers good ping for tennis ball usage"
+        "itemImgUrl": "https://contents.mediadecathlon.com/p2304425/9bc4b6f2a1cc11666488bfd6d3bfa6a9/p2304425.jpg?format=auto&quality=70&f=650x0"
     },
     {
         "itemName": "Kids Cricket Tennis Ball Cricket Bat T100 Easy Grey",
         "itemDesc": "Good",
-        "itemDimensions": "1 (3ft 5in - 4ft 3in), 2 - (4 ft 3in - 4in 6ft), 3- (4ft 6in - 4ft 9in)",
-        "itemImgUrl": "https://contents.mediadecathlon.com/p1989789/fbefa13a5422d32ddbd39990966e5732/p1989789.jpg?format=auto&quality=70&f=650x0",
-        "itemPrice": "399",
+        "itemSpec": "Single Piece of handle made of Drek Wood. Drek is a highly durable wood making it an ideal component for high impact bearing handles",
         "itemType": "Sports",
+        "itemPrice": "399",
+        "itemDimensions": "1 (3ft 5in - 4ft 3in), 2 - (4 ft 3in - 4in 6ft), 3- (4ft 6in - 4ft 9in)",
+        "trending": false,
         "itemId": 12,
-        "itemSpec": "Single Piece of handle made of Drek Wood. Drek is a highly durable wood making it an ideal component for high impact bearing handles"
+        "itemImgUrl": "https://contents.mediadecathlon.com/p1989789/fbefa13a5422d32ddbd39990966e5732/p1989789.jpg?format=auto&quality=70&f=650x0"
     },
     {
         "itemName": "Football Ball Training Size 5 (above 12 years) F100- Yellow",
         "itemDesc": "Good",
-        "itemDimensions": "Size 5 (Above 12 Years)",
-        "itemImgUrl": "https://contents.mediadecathlon.com/p1792797/e4085f705a12076fd9a9c548739ab428/p1792797.jpg?format=auto&quality=70&f=650x0",
-        "itemPrice": "299",
+        "itemSpec": "Between 68.5 and 69.5g (Size 5) Between 63.5 and 66g (Size 4) Between 60.5 and 62.5g (Size 3)",
         "itemType": "Sports",
+        "itemPrice": "299",
+        "itemDimensions": "Size 5 (Above 12 Years)",
+        "trending": true,
         "itemId": 13,
-        "itemSpec": "Between 68.5 and 69.5g (Size 5) Between 63.5 and 66g (Size 4) Between 60.5 and 62.5g (Size 3)"
+        "itemImgUrl": "https://contents.mediadecathlon.com/p1792797/e4085f705a12076fd9a9c548739ab428/p1792797.jpg?format=auto&quality=70&f=650x0"
     },
     {
         "itemName": "Kids Football Ball Size 1 Sunny 300 - Turquoise Blue",
         "itemDesc": "Good",
-        "itemDimensions": "Between 470 and 490 mm.",
-        "itemImgUrl": "https://contents.mediadecathlon.com/p2011948/3b41a627a47a8700fccbc52444900d34/p2011948.jpg?format=auto&quality=70&f=650x0",
-        "itemPrice": "149",
+        "itemSpec": "Size 1 Below 8 Years",
         "itemType": "Sports",
+        "itemPrice": "149",
+        "itemDimensions": "Between 470 and 490 mm.",
+        "trending": false,
         "itemId": 14,
-        "itemSpec": "Size 1 Below 8 Years"
+        "itemImgUrl": "https://contents.mediadecathlon.com/p2011948/3b41a627a47a8700fccbc52444900d34/p2011948.jpg?format=auto&quality=70&f=650x0"
     },
     {
         "itemName": "BADMINTON RACKET INDICO EXCEL,DOUBLE SHAFT BADMINTON RACKET,SHUTTLE COCK",
         "itemDesc": "Good",
-        "itemDimensions": "Gauge : 0.4m,Length : 28cm",
-        "itemImgUrl": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRX5QAFatJypYn0-d_NadoABCUge-IBdJflPTR1JG6RRY4VHBQrw9LC1aBgdibkNNKBDDsMDrYzah4sbkXTzyvrTpopFt85YQ&usqp=CAY",
-        "itemPrice": "283",
+        "itemSpec": "High intensity Nylon indico badminton racket excel 2pcs,4pcs shuttlecock",
         "itemType": "Sports",
+        "itemPrice": "283",
+        "itemDimensions": "Gauge : 0.4m,Length : 28cm",
+        "trending": false,
         "itemId": 15,
-        "itemSpec": "High intensity Nylon indico badminton racket excel 2pcs,4pcs shuttlecock"
+        "itemImgUrl": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRX5QAFatJypYn0-d_NadoABCUge-IBdJflPTR1JG6RRY4VHBQrw9LC1aBgdibkNNKBDDsMDrYzah4sbkXTzyvrTpopFt85YQ&usqp=CAY"
     },
     {
         "itemName": "Scorpion Mavis 350 Nylon Shuttlecock-6pcs Nylon Shuttle - Yellow",
         "itemDesc": "Good",
-        "itemDimensions": "Gauge : 0.4m,Length : 28cm",
-        "itemImgUrl": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcStWvvz3V2QIa9Bedm5Ei5yfiTZ_e5CBXzGivTD91uK5uS_EfxFMv-zB2ce8EknkGywGeuTCQLT-UcjgXWijHfU5iDYEO3Wwr0otYIcYzTCIJE9X-5pkBGIqg&usqp=CAE",
-        "itemPrice": "1,199.00",
+        "itemSpec": "High intensity Nylon indico badminton racket excel Slow, 75, Pack of 6 shuttlecock",
         "itemType": "Sports",
+        "itemPrice": "1,199.00",
+        "itemDimensions": "Gauge : 0.4m,Length : 28cm",
+        "trending": false,
         "itemId": 16,
-        "itemSpec": "High intensity Nylon indico badminton racket excel Slow, 75, Pack of 6 shuttlecock"
+        "itemImgUrl": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcStWvvz3V2QIa9Bedm5Ei5yfiTZ_e5CBXzGivTD91uK5uS_EfxFMv-zB2ce8EknkGywGeuTCQLT-UcjgXWijHfU5iDYEO3Wwr0otYIcYzTCIJE9X-5pkBGIqg&usqp=CAE"
     },
     {
         "itemName": "Khankudi's Leaf Printed Green Trendy Shirt For Men",
         "itemDesc": "Good",
-        "itemDimensions": "S 38",
-        "itemImgUrl": "https://images-do.nyc3.cdn.digitaloceanspaces.com/lAVtCJXFVr/product_images/1638351540.AP0015.jpeg",
-        "itemPrice": "649",
+        "itemSpec": "Printed",
         "itemType": "Dresses for men",
+        "itemPrice": "649",
+        "itemDimensions": "S 38",
+        "trending": false,
         "itemId": 17,
-        "itemSpec": "Printed"
+        "itemImgUrl": "https://images-do.nyc3.cdn.digitaloceanspaces.com/lAVtCJXFVr/product_images/1638351540.AP0015.jpeg"
     },
     {
         "itemName": "Wrinkle Resistant Medium Blue Twill Shirt",
         "itemDesc": "Good",
-        "itemDimensions": "L 40",
-        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0536/3594/0515/products/6db42fa4-6435-cb72-f750-a14d1d8ac0f3_Wrinkle-Resistant-Medium-Blue-Twill-Crop01_fa34c009-9005-4cce-945b-c686285a67b5_800x.jpg?v=1660152156",
-        "itemPrice": "3490",
+        "itemSpec": "100% Egyptian Cotton",
         "itemType": "Dresses for men",
+        "itemPrice": "3490",
+        "itemDimensions": "L 40",
+        "trending": false,
         "itemId": 18,
-        "itemSpec": "100% Egyptian Cotton"
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0536/3594/0515/products/6db42fa4-6435-cb72-f750-a14d1d8ac0f3_Wrinkle-Resistant-Medium-Blue-Twill-Crop01_fa34c009-9005-4cce-945b-c686285a67b5_800x.jpg?v=1660152156"
     },
     {
         "itemName": "EDD- MENS SLIM FIT CHECK SHIRT - GREEN",
         "itemDesc": "Good",
-        "itemDimensions": "Model height 188cm",
-        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0752/6435/products/HERO_ad40ed1a-4f76-4629-874f-044892701d2b_900x.jpg?v=1663832744",
-        "itemPrice": "1680",
+        "itemSpec": "100% premium Cotton Yarn Dyed Checks",
         "itemType": "Dresses for men",
+        "itemPrice": "1680",
+        "itemDimensions": "Model height 188cm",
+        "trending": false,
         "itemId": 19,
-        "itemSpec": "100% premium Cotton Yarn Dyed Checks"
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0752/6435/products/HERO_ad40ed1a-4f76-4629-874f-044892701d2b_900x.jpg?v=1663832744"
     },
     {
         "itemName": "Mens Maroon Checks Slim Fit Formal Shirt",
         "itemDesc": "Good",
-        "itemDimensions": "Xl & XXL",
-        "itemImgUrl": "https://storage.sg.content-cdn.io/cdn-cgi/image/width=600,height=800,quality=90,format=auto,fit=cover,g=top/in-resources/22a79ec5-e694-4d7a-ac5a-85c8fa45b7f1/Images/ProductImages/Source/ITMSH02448WINELS_IT_02.jpg",
-        "itemPrice": "1399",
+        "itemSpec": "100% premium Cotton Yarn Dyed Checks",
         "itemType": "Dresses for men",
+        "itemPrice": "1399",
+        "itemDimensions": "Xl & XXL",
+        "trending": false,
         "itemId": 20,
-        "itemSpec": "100% premium Cotton Yarn Dyed Checks"
+        "itemImgUrl": "https://storage.sg.content-cdn.io/cdn-cgi/image/width=600,height=800,quality=90,format=auto,fit=cover,g=top/in-resources/22a79ec5-e694-4d7a-ac5a-85c8fa45b7f1/Images/ProductImages/Source/ITMSH02448WINELS_IT_02.jpg"
     },
     {
         "itemName": "Mens Dark Blue Printed Slim Fit Casual Shirt",
         "itemDesc": "Good",
-        "itemDimensions": "Available in S & M & L & Xl & XXL",
-        "itemImgUrl": "https://storage.sg.content-cdn.io/cdn-cgi/image/width=600,height=800,quality=90,format=auto,fit=cover,g=top/in-resources/22a79ec5-e694-4d7a-ac5a-85c8fa45b7f1/Images/ProductImages/Source/ITMSH03064PRUSSIANLS_IT_02.jpg",
-        "itemPrice": "1399",
+        "itemSpec": "100% premium Cotton Yarn Dyed Checks",
         "itemType": "Dresses for men",
+        "itemPrice": "1399",
+        "itemDimensions": "Available in S & M & L & Xl & XXL",
+        "trending": true,
         "itemId": 21,
-        "itemSpec": "100% premium Cotton Yarn Dyed Checks"
+        "itemImgUrl": "https://storage.sg.content-cdn.io/cdn-cgi/image/width=600,height=800,quality=90,format=auto,fit=cover,g=top/in-resources/22a79ec5-e694-4d7a-ac5a-85c8fa45b7f1/Images/ProductImages/Source/ITMSH03064PRUSSIANLS_IT_02.jpg"
     },
     {
         "itemName": "Yash Gallery Women Yellow Solid Regular Fit Shirt",
         "itemDesc": "Good",
-        "itemDimensions": "Available in M",
-        "itemImgUrl": "https://assetscdn1.paytm.com/images/catalog/product/A/AP/APPYASH-GALLERYAASH129650C14747BC/1578043198772_10.jpg?imwidth=320&impolicy=hq",
-        "itemPrice": "819",
+        "itemSpec": "Polyester, 3/4th Sleeves",
         "itemType": "Dresses For women",
+        "itemPrice": "819",
+        "itemDimensions": "Available in M",
+        "trending": false,
         "itemId": 22,
-        "itemSpec": "Polyester, 3/4th Sleeves"
+        "itemImgUrl": "https://assetscdn1.paytm.com/images/catalog/product/A/AP/APPYASH-GALLERYAASH129650C14747BC/1578043198772_10.jpg?imwidth=320&impolicy=hq"
     },
     {
         "itemName": "Women NA Fit Striped Spread Collar Casual Shirt",
         "itemDesc": "Good",
-        "itemDimensions": "Available in XS, S, M",
-        "itemImgUrl": "https://rukminim1.flixcart.com/image/800/960/kzfvzww0/shirt/s/6/v/l-a19xwt4029-white-globus-original-imagbfhnmhgpngzb.jpeg?q=50",
-        "itemPrice": "919",
+        "itemSpec": "Polyester, 3/4th Sleeves",
         "itemType": "Dresses For women",
+        "itemPrice": "919",
+        "itemDimensions": "Available in XS, S, M",
+        "trending": false,
         "itemId": 23,
-        "itemSpec": "Polyester, 3/4th Sleeves"
+        "itemImgUrl": "https://rukminim1.flixcart.com/image/800/960/kzfvzww0/shirt/s/6/v/l-a19xwt4029-white-globus-original-imagbfhnmhgpngzb.jpeg?q=50"
     },
     {
         "itemName": "Women Regular Fit Solid Spread Collar Casual Shirt  (Pack of 2)",
         "itemDesc": "Good",
-        "itemDimensions": "Available in all sizes",
-        "itemImgUrl": "https://rukminim1.flixcart.com/image/800/960/xif0q/shirt/a/h/l/xxl-sys-4001-05-funday-fashion-original-imafuvwbqggzzgsa-bb.jpeg?q=50",
-        "itemPrice": "459",
+        "itemSpec": "Cotton",
         "itemType": "Dresses For women",
+        "itemPrice": "459",
+        "itemDimensions": "Available in all sizes",
+        "trending": false,
         "itemId": 24,
-        "itemSpec": "Cotton"
+        "itemImgUrl": "https://rukminim1.flixcart.com/image/800/960/xif0q/shirt/a/h/l/xxl-sys-4001-05-funday-fashion-original-imafuvwbqggzzgsa-bb.jpeg?q=50"
     },
     {
         "itemName": "Women Regular Fit Printed Casual Shirt",
         "itemDesc": "Good",
-        "itemDimensions": "Available in all sizes",
-        "itemImgUrl": "https://rukminim1.flixcart.com/image/800/960/l2arp8w0/top/i/g/g/s-bfss-cliochic-original-imagdz3zqz8xhpup.jpeg?q=50",
-        "itemPrice": "489",
+        "itemSpec": "Cotton",
         "itemType": "Dresses For women",
+        "itemPrice": "489",
+        "itemDimensions": "Available in all sizes",
+        "trending": true,
         "itemId": 25,
-        "itemSpec": "Cotton"
+        "itemImgUrl": "https://rukminim1.flixcart.com/image/800/960/l2arp8w0/top/i/g/g/s-bfss-cliochic-original-imagdz3zqz8xhpup.jpeg?q=50"
     },
     {
         "itemName": "Women Regular Fit Printed Spread Collar Casual Shirt",
         "itemDesc": "Good",
-        "itemDimensions": "Available in all sizes",
-        "itemImgUrl": "https://assets.ajio.com/medias/sys_master/root/20220107/YKv5/61d73adaaeb2695cdd077284/-473Wx593H-441129510-pink-MODEL.jpg",
-        "itemPrice": "330",
+        "itemSpec": "Cotton",
         "itemType": "Dresses For women",
+        "itemPrice": "330",
+        "itemDimensions": "Available in all sizes",
+        "trending": false,
         "itemId": 26,
-        "itemSpec": "Cotton"
+        "itemImgUrl": "https://assets.ajio.com/medias/sys_master/root/20220107/YKv5/61d73adaaeb2695cdd077284/-473Wx593H-441129510-pink-MODEL.jpg"
     },
     {
         "itemName": "Ninja 3 plus",
         "itemDesc": "Fire-Boltt Ninja 3 Plus features a 1.83 HD display, 200 mAh battery capacity, 118 sports modes, inbuilt games, voice assistant, and much more.",
-        "itemDimensions": "Available in all sizes",
-        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0137/0292/2286/products/ninja-3-plus-3_1800x1800.png?v=1682363784",
-        "itemPrice": "1,099.00",
+        "itemSpec": "200 mah battery, voice assistant",
         "itemType": "Smart watches",
+        "itemPrice": "1,099.00",
+        "itemDimensions": "Available in all sizes",
+        "trending": false,
         "itemId": 27,
-        "itemSpec": "200 mah battery, voice assistant"
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0137/0292/2286/products/ninja-3-plus-3_1800x1800.png?v=1682363784"
     },
     {
         "itemName": "Hurricane Pro",
         "itemDesc": "Fire-Boltt Hurricane Pro features a 35.3mm (1.39?) Hd Display, 123 Sports Modes, IP67 Water Resistant, Smart Notifications,  Strong Battery Life, and SpO2 Monitoring",
-        "itemDimensions": "Available in all sizes",
-        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0137/0292/2286/products/hurricane-pro_3_1800x1800.png?v=1678345856",
-        "itemPrice": "1,799.00",
+        "itemSpec": "Smart notifications, Strong battery Life",
         "itemType": "Smart watches",
+        "itemPrice": "1,799.00",
+        "itemDimensions": "Available in all sizes",
+        "trending": true,
         "itemId": 28,
-        "itemSpec": "Smart notifications, Strong battery Life"
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0137/0292/2286/products/hurricane-pro_3_1800x1800.png?v=1678345856"
     },
     {
         "itemName": "Supernova",
         "itemDesc": "Fire-Boltt Supernova with sharp 45.2mm (1.78) AMOLED display smartwatch, Bluetooth calling, voice assistant, 123 sports modes, an inbuilt mic & speaker, and inbuilt games",
-        "itemDimensions": "Available in all sizes",
-        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0137/0292/2286/products/supernova-black_1_1800x1800.png?v=1673500420",
+        "itemSpec": "Smart notifications, Strong battery Life, 123 sports modes",
+        "itemType": "Smart watches",
         "itemPrice": "2,799.00",
-        "itemType": "Smart watches",
-        "itemId": 29,
-        "itemSpec": "Smart notifications, Strong battery Life, 123 sports modes"
-    },
-    {
-        "itemName": "Supernova",
-        "itemDesc": "Upgrade your lifestyle and take control of your day with the AMOLED Display Smartwatch. Our smartwatch lets you easily track your fitness goals, and even control your music without ever having to pull out your phone.",
         "itemDimensions": "Available in all sizes",
-        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0137/0292/2286/products/rock-grey_2_1800x1800.png?v=1680697955",
-        "itemPrice": "2,999.00",
-        "itemType": "Smart watches",
-        "itemId": 74,
-        "itemSpec": "Smart notifications, Strong battery Life, 123 sports modes"
+        "trending": false,
+        "itemId": 29,
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0137/0292/2286/products/supernova-black_1_1800x1800.png?v=1673500420"
     },
     {
         "itemName": "REFLEX PLAY",
         "itemDesc": "1.3' AMOLED DISPLAY WITH ALWAYS-ON DISPLAY (AOD) FEATURE: ENJOY A STUNNING AND VIBRANT DISPLAY THAT'S ALWAYS ON, SO YOU CAN EASILY CHECK THE TIME AND OTHER IMPORTANT INFORMATION",
-        "itemDimensions": "UniSex",
-        "itemImgUrl": "https://staticimg.titan.co.in/Fastrack/Catalog/38074AP01_1.jpg",
-        "itemPrice": "2,999.00",
+        "itemSpec": "IP68 water resistent,black-color ,Aluminium",
         "itemType": "Smart watches",
+        "itemPrice": "2,999.00",
+        "itemDimensions": "UniSex",
+        "trending": false,
         "itemId": 30,
-        "itemSpec": "IP68 water resistent,black-color ,Aluminium"
+        "itemImgUrl": "https://staticimg.titan.co.in/Fastrack/Catalog/38074AP01_1.jpg"
     },
     {
         "itemName": "Ring",
         "itemDesc": "Now, manage all your communication with your Fire-Boltt Smartwatch featuring Bluetooth Calling with an inbuilt mic and speaker. Make, receive or reject calls straight from your wrist. Seize the view with a 43mm (1.7'' inch) Full Touch, High-Definition Lar",
-        "itemDimensions": "UniSex",
-        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0137/0292/2286/products/5_1800x1800.png?v=1638005388",
-        "itemPrice": "2,499.00",
+        "itemSpec": "IP68 water resistent, White-color",
         "itemType": "Smart watches",
+        "itemPrice": "2,499.00",
+        "itemDimensions": "UniSex",
+        "trending": false,
         "itemId": 31,
-        "itemSpec": "IP68 water resistent, White-color"
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0137/0292/2286/products/5_1800x1800.png?v=1638005388"
     },
     {
         "itemName": "ColorFit Icon 2",
         "itemDesc": "Get in the habit of monitoring your health with a watch that ensures your well-being by tracking your health vitals with utmost precision.",
-        "itemDimensions": "UniSex",
-        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0997/6284/products/Icon2-1_1900x.png?v=1681610912",
-        "itemPrice": "1,499.00",
+        "itemSpec": "IP68 water resistent, Brown-color",
         "itemType": "Smart watches",
+        "itemPrice": "1,499.00",
+        "itemDimensions": "UniSex",
+        "trending": false,
         "itemId": 32,
-        "itemSpec": "IP68 water resistent, Brown-color"
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0997/6284/products/Icon2-1_1900x.png?v=1681610912"
     },
     {
         "itemName": "ColorFit Quad Call",
         "itemDesc": "Get in the habit of monitoring your health with a watch that ensures your well-being by tracking your health vitals with utmost precision.",
-        "itemDimensions": "UniSex",
-        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0997/6284/files/Artboard3_19_480x.png?v=1686315408",
-        "itemPrice": "1,699.00",
+        "itemSpec": "IP68 water resistent, Brown-color",
         "itemType": "Smart watches",
+        "itemPrice": "1,699.00",
+        "itemDimensions": "UniSex",
+        "trending": false,
         "itemId": 33,
-        "itemSpec": "IP68 water resistent, Brown-color"
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0997/6284/files/Artboard3_19_480x.png?v=1686315408"
     },
     {
         "itemName": "OnePlus Nord Watch with 1.78” AMOLED Display",
         "itemDesc": "OnePlus Nord Watch with 1.78” AMOLED Display, 60 Hz Refresh Rate, 105 Fitness Modes, 10 Days Battery, SPO2, Heart Rate, Stress Monitor, Women Health Tracker & Multiple Watch Faces [Deep Blue]",
-        "itemDimensions": "UniSex",
-        "itemImgUrl": "https://m.media-amazon.com/images/I/51Lums4VcgL._SX679_.jpg",
-        "itemPrice": "4,999.00",
+        "itemSpec": "IP68 water resistent, Blue-color",
         "itemType": "Smart watches",
+        "itemPrice": "4,999.00",
+        "itemDimensions": "UniSex",
+        "trending": true,
         "itemId": 34,
-        "itemSpec": "IP68 water resistent, Blue-color"
+        "itemImgUrl": "https://m.media-amazon.com/images/I/51Lums4VcgL._SX679_.jpg"
     },
     {
         "itemName": "Quantum",
         "itemDesc": "Fire-Boltt Quantum is the ultimate fashion accessory for modern trendsetters. This smartwatch is designed selectively that combines the latest technology with timeless elegance. The metal chain strap gives you a secure fit while the full-color touchscreen",
-        "itemDimensions": "UniSex",
-        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0137/0292/2286/products/quantum-green_1_1800x1800.png?v=1685365655",
-        "itemPrice": "3,999.00",
+        "itemSpec": "IP68 water resistent, Sliver-color",
         "itemType": "Analog Watches",
+        "itemPrice": "3,999.00",
+        "itemDimensions": "UniSex",
+        "trending": false,
         "itemId": 35,
-        "itemSpec": "IP68 water resistent, Sliver-color"
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0137/0292/2286/products/quantum-green_1_1800x1800.png?v=1685365655"
     },
     {
         "itemName": "Black Dial Silver Stainless Steel Strap Watch",
         "itemDesc": "This analog watch for men features a black, round dial housed in a brass case. The case is fitted with a crown that lets you adjust the time. The dial has plain three hands, slanted markings at quarter intervals and studded markings at five minute interva",
-        "itemDimensions": "UniSex",
-        "itemImgUrl": "https://staticimg.titan.co.in/Titan/Catalog/1639SM02_1.jpg?impolicy=pqmed&imwidth=640",
+        "itemSpec": "IP68 water resistent, Sliver-color",
+        "itemType": "Analog Watches",
         "itemPrice": "1,995.00",
-        "itemType": "Analog Watches",
+        "itemDimensions": "UniSex",
+        "trending": false,
         "itemId": 36,
-        "itemSpec": "IP68 water resistent, Sliver-color"
+        "itemImgUrl": "https://staticimg.titan.co.in/Titan/Catalog/1639SM02_1.jpg?impolicy=pqmed&imwidth=640"
     },
     {
         "itemName": "Black Dial Silver Stainless Steel Strap Watch",
         "itemDesc": "Fire-Boltt Introducing the ultimate smartwatch for the adventurer in you! Our rugged smartwatch is designed to withstand even the toughest environments, while still keeping you connected and in control.",
-        "itemDimensions": "UniSex",
-        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0137/0292/2286/products/Black_01_400x.png?v=1677243430",
+        "itemSpec": "IP68 water resistent, Black-color",
+        "itemType": "Analog Watches",
         "itemPrice": "3,299.00",
-        "itemType": "Analog Watches",
+        "itemDimensions": "UniSex",
+        "trending": true,
         "itemId": 37,
-        "itemSpec": "IP68 water resistent, Black-color"
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0137/0292/2286/products/Black_01_400x.png?v=1677243430"
     },
     {
         "itemName": "Black Dial Silver Stainless Steel Strap Watch",
         "itemDesc": "Fire-Boltt Introducing the ultimate smartwatch for the adventurer in you! Our rugged smartwatch is designed to withstand even the toughest environments, while still keeping you connected and in control.",
-        "itemDimensions": "UniSex",
-        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0548/8849/7221/files/TN_3_700x700.png?v=1677153922",
-        "itemPrice": "1,499.00",
+        "itemSpec": "IP68 water resistent, Blue-color",
         "itemType": "Analog Watches",
+        "itemPrice": "1,499.00",
+        "itemDimensions": "UniSex",
+        "trending": false,
         "itemId": 38,
-        "itemSpec": "IP68 water resistent, Blue-color"
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0548/8849/7221/files/TN_3_700x700.png?v=1677153922"
     },
     {
         "itemName": "SWISSTYLE Analog Men's Watch (White Dial Brown Colored Strap)",
         "itemDesc": "Fire-Boltt Introducing the ultimate smartwatch for the adventurer in you! Our rugged smartwatch is designed to withstand even the toughest environments, while still keeping you connected and in control.",
-        "itemDimensions": "UniSex",
-        "itemImgUrl": "https://m.media-amazon.com/images/I/61QIcdh9HVL._UL1500_.jpg",
-        "itemPrice": "1,399.00",
+        "itemSpec": "Brown-color",
         "itemType": "Analog Watches",
+        "itemPrice": "1,399.00",
+        "itemDimensions": "UniSex",
+        "trending": false,
         "itemId": 39,
-        "itemSpec": "Brown-color"
+        "itemImgUrl": "https://m.media-amazon.com/images/I/61QIcdh9HVL._UL1500_.jpg"
     },
     {
         "itemName": "Fossil Leather New Men's Watch",
         "itemDesc": "Leather belt watch",
-        "itemDimensions": "Men",
-        "itemImgUrl": "https://static.wixstatic.com/media/a42156_d367d0da531b4b2eaaff4d28d7e10dec~mv2.jpg/v1/fill/w_660,h_750,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/a42156_d367d0da531b4b2eaaff4d28d7e10dec~mv2.jpg",
-        "itemPrice": "1,409.00",
+        "itemSpec": "Brown-color",
         "itemType": "Analog Watches",
+        "itemPrice": "1,409.00",
+        "itemDimensions": "Men",
+        "trending": false,
         "itemId": 40,
-        "itemSpec": "Brown-color"
+        "itemImgUrl": "https://static.wixstatic.com/media/a42156_d367d0da531b4b2eaaff4d28d7e10dec~mv2.jpg/v1/fill/w_660,h_750,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/a42156_d367d0da531b4b2eaaff4d28d7e10dec~mv2.jpg"
     },
     {
         "itemName": "DANIEL KLEIN PREMIUM MEN BLUE DIAL WATCH",
         "itemDesc": "Upgrade your accessory collection with this analog watch from the house of Daniel Klein. The watch offers high quality as well as lightweight feel. The Designed to perfection will go well with formals and casuals too.",
-        "itemDimensions": "Men",
-        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0667/6326/0178/products/DK11752-2.jpg?v=1671627947&width=500",
-        "itemPrice": "3,655.00",
+        "itemSpec": "White-Blue-color",
         "itemType": "Analog Watches",
+        "itemPrice": "3,655.00",
+        "itemDimensions": "Men",
+        "trending": false,
         "itemId": 41,
-        "itemSpec": "White-Blue-color"
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0667/6326/0178/products/DK11752-2.jpg?v=1671627947&width=500"
     },
     {
         "itemName": "RetroCam",
         "itemDesc": "Transform your experience into a throwback to the '90s.",
-        "itemDimensions": "",
-        "itemImgUrl": "https://dalovely.com/cdn/shop/products/minicamera_jpg.jpg?v=1675588654",
-        "itemPrice": "1,900.00",
+        "itemSpec": "Lasts up to 6 hours and holds 3,000+ of your photos/videos",
         "itemType": "Cameras",
+        "itemPrice": "1,900.00",
+        "itemDimensions": "",
+        "trending": false,
         "itemId": 42,
-        "itemSpec": "Lasts up to 6 hours and holds 3,000+ of your photos/videos"
+        "itemImgUrl": "https://dalovely.com/cdn/shop/products/minicamera_jpg.jpg?v=1675588654"
     },
     {
         "itemName": "NIKON Z5 MIRRORLESS CAMERA WITH 24-200MM LENS",
         "itemDesc": "24.3MP FX-Format CMOS Sensor | EXPEED 6 Image Processor | UHD 4K and Full HD Video Recording | 3.6m-Dot OLED Electronic Viewfinder | Limited 2-Year Warranty",
-        "itemDimensions": "Sensor-size: 35.9 x 23.9 mm, Maximum Resolution: 6016 x 4016",
-        "itemImgUrl": "https://www.imastudent.com/images/thumbs/002/0021248_nikon-z5-mirrorless-camera-with-24-200mm-lens_500.jpeg",
-        "itemPrice": "1,39,890.00",
+        "itemSpec": "Lasts up to 6 hours and holds 3,000+ of your photos/videos",
         "itemType": "Cameras",
+        "itemPrice": "1,39,890.00",
+        "itemDimensions": "Sensor-size: 35.9 x 23.9 mm, Maximum Resolution: 6016 x 4016",
+        "trending": false,
         "itemId": 43,
-        "itemSpec": "Lasts up to 6 hours and holds 3,000+ of your photos/videos"
+        "itemImgUrl": "https://www.imastudent.com/images/thumbs/002/0021248_nikon-z5-mirrorless-camera-with-24-200mm-lens_500.jpeg"
     },
     {
         "itemName": "Canon EOS 200D",
         "itemDesc": "Canon EOS 200D II 24.1MP Digital SLR Camera + EF-S 18-55mm f4 is STM Lens (Black)",
-        "itemDimensions": "Sensor-size: 35.9 x 23.9 mm, Maximum Resolution: 6016 x 4016",
-        "itemImgUrl": "https://m.media-amazon.com/images/I/41J1kYfM6PL.jpg",
-        "itemPrice": "1,39,890.00",
+        "itemSpec": "Compatible Mountings: Canon Ef-S; Photo Sensor Technology: Size:[Unit:Frames Per Second, Value:Aps-C ], Technology:[Value:Cmos ]; Hardware Interface: Secure Digital",
         "itemType": "Cameras",
+        "itemPrice": "1,39,890.00",
+        "itemDimensions": "Sensor-size: 35.9 x 23.9 mm, Maximum Resolution: 6016 x 4016",
+        "trending": false,
         "itemId": 44,
-        "itemSpec": "Compatible Mountings: Canon Ef-S; Photo Sensor Technology: Size:[Unit:Frames Per Second, Value:Aps-C ], Technology:[Value:Cmos ]; Hardware Interface: Secure Digital"
+        "itemImgUrl": "https://m.media-amazon.com/images/I/41J1kYfM6PL.jpg"
     },
     {
         "itemName": "Panasonic Lumix DMC-FZ2500 Digital",
         "itemDesc": "A mechanical shutter enables a maximum shutter speed of 1/4000 sec and an electronic shutter function avails a top shutter speed of 1/16,000 sec to better enable working in bright conditions and with wider aperture settings.",
-        "itemDimensions": "Sensor-size: 35.9 x 23.9 mm, Maximum Resolution: 6016 x 4016",
-        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0246/9150/7275/products/1_26ea0e25-9793-473e-9abd-43ac3da88ede_720x.jpg?v=1676438658",
-        "itemPrice": "70,704.00",
+        "itemSpec": "4K PHOTO Capabilities",
         "itemType": "Cameras",
+        "itemPrice": "70,704.00",
+        "itemDimensions": "Sensor-size: 35.9 x 23.9 mm, Maximum Resolution: 6016 x 4016",
+        "trending": false,
         "itemId": 45,
-        "itemSpec": "4K PHOTO Capabilities"
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0246/9150/7275/products/1_26ea0e25-9793-473e-9abd-43ac3da88ede_720x.jpg?v=1676438658"
     },
     {
         "itemName": "Canon EOS 1500D",
         "itemDesc": "Sensor: APS-C CMOS Sensor with 24.1 MP (high resolution for large prints and image cropping). Transmission frequency (central frequency):Frequency: 2 412 to 2 462MHz. Standard diopter :-2.5 - +0.5m-1 (dpt);ISO: 100-6400 sensitivity range (critical for obt",
-        "itemDimensions": "Sensor-size: 35.9 x 23.9 mm, Maximum Resolution: 6016 x 4016",
-        "itemImgUrl": "https://m.media-amazon.com/images/I/914hFeTU2-L._SX679_.jpg",
-        "itemPrice": "39,995.00",
+        "itemSpec": "4K PHOTO Capabilities",
         "itemType": "Cameras",
+        "itemPrice": "39,995.00",
+        "itemDimensions": "Sensor-size: 35.9 x 23.9 mm, Maximum Resolution: 6016 x 4016",
+        "trending": false,
         "itemId": 46,
-        "itemSpec": "4K PHOTO Capabilities"
+        "itemImgUrl": "https://m.media-amazon.com/images/I/914hFeTU2-L._SX679_.jpg"
     },
     {
         "itemName": "Sony Alpha",
         "itemDesc": "Sony Alpha ILCE-7M3K Full-Frame Mirrorless Digital SLR Camera with 28-70mm Zoom Lens",
-        "itemDimensions": "Sensor-size: 35.9 x 23.9 mm, Maximum Resolution: 6016 x 4016",
-        "itemImgUrl": "https://media-assets.hyperinvento.com/companies/a3c7bcff-3901-47a9-a4e5-b1d2b32d7abb/products/6e19b80d-b63d-4ec0-be5e-da7db239b31e/featureds/images/1a789e6bfdc04dbfaa8586ce3b07221d-product-featured-original.webp",
-        "itemPrice": "1,58,990.00",
+        "itemSpec": "24MP Full-Frame Exmor R BSI CMOS Sensor",
         "itemType": "Cameras",
+        "itemPrice": "1,58,990.00",
+        "itemDimensions": "Sensor-size: 35.9 x 23.9 mm, Maximum Resolution: 6016 x 4016",
+        "trending": false,
         "itemId": 47,
-        "itemSpec": "24MP Full-Frame Exmor R BSI CMOS Sensor"
+        "itemImgUrl": "https://media-assets.hyperinvento.com/companies/a3c7bcff-3901-47a9-a4e5-b1d2b32d7abb/products/6e19b80d-b63d-4ec0-be5e-da7db239b31e/featureds/images/1a789e6bfdc04dbfaa8586ce3b07221d-product-featured-original.webp"
     },
     {
         "itemName": "Canon EOS 3000D ",
         "itemDesc": "?Digital Camera EOS 3000D, Zoom Lens EF-S 18-55 F/3.5-5.6 IS II, Strap, Battery Charger, Battery Pack, 16 GB SD card",
-        "itemDimensions": "Sensor-size: 35.9 x 23.9 mm, Maximum Resolution: 6016 x 4016",
-        "itemImgUrl": "https://www.fliptwirls.com/wp-content/uploads/2023/05/FT5-3.jpg",
-        "itemPrice": "33,450.00",
+        "itemSpec": "24MP Full-Frame Exmor R BSI CMOS Sensor",
         "itemType": "Cameras",
+        "itemPrice": "33,450.00",
+        "itemDimensions": "Sensor-size: 35.9 x 23.9 mm, Maximum Resolution: 6016 x 4016",
+        "trending": false,
         "itemId": 48,
-        "itemSpec": "24MP Full-Frame Exmor R BSI CMOS Sensor"
+        "itemImgUrl": "https://www.fliptwirls.com/wp-content/uploads/2023/05/FT5-3.jpg"
     },
     {
         "itemName": "Sony a7",
         "itemDesc": "?Sony a7 III Full-Frame Mirrorless Interchangeable-Lens Camera (with 28-70mm F3.5-5.6 OSS Lens)",
-        "itemDimensions": "12.7 x 9.84 x 7.62 cm; 652.04 Grams",
-        "itemImgUrl": "https://easy-buy.in/wp-content/uploads/2022/11/91rQ3XfEYzL._SX679_.jpg",
-        "itemPrice": "1,69,950.00",
+        "itemSpec": "24MP Full-Frame Exmor R BSI CMOS Sensor,4000 Pixels",
         "itemType": "Cameras",
+        "itemPrice": "1,69,950.00",
+        "itemDimensions": "12.7 x 9.84 x 7.62 cm; 652.04 Grams",
+        "trending": false,
         "itemId": 49,
-        "itemSpec": "24MP Full-Frame Exmor R BSI CMOS Sensor,4000 Pixels"
+        "itemImgUrl": "https://easy-buy.in/wp-content/uploads/2022/11/91rQ3XfEYzL._SX679_.jpg"
     },
     {
         "itemName": "Nikon Z 5 Mirrorless Digital Camera with 24-200mm Lens",
         "itemDesc": "?Compact and capable, the Nikon Z 5 is an FX-format mirrorless camera with a well-rounded feature-set to suit both photo and video needs. Its 24.3MP CMOS sensor and EXPEED 6 processor afford wide sensitivity to ISO 51200, quick shooting at 4.5 fps, and UH",
-        "itemDimensions": "Sensor-size: 35.9 x 23.9 mm",
-        "itemImgUrl": "https://www.tanotis.com/cdn/shop/products/nikon_z_5_mirrorless_digital_1595299621_1578218_800x.jpg?v=1606570042",
-        "itemPrice": "1,69,950.00",
+        "itemSpec": "24.3MP FX-Format CMOS Sensor, UHD 4K and Full HD Video Recording",
         "itemType": "Cameras",
+        "itemPrice": "1,69,950.00",
+        "itemDimensions": "Sensor-size: 35.9 x 23.9 mm",
+        "trending": false,
         "itemId": 50,
-        "itemSpec": "24.3MP FX-Format CMOS Sensor, UHD 4K and Full HD Video Recording"
+        "itemImgUrl": "https://www.tanotis.com/cdn/shop/products/nikon_z_5_mirrorless_digital_1595299621_1578218_800x.jpg?v=1606570042"
     },
     {
         "itemName": "RAM musical MB-3SB 0120 Wooden Bongo ",
         "itemDesc": "Wooden",
-        "itemDimensions": "",
-        "itemImgUrl": "https://rukminim1.flixcart.com/image/832/832/k9d3p8w0/bongo/u/d/g/mb-3sb-0120-ram-musical-original-imafr65tuk5eugub.jpeg?q=70",
-        "itemPrice": "1,395.00",
+        "itemSpec": "Good",
         "itemType": "Musical Instruments",
+        "itemPrice": "1,395.00",
+        "itemDimensions": "",
+        "trending": false,
         "itemId": 51,
-        "itemSpec": "Good"
+        "itemImgUrl": "https://rukminim1.flixcart.com/image/832/832/k9d3p8w0/bongo/u/d/g/mb-3sb-0120-ram-musical-original-imafr65tuk5eugub.jpeg?q=70"
     },
     {
         "itemName": "Chateau Alto Saxophone CAS-21L",
         "itemDesc": "Cheverny CAS-21 Alto Saxophone design is classic and simple. It is an ideal choice for beginner musicians and students. Chateau was established in 1979 in Taiwan and is a well-known manufacturer and exporter of musical instruments today. Chateau products ",
-        "itemDimensions": "?66 x 29.8 x 17.1 cm; 7.71 Kilograms",
-        "itemImgUrl": "https://m.media-amazon.com/images/I/41ypC7sju0L.jpg",
-        "itemPrice": "63,000.00",
+        "itemSpec": "Brass construction, Golden lacquer finish",
         "itemType": "Musical Instruments",
+        "itemPrice": "63,000.00",
+        "itemDimensions": "?66 x 29.8 x 17.1 cm; 7.71 Kilograms",
+        "trending": false,
         "itemId": 52,
-        "itemSpec": "Brass construction, Golden lacquer finish"
+        "itemImgUrl": "https://m.media-amazon.com/images/I/41ypC7sju0L.jpg"
     },
     {
         "itemName": "Sony Onebox",
         "itemDesc": "?FM Lead Antenna, Instruction Manual , 2 Speakers , Remote Control, 2 R03 (size AAA) Batteries and AC Power Cord",
-        "itemDimensions": "82x59x116 Centimeters",
-        "itemImgUrl": "https://m.media-amazon.com/images/I/41ypC7sju0L.jpg",
-        "itemPrice": "84,990.00",
+        "itemSpec": "?Floor Standing",
         "itemType": "Musical Instruments",
+        "itemPrice": "84,990.00",
+        "itemDimensions": "82x59x116 Centimeters",
+        "trending": false,
         "itemId": 53,
-        "itemSpec": "?Floor Standing"
+        "itemImgUrl": "https://m.media-amazon.com/images/I/41ypC7sju0L.jpg"
     },
     {
         "itemName": "Vault RG1 Soloist Premium Electric Guitar",
         "itemDesc": "?The Vault RG1 Soloist Electric Guitar exhibits shark-tooth inlays, which add an exquisite appeal to the instrument. Includes a whammy bar for extended playing styles. The chrome plating on the hardware offers the ultimate protection from corrosion, tarni",
-        "itemDimensions": "82 x 59 x 116 Centimeters",
-        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0657/6821/files/vault-electric-guitars-transparent-blue-walnut-vault-rg1-soloist-premium-electric-guitar-29904529588403_500x.jpg?v=1686532363",
-        "itemPrice": "10,999.00",
+        "itemSpec": "?Floor Standing",
         "itemType": "Musical Instruments",
+        "itemPrice": "10,999.00",
+        "itemDimensions": "82 x 59 x 116 Centimeters",
+        "trending": false,
         "itemId": 54,
-        "itemSpec": "?Floor Standing"
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0657/6821/files/vault-electric-guitars-transparent-blue-walnut-vault-rg1-soloist-premium-electric-guitar-29904529588403_500x.jpg?v=1686532363"
     },
     {
         "itemName": "ToySiri Electronic Drum pad Electric 7 Drum Kit Set (Student, Professional, Kids) ",
         "itemDesc": "?ToySiri Electronic Drum pad Electric 7 Drum Kit Set (Student, Professional, Kids) | Built in Dual Speakers | Beginner Pro | Perfect Gift for Child and Adult",
-        "itemDimensions": "43 x 6 x 24 Centimeters",
-        "itemImgUrl": "https://m.media-amazon.com/images/I/41oOi3t8YjL.jpg",
-        "itemPrice": "6,091.00",
+        "itemSpec": "Portable and professional drum: 7 pads and two drum pedals make professional variety sounds including tom, snare, hi-hat, crash, ride, hi-hat Professional demo inside, convenient to study",
         "itemType": "Musical Instruments",
+        "itemPrice": "6,091.00",
+        "itemDimensions": "43 x 6 x 24 Centimeters",
+        "trending": false,
         "itemId": 55,
-        "itemSpec": "Portable and professional drum: 7 pads and two drum pedals make professional variety sounds including tom, snare, hi-hat, crash, ride, hi-hat Professional demo inside, convenient to study"
+        "itemImgUrl": "https://m.media-amazon.com/images/I/41oOi3t8YjL.jpg"
     },
     {
         "itemName": "IKIGAI: The Japanese secret to a long and happy life",
         "itemDesc": "It's the Japanese word for 'a reason to live' or 'a reason to jump out of bed in the morning'. It's the place where your needs, desires, ambitions, and satisfaction meet. A place of balance. Small wonder that finding your ikigai is closely linked to livin",
-        "itemDimensions": "",
-        "itemImgUrl": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcS_vyVuUa0e1ZvNhDe8wUabAbPPGhzf2t6CcymTCWLi66oUA63hrXWqmQnaqOtet3iGlGOoSteE9idRsl3MpwhwR3R0eXFgMd7zbJNAxO8i5oX1NMJm4sQmLA",
-        "itemPrice": "99",
+        "itemSpec": "",
         "itemType": "Books",
+        "itemPrice": "99",
+        "itemDimensions": "",
+        "trending": false,
         "itemId": 56,
-        "itemSpec": ""
+        "itemImgUrl": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcS_vyVuUa0e1ZvNhDe8wUabAbPPGhzf2t6CcymTCWLi66oUA63hrXWqmQnaqOtet3iGlGOoSteE9idRsl3MpwhwR3R0eXFgMd7zbJNAxO8i5oX1NMJm4sQmLA"
     },
     {
         "itemName": "It Ends With Us",
         "itemDesc": "The newest, highly anticipated novel from beloved #1 New York Times bestselling author, Colleen Hoover. Sometimes it is the one who loves you who hurts you the most. Lily hasn't always had it easy, but that's never stopped her from working hard for the li",
-        "itemDimensions": "",
-        "itemImgUrl": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcRVWy5Xgxgzs8ei-9gOhMWMz1DDUFY0dZIy0FfAGS3TPf6so56Nwh2kfzH1wWvEWuMiwD0uE_0dYadTnCww1uduAN5VKshS2LKsWQdy4mLP",
-        "itemPrice": "217",
+        "itemSpec": "",
         "itemType": "Books",
+        "itemPrice": "217",
+        "itemDimensions": "",
+        "trending": false,
         "itemId": 57,
-        "itemSpec": ""
+        "itemImgUrl": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcRVWy5Xgxgzs8ei-9gOhMWMz1DDUFY0dZIy0FfAGS3TPf6so56Nwh2kfzH1wWvEWuMiwD0uE_0dYadTnCww1uduAN5VKshS2LKsWQdy4mLP"
     },
     {
         "itemName": "THE SECRET Paperback",
         "itemDesc": "Regarded as a life-changing read by many readers - The Secret by Rhonda Byrne is a self-help book that embarks to motivate the reader about a universal paradigm about success that can be achieved though it remains hidden for most people.",
-        "itemDimensions": "",
-        "itemImgUrl": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQFrDU9sZ2BE1bK2X22HK98euBLSkZWI4HICu90mkHFrROa0XLzeNeveAL5Lzfd4biHFyNr89K0oRKPT_sZvJrL0gV-ao4ltct4lD4qfYE",
-        "itemPrice": "186",
+        "itemSpec": "",
         "itemType": "Books",
+        "itemPrice": "186",
+        "itemDimensions": "",
+        "trending": false,
         "itemId": 58,
-        "itemSpec": ""
+        "itemImgUrl": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQFrDU9sZ2BE1bK2X22HK98euBLSkZWI4HICu90mkHFrROa0XLzeNeveAL5Lzfd4biHFyNr89K0oRKPT_sZvJrL0gV-ao4ltct4lD4qfYE"
     },
     {
         "itemName": "A GAME OF THRONES",
         "itemDesc": "Book Description: Full of drama and adventure, rage and lust, mystery and romance, George R.R. Martin 'Game of Thrones: Song of Fire and Ice (Book I) is regarded as one of the most intriguing and greatest epic of the modern era. Set in 12, 000BC, the seas",
-        "itemDimensions": "",
-        "itemImgUrl": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSn_DHfOHEdW7Pis4n94rWVKKLaEze226OlbneucyARmWc0I9UfNUq7Z2jSy9GBmx4yRq7FMWTv9T_sdPIb4ht55Ul842jxGbh5OnmCAZM",
-        "itemPrice": "559",
+        "itemSpec": "",
         "itemType": "Books",
+        "itemPrice": "559",
+        "itemDimensions": "",
+        "trending": false,
         "itemId": 59,
-        "itemSpec": ""
+        "itemImgUrl": "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcSn_DHfOHEdW7Pis4n94rWVKKLaEze226OlbneucyARmWc0I9UfNUq7Z2jSy9GBmx4yRq7FMWTv9T_sdPIb4ht55Ul842jxGbh5OnmCAZM"
     },
     {
         "itemName": "The Midnight Library",
         "itemDesc": "Between life and death there is a library. When Nora seed finds herself in the midnight library, she has a chance to make things right. Up until now, her life has been full of misery and regret. She feels she has let everyone down, including herself. But ",
-        "itemDimensions": "",
-        "itemImgUrl": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcTF0hnQt_rQASukZiojwUvbpadB62QgORp3VHE77aoddikOQ4ezR5An9CYzOEuDFgtAXJt4tA04AS31OFW5xyE9M-0FVZm23zjUb3olBdORp9Z33XbYgtk4KA",
-        "itemPrice": "1,813.00",
+        "itemSpec": "",
         "itemType": "Books",
+        "itemPrice": "1,813.00",
+        "itemDimensions": "",
+        "trending": false,
         "itemId": 60,
-        "itemSpec": ""
+        "itemImgUrl": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcTF0hnQt_rQASukZiojwUvbpadB62QgORp3VHE77aoddikOQ4ezR5An9CYzOEuDFgtAXJt4tA04AS31OFW5xyE9M-0FVZm23zjUb3olBdORp9Z33XbYgtk4KA"
     },
     {
         "itemName": "Termination Shock",
         "itemDesc": "",
-        "itemDimensions": "",
-        "itemImgUrl": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcRMlqctKCY_HOZ9iODLAIqYiXUDwhhSHicQ4AKqMiESBg7K-fG0Eqmj74J5OLHuYui6wdw7ZOmz6vcRDNwGAwODSIuHLNqezzMngNgCwhU",
-        "itemPrice": "437",
+        "itemSpec": "",
         "itemType": "Books",
+        "itemPrice": "437",
+        "itemDimensions": "",
+        "trending": false,
         "itemId": 61,
-        "itemSpec": ""
+        "itemImgUrl": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcRMlqctKCY_HOZ9iODLAIqYiXUDwhhSHicQ4AKqMiESBg7K-fG0Eqmj74J5OLHuYui6wdw7ZOmz6vcRDNwGAwODSIuHLNqezzMngNgCwhU"
     },
     {
         "itemName": "It Starts With Us",
         "itemDesc": "A touching and emotional novel about love, heartbreak, and self-discovery. A must-read for fans of contemporary romance and women's fiction. Written with Colleen Hoover's signature style.",
-        "itemDimensions": "",
-        "itemImgUrl": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcTKY8jQWiaLrgAVly6e6YCLWjN7Wrvc9loZcqfT4gV0tdaoAO-FFUZNJg-5hwOApofJRO-d6Mx2sUqWhSa60r7KTmyoXT8aLP0rADyNigY",
-        "itemPrice": "165",
+        "itemSpec": "",
         "itemType": "Books",
+        "itemPrice": "165",
+        "itemDimensions": "",
+        "trending": false,
         "itemId": 62,
-        "itemSpec": ""
+        "itemImgUrl": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcTKY8jQWiaLrgAVly6e6YCLWjN7Wrvc9loZcqfT4gV0tdaoAO-FFUZNJg-5hwOApofJRO-d6Mx2sUqWhSa60r7KTmyoXT8aLP0rADyNigY"
     },
     {
         "itemName": "A Good Girl'S Guide To Murder",
         "itemDesc": "A debut YA crime thriller as addictive as Serial and as page-turning as One of Us Is Lying. A cold-case thriller written in the original format of a college report - complete with interviews, logs and murder maps. A deftly-woven cold-case plot with themes",
-        "itemDimensions": "",
-        "itemImgUrl": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQ6dLp5fB5SA6Jtb6za8ZFUpmL0wYLZTpRfpXE-hAatokRkneT360iCAkJvgvQNdpCnZnF3etQyn7insSl1m9oDGC6zE4NulugK1tlPPgQ",
-        "itemPrice": "299",
+        "itemSpec": "",
         "itemType": "Books",
+        "itemPrice": "299",
+        "itemDimensions": "",
+        "trending": false,
         "itemId": 63,
-        "itemSpec": ""
+        "itemImgUrl": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQ6dLp5fB5SA6Jtb6za8ZFUpmL0wYLZTpRfpXE-hAatokRkneT360iCAkJvgvQNdpCnZnF3etQyn7insSl1m9oDGC6zE4NulugK1tlPPgQ"
     },
     {
         "itemName": "102 Inch Led Display Screen P2.5 Video Wall For Hotel Sports Bar Events",
         "itemDesc": "Large 102 Inch P2.5 Led Display Screen for Sports Bar, Hotels, Restaurants Event Halls and More by Nevon Digital. Display Promotional Images/Videos and much more on the Go simply using an Android App, Desktop PC or Control all displays over the internet.",
-        "itemDimensions": "230 x 134 x 9.5 cm (91 x 53 x 4.5 Inches)",
-        "itemImgUrl": "https://nevonexpress.in/wp-content/uploads/2023/02/102-inch-P2.5-led-Display-main-min.jpg",
-        "itemPrice": "2,46,499.00",
+        "itemSpec": "Video Format: HD video hard decoding, 60Hz frame rate output. AVI, WMV, RMVB, MP4, 3GP, ASF, MPG, FLV, F4V, MKV, MOV, DAT, VOB, TRP, TS, WEBM, etc.",
         "itemType": "TV",
+        "itemPrice": "2,46,499.00",
+        "itemDimensions": "230 x 134 x 9.5 cm (91 x 53 x 4.5 Inches)",
+        "trending": false,
         "itemId": 64,
-        "itemSpec": "Video Format: HD video hard decoding, 60Hz frame rate output. AVI, WMV, RMVB, MP4, 3GP, ASF, MPG, FLV, F4V, MKV, MOV, DAT, VOB, TRP, TS, WEBM, etc."
+        "itemImgUrl": "https://nevonexpress.in/wp-content/uploads/2023/02/102-inch-P2.5-led-Display-main-min.jpg"
     },
     {
         "itemName": "Sony Bravia 139 cm (55 inches) XR series 4K Ultra HD Smart OLED Google TV XR-55A80J (Black)",
         "itemDesc": "Resolution: 4K Ultra HD (3840 x 2160) | Refresh Rate: 120 hertz,Sound : 30 Watts Output | Acoustic Surface Audio+| 3D Surround Upscaling | Dolby Atmos | Ambient Optimization",
-        "itemDimensions": "230 x 134 x 9.5 cm (91 x 53 x 4.5 Inches)",
-        "itemImgUrl": "https://m.media-amazon.com/images/I/71EFqckgJOL._SX679_.jpg",
-        "itemPrice": "1,24,990.00",
+        "itemSpec": "Video Format: HD video hard decoding, 60Hz frame rate output. AVI, WMV, RMVB, MP4, 3GP, ASF, MPG, FLV, F4V, MKV, MOV, DAT, VOB, TRP, TS, WEBM, etc.",
         "itemType": "TV",
+        "itemPrice": "1,24,990.00",
+        "itemDimensions": "230 x 134 x 9.5 cm (91 x 53 x 4.5 Inches)",
+        "trending": true,
         "itemId": 65,
-        "itemSpec": "Video Format: HD video hard decoding, 60Hz frame rate output. AVI, WMV, RMVB, MP4, 3GP, ASF, MPG, FLV, F4V, MKV, MOV, DAT, VOB, TRP, TS, WEBM, etc."
+        "itemImgUrl": "https://m.media-amazon.com/images/I/71EFqckgJOL._SX679_.jpg"
     },
     {
         "itemName": "Nevon 85 Inch Indoor LED Commercial Display Screen P2.5 Video Wall",
         "itemDesc": "Fully Programmable High Brightness 85 Inch Indoor Commercial LED Display Screen P2.5 Video Wall for Information Display System, Mall Advertising, Conference Room, Events and Exhibitions. Program Your Offers, Schemes, Todays Menus, Promotional Images/Video",
-        "itemDimensions": "192 x 96 cm (75.6 x 38.4 Inches)",
-        "itemImgUrl": "https://nevonexpress.in/wp-content/uploads/2022/09/85-inch-P2.5-led-Display-min.jpg",
-        "itemPrice": "1,49,000.00",
+        "itemSpec": "Supports 4GB Flash memory and ability to expand U-disk memory.",
         "itemType": "TV",
+        "itemPrice": "1,49,000.00",
+        "itemDimensions": "192 x 96 cm (75.6 x 38.4 Inches)",
+        "trending": false,
         "itemId": 66,
-        "itemSpec": "Supports 4GB Flash memory and ability to expand U-disk memory."
+        "itemImgUrl": "https://nevonexpress.in/wp-content/uploads/2022/09/85-inch-P2.5-led-Display-min.jpg"
     },
     {
         "itemName": "Sony Bravia 164 cm (65 inches) 4K Ultra HD Smart LED Google TV KD-65X74K (Black)",
         "itemDesc": "Connectivity: 3 HDMI ports to connect set top box, Blu Ray players, gaming console | 2 USB ports to connect hard drives and other USB devices",
-        "itemDimensions": "65 Inches",
-        "itemImgUrl": "https://m.media-amazon.com/images/I/81wxS8abrgL._SX679_.jpg",
-        "itemPrice": "77,990.00",
+        "itemSpec": "Netflix, Amazon Prime Video, Disney+ Hotstar, Sony Liv, Zee5, Voot, Hoichoi & many More",
         "itemType": "TV",
+        "itemPrice": "77,990.00",
+        "itemDimensions": "65 Inches",
+        "trending": false,
         "itemId": 67,
-        "itemSpec": "Netflix, Amazon Prime Video, Disney+ Hotstar, Sony Liv, Zee5, Voot, Hoichoi & many More"
+        "itemImgUrl": "https://m.media-amazon.com/images/I/81wxS8abrgL._SX679_.jpg"
     },
     {
         "itemName": "Oneplus Q2 Pro 65 Inch QLED 4K, 3840 X 2160 Pixels TV",
         "itemDesc": "Connectivity: 3 HDMI ports to connect set top box, Blu Ray players, gaming console | 2 USB ports to connect hard drives and other USB devices",
-        "itemDimensions": "65 Inches",
-        "itemImgUrl": "https://img5.gadgetsnow.com/gd/images/products/additional/large/G414812_View_1/electronics/televisions/oneplus-q2-pro-65-inch-qled-4k-3840-x-2160-pixels-tv.jpg",
-        "itemPrice": "99,999.00",
+        "itemSpec": "4K, 3840 x 2160 Pixels",
         "itemType": "TV",
+        "itemPrice": "99,999.00",
+        "itemDimensions": "65 Inches",
+        "trending": false,
         "itemId": 68,
-        "itemSpec": "4K, 3840 x 2160 Pixels"
+        "itemImgUrl": "https://img5.gadgetsnow.com/gd/images/products/additional/large/G414812_View_1/electronics/televisions/oneplus-q2-pro-65-inch-qled-4k-3840-x-2160-pixels-tv.jpg"
     },
     {
         "itemName": "Shokz OpenRun Open-Ear Sweat Resistant Bone Conduction Sports Bluetooth Headset  (Blue, In the Ear)",
         "itemDesc": "In the Ear",
-        "itemDimensions": "",
-        "itemImgUrl": "https://rukminim1.flixcart.com/image/832/832/l52sivk0/headphone/d/d/6/s-opnrn-blu-shokz-original-imagfu5v7nmjbmyy.jpeg?q=70",
-        "itemPrice": "13,499.00",
+        "itemSpec": "Color:Blue",
         "itemType": "Headfones",
+        "itemPrice": "13,499.00",
+        "itemDimensions": "",
+        "trending": true,
         "itemId": 70,
-        "itemSpec": "Color:Blue"
+        "itemImgUrl": "https://rukminim1.flixcart.com/image/832/832/l52sivk0/headphone/d/d/6/s-opnrn-blu-shokz-original-imagfu5v7nmjbmyy.jpeg?q=70"
     },
     {
         "itemName": "FiiO - UTWS5",
         "itemDesc": "Best pairs with FA1, FD3 PRO, FH3, FH5S, FH5S PRO, FA7S, FH7, FH9, FA9, FD7, FDX, FD3, and IEMS with 0.78mm 2-Pin and MMCX connections.Note: It is not compatible with any of the Shure IEMs and IEMs that have a sunken top-end connectors like Moondrop Kato.",
-        "itemDimensions": "",
-        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0153/8863/products/Headphone-Zone-FiiO-UTWS5-2-PIN-1.jpg?v=1660111271&width=800",
-        "itemPrice": "12,499.00",
+        "itemSpec": "Color:Blue",
         "itemType": "Headfones",
+        "itemPrice": "12,499.00",
+        "itemDimensions": "",
+        "trending": false,
         "itemId": 71,
-        "itemSpec": "Color:Blue"
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0153/8863/products/Headphone-Zone-FiiO-UTWS5-2-PIN-1.jpg?v=1660111271&width=800"
     },
     {
         "itemName": "OnePlus Bullets Z2 Bluetooth Wireless In Ear Earphones With Mic (Acoustic Red)",
         "itemDesc": "A quick 10-minute charge delivers up to 20 hours of immersive audio playback.The flagship-level battery life delivers up to 30 hours of non-stop music on a single charge.A large 12.4 mm bass driver delivers uncompromisingly deep bass for powerful beats.Ex",
-        "itemDimensions": "",
-        "itemImgUrl": "https://img5.gadgetsnow.com/gd/images/products/additional/large/G390133_View_1/accessories/audio/oneplus-bullets-z2-bluetooth-wireless-in-ear-earphones-with-mic-acoustic-red-.jpg",
-        "itemPrice": "1,599.00",
+        "itemSpec": "Color:Blue",
         "itemType": "Headfones",
+        "itemPrice": "1,599.00",
+        "itemDimensions": "",
+        "trending": false,
         "itemId": 72,
-        "itemSpec": "Color:Blue"
+        "itemImgUrl": "https://img5.gadgetsnow.com/gd/images/products/additional/large/G390133_View_1/accessories/audio/oneplus-bullets-z2-bluetooth-wireless-in-ear-earphones-with-mic-acoustic-red-.jpg"
     },
     {
         "itemName": "Bowers & Wilkins Px8 Headphones with Active Noise Cancellation (Black)",
         "itemDesc": "A quick 10-minute charge delivers up to 20 hours of immersive audio playback.The flagship-level battery life delivers up to 30 hours of non-stop music on a single charge.A large 12.4 mm bass driver delivers uncompromisingly deep bass for powerful beats.Ex",
-        "itemDimensions": "",
-        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0627/9109/0407/products/Untitleddesign_18_900x900.png?v=1679125528",
-        "itemPrice": "94,999.00",
+        "itemSpec": "Color:Black",
         "itemType": "Headfones",
+        "itemPrice": "94,999.00",
+        "itemDimensions": "",
+        "trending": false,
         "itemId": 73,
-        "itemSpec": "Color:Black"
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0627/9109/0407/products/Untitleddesign_18_900x900.png?v=1679125528"
+    },
+    {
+        "itemName": "Supernova",
+        "itemDesc": "Upgrade your lifestyle and take control of your day with the AMOLED Display Smartwatch. Our smartwatch lets you easily track your fitness goals, and even control your music without ever having to pull out your phone.",
+        "itemSpec": "Smart notifications, Strong battery Life, 123 sports modes",
+        "itemType": "Smart watches",
+        "itemPrice": "2,999.00",
+        "itemDimensions": "Available in all sizes",
+        "trending": false,
+        "itemId": 74,
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0137/0292/2286/products/rock-grey_2_1800x1800.png?v=1680697955"
     },
     {
         "itemName": "Realme 10 Pro Plus ",
         "itemDesc": "108 MP + 8 MP + 2 MP",
-        "itemDimensions": "161.5 mmx73.9 mmx7.95 mm",
-        "itemImgUrl": "https://img3.gadgetsnow.com/gd/images/products/additional/large/G406451_View_1/mobiles/smartphones/realme-10-pro-plus-128-gb-nebula-blue-6-gb-ram-.jpg",
-        "itemPrice": "25,999.00",
+        "itemSpec": "6 GB RAM and 128 GB internal memory",
         "itemType": "Mobile",
+        "itemPrice": "25,999.00",
+        "itemDimensions": "161.5 mmx73.9 mmx7.95 mm",
+        "trending": false,
         "itemId": 75,
-        "itemSpec": "6 GB RAM and 128 GB internal memory"
+        "itemImgUrl": "https://img3.gadgetsnow.com/gd/images/products/additional/large/G406451_View_1/mobiles/smartphones/realme-10-pro-plus-128-gb-nebula-blue-6-gb-ram-.jpg"
     },
     {
         "itemName": "Realme narzo N55",
         "itemDesc": "64MP Primary AI Camera",
-        "itemDimensions": "Large 6.72” Full screen display on the narzo N55 provides a segment leading display with a centre punch hole display, 90Hz ultra smooth refresh rate, 680nits of peak brightness, and 91.4% screen-to-Body ratio",
-        "itemImgUrl": "https://m.media-amazon.com/images/I/71Ftzmh3XWL._SX679_.jpg",
-        "itemPrice": "10,999.00",
+        "itemSpec": "4 GB RAM and 64 GB internal memory, 33W Segment Fastest Charging",
         "itemType": "Mobile",
+        "itemPrice": "10,999.00",
+        "itemDimensions": "Large 6.72” Full screen display on the narzo N55 provides a segment leading display with a centre punch hole display, 90Hz ultra smooth refresh rate, 680nits of peak brightness, and 91.4% screen-to-Body ratio",
+        "trending": false,
         "itemId": 76,
-        "itemSpec": "4 GB RAM and 64 GB internal memory, 33W Segment Fastest Charging"
+        "itemImgUrl": "https://m.media-amazon.com/images/I/71Ftzmh3XWL._SX679_.jpg"
     },
     {
         "itemName": "Galaxy M13",
         "itemDesc": "50.0 MP + 5.0 MP + 2.0 MP",
-        "itemDimensions": "16.72cm (6.6') full rectangle / 16.30cm (6.4') rounded corners, 1080 x 2408 (FHD+)",
-        "itemImgUrl": "https://images.samsung.com/is/image/samsung/p6pim/in/sm-m135flgqins/gallery/in-galaxy-m13-sm-m135-sm-m135flgqins-533230710?$2052_1641_PNG$",
-        "itemPrice": "10,999.00",
+        "itemSpec": "12 GB RAM and 128 GB internal memory, 33W Segment Fastest Charging, 6000mah battery",
         "itemType": "Mobile",
+        "itemPrice": "10,999.00",
+        "itemDimensions": "16.72cm (6.6') full rectangle / 16.30cm (6.4') rounded corners, 1080 x 2408 (FHD+)",
+        "trending": false,
         "itemId": 77,
-        "itemSpec": "12 GB RAM and 128 GB internal memory, 33W Segment Fastest Charging, 6000mah battery"
+        "itemImgUrl": "https://images.samsung.com/is/image/samsung/p6pim/in/sm-m135flgqins/gallery/in-galaxy-m13-sm-m135-sm-m135flgqins-533230710?$2052_1641_PNG$"
     },
     {
         "itemName": "BoAt Rockerz 510 Super Extra Bass Bluetooth Headset",
         "itemDesc": "Bluetooth version: 4.1, Wireless range: 10 m",
-        "itemDimensions": "",
-        "itemImgUrl": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRjJh6WhXFwbFNoPA5AqFOJj-IXz_1ae8Q_Cx6Ou-1YsqLqw9BwvcTprmnI3B-tEoq-iSdqPT0Jziy3xOM9xPn1UQnIwKQMxa2afZpgC3UO-1BBhxK07gjqmA",
-        "itemPrice": "999.00",
+        "itemSpec": "Battery life: 20 hrs | Charging time: 2.5 hrs",
         "itemType": "headfones",
+        "itemPrice": "999.00",
+        "itemDimensions": "",
+        "trending": false,
         "itemId": 78,
-        "itemSpec": "Battery life: 20 hrs | Charging time: 2.5 hrs"
+        "itemImgUrl": "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcRjJh6WhXFwbFNoPA5AqFOJj-IXz_1ae8Q_Cx6Ou-1YsqLqw9BwvcTprmnI3B-tEoq-iSdqPT0Jziy3xOM9xPn1UQnIwKQMxa2afZpgC3UO-1BBhxK07gjqmA"
     },
     {
         "itemName": "EPOS - PC 5 Chat",
         "itemDesc": "Wired, 1 X 3.5 Mm",
-        "itemDimensions": "50 Mm. + 140 Mm. + 160 Mm",
-        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0153/8863/products/Headphone-Zone-EPOS-PC5-CHAT-01.jpg?v=1644040398&width=800",
-        "itemPrice": "1,490.00",
+        "itemSpec": "Battery life: 20 hrs | Charging time: 2.5 hrs",
         "itemType": "headfones",
+        "itemPrice": "1,490.00",
+        "itemDimensions": "50 Mm. + 140 Mm. + 160 Mm",
+        "trending": false,
         "itemId": 79,
-        "itemSpec": "Battery life: 20 hrs | Charging time: 2.5 hrs"
+        "itemImgUrl": "https://cdn.shopify.com/s/files/1/0153/8863/products/Headphone-Zone-EPOS-PC5-CHAT-01.jpg?v=1644040398&width=800"
     }
 ]

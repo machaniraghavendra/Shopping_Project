@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.query.command.entites.ItemEntity;
+import com.shopping.query.command.entites.dto.ItemsDto;
 import com.shopping.query.command.exceptions.ItemAlreadyException;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.service.ItemService;
@@ -64,5 +66,15 @@ public class ItemsController {
 	@GetMapping("/")
 	public ResponseEntity<List<ItemEntity>> viewall() {
 		return new ResponseEntity<>(itemService.viewall(), HttpStatus.OK);
+	}
+
+	@GetMapping("/type")
+	public ResponseEntity<List<ItemsDto>> getbygetItemsByType(@RequestParam("type") String type) {
+		return new ResponseEntity<>(itemService.getItemsByType(type), HttpStatus.OK);
+	}
+
+	@GetMapping("/trending")
+	public ResponseEntity<List<ItemsDto>> getTrendingItems() {
+		return new ResponseEntity<>(itemService.getTrendingItems(), HttpStatus.OK);
 	}
 }

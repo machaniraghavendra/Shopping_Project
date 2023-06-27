@@ -27,7 +27,7 @@ export default function Sports() {
   }
 
   const fetch = () => {
-    axios.get("http://localhost:8083/items/")
+    axios.get("http://localhost:8083/items/type?type=sports")
       .then((res) => {
         if (res.status == "200") {
           setfetchDone(true)

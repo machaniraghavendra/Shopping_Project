@@ -18,11 +18,12 @@
     position: relative;
     width: 50%;
 }
-
-.button-card {
-    position: relative;
-    color: black;
-    text-align: center;
-    background-color: rgb(3, 3, 231);
-    z-index: 10;
+.carousel-control-prev, .carousel-control-next{
+    background-color: rgb(87, 81, 2);
+    width: 4%;
+    height: 50%;
+    display: flex;
+    top: 20%;
+    align-self: center;
+    justify-content: center;
 }

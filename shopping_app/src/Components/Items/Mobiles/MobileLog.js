@@ -21,7 +21,7 @@ export default function MobileLog(props) {
     var i = 0;
 
     const fetch = () => {
-        axios.get("http://localhost:8083/items/")
+        axios.get("http://localhost:8083/items/type?type=Mobile")
             .then((res) => {
                 if (res.status == "200") {
                     setfetchDone(true)

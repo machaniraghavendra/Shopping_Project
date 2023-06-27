@@ -21,5 +21,6 @@ public class ItemsDto {
 	private String ItemDesc;
 	private String ItemSpec;
 	private String ItemDimensions;
+	private boolean isTrending;
 
 }

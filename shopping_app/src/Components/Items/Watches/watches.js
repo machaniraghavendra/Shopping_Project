@@ -27,7 +27,7 @@ export default function Watches() {
   }
 
   const fetch = () => {
-    axios.get("http://localhost:8083/items/")
+    axios.get("http://localhost:8083/items/type?type=Analog Watches")
       .then((res) => {
         if (res.status == "200") {
           setfetchDone(true)
