@@ -1,6 +1,10 @@
 package com.shopping.query.command.entites;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -32,5 +36,7 @@ public class ItemEntity {
 	private String ItemSpec;
 	private String ItemDimensions;
 	private boolean isTrending;
+	private LocalDateTime itemAddedOn;
+	private LocalDateTime itemUpdatedOn;
 
 }

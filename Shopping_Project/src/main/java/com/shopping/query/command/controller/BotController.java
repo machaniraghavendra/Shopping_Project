@@ -1,6 +1,7 @@
 package com.shopping.query.command.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,9 +43,9 @@ public class BotController {
 		return ResponseEntity.ok(botServiceImpl.viewAllResponse());
 	}
 
-	@PostMapping("/{email}")
-	public void listClear(@PathVariable String email) {
-		botServiceImpl.listClear(email);
+	@PostMapping("/{userId}")
+	public void listClear(@PathVariable UUID userId) {
+		botServiceImpl.listClear(userId);
 	}
 	
 }

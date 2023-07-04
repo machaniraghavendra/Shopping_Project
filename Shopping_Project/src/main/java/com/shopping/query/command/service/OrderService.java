@@ -32,7 +32,7 @@ public interface OrderService {
 
 	List<Object> getSavedOrder();
 
-	List<OrdersDto> getOrdersofUser(String userId);
+	List<OrdersDto> getOrdersofUser(UUID userId);
 
 	String getDate(LocalDateTime date);
 

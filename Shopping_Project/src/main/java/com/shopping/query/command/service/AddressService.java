@@ -18,17 +18,17 @@ public interface AddressService {
 
 	AddressDto findAddress(Integer id) throws UserNotFoundException;
 
-	AddressDto findAddressWithUserId(String userId, String address);
+	AddressDto findAddressWithUserId(UUID userId, String address);
 
-	String deleteAddressWithUserIdAndAddress(String userId, String address);
+	String deleteAddressWithUserIdAndAddress(UUID userId, String address);
 	
 	List<AddressEntity> viewAllAddress();
 
-	List<AddressDto> viewAllAddressWithUserId(String userId);
+	List<AddressDto> viewAllAddressWithUserId(UUID userId);
 
 	List<Object> findAddressEntity(Integer id);
 	
-	Optional<AddressEntity> getAddressWithUserIdandAddress(String userId, String address);
+	Optional<AddressEntity> getAddressWithUserIdandAddress(UUID userId, String address);
 
 	Optional<AddressEntity> findWIthReferenceId(UUID referenceId);
 }

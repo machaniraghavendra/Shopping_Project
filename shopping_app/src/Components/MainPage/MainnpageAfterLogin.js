@@ -46,11 +46,11 @@ export default function MainPageAfterlogin(props) {
     }
 
     const currentuser = () => {
-        axios.get("http://localhost:8083/user/" + props.user).then(a => {
+        axios.get("http://localhost:8083/user/userid/" + props.user).then(a => {
             if (a.status == "200") {
                 setfetchDone(true)
             }
-            return (setUserName(a.data.userName),setUser(a.data))
+            return (setUserName(a.data.userName), setUser(a.data))
         }).catch((error) => {
             setError(true);
             if (error.response.data === undefined) {
@@ -96,7 +96,6 @@ export default function MainPageAfterlogin(props) {
     const checkPresentUser = () => {
         if (userName == undefined) {
             localStorage.removeItem("currentuser")
-            localStorage.removeItem("Raghu")
         }
     }
 
@@ -110,14 +109,14 @@ export default function MainPageAfterlogin(props) {
         currentuser();
         document.title = "Mart | Shopping Mart"
         setTimeout(() => {
-            if (!localStorage.getItem("Raghu") && !localStorage.getItem("currentuser")) {
+            if (!localStorage.getItem("currentuser")) {
                 nav("/login")
             }
         }, 2000);
         return (fetch())
     }, [])
 
-    if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+    if (localStorage.getItem("currentuser")) {
         return (
             <div className='container-fluid '>
                 <header>
@@ -135,15 +134,15 @@ export default function MainPageAfterlogin(props) {
                                     <br></br>
                                     <div className="btn-group">
                                         <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
-                                        {fetchDone ?
-                                            <span>{user.profileImgUrl ?
-                                                <img src={user.profileImgUrl} width={25} height={25} />
-                                                : <i className="fa-solid fa-user"></i>}&nbsp;{user.userName}
-                                            </span>
-                                            :
-                                            <span className="placeholder-glow">
-                                                <span className="placeholder col-12"></span>
-                                            </span>}                                        </button>
+                                            {fetchDone ?
+                                                <span>{user.profileImgUrl ?
+                                                    <img src={user.profileImgUrl} width={25} height={25} />
+                                                    : <i className="fa-solid fa-user"></i>}&nbsp;{user.userName}
+                                                </span>
+                                                :
+                                                <span className="placeholder-glow">
+                                                    <span className="placeholder col-12"></span>
+                                                </span>}                                        </button>
                                         <ul className="dropdown-menu bg-secondary-warning dropdown-menu-lg-end user">
                                             <li><Link className="dropdown-item" to={"/profile/settings"}><i className='fa-solid fa-gear'></i> Settings</Link></li>
                                             <li>
@@ -410,9 +409,7 @@ export default function MainPageAfterlogin(props) {
                                 <button type="button" className="btn btn-outline-success" data-bs-dismiss="modal">No</button>
                                 <button type="button" className="btn btn-outline-danger"
                                     onClick={() => {
-                                        return (localStorage.removeItem("currentuser"),
-                                            localStorage.removeItem("Raghu"),
-                                            window.location.reload())
+                                        return (localStorage.removeItem("currentuser"), window.location.reload())
                                     }}
                                 >Yes</button>
                             </div>
@@ -435,7 +432,6 @@ export default function MainPageAfterlogin(props) {
                                 <button type="button" className="btn btn-outline-danger"
                                     onClick={() => {
                                         return (localStorage.removeItem("currentuser"),
-                                            localStorage.removeItem("Raghu"),
                                             nav("/login"),
                                             window.location.reload())
                                     }}

@@ -117,7 +117,7 @@ export default function Wishlist(props) {
     window.onscroll = () => check();
     document.title = "WishList | Shopping Mart";
     axios
-      .get("http://localhost:8083/user/" + props.user)
+      .get("http://localhost:8083/user/userid/" + props.user)
       .then((a) => {
         return setUser(a.data);
       })
@@ -408,7 +408,7 @@ export default function Wishlist(props) {
                                 className="btn "
                                 onClick={() => {
                                   if (
-                                    localStorage.getItem("Raghu") &&
+                                    
                                     localStorage.getItem("currentuser")
                                   ) {
                                     axios
@@ -831,7 +831,6 @@ export default function Wishlist(props) {
                                   className="btn "
                                   onClick={() => {
                                     if (
-                                      localStorage.getItem("Raghu") &&
                                       localStorage.getItem("currentuser")
                                     ) {
                                       axios

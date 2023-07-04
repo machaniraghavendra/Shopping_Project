@@ -46,7 +46,7 @@ public class AddressServiceImpl implements AddressService {
 			try {
 				if (!Objects.isNull(entity)
 						&& entity.getDeliveryAddress().equalsIgnoreCase(addressEntity.getDeliveryAddress())
-						&& entity.getUserDetails().getUserEmail().equalsIgnoreCase(addressEntity.getUserId()))
+						&& entity.getUserDetails().getUserId().equals(addressEntity.getUserId()))
 					throw new AddressAlreadyExistsException("Same address already exists");
 				else {
 					repo.save(addressEntity);
@@ -97,7 +97,7 @@ public class AddressServiceImpl implements AddressService {
 	}
 
 	@Override
-	public String deleteAddressWithUserIdAndAddress(String userId, String address) {
+	public String deleteAddressWithUserIdAndAddress(UUID userId, String address) {
 		Optional<AddressEntity> addressEntity = getAddressWithUserIdandAddress(userId, address);
 		if (!addressEntity.isEmpty()) {
 			repo.delete(addressEntity.get());
@@ -108,7 +108,7 @@ public class AddressServiceImpl implements AddressService {
 	}
 
 	@Override
-	public Optional<AddressEntity> getAddressWithUserIdandAddress(String userId, String address) {
+	public Optional<AddressEntity> getAddressWithUserIdandAddress(UUID userId, String address) {
 		return viewAllAddress().stream().filter(a -> a.getUserId().equals(userId))
 				.filter(a -> a.getDeliveryAddress().equals(address)).findFirst();
 	}
@@ -142,7 +142,7 @@ public class AddressServiceImpl implements AddressService {
 	}
 
 	@Override
-	public List<AddressDto> viewAllAddressWithUserId(String userId) {
+	public List<AddressDto> viewAllAddressWithUserId(UUID userId) {
 		List<AddressEntity> list = viewAllAddress().stream().filter(a -> a.getUserId().equals(userId))
 				.sorted(Comparator.comparing(AddressEntity::getAddedOn,Comparator.reverseOrder()))
 				.collect(Collectors.toList());
@@ -158,7 +158,7 @@ public class AddressServiceImpl implements AddressService {
 	}
 
 	@Override
-	public AddressDto findAddressWithUserId(String userId, String address) {
+	public AddressDto findAddressWithUserId(UUID userId, String address) {
 		Optional<AddressDto> addressDto = viewAllAddressWithUserId(userId).stream()
 				.filter(a -> a.getDeliveryAddress().equals(address)).findFirst();
 		if (!addressDto.isEmpty()) {

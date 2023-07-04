@@ -59,7 +59,7 @@ public class OrdersController {
 	}
 
 	@GetMapping("/orderWithUser")
-	public ResponseEntity<List<OrdersDto>> getOrdersofUser(@RequestParam("userId") String userId)
+	public ResponseEntity<List<OrdersDto>> getOrdersofUser(@RequestParam("userId") UUID userId)
 			throws ItemNotFoundException {
 		return ResponseEntity.ok(ordersServImpl.getOrdersofUser(userId));
 	}

@@ -80,7 +80,7 @@ public class BotServiceImpl implements BotService {
 	@SuppressWarnings("static-access")
 	private static BotEntity botBulider(BotEntity incomeBot, String message) throws UserNotFoundException {
 		try {
-			if (!Objects.isNull(incomeBot.getUserDetails().getUserEmail())) {
+			if (!Objects.isNull(incomeBot.getUserDetails().getUserId())) {
 				return new BotEntity().builder().id(UUID.randomUUID()).userMessage(incomeBot.getUserMessage())
 						.botMessage(message).botReturnedAt(orderDetailsServImpl.getTime(LocalDateTime.now()))
 						.userMessagedAt(orderDetailsServImpl.getTime(LocalDateTime.now()))
@@ -99,9 +99,9 @@ public class BotServiceImpl implements BotService {
 	}
 
 	@Override
-	public void listClear(String userEmail) {
+	public void listClear(UUID userId) {
 		responses
-				.removeAll(responses.stream().filter(a -> a.getUserDetails().getUserEmail().equalsIgnoreCase(userEmail))
+				.removeAll(responses.stream().filter(a -> a.getUserDetails().getUserId().equals(userId))
 						.collect(Collectors.toList()));
 	}
 

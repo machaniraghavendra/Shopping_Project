@@ -24,7 +24,7 @@ public class AddressEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer addressId;
-	private String userId;
+	private UUID userId;
 	private String deliveryAddress;
 	private String pincode;
 	private String phoneNumber;

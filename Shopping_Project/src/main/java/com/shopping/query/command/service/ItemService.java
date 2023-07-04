@@ -2,6 +2,7 @@ package com.shopping.query.command.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.shopping.query.command.entites.ItemEntity;
 import com.shopping.query.command.entites.dto.ItemsDto;
@@ -27,7 +28,7 @@ public interface ItemService {
 
 	List<ItemsDto> getTrendingItems();
 
-	Map<String, List<ItemsDto>> viewedHistory(String userEmail, int itemId) throws ItemNotFoundException;
+	Map<UUID, List<ItemsDto>> viewedHistory(UUID userId, int itemId) throws ItemNotFoundException;
 
-	List<ItemsDto> getViewedHistory(String userEmail);
+	List<ItemsDto> getViewedHistory(UUID userId);
 }

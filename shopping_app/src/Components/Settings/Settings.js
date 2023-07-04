@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import Footer from '../Footer/Footer';
 import ChatBot from '../ChatBot/ChatBot';
 import ProfilePictureEdit from './ProfilePictureEdit';
+import UsersLinks from '../AdminPages/UsersLinks';
 
 export default function Settings(props) {
 
@@ -88,7 +89,7 @@ export default function Settings(props) {
     }
 
     const currentuser = () => {
-        axios.get("http://localhost:8083/user/" + props.user).then(res => {
+        axios.get("http://localhost:8083/user/userid/" + props.user).then(res => {
             if (res.status == "200") {
                 setfetchDone(true)
             }
@@ -241,7 +242,7 @@ export default function Settings(props) {
             setShowToast(false);
         }, 6500);
     }
-    
+
     const set = (e) => {
         const { name, value } = e.target;
         setValue({ ...values, [name]: value });
@@ -325,14 +326,14 @@ export default function Settings(props) {
     useEffect(() => {
         currentuser();
         fetchAddress();
-        axios.get("http://localhost:8083/user/theme/" + props.user).then(a => setTheme(a.data)).catch((error) => {
-            setError(true);
-            if (error.response.data === undefined) {
-                setErrorMessage("Something went wrong")
-            } else {
-                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-            }
-        });
+        // axios.get("http://localhost:8083/user/theme/" + props.user).then(a => setTheme(a.data)).catch((error) => {
+        //     setError(true);
+        //     if (error.response.data === undefined) {
+        //         setErrorMessage("Something went wrong")
+        //     } else {
+        //         setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+        //     }
+        // });
         getTheme(sessionStorage.getItem("dark") === "true" ? true : false);
         { sessionStorage.getItem("dark") == "true" ? setClassname("modal-content bg-dark text-light") : setClassname("modal-content") }
 
@@ -346,7 +347,7 @@ export default function Settings(props) {
 
     }, [])
 
-    if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+    if (localStorage.getItem("currentuser")) {
         return (
             <div className='container-fluid justify-content-center'>
                 < header className='cart-head' >
@@ -462,6 +463,13 @@ export default function Settings(props) {
                                     </figure>
                                 }
                             </div>
+
+                            {user.admin &&
+                                <div className='container-md data text-light p-3 my-3'>
+                                    <UsersLinks />
+                                </div>
+                            }
+                            
                             <section>
                                 <div className='container-md data p-2'>
                                     <div className="row ">
@@ -504,8 +512,9 @@ export default function Settings(props) {
                                                         if (isSubmit && formErrors.userName == "") {
                                                             axios.put("http://localhost:8083/user/", {
                                                                 "userName": values.userName,
+                                                                "userId": localStorage.getItem("currentuser"),
                                                                 "userEmail": user.userEmail,
-                                                                "profileImgUrl":user.profileImgUrl,
+                                                                "profileImgUrl": user.profileImgUrl,
                                                                 "mobileNumber": user.mobileNumber
                                                             }).then(res => { setInfo(res.data); }).catch((error) => {
                                                                 setError(true);
@@ -537,8 +546,9 @@ export default function Settings(props) {
                                                         if (isSubmit == true && formErrors.mobileNumber == "") {
                                                             axios.put("http://localhost:8083/user/", {
                                                                 "userName": user.userName,
+                                                                "userId": localStorage.getItem("currentuser"),
                                                                 "userEmail": user.userEmail,
-                                                                "profileImgUrl":user.profileImgUrl,
+                                                                "profileImgUrl": user.profileImgUrl,
                                                                 "mobileNumber": values.mobileNumber
                                                             }).then(res => { setInfo(res.data); }).catch((error) => {
                                                                 setError(true);
@@ -666,7 +676,6 @@ export default function Settings(props) {
                                 <button type="button" className="btn btn-outline-danger"
                                     onClick={() => {
                                         return (localStorage.removeItem("currentuser"),
-                                            localStorage.removeItem("Raghu"),
                                             window.location.reload())
                                     }}
                                 >Yes</button>

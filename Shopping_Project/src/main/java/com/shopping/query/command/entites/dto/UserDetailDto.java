@@ -1,5 +1,7 @@
 package com.shopping.query.command.entites.dto;
 
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,10 +13,11 @@ import lombok.ToString;
 @NoArgsConstructor
 public class UserDetailDto {
 
+	private UUID userId;
 	private String userEmail;
 	private String userName;
 	private String mobileNumber;
 	private String profileImgUrl;
-	private boolean darkModeEnabled;
+	private boolean admin;
 
 }

@@ -5,7 +5,7 @@ import { React, Component } from "react";
 class ChatBot extends Component {
     constructor(props) {
         super(props);
-        axios.get("http://localhost:8083/user/" + localStorage.getItem("currentuser")).then(a => { return (this.setUser(a.data)) }).catch((error) => { this.setErrorMessage(error) });
+        axios.get("http://localhost:8083/user/userid/" + localStorage.getItem("currentuser")).then(a => { return (this.setUser(a.data)) }).catch((error) => { this.setErrorMessage(error) });
         this.getResponses()
         this.state = {
             showBot: false,
@@ -16,16 +16,19 @@ class ChatBot extends Component {
             error: false
         };
     }
-    setUser(user) {
+    
+    setUser = (user) => {
         this.setState({
             user: user
         })
     }
+
     callBot(presentState) {
         this.setState({
             showBot: !presentState,
         })
     }
+
     setMessage(message) {
         let height = document.getElementById("con-area")
         this.getResponses(height);
@@ -33,16 +36,18 @@ class ChatBot extends Component {
             userMessage: message
         })
     }
+
     setResponses(responses) {
         this.setState({
             responses: responses
         })
     }
+
     setErrorMessage(error) {
         this.setState({
             error: true
         })
-        if (error.response.data === undefined) {
+        if (error.response === undefined) {
             this.setState({
                 errorMessage: "Something went wrong"
             })
@@ -68,8 +73,9 @@ class ChatBot extends Component {
             height.scrollTop = height.scrollHeight - height.clientHeight;
         }
     }
+
     clearResponses() {
-        axios.post("http://localhost:8083/bot/" + this.state.user.userEmail)
+        axios.post("http://localhost:8083/bot/" + this.state.user.userId)
             .catch((error) => { this.setErrorMessage(error) });
     }
 
@@ -78,6 +84,7 @@ class ChatBot extends Component {
             "userDetails": {
                 "userName": this.state.user.userName,
                 "userEmail": this.state.user.userEmail,
+                "userId": localStorage.getItem("currentuser"),
                 "mobileNumber": this.state.user.mobileNumber
             },
             "userMessage": this.state.userMessage
@@ -109,12 +116,12 @@ class ChatBot extends Component {
                                 </div>
                             </div>
                             <div className="card-body text-dark bg-dark m-1 conversation-area" id="con-area">
-                                {this.state.responses.filter(a => a.userDetails.userEmail == this.state.user.userEmail).length == 0 ?
+                                {this.state.responses.filter(a => a.userDetails.userId == this.state.user.userId).length == 0 ?
                                     <div className=" text-light justify-content-center">
                                         <p className="text-center">Start conversation saying "Hi / Hello" </p>
                                     </div>
                                     :
-                                    this.state.responses.filter(a => a.userDetails.userEmail == this.state.user.userEmail).map(a => {
+                                    this.state.responses.filter(a => a.userDetails.userId == this.state.user.userId).map(a => {
                                         return (
                                             <div key={a.id}>
                                                 {/* User */}

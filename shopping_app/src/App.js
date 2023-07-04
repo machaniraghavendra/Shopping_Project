@@ -15,7 +15,7 @@ import Wishlist from "./Components/WishList/Wishlist";
 import ForgotPass from "./Components/Login/ForgotPass";
 import MobileLog from "./Components/Items/Mobiles/MobileLog";
 import View from "./Components/View/View";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import Settings from "./Components/Settings/Settings";
 import Buypage from "./Components/PurchasePage/BuyPage";
@@ -30,26 +30,41 @@ import Books from "./Components/Items/Books/Books";
 import TV from "./Components/Items/TV/Tv";
 import Headfones from "./Components/Items/Headfones/Headfones";
 import ViewMoreItems from "./Components/View/ViewMoreItems";
+import UsersList from "./Components/AdminPages/UsersList";
+import ItemsList from "./Components/AdminPages/ItemsList";
+import UpdateItem from "./Components/AdminPages/UpdateItem";
+
 
 function App() {
   let user = localStorage.getItem("currentuser");
+
+  const [currentUser, setcurrentUser] = useState([]);
 
   const [userPresent, setUserPresent] = useState(false);
 
   const [fetchUserDone, setfetchUserDone] = useState(false);
 
   const currentuser = () => {
-    axios.get("http://localhost:8083/user/id/" + user).then((res) => {
-      if (res.status == "200") {
-        setfetchUserDone(true)
-      }
-      return (setUserPresent(true))
-    }).catch(() => { setUserPresent(false) })
+    if (user) {
+      axios.get("http://localhost:8083/user/userid/" + user).then(res => {
+        if (res.status == "200") {
+          setfetchUserDone(true);
+          setcurrentUser(res.data);
+          setUserPresent(true);
+        }
+      }).catch(a=>{localStorage.removeItem("currentuser")})
+    }else{
+      setfetchUserDone(true);
+      setUserPresent(false);
+    }
   }
 
-  currentuser();
+  useEffect(() => {
+    currentuser()
+  }, [])
+
   if (fetchUserDone) {
-    if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser") && userPresent) {
+    if (localStorage.getItem("currentuser") && userPresent) {
       return (
         <div className="App">
           <Router>
@@ -65,6 +80,9 @@ function App() {
               <Route path="/orders" element={<Orders user={user} />} />
               <Route path="/orderdetails" element={<OrderDetails user={user} />} />
               <Route path="/viewmore/*" element={<ViewMoreItems user={user} />} />
+              <Route path="/admin/userslist" element={<UsersList user={user} />} />
+              <Route path="/admin/itemslist" element={<ItemsList user={user} />} />
+              <Route path="/admin/updateitem/*" element={<UpdateItem user={user} />} />
               <Route path="/mart" element={
                 <>
                   <MainpageAfterLog user={user} />

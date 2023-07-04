@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class FavServiceImpl implements FavService {
 		String itemName = mapper.itemDtoMapperById(favouritesEntity.getItemId()).getItemName();
 		try {
 			List<FavouritesEntity> favList = viewall().stream()
-					.filter(a -> a.getUserId().equalsIgnoreCase(favouritesEntity.getUserId()))
+					.filter(a -> a.getUserId().equals(favouritesEntity.getUserId()))
 					.filter(a -> Objects.equals(a.getItemId(), favouritesEntity.getItemId()))
 					.collect(Collectors.toList());
 			if (!favList.isEmpty())
@@ -68,8 +69,8 @@ public class FavServiceImpl implements FavService {
 	}
 
 	@Override
-	public String delete(String itemName, String userEmail) throws ItemNotFoundInFavException, ItemNotFoundException {
-		Integer itemId = checkandgetlistWithUserId(userEmail).stream()
+	public String delete(String itemName, UUID userId) throws ItemNotFoundInFavException, ItemNotFoundException {
+		Integer itemId = checkandgetlistWithUserId(userId).stream()
 				.filter(a -> a.getItemName().equalsIgnoreCase(itemName)).map(a -> a.getItemId()).findFirst().get();
 		FavouritesEntity favEntity = viewall().stream().filter(a -> a.getItemId() == itemId).findFirst().get();
 		try {
@@ -107,21 +108,21 @@ public class FavServiceImpl implements FavService {
 	}
 
 	@Override
-	public List<Map<String, List<ItemsDto>>> viewallMap() throws UserNotFoundException, ItemNotFoundException {
-		List<Map<String, List<ItemsDto>>> list = new ArrayList<>();
-		Map<String, List<ItemsDto>> item = new HashMap<>();
+	public List<Map<UUID, List<ItemsDto>>> viewallMap() throws UserNotFoundException, ItemNotFoundException {
+		List<Map<UUID, List<ItemsDto>>> list = new ArrayList<>();
+		Map<UUID, List<ItemsDto>> item = new HashMap<>();
 		List<FavouritesEntity> itemEntities = viewall();
 		if (Objects.nonNull(itemEntities)) {
 			for (int i = 0; i < itemEntities.size(); i++) {
-				String userEmail = mapper.userDetailDtoMapper(itemEntities.get(i).getUserId()).getUserEmail();
+				UUID userId = mapper.userDetailDtoMapper(itemEntities.get(i).getUserId()).getUserId();
 				ItemsDto itemsDto = mapper.itemDtoMapperById(itemEntities.get(i).getItemId());
-				if (checkandgetlistWithUserId(userEmail).isEmpty()) {
-					item.put(userEmail, Arrays.asList(itemsDto));
+				if (checkandgetlistWithUserId(userId).isEmpty()) {
+					item.put(userId, Arrays.asList(itemsDto));
 				} else {
-					List<ItemsDto> dtos = checkandgetlistWithUserId(userEmail);
+					List<ItemsDto> dtos = checkandgetlistWithUserId(userId);
 					dtos.add(itemsDto);
-					item.put(userEmail, dtos);
-					item.get(userEmail).remove(itemsDto);
+					item.put(userId, dtos);
+					item.get(userId).remove(itemsDto);
 				}
 			}
 			list.add(item);
@@ -129,9 +130,9 @@ public class FavServiceImpl implements FavService {
 		return list;
 	}
 
-	private List<ItemsDto> checkandgetlistWithUserId(String userId) {
+	private List<ItemsDto> checkandgetlistWithUserId(UUID userId) {
 		List<FavouritesEntity> entities = viewall();
-		return entities.stream().filter(a -> a.getUserId().equalsIgnoreCase(userId)).map(a -> {
+		return entities.stream().filter(a -> a.getUserId().equals(userId)).map(a -> {
 			try {
 				return mapper.itemDtoMapperById(a.getItemId());
 			} catch (ItemNotFoundException e) {
@@ -141,7 +142,7 @@ public class FavServiceImpl implements FavService {
 		}).collect(Collectors.toList());
 	}
 
-	public List<List<ItemsDto>> getListofFavItemswithUserId(String userId)
+	public List<List<ItemsDto>> getListofFavItemswithUserId(UUID userId)
 			throws UserNotFoundException, ItemNotFoundException {
 		return viewallMap().stream().map(a -> {
 			if (a.containsKey(userId)) {
@@ -151,5 +152,5 @@ public class FavServiceImpl implements FavService {
 			}
 		}).collect(Collectors.toList());
 	}
-	
+
 }

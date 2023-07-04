@@ -54,7 +54,7 @@ public class OrdersServImpl implements OrderService {
 	public boolean saveOrderByCheckingAddress(OrdersEntity ordersEntity) throws UserNotFoundException {
 		AddressDto addressDto = mapper.mapAddressDtoWithOrdersEntity(ordersEntity);
 		Optional<AddressEntity> entity = addressService.getAddressWithUserIdandAddress(
-				addressDto.getUserDetails().getUserEmail(), addressDto.getDeliveryAddress());
+				addressDto.getUserDetails().getUserId(), addressDto.getDeliveryAddress());
 		if (!entity.isEmpty()) {
 			return Boolean.TRUE;
 		}
@@ -165,8 +165,8 @@ public class OrdersServImpl implements OrderService {
 	}
 
 	@Override
-	public List<OrdersDto> getOrdersofUser(String userId) {
-		List<OrdersEntity> ordersEntities = getAllOrders().stream().filter(a -> a.getUserId().equalsIgnoreCase(userId))
+	public List<OrdersDto> getOrdersofUser(UUID userId) {
+		List<OrdersEntity> ordersEntities = getAllOrders().stream().filter(a -> a.getUserId().equals(userId))
 				.sorted(Comparator.comparing(OrdersEntity::getOrderedAt, Comparator.reverseOrder()))
 				.sorted(Comparator.comparing(OrdersEntity::getOrderedOn, Comparator.reverseOrder()))
 				.collect(Collectors.toList());

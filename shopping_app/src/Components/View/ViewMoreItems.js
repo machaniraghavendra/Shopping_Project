@@ -60,7 +60,7 @@ export default function ViewMoreItems(props) {
     }
 
     const currentuser = () => {
-        axios.get("http://localhost:8083/user/" + props.user).then(res => {
+        axios.get("http://localhost:8083/user/userid/" + props.user).then(res => {
             if (res.status == "200") {
                 setfetchDone(true)
             }
@@ -215,7 +215,7 @@ export default function ViewMoreItems(props) {
                                                 <div className="card " data-aos="fade-up" >
                                                     <div className='card-header justify-content-end text-end'>
                                                         <button className='btn  m-2' onClick={() => {
-                                                            if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                            if ( localStorage.getItem("currentuser")) {
                                                                 axios.post("http://localhost:8083/cart/", {
                                                                     "itemId": e.itemId,
                                                                     "userId": localStorage.getItem("currentuser")
@@ -234,7 +234,7 @@ export default function ViewMoreItems(props) {
                                                         }}
                                                         ><i className='fa-solid fa-cart-shopping text-info'></i></button>
                                                         <button className='btn ' onClick={() => {
-                                                            if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                            if ( localStorage.getItem("currentuser")) {
                                                                 axios.post("http://localhost:8083/fav/", {
                                                                     "itemId": e.itemId,
                                                                     "userId": localStorage.getItem("currentuser")
