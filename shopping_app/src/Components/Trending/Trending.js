@@ -53,7 +53,7 @@ export default function Trending() {
     }
 
     const cartAdd = (id) => {
-        if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+        if ( localStorage.getItem("currentuser")) {
             axios.post("http://localhost:8083/cart/", {
                 "itemId": id,
                 "userId": localStorage.getItem("currentuser")
@@ -71,7 +71,7 @@ export default function Trending() {
     }
 
     const favAdd = (id) => {
-        if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+        if ( localStorage.getItem("currentuser")) {
             axios.post("http://localhost:8083/fav/", {
                 "itemId": id,
                 "userId": localStorage.getItem("currentuser")

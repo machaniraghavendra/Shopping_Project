@@ -49,8 +49,8 @@ export default function Login(props) {
                 axios.get("http://localhost:8083/user/" + user.userEmail + "/" + user.userPassword)
                     .then(res => {
                         if (res.data) {
-                            { localStorage.setItem("Raghu", "raghu"); localStorage.setItem("currentuser", userName.userEmail) };
-                            if (localStorage.getItem("Raghu")) {
+                            {  localStorage.setItem("currentuser", userName.userId) };
+                            if (localStorage.getItem("currentuser")) {
                                 return (setInfo(""),
                                     setShowToast(true), timeout(),
                                     axios.get("http://localhost:8083/user/id/" + props.user).then(res => { return (setWhat(true)) })
@@ -130,13 +130,13 @@ export default function Login(props) {
 
     useEffect(() => {
         document.title = "Login | Shopping Mart"
-        if (localStorage.getItem("currentuser") && localStorage.getItem("Raghu")) {
+        if (localStorage.getItem("currentuser")) {
             nav("/mart")
         }
     }, [])
 
 
-    if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+    if ( localStorage.getItem("currentuser")) {
         return (
             <section className="vh-100 py-5 position-absolute" style={{ backgroundColor: "BLACK", width: "100%", height: "100%" }}>
                 <div className='container-fluid justify-content-center text-center text-light'>

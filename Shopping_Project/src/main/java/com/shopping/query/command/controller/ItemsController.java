@@ -2,6 +2,8 @@ package com.shopping.query.command.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,6 +38,7 @@ public class ItemsController {
 
 	@PostMapping("/")
 	public ResponseEntity<String> save(@RequestBody ItemEntity itemEntity) throws ItemAlreadyException {
+		itemEntity.setItemId(viewall().getBody() == null ? 1 : viewall().getBody().size() + 2);
 		return new ResponseEntity<>(itemService.save(itemEntity), HttpStatus.OK);
 	}
 
@@ -70,7 +73,7 @@ public class ItemsController {
 	}
 
 	@GetMapping("/type")
-	public ResponseEntity<List<ItemsDto>> getbygetItemsByType(@RequestParam("type") String type) {
+	public ResponseEntity<List<ItemsDto>> getItemsByType(@RequestParam("type") String type) {
 		return new ResponseEntity<>(itemService.getItemsByType(type), HttpStatus.OK);
 	}
 
@@ -80,13 +83,13 @@ public class ItemsController {
 	}
 
 	@PostMapping("/history")
-	public ResponseEntity<Map<String, List<ItemsDto>>> viewedHistory(@RequestParam("user") String user,
+	public ResponseEntity<Map<UUID, List<ItemsDto>>> viewedHistory(@RequestParam("userId") UUID userId,
 			@RequestParam("id") int id) throws ItemNotFoundException {
-		return new ResponseEntity<>(itemService.viewedHistory(user, id), HttpStatus.OK);
+		return new ResponseEntity<>(itemService.viewedHistory(userId, id), HttpStatus.OK);
 	}
 
 	@GetMapping("/historyget")
-	public ResponseEntity<List<ItemsDto>> getHistory(@RequestParam("user") String user) throws ItemNotFoundException {
-		return new ResponseEntity<>(itemService.getViewedHistory(user), HttpStatus.OK);
+	public ResponseEntity<List<ItemsDto>> getHistory(@RequestParam("userId") UUID userId) throws ItemNotFoundException {
+		return new ResponseEntity<>(itemService.getViewedHistory(userId), HttpStatus.OK);
 	}
 }

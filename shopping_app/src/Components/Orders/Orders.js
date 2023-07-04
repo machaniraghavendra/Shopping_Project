@@ -68,7 +68,7 @@ export default function Orders(props) {
         sessionStorage.getItem("dark") === "true" ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
             : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
         document.title = "Orders | Shopping Mart"
-        axios.get("http://localhost:8083/user/" + props.user).then(a => { return (setUser(a.data)) }).catch((error) => {
+        axios.get("http://localhost:8083/user/userid/" + props.user).then(a => { return (setUser(a.data)) }).catch((error) => {
             setError(true);
             if (error.response.data === undefined) {
                 setErrorMessage("Something went wrong")

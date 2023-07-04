@@ -50,7 +50,7 @@ export default function Buypage(props) {
             validate(e)
         } else {
             axios.post("http://localhost:8083/orders/", {
-                "userId": user.userEmail,
+                "userId": props.user,
                 "itemId": itemId,
                 "firstName": details.firstName,
                 "lastName": details.lastName,
@@ -125,7 +125,7 @@ export default function Buypage(props) {
 
     const checkAddress = () => {
         axios.post("http://localhost:8083/orders/check/", {
-            "userId": user.userEmail,
+            "userId": props.user,
             "itemId": 1,
             "firstName": details.firstName,
             "lastName": details.lastName,
@@ -153,7 +153,7 @@ export default function Buypage(props) {
     }
 
     const fetchUser = () => {
-        axios.get("http://localhost:8083/user/" + props.user).then(a => {
+        axios.get("http://localhost:8083/user/userid/" + props.user).then(a => {
             if (a.status == "200") {
                 getItem();
                 setfetchDone(true);
@@ -313,7 +313,7 @@ export default function Buypage(props) {
                                         <div className="card-body">
                                             <div className="row">
                                                 <div className="col-md-6">
-                                                    {itemData.itemSpec != null || itemData.itemSpec != "" && <p>Specifications :  {itemData.itemSpec}</p>}
+                                                    {itemData.itemSpec != null || itemData.itemSpec != "" ? <p>Specifications :  {itemData.itemSpec}</p> : "Not mentioned"}
                                                     {itemData.itemDimensions != null || itemData.itemDimensions != "" && <p>Dimensions :  {itemData.itemDimensions}</p>}
                                                     <p>Description : {itemData.itemDesc == null ? "Not mentioned" : itemData.itemDesc}</p>
                                                     <p>Product type : {itemData.itemType == null ? "Not mentioned" : itemData.itemType}</p>

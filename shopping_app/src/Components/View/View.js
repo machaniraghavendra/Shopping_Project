@@ -68,7 +68,7 @@ export default function View(props) {
     }
 
     const getInterests = () => {
-        axios.get("http://localhost:8083/items/historyget?user=" + props.user).then(res => {
+        axios.get("http://localhost:8083/items/historyget?userId=" + props.user).then(res => {
             if (res.status == "200") {
                 setInterestedItems(res.data)
             }
@@ -83,7 +83,7 @@ export default function View(props) {
     }
 
     const addIntoInterest = (id) => {
-        axios.post("http://localhost:8083/items/history?user=" + localStorage.getItem("currentuser") + "&id=" + id)
+        axios.post("http://localhost:8083/items/history?userId=" + localStorage.getItem("currentuser") + "&id=" + id)
             .catch((error) => {
                 setError(true);
                 if (error.response.data === undefined) {
@@ -143,7 +143,7 @@ export default function View(props) {
         check();
         sessionStorage.getItem("dark") === "true" ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
             : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
-        axios.get("http://localhost:8083/user/" + props.user).then(a => {
+        axios.get("http://localhost:8083/user/userid/" + props.user).then(a => {
             if (a.status == "200") {
                 setfetchUserDone(true)
             }
@@ -217,7 +217,7 @@ export default function View(props) {
                                 <div className="col-lg-8 my-3" id='right-view'>
                                     <div className='text-end'>
                                         <button className='btn  m-2' onClick={() => {
-                                            if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                            if ( localStorage.getItem("currentuser")) {
                                                 axios.post("http://localhost:8083/cart/", {
                                                     "itemId": item.itemId,
                                                     "userId": localStorage.getItem("currentuser")
@@ -236,7 +236,7 @@ export default function View(props) {
                                         ><i className='fa-solid fa-cart-shopping text-info'></i></button>
 
                                         <button className='btn ' onClick={() => {
-                                            if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                            if ( localStorage.getItem("currentuser")) {
                                                 axios.post("http://localhost:8083/fav/", {
                                                     "itemId": item.itemId,
                                                     "userId": localStorage.getItem("currentuser")
@@ -328,7 +328,7 @@ export default function View(props) {
                                             <div className="card view-more-card">
                                                 <div className='card-head text-end'>
                                                     <button className='btn  m-2' onClick={() => {
-                                                        if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                        if ( localStorage.getItem("currentuser")) {
                                                             axios.post("http://localhost:8083/cart/", {
                                                                 "itemId": a.itemId,
                                                                 "userId": localStorage.getItem("currentuser")
@@ -346,7 +346,7 @@ export default function View(props) {
                                                     }}
                                                     ><i className='fa-solid fa-cart-shopping text-info'></i></button>
                                                     <button className='btn ' onClick={() => {
-                                                        if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                        if ( localStorage.getItem("currentuser")) {
                                                             axios.post("http://localhost:8083/fav/", {
                                                                 "itemId": a.itemId,
                                                                 "userId": localStorage.getItem("currentuser")
@@ -490,7 +490,7 @@ export default function View(props) {
                 <h3 className='view p-2'>Your Interests </h3>
                 {fetchItemDone ?
                     <div className='container'>
-                        <div className="row row-card row-cols-2 row-cols-md-4 g-4 align-content-center text-center my-3" id="viewsimilarscroll">
+                        <div className="row row-card row-cols-2 row-cols-md-4 g-4 align-content-center justify-content-center text-center my-3" id="viewsimilarscroll">
                             {interesteditems.length != 0 ?
                                 interesteditems
                                     .filter(a => {
@@ -504,7 +504,7 @@ export default function View(props) {
                                                 <div className="card view-more-card">
                                                     <div className='card-head text-end'>
                                                         <button className='btn  m-2' onClick={() => {
-                                                            if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                            if ( localStorage.getItem("currentuser")) {
                                                                 axios.post("http://localhost:8083/cart/", {
                                                                     "itemId": a.itemId,
                                                                     "userId": localStorage.getItem("currentuser")
@@ -522,7 +522,7 @@ export default function View(props) {
                                                         }}
                                                         ><i className='fa-solid fa-cart-shopping text-info'></i></button>
                                                         <button className='btn ' onClick={() => {
-                                                            if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                            if ( localStorage.getItem("currentuser")) {
                                                                 axios.post("http://localhost:8083/fav/", {
                                                                     "itemId": a.itemId,
                                                                     "userId": localStorage.getItem("currentuser")

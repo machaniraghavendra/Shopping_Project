@@ -1,5 +1,6 @@
 package com.shopping.query.command.service.implementation;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,7 @@ public class ItemServiceImpl implements ItemService {
 
 	private MappersClass mappersClass = new MappersClass();
 
-	private Map<String, List<ItemsDto>> history = new HashMap<>();
+	private Map<UUID, List<ItemsDto>> history = new HashMap<>();
 
 	@Override
 	public String save(ItemEntity itemEntity) throws ItemAlreadyException {
@@ -41,6 +43,8 @@ public class ItemServiceImpl implements ItemService {
 			if (itemsRepo.existsById(itemEntity.getItemId()))
 				throw new ItemAlreadyException("The item " + itemEntity.getItemName() + " already there");
 			else {
+				itemEntity.setItemPrice(String.format("%,.2f", Double.valueOf(itemEntity.getItemPrice())));
+				itemEntity.setItemAddedOn(LocalDateTime.now());
 				itemsRepo.save(itemEntity);
 				return "Added !";
 			}
@@ -57,6 +61,7 @@ public class ItemServiceImpl implements ItemService {
 				throw new ItemNotFoundException("The item " + itemEntity.getItemName() + " not exists");
 			else {
 				if ((getTrendingItems().isEmpty() || getTrendingItems().size() < 9) || !itemEntity.isTrending()) {
+					itemEntity.setItemUpdatedOn(LocalDateTime.now());
 					itemsRepo.save(itemEntity);
 					return "Updated !";
 				}
@@ -100,7 +105,17 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public List<ItemEntity> viewall() {
-		return itemsRepo.findAll();
+		List<ItemEntity> listToShow = new ArrayList<>();
+		var listOfItems = itemsRepo.findAll();
+		listToShow.addAll(listOfItems.stream().filter(item -> Objects.nonNull(item.getItemAddedOn()))
+				.sorted(Comparator.comparing(ItemEntity::getItemName, Comparator.reverseOrder()))
+				.sorted(Comparator.comparing(ItemEntity::getItemAddedOn, Comparator.reverseOrder()))
+				.sorted(Comparator.comparing(ItemEntity::isTrending, Comparator.reverseOrder())).toList());
+		listToShow.addAll(listOfItems.stream().filter(item -> Objects.nonNull(item.getItemUpdatedOn()))
+				.sorted(Comparator.comparing(ItemEntity::getItemName, Comparator.reverseOrder()))
+				.sorted(Comparator.comparing(ItemEntity::getItemUpdatedOn, Comparator.reverseOrder()))
+				.sorted(Comparator.comparing(ItemEntity::isTrending, Comparator.reverseOrder())).toList());
+		return listToShow;
 	}
 
 	@Override
@@ -113,10 +128,11 @@ public class ItemServiceImpl implements ItemService {
 				if (itemsRepo.existsById(item.getItemId()))
 					throw new ItemAlreadyException("Already exists in data");
 				else {
-					itemsRepo.saveAll(itemEntity);
-					return "Saved list of Items";
+					item.setItemAddedOn(LocalDateTime.now());
+					itemsRepo.save(item);
 				}
 			}
+			return "Saved list of Items";
 		} catch (ItemAlreadyException e) {
 			e.printStackTrace();
 		}
@@ -163,26 +179,24 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public Map<String, List<ItemsDto>> viewedHistory(String userEmail, int itemId) throws ItemNotFoundException {
+	public Map<UUID, List<ItemsDto>> viewedHistory(UUID userId, int itemId) throws ItemNotFoundException {
 		List<ItemsDto> items = new ArrayList<>();
-		if (!(userEmail.isEmpty() && Objects.isNull(userEmail)) && itemId > 0) {
-			if (history.isEmpty() || !history.containsKey(userEmail)) {
+		if (!(Objects.isNull(userId)) && itemId > 0) {
+			if (history.isEmpty() || !history.containsKey(userId)) {
 				items.add(mappersClass.itemDtoMapperByEntity((ItemEntity) find(itemId).get(0)));
-				history.put(userEmail, items);
+				history.put(userId, items);
 			} else {
-				if (!history.get(userEmail).isEmpty()) {
-					if (history.get(userEmail).size() < 5) {
-						if (!history.get(userEmail)
-								.contains(mappersClass.itemDtoMapperByEntity((ItemEntity) find(itemId).get(0)))) {
-							history.get(userEmail)
-									.add(mappersClass.itemDtoMapperByEntity((ItemEntity) find(itemId).get(0)));
+				List<ItemsDto> itemsDtos = history.get(userId);
+				ItemsDto dto = mappersClass.itemDtoMapperByEntity((ItemEntity) find(itemId).get(0));
+				if (!itemsDtos.isEmpty()) {
+					if (itemsDtos.size() < 4) {
+						if (!itemsDtos.contains(dto)) {
+							itemsDtos.add(dto);
 						}
 					} else {
-						if (!history.get(userEmail)
-								.contains(mappersClass.itemDtoMapperByEntity((ItemEntity) find(itemId).get(0)))) {
-							history.get(userEmail).remove(0);
-							history.get(userEmail)
-									.add(mappersClass.itemDtoMapperByEntity((ItemEntity) find(itemId).get(0)));
+						if (!itemsDtos.contains(dto)) {
+							itemsDtos.remove(0);
+							itemsDtos.add(dto);
 						}
 					}
 				}
@@ -192,15 +206,15 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<ItemsDto> getViewedHistory(String userEmail) {
-		if (history.isEmpty() && userEmail.isEmpty()) {
+	public List<ItemsDto> getViewedHistory(UUID userId) {
+		if (history.isEmpty() && Objects.isNull(userId)) {
 			return Collections.emptyList();
 		} else {
-			if (history.containsKey(userEmail)) {
-				if (history.get(userEmail).isEmpty()) {
+			if (history.containsKey(userId)) {
+				if (history.get(userId).isEmpty()) {
 					return Collections.emptyList();
 				} else {
-					return history.get(userEmail).stream()
+					return history.get(userId).stream()
 							.sorted(Comparator.comparing(ItemsDto::getItemPrice, Comparator.reverseOrder()))
 							.collect(Collectors.toList());
 				}

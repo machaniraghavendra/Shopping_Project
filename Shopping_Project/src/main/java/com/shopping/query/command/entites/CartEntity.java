@@ -1,5 +1,7 @@
 package com.shopping.query.command.entites;
 
+import java.util.UUID;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,6 +26,6 @@ public class CartEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int cartId;
 	private int ItemId;
-	private String userId;
+	private UUID userId;
 
 }

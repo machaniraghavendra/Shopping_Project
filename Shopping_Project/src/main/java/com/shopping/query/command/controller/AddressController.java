@@ -1,6 +1,7 @@
 package com.shopping.query.command.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class AddressController {
 	}
 	
 	@DeleteMapping("/{userId}/{address}")
-	public ResponseEntity<String> deleteAddressWithUserIdAndAddress(@PathVariable String userId, @PathVariable String address) {
+	public ResponseEntity<String> deleteAddressWithUserIdAndAddress(@PathVariable UUID userId, @PathVariable String address) {
 		return ResponseEntity.ok(service.deleteAddressWithUserIdAndAddress(userId,address));
 	}
 
@@ -63,12 +64,12 @@ public class AddressController {
 	}
 
 	@GetMapping("/user/{id}")
-	public ResponseEntity<List<AddressDto>> viewAllAddressWithUserId(@PathVariable String id) {
+	public ResponseEntity<List<AddressDto>> viewAllAddressWithUserId(@PathVariable UUID id) {
 		return ResponseEntity.ok(service.viewAllAddressWithUserId(id));
 	}
 
 	@GetMapping("/{id}/{address}")
-	public ResponseEntity<AddressDto> findAddressWithUserId(@PathVariable String id, @PathVariable String address) {
+	public ResponseEntity<AddressDto> findAddressWithUserId(@PathVariable UUID id, @PathVariable String address) {
 		return ResponseEntity.ok(service.findAddressWithUserId(id, address));
 	}
 }

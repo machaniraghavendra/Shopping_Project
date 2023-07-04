@@ -1,6 +1,7 @@
 package com.shopping.query.command.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.query.command.entites.UserEntity;
@@ -39,29 +41,35 @@ public class UserController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable("id") String userEmail) throws UserNotFoundException {
-		return ResponseEntity.ok(userServiceImpl.delete(userEmail));
+	public ResponseEntity<String> delete(@PathVariable("id") String userId) throws UserNotFoundException {
+		return ResponseEntity.ok(userServiceImpl.delete(userId));
 	}
 
-	@GetMapping("/{id}")
-	public ResponseEntity<UserDetailDto> find(@PathVariable("id") String userEmail) throws UserNotFoundException {
+	@GetMapping("/{userEmail}")
+	public ResponseEntity<UserDetailDto> find(@PathVariable("userEmail") String userEmail)
+			throws UserNotFoundException {
 		return ResponseEntity.ok(userServiceImpl.find(userEmail));
+	}
+
+	@GetMapping("/userid/{userId}")
+	public ResponseEntity<UserDetailDto> find(@PathVariable("userId") UUID userId) throws UserNotFoundException {
+		return ResponseEntity.ok(userServiceImpl.getUserWithId(userId));
 	}
 
 	@GetMapping("/")
 	public ResponseEntity<List<UserEntity>> findall() {
 		return ResponseEntity.ok(userServiceImpl.findall());
 	}
-	
-	@GetMapping("/theme/{useremail}")
-	public ResponseEntity<Boolean> getTheme(@PathVariable("useremail") String userEmail) {
-		return ResponseEntity.ok(userServiceImpl.getTheme(userEmail));
-	}
 
 	@GetMapping("/{useremail}/{password}")
 	public ResponseEntity<Boolean> check(@PathVariable("useremail") String userEmail,
 			@PathVariable("password") String userPassword) {
 		return ResponseEntity.ok(userServiceImpl.check(userEmail, userPassword));
+	}
+	
+	@GetMapping("/admin/userid")
+	public ResponseEntity<Boolean> checkIsAdmin(@RequestParam("userId") UUID userId) throws UserNotFoundException {
+		return ResponseEntity.ok(userServiceImpl.checkIsAdmin(userId));
 	}
 
 }

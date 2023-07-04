@@ -55,7 +55,7 @@ export default function Mobiles() {
 
                                             <div className='card-header justify-content-end text-end'>
                                                 <button className='btn  m-2' onClick={() => {
-                                                    if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                    if ( localStorage.getItem("currentuser")) {
                                                         axios.post("http://localhost:8083/cart/", {
                                                             "itemId": e.itemId,
                                                             "userId": localStorage.getItem("currentuser")
@@ -73,7 +73,7 @@ export default function Mobiles() {
                                                 }}
                                                 ><i className='fa-solid fa-cart-shopping text-info'></i></button>
                                                 <button className='btn ' onClick={() => {
-                                                    if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                    if ( localStorage.getItem("currentuser")) {
                                                         axios.post("http://localhost:8083/fav/", {
                                                             "itemId": e.itemId,
                                                             "userId": localStorage.getItem("currentuser")

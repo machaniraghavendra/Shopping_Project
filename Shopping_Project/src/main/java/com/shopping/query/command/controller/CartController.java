@@ -2,6 +2,7 @@ package com.shopping.query.command.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -46,9 +47,9 @@ public class CartController {
 	}
 
 	@DeleteMapping("/{itemName}")
-	public ResponseEntity<String> delete(@PathVariable("itemName") String itemName, @RequestParam String userEmail)
+	public ResponseEntity<String> delete(@PathVariable("itemName") String itemName, @RequestParam UUID userId)
 			throws ItemNotFoundInCartException, ItemNotFoundException {
-		return ResponseEntity.ok(cartServiceImpl.delete(itemName, userEmail));
+		return ResponseEntity.ok(cartServiceImpl.delete(itemName, userId));
 	}
 
 	@GetMapping("/{id}")
@@ -58,13 +59,13 @@ public class CartController {
 	}
 
 	@GetMapping("/map")
-	public ResponseEntity<List<Map<String, List<ItemsDto>>>> viewallMap()
+	public ResponseEntity<List<Map<UUID, List<ItemsDto>>>> viewallMap()
 			throws UserNotFoundException, ItemNotFoundException {
 		return ResponseEntity.ok(cartServiceImpl.viewallMap());
 	}
 
 	@GetMapping("/userId/{userid}")
-	public ResponseEntity<List<List<ItemsDto>>> getListofCartItemswithUserId(@PathVariable("userid") String userid)
+	public ResponseEntity<List<List<ItemsDto>>> getListofCartItemswithUserId(@PathVariable("userid") UUID userid)
 			throws UserNotFoundException, ItemNotFoundException {
 		return ResponseEntity.ok(cartServiceImpl.getListofCartItemswithUserId(userid));
 	}

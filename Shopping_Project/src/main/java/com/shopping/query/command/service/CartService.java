@@ -2,6 +2,7 @@ package com.shopping.query.command.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import com.shopping.query.command.entites.CartEntity;
 import com.shopping.query.command.entites.dto.CartDto;
@@ -17,14 +18,14 @@ public interface CartService {
 
 	String update(CartEntity cartEntity) throws ItemNotFoundInCartException, ItemNotFoundException;
 
-	String delete(String itemName, String userEmail) throws ItemNotFoundInCartException, ItemNotFoundException;
+	String delete(String itemName, UUID userEmail) throws ItemNotFoundInCartException, ItemNotFoundException;
 
 	CartDto find(int cartId) throws ItemNotFoundInCartException, UserNotFoundException, ItemNotFoundException;
 
 	List<CartEntity> viewall();
 
-	List<Map<String, List<ItemsDto>>> viewallMap() throws UserNotFoundException, ItemNotFoundException;
+	List<Map<UUID, List<ItemsDto>>> viewallMap() throws UserNotFoundException, ItemNotFoundException;
 
-	List<List<ItemsDto>> getListofCartItemswithUserId(String userId)
+	List<List<ItemsDto>> getListofCartItemswithUserId(UUID userId)
 			throws UserNotFoundException, ItemNotFoundException;
 }

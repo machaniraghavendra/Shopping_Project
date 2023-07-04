@@ -1,6 +1,7 @@
 package com.shopping.query.command.entites;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Entity
 @Builder
@@ -23,10 +25,13 @@ public class UserEntity implements Serializable {
 	protected static final String TABLE_NAME = "USER_STORY";
 	@Id
 	private String userEmail;
+	@Column(columnDefinition = "Text")
+	private UUID userId;
 	private String userName;
+	@NonNull
 	private String userPassword;
 	private String mobileNumber;
 	@Column(length = 23000)
 	private String profileImgUrl;
-	private boolean darkModeEnabled;
+	private boolean admin;
 }

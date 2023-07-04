@@ -98,7 +98,7 @@ export default function Cartpage(props) {
             : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
         window.onscroll = () => check();
         document.title = "Cart | Shopping Mart"
-        axios.get("http://localhost:8083/user/" + props.user).then(a => {
+        axios.get("http://localhost:8083/user/userid/" + props.user).then(a => {
             return (setUser(a.data))
         }).catch((error) => {
             setError(true);
@@ -249,7 +249,7 @@ export default function Cartpage(props) {
                                                                 }}
                                                                 ><i className='fa-solid fa-trash text-danger'></i></button>
                                                                 <button className='btn ' onClick={() => {
-                                                                    if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                                    if ( localStorage.getItem("currentuser")) {
                                                                         axios.post("http://localhost:8083/fav/", {
                                                                             "itemId": e.itemId,
                                                                             "userId": localStorage.getItem("currentuser")
@@ -445,7 +445,7 @@ export default function Cartpage(props) {
                                                                         data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-whatever="@mdo"
                                                                     ><i className='fa-solid fa-trash text-danger'></i></button>
                                                                     <button className='btn ' onClick={() => {
-                                                                        if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                                        if ( localStorage.getItem("currentuser")) {
                                                                             axios.post("http://localhost:8083/fav/", {
                                                                                 "itemId": e.itemId,
                                                                                 "userId": localStorage.getItem("currentuser")

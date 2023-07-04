@@ -34,9 +34,11 @@ export default function ForgotPass(props) {
                             axios.put("http://localhost:8083/user/", {
                                 "userEmail": values.userEmail,
                                 "userPassword": values.userPassword,
+                                "profileImgUrl":res.data.profileImgUrl,
                                 "userName": res.data.userName,
                                 "mobileNumber": res.data.mobileNumber,
-                                "userId": res.data.userId
+                                "userId": res.data.userId,
+                                "admin":res.data.admin
                             })
                                 .then(res => {
                                     return (setInfo(res.data), setIsSubmit(false), setShowToast(true), timeout())

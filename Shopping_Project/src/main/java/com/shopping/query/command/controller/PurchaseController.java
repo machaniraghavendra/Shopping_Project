@@ -1,5 +1,7 @@
 package com.shopping.query.command.controller;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,12 +27,12 @@ public class PurchaseController {
 	private PurchaseService purchaseImpl;
 
 	@PostMapping("/{itemId}")
-	public void purchaseItem(@RequestParam String userId,@PathVariable int itemId) throws ItemNotFoundException {
+	public void purchaseItem(@RequestParam UUID userId,@PathVariable int itemId) throws ItemNotFoundException {
 		purchaseImpl.buyNow(userId,itemId);
 	}
 
 	@GetMapping("/")
-	public ResponseEntity<Object> getItem(@RequestParam String userId) {
+	public ResponseEntity<Object> getItem(@RequestParam UUID userId) {
 		return ResponseEntity.ok(purchaseImpl.getItem(userId));
 	}
 }

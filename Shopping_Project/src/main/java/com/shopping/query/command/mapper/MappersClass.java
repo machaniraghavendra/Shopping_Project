@@ -1,16 +1,17 @@
 package com.shopping.query.command.mapper;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.shopping.query.command.entites.OrdersEntity;
 import com.shopping.query.command.entites.AddressEntity;
 import com.shopping.query.command.entites.ItemEntity;
-import com.shopping.query.command.entites.dto.OrdersDto;
+import com.shopping.query.command.entites.OrdersEntity;
 import com.shopping.query.command.entites.dto.AddressDto;
 import com.shopping.query.command.entites.dto.ItemsDto;
+import com.shopping.query.command.entites.dto.OrdersDto;
 import com.shopping.query.command.entites.dto.UserDetailDto;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
@@ -26,8 +27,8 @@ public class MappersClass {
 	@Autowired
 	private ItemServiceImpl itemServiceImpl;
 
-	public UserDetailDto userDetailDtoMapper(String userEmail) throws UserNotFoundException {
-		UserDetailDto userEntity = userService.find(userEmail);
+	public UserDetailDto userDetailDtoMapper(UUID userId) throws UserNotFoundException {
+		UserDetailDto userEntity = userService.getUserWithId(userId);
 		if (Objects.isNull(userEntity))
 			return new UserDetailDto();
 		return userEntity;

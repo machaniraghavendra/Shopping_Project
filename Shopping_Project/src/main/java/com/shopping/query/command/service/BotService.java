@@ -8,8 +8,12 @@ import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
 
 public interface BotService {
+	
 	void queryReponse(BotEntity incomeBot) throws UserNotFoundException, ItemNotFoundException;
-	void listClear(String userEmail) ;
+	
+	void listClear(UUID userEmail) ;
+	
 	List<BotEntity> viewAllResponse() ;
+	
 	String getOrderDetailsWithUUID(UUID id) throws ItemNotFoundException;
 }

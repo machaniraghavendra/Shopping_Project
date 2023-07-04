@@ -27,7 +27,7 @@ public class OrdersEntity {
 	@GeneratedValue (strategy = GenerationType.AUTO)
 	private Integer orderId;
 	@NonNull
-	private String userId;
+	private UUID userId;
 	@NonNull
 	private Integer itemId;
 	@NonNull

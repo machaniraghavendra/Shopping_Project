@@ -75,12 +75,12 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(value=UserNotFoundException.class)
 	public ResponseEntity<String> usernotfoundexception(UserNotFoundException e){
-		return new ResponseEntity<String>("User not exists ",HttpStatus.OK);
+		return new ResponseEntity<>("User not exists ",HttpStatus.OK);
 	}
 	
 	@ExceptionHandler(value=UserAlreadyExistsException.class)
 	public ResponseEntity<String> useralreadyexception(UserAlreadyExistsException e){
-		return new ResponseEntity<String>("User already exists ",HttpStatus.OK);
+		return new ResponseEntity<>("User already exists ",HttpStatus.OK);
 	}
 
 	@ExceptionHandler(value = AddressAlreadyExistsException.class)

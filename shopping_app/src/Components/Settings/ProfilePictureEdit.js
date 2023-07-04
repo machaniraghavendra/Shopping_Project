@@ -22,7 +22,8 @@ export default function ProfilePictureEdit(props) {
 
     const updateImgUrl = () => {
         axios.put("http://localhost:8083/user/", {
-            "userEmail": localStorage.getItem("currentuser"),
+            "userEmail": user.userEmail,
+            "userId": localStorage.getItem("currentuser"),
             "userName": user.userName,
             "mobileNumber": user.mobileNumber,
             "profileImgUrl": store

@@ -80,7 +80,7 @@ export default function Shirts() {
                                                     <div className="card" data-aos="zoom-in-right">
                                                         <div className='card-header justify-content-end text-end'>
                                                             <button className='btn  m-2' onClick={() => {
-                                                                if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                                if ( localStorage.getItem("currentuser")) {
                                                                     axios.post("http://localhost:8083/cart/", {
                                                                         "itemId": e.itemId,
                                                                         "userId": localStorage.getItem("currentuser")
@@ -98,7 +98,7 @@ export default function Shirts() {
                                                             }}
                                                             ><i className='fa-solid fa-cart-shopping text-info'></i></button>
                                                             <button className='btn ' onClick={() => {
-                                                                if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                                if ( localStorage.getItem("currentuser")) {
                                                                     axios.post("http://localhost:8083/fav/", {
                                                                         "itemId": e.itemId,
                                                                         "userId": localStorage.getItem("currentuser")
@@ -148,7 +148,7 @@ export default function Shirts() {
                                                     <div className="card" data-aos="zoom-in-right">
                                                         <div className='card-header justify-content-end text-end'>
                                                             <button className='btn  m-2' onClick={() => {
-                                                                if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                                if ( localStorage.getItem("currentuser")) {
                                                                     axios.post("http://localhost:8083/cart/", {
                                                                         "itemId": e.itemId,
                                                                         "userId": localStorage.getItem("currentuser")
@@ -166,7 +166,7 @@ export default function Shirts() {
                                                             }}
                                                             ><i className='fa-solid fa-cart-shopping text-info'></i></button>
                                                             <button className='btn' onClick={() => {
-                                                                if (localStorage.getItem("Raghu") && localStorage.getItem("currentuser")) {
+                                                                if ( localStorage.getItem("currentuser")) {
                                                                     axios.post("http://localhost:8083/fav/", {
                                                                         "itemId": e.itemId,
                                                                         "userId": localStorage.getItem("currentuser")
@@ -189,7 +189,7 @@ export default function Shirts() {
                                                             <h6 className="card-title text-truncate" id={e.itemName}>{e.itemName}</h6>
                                                             <p className="card-text"><b>Price : </b> ₹{e.itemPrice}</p>
                                                         </div>
-                                                        <Link to={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info'>View More...</Link>
+                                                        <Link to={'/view/' + e.itemId + "/" + e.itemName} className='btn btn-info' onClick={() => { addIntoInterest(e.itemId) }}>View More...</Link>
                                                     </div>
                                                 </div>
                                             )
