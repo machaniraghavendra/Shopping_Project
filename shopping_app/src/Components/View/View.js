@@ -374,7 +374,7 @@ export default function View(props) {
                                                             onClick={() => {
                                                                 addIntoInterest(a.itemId);
                                                                 return (
-                                                                    getItem(true)
+                                                                   window.onload(getItem())
                                                                 )
                                                             }}>View More...</Link>
                                                     </div>
@@ -550,8 +550,8 @@ export default function View(props) {
                                                                 onClick={() => {
                                                                     addIntoInterest(a.itemId);
                                                                     return (
-                                                                        getItem(true)
-                                                                    )
+                                                                        window.onload(getItem())
+                                                                        )
                                                                 }}>View More...</Link>
                                                         </div>
                                                     </div>

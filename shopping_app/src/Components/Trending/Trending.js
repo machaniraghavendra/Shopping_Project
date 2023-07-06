@@ -111,7 +111,7 @@ export default function Trending() {
         return (fetch())
     }, [])
 
-    if (fetchDone) {
+    if (fetchDone&&trendingItems!=[]) {
         return (
             <div className='container-fluid'>
                 <h2 id='trending' className='dark'>Trending <i className="bi bi-stars"></i></h2>

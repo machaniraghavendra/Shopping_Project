@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import { Link, useNavigate } from "react-router-dom";
 import ErrorPage from "../Error/ErrorPage";
+import ChatBot from '../ChatBot/ChatBot';
 
 export default function UpdateItem(props) {
 
@@ -23,6 +24,8 @@ export default function UpdateItem(props) {
     const [errors, setErrors] = useState({ itemName: "", itemDesc: "", itemImgUrl: "", itemDimensions: "", itemPrice: "", itemSpec: "", itemType: "", trending: false });
 
     const [isSubmit, setIsSubmit] = useState(false);
+
+    const [deleteItemPop, setDeleteItemPop] = useState(false);
 
     const nav = useNavigate();
 
@@ -277,10 +280,13 @@ export default function UpdateItem(props) {
                 <div className="container viewbg text-light py-3 my-2">
                     {item.map(a => {
                         return (
-                            <div className="container-fluid">
+                            <div className="container-fluid" key={a.itemId}>
                                 <h5 className="text-truncate">{itemDetails.itemName}</h5>
+                                <div className="justify-content-center d-flex my-3 d-lg-none">
+                                    <img src={itemDetails.itemImgUrl} width={200} height={200} alt="No image found with URL" />
+                                </div>
                                 <div className="row  p-3">
-                                    <form className="card-color col-12 col-lg-9" onSubmit={(e) => { updateItem(); return (e.preventDefault()) }}>
+                                    <form className="card-color bg-warning col-12 col-lg-9" onSubmit={(e) => { updateItem(); return (e.preventDefault()) }}>
                                         <div className="row text-black" >
                                             <div className='row'>
                                                 <div className="col-md g-4">
@@ -354,7 +360,7 @@ export default function UpdateItem(props) {
                                                 </div>
                                                 <div className="col-md g-4">
                                                     <div className="form-check">
-                                                        <input className="form-check-input" type="checkbox" name="trending" value={!itemDetails.trending}
+                                                        <input className="form-check-input" type="checkbox" name="trending" value={itemDetails.trending}
                                                             onChange={setToItemDetails}
                                                             id="flexCheckDefault" />
                                                         <label className="form-check-label text-light" htmlFor="flexCheckDefault">
@@ -384,18 +390,17 @@ export default function UpdateItem(props) {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className="justify-content-center d-flex m-3 btn-group btn-sm">
+                                        <div className="justify-content-center d-flex m-3 btn-group btn-sm gap-3">
                                             <button className="btn btn-success px-5"> Update</button>
-                                            <button className="btn btn-danger px-5" onClick={() => { deleteItem() }}> Delete item</button>
-
+                                            <button className="btn btn-danger px-5" onClick={() => { setDeleteItemPop(true) }}> Delete item</button>
                                         </div>
                                     </form>
 
                                     <div className="col-12 col-lg-3 py-2">
-                                        <div className="justify-content-center d-flex my-4">
+                                        <div className="justify-content-center d-none my-4 d-lg-flex">
                                             <img src={itemDetails.itemImgUrl} width={200} height={200} alt="No image found with URL" />
                                         </div>
-                                        <h6>Update History : </h6>
+                                        <h6>Last update on this item : </h6>
                                         <p className="px-2">1. {itemDetails.itemUpdatedOn == null ?
                                             itemDetails.itemAddedOn.replaceAll("T", " ").substring(itemDetails.itemAddedOn.indexOf("."), itemDetails.itemAddedOn)
                                             :
@@ -407,6 +412,24 @@ export default function UpdateItem(props) {
                     })
                     }
                 </div>
+
+                <ChatBot />
+                
+                {/* Delete Item */}
+                {deleteItemPop && <>
+                    <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div className="d-flex">
+                            <div className="toast-body text-danger text-center">
+                                <h6>Want to delete item?</h6>
+                                <div className="mt-2 pt-2 btn-group gap-2">
+                                    <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { deleteItem(); setDeleteItemPop(false) }}>Yes</button>
+                                    <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { setDeleteItemPop(false) }}>No</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+                }
 
                 {/* Error pop*/}
                 {error && <>

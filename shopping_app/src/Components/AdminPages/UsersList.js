@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import { Link, useNavigate } from "react-router-dom";
 import ErrorPage from "../Error/ErrorPage";
+import ChatBot from '../ChatBot/ChatBot';
 
 export default function UsersList(props) {
 
@@ -27,6 +28,8 @@ export default function UsersList(props) {
     const [search, setSearch] = useState("");
 
     const [onlyAdmin, setOnlyAdmin] = useState(false);
+
+    let i = 0;
 
     const checkIsAdmin = () => {
         axios.get("http://localhost:8083/user/admin/userid?userId=" + props.user).then(a => { setIsAdmin(a.data); setfetchDone(true) }).catch((error) => {
@@ -81,7 +84,6 @@ export default function UsersList(props) {
         }
     }
 
-    console.log(isAdmin);
     useEffect(() => {
         sessionStorage.getItem("dark") === "true" ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
             : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
@@ -156,15 +158,15 @@ export default function UsersList(props) {
                 </aside>
 
                 <div className="container my-3">
-                    <div className="col-lg-2 col">
-                        <input type='search' className='form-control form-control-sm w-lg-75 w-100 ' id="viewSearchbar" placeholder='Search for Type/Name/Price'
+                    <div className="col-lg-6 col">
+                        <input type='search' className='form-control form-control-sm w-lg-75 w-100 ' id="viewSearchbar" placeholder='Search for Email/Name'
                             onChange={(a) => {
                                 setSearch(a.target.value)
                             }} />
                     </div>
                 </div>
 
-                <div className="container my-3 table-responsive">
+                <div className="container-fluid my-3 table-responsive-lg">
                     <table className="table table-dark table-bordered border-warning table-hover border-0 text-center">
                         <thead>
                             <tr>
@@ -198,11 +200,12 @@ export default function UsersList(props) {
                                         return a
                                     }
                                 })
-                                .map((a, i) => {
+                                .map((a, index) => {
+                                    i++
                                     return (
-                                        <tbody key={i}>
+                                        <tbody key={index}>
                                             <tr >
-                                                <th scope="row">{i + 1}</th>
+                                                <th scope="row">{index + 1}</th>
                                                 <td>{a.profileImgUrl ? <img src={a.profileImgUrl} width="30" height="30" /> : <i className='fa-solid fa-user'></i>}</td>
                                                 <td>{a.userEmail}</td>
                                                 <td>{a.userName}</td>
@@ -259,8 +262,19 @@ export default function UsersList(props) {
                                     <td>  <span className="placeholder col-7"></span></td>
                                 </tr>
                             </tbody>}
+
+                        {i == 0 && <tbody >
+                            <tr className="text-center">
+                                <td colSpan="9" className="h5">
+                                    No User(s) found
+                                </td>
+                            </tr>
+                        </tbody>}
+
                     </table>
                 </div>
+
+                            <ChatBot/>
 
                 {/* Delete pop */}
                 {showDeletePop &&
