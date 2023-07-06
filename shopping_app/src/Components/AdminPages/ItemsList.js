@@ -3,8 +3,10 @@ import { useEffect, useState } from "react";
 import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import { Link, useNavigate } from "react-router-dom";
 import ErrorPage from "../Error/ErrorPage";
+import ChatBot from '../ChatBot/ChatBot';
 
 export default function ItemsList(props) {
+
     const [isAdmin, setIsAdmin] = useState(false);
 
     const [user, setUser] = useState([]);
@@ -34,6 +36,60 @@ export default function ItemsList(props) {
     const [informationPop, setInformationPop] = useState("");
 
     const [sortitems, setSortItems] = useState({ NameSort: false, DescSort: false, SpecSort: false, TypeSort: false, PriceSort: false, TrendingSort: true, DimensionsSort: false })
+
+    const [itemsLimit, setItemsLimit] = useState(10);
+
+    const paginationsAttributes = [];
+
+    const paginationButtons = [];
+
+    const showItemsInPagination = [];
+
+    const nav = useNavigate();
+
+    let pageNumber = Number.parseInt(window.location.href.substring(window.location.href.indexOf("=") + 1))
+
+    let currentPage = 1;
+
+    let prevRange;
+
+    let currRange;
+
+    let i = 0;
+
+    for (let index = 0; index <= Number.parseInt(itemsList.length / itemsLimit); index++) {
+        paginationsAttributes.push(index)
+    }
+
+    // Pagination
+    if (itemsList) {
+        currentPage = pageNumber;
+        prevRange = (pageNumber - 1) * itemsLimit;
+        currRange = (pageNumber) * itemsLimit
+        if (filters || search) {
+            for (let i = 0; i < itemsList.length; i++) {
+                showItemsInPagination.push(itemsList[i])
+            }
+        } else {
+            for (let i = prevRange; i < currRange; i++) {
+                showItemsInPagination.push(itemsList[i]);
+            }
+        }
+
+        if (pageNumber == 1) {
+            paginationButtons.push(pageNumber)
+            paginationButtons.push(pageNumber + 1)
+        }
+        else if (pageNumber == paginationsAttributes[paginationsAttributes.length - 1] + 1) {
+            paginationButtons.push(pageNumber - 1)
+            paginationButtons.push(pageNumber)
+        }
+        else {
+            paginationButtons.push(pageNumber - 1)
+            paginationButtons.push(pageNumber)
+            paginationButtons.push(pageNumber + 1)
+        }
+    }
 
     const checkIsAdmin = () => {
         axios.get("http://localhost:8083/user/admin/userid?userId=" + props.user).then(a => { setIsAdmin(a.data); setfetchDone(true) }).catch((error) => {
@@ -75,7 +131,7 @@ export default function ItemsList(props) {
 
     const sortItems = (a) => {
         if (a === "name") {
-            setSortItems({ NameSort: !sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort })
+            setSortItems({ NameSort: !sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort, TrendingSort: sortitems.TrendingSort })
         }
         if (a === "trending") {
             setSortItems({ TrendingSort: !sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort })
@@ -104,12 +160,12 @@ export default function ItemsList(props) {
     }
 
     const clearFields = () => {
-        setItemDetails({ itemName: "", itemDesc: "", itemImgUrl: "", itemDimensions: "", itemPrice: "", itemSpec: "", itemType: "" })
+        setItemDetails({ itemName: "", itemDesc: "", itemImgUrl: "", itemDimensions: "", itemPrice: "", itemSpec: "", itemType: "", trending: false })
         clearErrorFields()
     }
 
     const clearErrorFields = () => {
-        setErrors({ itemName: "", itemDesc: "", itemImgUrl: "", itemDimensions: "", itemPrice: "", itemSpec: "", itemType: "" })
+        setErrors({ itemName: "", itemDesc: "", itemImgUrl: "", itemDimensions: "", itemPrice: "", itemSpec: "", itemType: "", trending: false })
     }
 
     const addItem = () => {
@@ -195,6 +251,9 @@ export default function ItemsList(props) {
         checkIsAdmin();
         currentuser();
         getAllItemsList();
+        if (window.location.href == "http://localhost:3000/admin/itemsList") {
+            nav("/admin/itemsList?page=1")
+        }
     }, [])
 
     if (isAdmin) {
@@ -262,20 +321,20 @@ export default function ItemsList(props) {
                     </div>
                 </aside>
 
-                <div className="container my-3 viewbg py-2">
+                <div className="container-fluid my-3 viewbg py-2">
                     <div className="container-fluid row my-4 ">
-                        <div className="col-lg-2 col">
+                        <div className="col-xl-2 col-12 my-2 my-xl-0">
                             <input type='search' className='form-control form-control-sm w-lg-75 w-100 ' id="viewSearchbar" placeholder='Search for Type/Name/Price'
                                 onChange={(a) => {
                                     setSearch(a.target.value)
                                 }} />
                         </div>
-                        <div className="col-lg-8 col my-md-3 my-lg-0">
-                            <div className="d-flex gap-2 justify-content-center btn-group-sm gap-2" role="group" >
+                        <div className="col-xl-8 col my-md-3 my-lg-0">
+                            <div className="gap-2 justify-content-center btn-group-sm gap-2 d-none d-lg-flex" role="group" >
                                 <input type="radio" className="btn-check " name="btnradio" id="all" autoComplete="off" onClick={() => setfilters("")} checked={filters === "" && true} />
                                 <label className="btn btn-outline-light " htmlFor="all">All</label>
 
-                                <input type="radio" className="btn-check " name="btnradio" id="Mobile" autoComplete="off" onClick={() => { setfilters("Mobile"); console.log(filters); }} />
+                                <input type="radio" className="btn-check " name="btnradio" id="Mobile" autoComplete="off" onClick={() => { setfilters("Mobile"); }} />
                                 <label className="btn btn-outline-warning " htmlFor="Mobile">Mobiles</label>
 
                                 <input type="radio" className="btn-check " name="btnradio" id="Sports" autoComplete="off" onClick={() => setfilters("Sports")} />
@@ -305,13 +364,81 @@ export default function ItemsList(props) {
                                 <input type="radio" className="btn-check " name="btnradio" id="Dresses" autoComplete="off" onClick={() => setfilters("Dresses")} />
                                 <label className="btn btn-outline-warning " htmlFor="Dresses">Dresses</label>
                             </div>
+                            <div className="btn-group d-block d-lg-none d-flex gap-2 justify-content-center">
+                                <button type="button" className="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Fllters
+                                </button>
+                                <ul className="dropdown-menu bg-black gap-1 p-2  text-center dropdown-menu-start dropdown-menu-lg-end">
+                                    <li className="">
+                                        <input type="radio" className="btn-check" name="btnradiodrop" id="alldrop" autoComplete="off" onClick={() => setfilters("")} checked={filters === "" && true} />
+                                        <label className="btn btn-outline-light d-flex" htmlFor="alldrop">All</label>
+                                    </li>
+                                    <li>
+                                        <input type="radio" className="btn-check" name="btnradiodrop" id="Mobiledrop" autoComplete="off" onClick={() => { setfilters("Mobile"); }} />
+                                        <label className="btn btn-outline-warning d-flex" htmlFor="Mobiledrop">Mobiles</label>
+                                    </li>
+                                    <li>
+                                        <input type="radio" className="btn-check" name="btnradiodrop" id="Sportsdrop" autoComplete="off" onClick={() => setfilters("Sports")} />
+                                        <label className="btn btn-outline-warning d-flex" htmlFor="Sportsdrop">Sports</label>
+                                    </li>
+                                    <li>
+                                        <input type="radio" className="btn-check " name="btnradiodrop" id="Smart_watchesdrop" autoComplete="off" onClick={() => setfilters("Smart_watches")} />
+                                        <label className="btn btn-outline-warning d-flex" htmlFor="Smart_watchesdrop">Smart Watches</label>
+                                    </li>
+                                    <li>
+                                        <input type="radio" className="btn-check " name="btnradiodrop" id="Analog_Watchesdrop" autoComplete="off" onClick={() => { setfilters("Analog_Watches") }} />
+                                        <label className="btn btn-outline-warning d-flex" htmlFor="Analog_Watchesdrop">Analog Watches</label>
+                                    </li>
+                                    <li>
+                                        <input type="radio" className="btn-check " name="btnradiodrop" id="TVdrop" autoComplete="off" onClick={() => setfilters("TV")} />
+                                        <label className="btn btn-outline-warning d-flex" htmlFor="TVdrop">TV</label>
+                                    </li>
+                                    <li>
+                                        <input type="radio" className="btn-check " name="btnradiodrop" id="Headfonesdrop" autoComplete="off" onClick={() => setfilters("Headfones")} />
+                                        <label className="btn btn-outline-warning d-flex" htmlFor="Headfonesdrop">Headfones</label>
+                                    </li>
+                                    <li>
+                                        <input type="radio" className="btn-check " name="btnradiodrop" id="Camerasdrop" autoComplete="off" onClick={() => setfilters("Cameras")} />
+                                        <label className="btn btn-outline-warning d-flex" htmlFor="Camerasdrop">Cameras</label>
+                                    </li>
+                                    <li>
+                                        <input type="radio" className="btn-check " name="btnradiodrop" id="Musical_Instrumentsdrop" autoComplete="off" onClick={() => setfilters("Musical_Instruments")} />
+                                        <label className="btn btn-outline-warning d-flex" htmlFor="Musical_Instrumentsdrop">Musical Inst..</label>
+                                    </li>
+                                    <li>
+                                        <input type="radio" className="btn-check " name="btnradiodrop" id="Booksdrop" autoComplete="off" onClick={() => setfilters("Books")} />
+                                        <label className="btn btn-outline-warning d-flex" htmlFor="Booksdrop">Books</label>
+                                    </li>
+                                    <li>
+                                        <input type="radio" className="btn-check " name="btnradiodrop" id="Dressesdrop" autoComplete="off" onClick={() => setfilters("Dresses")} />
+                                        <label className="btn btn-outline-warning d-flex" htmlFor="Dressesdrop">Dresses</label>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
-                        <div className="col-lg-2 col btn-group">
+                        <div className="col-xl-2 col btn-group gap-2">
+                            <button type="button" className="btn btn-outline-info dropdown-toggle btn-sm" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                                Set Items Limit
+                            </button>
+                            <ul className="dropdown-menu dropdown-menu-end dropdown-menu-lg-start bg-secondary p-2">
+                                <input type="radio" className="btn-check " name="btnradiolimit" id="5" autoComplete="off" onClick={() => { setItemsLimit(5) }} checked={itemsLimit == 5 && true} />
+                                <label className="btn btn-outline-light " htmlFor="5">5</label>
+                                <input type="radio" className="btn-check " name="btnradiolimit" id="10" autoComplete="off" onClick={() => { setItemsLimit(10) }} checked={itemsLimit == 10 && true} />
+                                <label className="btn btn-outline-light " htmlFor="10">10</label>
+                                <input type="radio" className="btn-check " name="btnradiolimit" id="15" autoComplete="off" onClick={() => { setItemsLimit(15) }} checked={itemsLimit == 15 && true} />
+                                <label className="btn btn-outline-light " htmlFor="15">15</label>
+                                <input type="radio" className="btn-check " name="btnradiolimit" id="20" autoComplete="off" onClick={() => { setItemsLimit(20) }} checked={itemsLimit == 20 && true} />
+                                <label className="btn btn-outline-light " htmlFor="20">20</label>
+                                <div className=" my-3 mx-1 text-light">
+                                    <label htmlFor="limittext">Set limit...</label>
+                                    <input type="number" className="form-control" name="btntextlimit" id="limittext" autoComplete="off" onChange={(a) => { setItemsLimit(a.target.value == 0 || a.target.value > itemsList.length ? 1 : a.target.value) }} value={itemsLimit} />
+                                </div>
+                            </ul>
                             <button className="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#popUpforItemAdd">Add Item +</button>
                         </div>
                     </div>
 
-                    <div className="table-responsive-lg">
+                    <div className="table-responsive-xl">
                         <table className="table table-dark table-bordered border-warning table-hover border-0 ">
                             <thead style={{ cursor: "pointer" }}>
                                 <tr>
@@ -327,7 +454,7 @@ export default function ItemsList(props) {
                                 </tr>
                             </thead>
                             {fetchDone ?
-                                itemsList
+                                showItemsInPagination
                                     .sort((a, b) => {
                                         if (sortitems.NameSort) {
                                             return a.itemName.length - b.itemName.length
@@ -389,13 +516,14 @@ export default function ItemsList(props) {
                                         }
                                     }
                                     )
-                                    .map((a, i) => {
+                                    .map((a, index) => {
+                                        i++;
                                         return (
-                                            <tbody key={i}>
-                                                <tr>
-                                                    <th scope="row">{i + 1}</th>
+                                            <tbody key={index}>
+                                                <tr id="items_list_row">
+                                                    <th scope="row">{filters || search ? index + 1 : Number.parseInt(prevRange++) + 1}</th>
                                                     <td>{a.itemImgUrl ? <img src={a.itemImgUrl} width="30" height="30" /> : <i className='fa-solid fa-user'></i>}</td>
-                                                    <td className="text-truncate"><Link to={"/admin/updateitem/"+a.itemId} className="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">{a.itemName.length > 15 ? a.itemName.substring(0, 15) + "..." : a.itemName}</Link></td>
+                                                    <td className="text-truncate"><Link to={"/admin/updateitem/" + a.itemId} className="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">{a.itemName.length > 15 ? a.itemName.substring(0, 15) + "..." : a.itemName}</Link></td>
                                                     <td className="text-truncate">{a.itemDesc.length > 15 ? a.itemDesc.substring(0, 15) + "..." : a.itemDesc}</td>
                                                     <td className="text-truncate">{a.itemSpec.length > 15 ? a.itemSpec.substring(0, 15) + "..." : a.itemSpec}</td>
                                                     <td className="text-truncate">{a.itemType.length > 15 ? a.itemType.substring(0, 15) + "..." : a.itemType}</td>
@@ -448,9 +576,69 @@ export default function ItemsList(props) {
                                         <td>  <span className="placeholder col-7"></span></td>
                                     </tr>
                                 </tbody>}
+                            {i == 0 && <tbody >
+                                <tr className="text-center">
+                                    <td colSpan="10" className="h5">
+                                        No items found
+                                    </td>
+                                </tr>
+                            </tbody>}
                         </table>
+
+
+                        {/* Pagination */}
+                        {(!(filters || search) && !(itemsLimit == itemsList.length) )&&
+                            <nav aria-label="Page navigation">
+                                <ul className="pagination justify-content-xl-end justify-content-center pagination-sm mx-3 gap-2">
+
+                                    <li className={pageNumber == 1 ? "page-item disabled" : "page-item active"}>
+                                        <Link className="page-link" to={"/admin/itemsList?page=" + (pageNumber - 1)}
+                                        ><i className="bi bi-chevron-double-left"></i>
+                                        </Link>
+                                    </li>
+
+                                    <div className="d-flex gap-2 justify-content-center btn-group-sm gap-2" role="group" key={i} >
+
+                                        {pageNumber != 2 && <li className={pageNumber == 1 ? "page-item active" : "page-item"} hidden={pageNumber == 1 ? true : false}>
+                                            <Link className="page-link" to={"/admin/itemsList?page=" + 1}>1</Link>
+                                        </li>}
+
+                                        {!(pageNumber == 1 || pageNumber == 2) && <span className="text-light">....</span>}
+
+                                        {paginationButtons.map(a => {
+                                            return (
+                                                <li className={pageNumber == (a) ? "page-item active" : "page-item"} key={a}>
+                                                    <Link className="page-link" to={"/admin/itemsList?page=" + a}>{a}</Link>
+                                                </li>
+                                            )
+                                        })}
+
+                                        {!(pageNumber == paginationsAttributes[paginationsAttributes.length - 1] + 1
+                                            || pageNumber == paginationsAttributes[paginationsAttributes.length - 1])
+                                            && <span className="text-light">....</span>}
+
+                                    </div>
+
+                                    {pageNumber != paginationsAttributes[paginationsAttributes.length - 1] + 1 &&
+                                        <li className={pageNumber == paginationsAttributes[paginationsAttributes.length - 1] + 1 ? "page-item active" : "page-item"} hidden={pageNumber == paginationsAttributes[paginationsAttributes.length - 1] ? true : false}>
+                                            <Link className="page-link" to={"/admin/itemsList?page=" + paginationsAttributes[paginationsAttributes.length - 1]}>{paginationsAttributes[paginationsAttributes.length - 1] + 1}</Link>
+                                        </li>}
+
+                                    <li className={pageNumber == paginationsAttributes[paginationsAttributes.length - 1] + 1 ? "page-item disabled" : "page-item active"}>
+                                        <Link className="page-link" to={"/admin/itemsList?page=" + (pageNumber + 1)}>
+                                            <i className="bi bi-chevron-double-right"></i>
+                                        </Link>
+                                    </li>
+
+                                </ul>
+
+                            </nav>
+                        }
+
                     </div>
                 </div>
+
+                <ChatBot />
 
                 {/* Add item popup */}
                 <div className="modal fade" id="popUpforItemAdd" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -536,7 +724,7 @@ export default function ItemsList(props) {
                                                     <input className="form-check-input" type="checkbox" name="trending" value={!itemDetails.trending}
                                                         onChange={setToItemDetails}
                                                         id="flexCheckDefault" />
-                                                    <label className="form-check-label" htmlFor="flexCheckDefault">
+                                                    <label className="form-check-label text-bg-light px-2" htmlFor="flexCheckDefault">
                                                         Trending
                                                     </label>
                                                 </div>
@@ -589,6 +777,7 @@ export default function ItemsList(props) {
                 </>
                 }
 
+                {/* Message pop */}
                 {informationPop && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">
                     <div className="d-flex">
                         <div className="toast-body">

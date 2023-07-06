@@ -1,9 +1,11 @@
 package com.shopping.query.command.controller;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,7 +40,8 @@ public class ItemsController {
 
 	@PostMapping("/")
 	public ResponseEntity<String> save(@RequestBody ItemEntity itemEntity) throws ItemAlreadyException {
-		itemEntity.setItemId(viewall().getBody() == null ? 1 : viewall().getBody().size() + 2);
+		itemEntity.setItemId(itemService.viewall().stream().sorted(Comparator.comparing(ItemEntity::getItemId, Comparator.reverseOrder()))
+				.collect(Collectors.toList()).get(0).getItemId() + 1);
 		return new ResponseEntity<>(itemService.save(itemEntity), HttpStatus.OK);
 	}
 

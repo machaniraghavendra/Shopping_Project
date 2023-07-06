@@ -56,16 +56,25 @@ public class ItemServiceImpl implements ItemService {
 
 	@Override
 	public String update(ItemEntity itemEntity) throws ItemNotFoundException {
+		boolean check = false;
 		try {
 			if (!itemsRepo.existsById(itemEntity.getItemId()))
 				throw new ItemNotFoundException("The item " + itemEntity.getItemName() + " not exists");
 			else {
-				if ((getTrendingItems().isEmpty() || getTrendingItems().size() < 9) || !itemEntity.isTrending()) {
+				if (itemEntity.isTrending()) {
+					check = true;
+				} else {
+					if (!getTrendingItems().isEmpty() && getTrendingItems().size() <= 9 && !itemEntity.isTrending()) {
+						check = true;
+					} else {
+						return "Trending items are enough more";
+					}
+				}
+				if (check) {
 					itemEntity.setItemUpdatedOn(LocalDateTime.now());
 					itemsRepo.save(itemEntity);
 					return "Updated !";
 				}
-				return "Trending items are enough more";
 			}
 		} catch (ItemNotFoundException e) {
 			e.printStackTrace();
@@ -112,6 +121,7 @@ public class ItemServiceImpl implements ItemService {
 				.sorted(Comparator.comparing(ItemEntity::getItemAddedOn, Comparator.reverseOrder()))
 				.sorted(Comparator.comparing(ItemEntity::isTrending, Comparator.reverseOrder())).toList());
 		listToShow.addAll(listOfItems.stream().filter(item -> Objects.nonNull(item.getItemUpdatedOn()))
+				.filter(item -> Objects.isNull(item.getItemAddedOn()))
 				.sorted(Comparator.comparing(ItemEntity::getItemName, Comparator.reverseOrder()))
 				.sorted(Comparator.comparing(ItemEntity::getItemUpdatedOn, Comparator.reverseOrder()))
 				.sorted(Comparator.comparing(ItemEntity::isTrending, Comparator.reverseOrder())).toList());
