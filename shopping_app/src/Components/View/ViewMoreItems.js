@@ -28,6 +28,8 @@ export default function ViewMoreItems(props) {
 
     const [user, setUser] = useState([]);
 
+    const [scroll, setScroll] = useState(false);
+
     let i = 0;
 
     const fetch = (type) => {
@@ -49,14 +51,22 @@ export default function ViewMoreItems(props) {
 
     const addIntoInterest = (id) => {
         axios.post("http://localhost:8083/items/history?user=" + localStorage.getItem("currentuser") + "&id=" + id)
-        .catch((error) => {
-            setError(true);
-            if (error.response.data === undefined) {
-                setErrorMessage("Something went wrong")
-            } else {
-                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-            }
-        })
+            .catch((error) => {
+                setError(true);
+                if (error.response.data === undefined) {
+                    setErrorMessage("Something went wrong")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
+            })
+    }
+
+    window.onscroll = () => {
+        if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 620) {
+            setScroll(true)
+        } else {
+            setScroll(false)
+        }
     }
 
     const currentuser = () => {
@@ -102,21 +112,21 @@ export default function ViewMoreItems(props) {
     return (
         <div className='container-fluid'>
             <div className='row text-light p-2 viewbg'>
-                <div className='col-3'>
+                <div className='col-xl-2 col-2'>
                     <span className='fs-5'>
                         <i className="fa-thin fa-arrow-left btn mx-2 btn-light" style={{ fontFamily: "fontAwesome" }} onClick={() => { return (window.history.back()) }}></i>
-                        <span id='items' className='dark fw-semibold'>{itemType.toUpperCase()}'S</span>
+                        <span id='items' className='dark fw-semibold d-lg-inline-block d-none'>{itemType.toUpperCase()}'S</span>
                     </span>
                 </div>
-                <div className='col-1'>
-                    <div><input type='search' className='form-control form-control-sm w-100 ' id="viewSearchbar" placeholder='Search...'
+                <div className='col-xl-2 col-6'>
+                    <div><input type='search' className='form-control form-control-sm w ' id="viewSearchbar" placeholder='Search...'
                         onChange={(a) => {
                             setSearch(a.target.value)
                         }}
                     /></div>
                 </div>
-                <div className='col-7'>
-                    <div className="d-flex gap-2 justify-content-center btn-group-sm gap-2" role="group" >
+                <div className='col-xl-7 col-2'>
+                    <div className="d-none d-xl-flex gap-2 justify-content-center btn-group-sm gap-2" role="group" >
                         <input type="radio" className="btn-check " name="btnradio" id="all" autoComplete="off" onClick={() => setfilters("")} checked={filters === "" && true} />
                         <label className="btn btn-outline-light " htmlFor="all">All</label>
 
@@ -141,8 +151,47 @@ export default function ViewMoreItems(props) {
                         <input type="radio" className="btn-check " name="btnradio" id=">100000" autoComplete="off" onClick={() => setfilters(">100000")} />
                         <label className="btn btn-outline-warning " htmlFor=">100000">Above 1,000,00</label>
                     </div>
+                    <div className="btn-group d-block d-xl-none d-flex gap-2 justify-content-center">
+                        <button type="button" className="btn btn-warning dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            Fllters
+                        </button>
+                        <ul className="dropdown-menu bg-black gap-1 p-2  text-center dropdown-menu-start dropdown-menu-lg-end">
+                            <li>
+                                <input type="radio" className="btn-check " name="btnradiodrop" id="alldrop" autoComplete="off" onClick={() => setfilters("")} checked={filters === "" && true} />
+                                <label className="btn btn-outline-light " htmlFor="alldrop">All</label>
+                            </li>
+                            <li>
+                                <input type="radio" className="btn-check " name="btnradiodrop" id="500drop" autoComplete="off" onClick={() => setfilters("500")} />
+                                <label className="btn btn-outline-warning " htmlFor="500drop">Below 500</label>
+                            </li>
+                            <li>
+                                <input type="radio" className="btn-check " name="btnradiodrop" id="1000drop" autoComplete="off" onClick={() => setfilters("1000")} />
+                                <label className="btn btn-outline-warning " htmlFor="1000drop">Below 1,000</label>
+                            </li>
+                            <li>
+                                <input type="radio" className="btn-check " name="btnradiodrop" id="5000drop" autoComplete="off" onClick={() => setfilters("5000")} />
+                                <label className="btn btn-outline-warning " htmlFor="5000drop">Below 5,000</label>
+                            </li>
+                            <li>
+                                <input type="radio" className="btn-check " name="btnradiodrop" id="10000drop" autoComplete="off" onClick={() => { setfilters("10000") }} />
+                                <label className="btn btn-outline-warning " htmlFor="10000drop">Below 10,000</label>
+                            </li>
+                            <li>
+                                <input type="radio" className="btn-check " name="btnradiodrop" id="50000drop" autoComplete="off" onClick={() => setfilters("50000")} />
+                                <label className="btn btn-outline-warning " htmlFor="50000drop">Below 50,000</label>
+                            </li>
+                            <li>
+                                <input type="radio" className="btn-check " name="btnradiodrop" id="100000drop" autoComplete="off" onClick={() => setfilters("100000")} />
+                                <label className="btn btn-outline-warning " htmlFor="100000drop">Below 1,00,000</label>
+                            </li>
+                            <li>
+                                <input type="radio" className="btn-check " name="btnradiodrop" id=">100000drop" autoComplete="off" onClick={() => setfilters(">100000")} />
+                                <label className="btn btn-outline-warning " htmlFor=">100000drop">Above 1,000,00</label>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div className='col-1'>
+                <div className='col-xl-1 col-2'>
                     <div className="justify-content-around d-flex">
                         <div className="btn-group btn-group-sm">
                             <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
@@ -171,6 +220,7 @@ export default function ViewMoreItems(props) {
                     </div>
                 </div>
             </div>
+
             {fetchDone ?
                 items.length == [] || !items.map(e => { e.itemType.toLowerCase().includes(itemType.toLowerCase()) }) ?
                     <div className='container-fluid justify-content-center text-center'>
@@ -215,7 +265,7 @@ export default function ViewMoreItems(props) {
                                                 <div className="card " data-aos="fade-up" >
                                                     <div className='card-header justify-content-end text-end'>
                                                         <button className='btn  m-2' onClick={() => {
-                                                            if ( localStorage.getItem("currentuser")) {
+                                                            if (localStorage.getItem("currentuser")) {
                                                                 axios.post("http://localhost:8083/cart/", {
                                                                     "itemId": e.itemId,
                                                                     "userId": localStorage.getItem("currentuser")
@@ -234,7 +284,7 @@ export default function ViewMoreItems(props) {
                                                         }}
                                                         ><i className='fa-solid fa-cart-shopping text-info'></i></button>
                                                         <button className='btn ' onClick={() => {
-                                                            if ( localStorage.getItem("currentuser")) {
+                                                            if (localStorage.getItem("currentuser")) {
                                                                 axios.post("http://localhost:8083/fav/", {
                                                                     "itemId": e.itemId,
                                                                     "userId": localStorage.getItem("currentuser")
@@ -368,6 +418,16 @@ export default function ViewMoreItems(props) {
                 </div>
             }
             <hr />
+
+            {/* Scroll button */}
+            <div className="container-fluid" >
+                <button className={scroll ? "btn btn-primary align-text-center scroll-up d-block" : "btn btn-primary align-text-center scroll-up d-none"}
+                    onClick={() => {
+                        return (document.documentElement.scrollTop = 0,
+                            document.body.scrollTop = 0)
+                    }}>
+                    <h4><i className="fa-solid fa-angle-up"></i></h4></button>
+            </div>
 
             <ChatBot />
 

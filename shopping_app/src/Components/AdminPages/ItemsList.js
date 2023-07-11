@@ -589,7 +589,7 @@ export default function ItemsList(props) {
                         {/* Pagination */}
                         {(!(filters || search) && !(itemsLimit == itemsList.length) )&&
                             <nav aria-label="Page navigation">
-                                <ul className="pagination justify-content-xl-end justify-content-center pagination-sm mx-3 gap-2">
+                                <ul className="pagination justify-content-xl-end justify-content-center mx-3 gap-2">
 
                                     <li className={pageNumber == 1 ? "page-item disabled" : "page-item active"}>
                                         <Link className="page-link" to={"/admin/itemsList?page=" + (pageNumber - 1)}

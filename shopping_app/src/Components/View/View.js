@@ -9,7 +9,7 @@ import loadingImg from "../Resources/Loading_Card.png";
 
 export default function View(props) {
 
-    let num = window.location.href.replaceAll("%20", " ").substring(window.location.href.indexOf("view/") + 5, window.location.href.indexOf("view/") + 7).replace("/", "").trim();
+    let num = window.location.href.replaceAll("%20", " ").replaceAll("/", " ").split(" ", 5)[4];
 
     const [viewItem, setviewItem] = useState([]);
 
@@ -30,6 +30,8 @@ export default function View(props) {
     const [error, setError] = useState(false);
 
     const [errorMessage, setErrorMessage] = useState("");
+
+    const [scroll, setScroll] = useState(false);
 
     const timeout = () => {
         setTimeout(() => {
@@ -137,6 +139,14 @@ export default function View(props) {
         })
     }
 
+    window.onscroll = () => {
+        if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 620) {
+            setScroll(true)
+        } else {
+            setScroll(false)
+        }
+    }
+
     window.onload = document.title = viewItem.map(a => { return (a.itemName) }) + " | Shopping Mart";
 
     useEffect(() => {
@@ -217,7 +227,7 @@ export default function View(props) {
                                 <div className="col-lg-8 my-3" id='right-view'>
                                     <div className='text-end'>
                                         <button className='btn  m-2' onClick={() => {
-                                            if ( localStorage.getItem("currentuser")) {
+                                            if (localStorage.getItem("currentuser")) {
                                                 axios.post("http://localhost:8083/cart/", {
                                                     "itemId": item.itemId,
                                                     "userId": localStorage.getItem("currentuser")
@@ -236,7 +246,7 @@ export default function View(props) {
                                         ><i className='fa-solid fa-cart-shopping text-info'></i></button>
 
                                         <button className='btn ' onClick={() => {
-                                            if ( localStorage.getItem("currentuser")) {
+                                            if (localStorage.getItem("currentuser")) {
                                                 axios.post("http://localhost:8083/fav/", {
                                                     "itemId": item.itemId,
                                                     "userId": localStorage.getItem("currentuser")
@@ -277,6 +287,7 @@ export default function View(props) {
                                                 });
                                             }}>Buy now</button>
                                         </Link>
+                                        {user.admin && <Link to={"/admin/updateitem/" + item.itemId} className='btn btn-info mx-2'>Update</Link>}
                                     </div>
                                 </div>
                             </div>
@@ -314,7 +325,7 @@ export default function View(props) {
                             <span style={{ zIndex: "1" }}>
                                 <span className='bg-warning text-dark btn btn-sm h-100 py-5 ' id='scrollleftbutton' onClick={() => { scrollLeft() }}><i className="bi bi-chevron-left "></i></span>
                             </span>
-                            <div className="row row-card row-cols-2 row-cols-md-4 g-4 align-content-center text-center my-3" id="viewsimilarscroll">
+                            <div className="row row-card row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4 align-content-center text-center my-3" id="viewsimilarscroll">
                                 {items.filter(a => {
                                     return (
                                         a.itemType == viewItem.map(a => { return (a.itemType) }))
@@ -328,7 +339,7 @@ export default function View(props) {
                                             <div className="card view-more-card">
                                                 <div className='card-head text-end'>
                                                     <button className='btn  m-2' onClick={() => {
-                                                        if ( localStorage.getItem("currentuser")) {
+                                                        if (localStorage.getItem("currentuser")) {
                                                             axios.post("http://localhost:8083/cart/", {
                                                                 "itemId": a.itemId,
                                                                 "userId": localStorage.getItem("currentuser")
@@ -346,7 +357,7 @@ export default function View(props) {
                                                     }}
                                                     ><i className='fa-solid fa-cart-shopping text-info'></i></button>
                                                     <button className='btn ' onClick={() => {
-                                                        if ( localStorage.getItem("currentuser")) {
+                                                        if (localStorage.getItem("currentuser")) {
                                                             axios.post("http://localhost:8083/fav/", {
                                                                 "itemId": a.itemId,
                                                                 "userId": localStorage.getItem("currentuser")
@@ -374,7 +385,7 @@ export default function View(props) {
                                                             onClick={() => {
                                                                 addIntoInterest(a.itemId);
                                                                 return (
-                                                                   window.onload(getItem())
+                                                                    window.onload(getItem())
                                                                 )
                                                             }}>View More...</Link>
                                                     </div>
@@ -489,9 +500,10 @@ export default function View(props) {
             <div className='container'>
                 <h3 className='view p-2'>Your Interests </h3>
                 {fetchItemDone ?
+
                     <div className='container'>
-                        <div className="row row-card row-cols-2 row-cols-md-4 g-4 align-content-center justify-content-center text-center my-3" id="viewsimilarscroll">
-                            {interesteditems.length != 0 ?
+                        <div className="row row-card row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4 align-content-start align-content-xl-center justify-content-start justify-content-lg-center text-center my-3" id="viewsimilarscroll">
+                            {interesteditems.length != 0 && interesteditems.length != 1 ?
                                 interesteditems
                                     .filter(a => {
                                         return (
@@ -504,7 +516,7 @@ export default function View(props) {
                                                 <div className="card view-more-card">
                                                     <div className='card-head text-end'>
                                                         <button className='btn  m-2' onClick={() => {
-                                                            if ( localStorage.getItem("currentuser")) {
+                                                            if (localStorage.getItem("currentuser")) {
                                                                 axios.post("http://localhost:8083/cart/", {
                                                                     "itemId": a.itemId,
                                                                     "userId": localStorage.getItem("currentuser")
@@ -522,7 +534,7 @@ export default function View(props) {
                                                         }}
                                                         ><i className='fa-solid fa-cart-shopping text-info'></i></button>
                                                         <button className='btn ' onClick={() => {
-                                                            if ( localStorage.getItem("currentuser")) {
+                                                            if (localStorage.getItem("currentuser")) {
                                                                 axios.post("http://localhost:8083/fav/", {
                                                                     "itemId": a.itemId,
                                                                     "userId": localStorage.getItem("currentuser")
@@ -551,7 +563,7 @@ export default function View(props) {
                                                                     addIntoInterest(a.itemId);
                                                                     return (
                                                                         window.onload(getItem())
-                                                                        )
+                                                                    )
                                                                 }}>View More...</Link>
                                                         </div>
                                                     </div>
@@ -658,6 +670,15 @@ export default function View(props) {
                         </div>
                     </div>
                 }
+            </div>
+
+            <div className="container-fluid" >
+                <button className={scroll ? "btn btn-primary align-text-center scroll-up d-block" : "btn btn-primary align-text-center scroll-up d-none"}
+                    onClick={() => {
+                        return (document.documentElement.scrollTop = 0,
+                            document.body.scrollTop = 0)
+                    }}>
+                    <h4><i className="fa-solid fa-angle-up"></i></h4></button>
             </div>
 
             {showToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">

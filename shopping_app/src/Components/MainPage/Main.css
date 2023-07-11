@@ -18,7 +18,7 @@
     z-index: 2;
     transition: .9s;
     transition-timing-function: 5s cubic-bezier(.65, .4, .47, .62);
-    animation: navbar 0.5s 1 linear alternate;
+    animation: navbar 0.3s 1 linear alternate;
 }
 
 @keyframes navbar {
@@ -71,17 +71,21 @@
     z-index: 99;
     left: 87%;
     top: 87%;
-    animation: scroll 0.9s 1 linear;
+    animation: scroll 0.5s 1 linear;
     animation-direction: alternate;
 }
 
 @keyframes scroll {
     0% {
         opacity: 0;
+        transform: translateY(10px);
     }
-
+    50% {
+        transform: translateY(-10px);
+    }
     100% {
         opacity: 1;
+        transform: translateY(10px);
     }
 }
 

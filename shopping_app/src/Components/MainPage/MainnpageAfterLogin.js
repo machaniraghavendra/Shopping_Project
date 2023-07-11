@@ -31,6 +31,10 @@ export default function MainPageAfterlogin(props) {
 
     const [user, setUser] = useState([]);
 
+    const [show, setShow] = useState(false);
+
+    const [scroll, setScroll] = useState(false);
+
 
     const fetch = () => {
         axios.get("http://localhost:8083/items/")
@@ -62,31 +66,16 @@ export default function MainPageAfterlogin(props) {
     }
 
     const check = () => {
-        let top = document.querySelector(".check");
-        let title = document.querySelector(".check .container-fluid h1");
-        let title2 = document.querySelector(".check .container-fluid h2");
-        let extraId = document.querySelector(".extraId");
-        let scroll = document.querySelector(".scroll-up");
-        setTimeout(() => {
-            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 220 && (window.location.pathname) === ("/mart")) {
-                top.classList.add("fixed-top");
-                title.innerHTML = ' <img src="https://media.istockphoto.com/vectors/shopping-bag-flat-icon-pixel-perfect-for-mobile-and-web-vector-id1145783156?k=20&m=1145783156&s=612x612&w=0&h=RJdFiHDeaQJt3KbyIfJmWS12iQrD63DUCMWPrFLumwk=" alt="" width="35" height="35" className="d-inline-block align-text-top" />&nbsp;Shopping Mart'
-                title2.innerHTML = ""
-            }
-            if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 620 && (window.location.pathname) === ("/mart")) {
-                scroll.style.display = "block";
-                title2.classList.remove("d-none")
-            }
-            else {
-                setTimeout(() => {
-                    if ((window.location.pathname) === ("/mart")) {
-                        top.classList.remove("fixed-top");
-                        scroll.style.display = "none";
-                        title.innerHTML = "Contents";
-                    }
-                }, 500);
-            }
-        }, 500);
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 220) {
+            setShow(true)
+        }
+        if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 620) {
+            setScroll(true)
+        }
+        else {
+            setShow(false);
+            setScroll(false)
+        }
     }
 
     window.onscroll = () => {
@@ -163,14 +152,20 @@ export default function MainPageAfterlogin(props) {
 
                         &nbsp;
 
-                        <nav className="navbar navbar-expand-lg check bg-light">
+                        <nav className={show ? "navbar navbar-expand-lg check bg-light fixed-top" : "navbar navbar-expand-lg check bg-light"}>
                             <div className="container-fluid  ">
                                 <button className="navbar-toggler " type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
                                     <span className="navbar-toggler-icon"></span>
                                 </button>
                                 <h2 className=' d-sm-block d-md-none d-lg-none navbar-brand'></h2>
 
-                                <h1 className="navbar-brand" ></h1>
+                                {show ?
+                                    <h1 className="navbar-brand" >
+                                        <img src="https://media.istockphoto.com/vectors/shopping-bag-flat-icon-pixel-perfect-for-mobile-and-web-vector-id1145783156?k=20&m=1145783156&s=612x612&w=0&h=RJdFiHDeaQJt3KbyIfJmWS12iQrD63DUCMWPrFLumwk=" alt="" width="35" height="35" className="d-inline-block align-text-top" />
+                                        &nbsp;Shopping Mart</h1>
+                                    :
+                                    <h1 className="navbar-brand" >Contents</h1>}
+                                    
                                 <div className="collapse navbar-collapse " id="navbarTogglerDemo02">
                                     <ul className="navbar-nav me-auto mb-2 mb-lg-0  ">
                                         <li className="nav-item ">
@@ -217,7 +212,7 @@ export default function MainPageAfterlogin(props) {
                             </div>
                         </nav>
                     </div>
-                </header>
+                </header >
 
                 <hr />
 
@@ -384,7 +379,7 @@ export default function MainPageAfterlogin(props) {
                 <hr />
 
                 <div className="container-fluid" >
-                    <button className="btn btn-primary align-text-center scroll-up"
+                    <button className={scroll ? "btn btn-primary align-text-center scroll-up d-block" : "btn btn-primary align-text-center scroll-up d-none"}
                         onClick={() => {
                             return (document.documentElement.scrollTop = 0,
                                 document.body.scrollTop = 0)
@@ -442,21 +437,22 @@ export default function MainPageAfterlogin(props) {
                 </div>
 
                 {/* Error pop*/}
-                {error && <>
-                    <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
-                        <div className="d-flex">
-                            <div className="toast-body text-danger text-center">
-                                <h6>Error !</h6>
-                                {errorMessage}
-                                <div className="mt-2 pt-2">
-                                    <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { setError(false); setErrorMessage("") }}>Ok</button>
+                {
+                    error && <>
+                        <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div className="d-flex">
+                                <div className="toast-body text-danger text-center">
+                                    <h6>Error !</h6>
+                                    {errorMessage}
+                                    <div className="mt-2 pt-2">
+                                        <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { setError(false); setErrorMessage("") }}>Ok</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </>
+                    </>
                 }
-            </div>
+            </div >
         )
     } else {
         return (
