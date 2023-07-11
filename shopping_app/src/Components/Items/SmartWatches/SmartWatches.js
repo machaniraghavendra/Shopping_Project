@@ -27,7 +27,7 @@ export default function SmartWatches() {
     }
 
     const addIntoInterest = (id) => {
-        axios.post("http://localhost:8083/items/history?user=" + localStorage.getItem("currentuser") + "&id=" + id)
+        axios.post("http://localhost:8083/items/history?userId=" + localStorage.getItem("currentuser") + "&id=" + id)
         .catch((error) => {
             setError(true);
             if (error.response.data === undefined) {
