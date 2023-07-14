@@ -132,6 +132,7 @@ public class UserServiceImpl implements UserService {
 		detailDto.setUserName(entity.getUserName());
 		detailDto.setMobileNumber(entity.getMobileNumber());
 		detailDto.setProfileImgUrl(entity.getProfileImgUrl());
+		detailDto.setLoggedIn(entity.isLoggedIn());
 		detailDto.setAdmin(entity.isAdmin());
 		return detailDto;
 	}

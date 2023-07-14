@@ -53,6 +53,11 @@ public class OrdersController {
 		return ResponseEntity.ok(ordersServImpl.updateOrder(id, status));
 	}
 
+	@PutMapping("updateOrderStatus/{id}")
+	public void updateOrderStatus(@PathVariable("id") UUID id) throws OrderNotFoundException {
+		ordersServImpl.updateOrderStatus(id);
+	}
+	
 	@GetMapping("/all")
 	public ResponseEntity<List<OrdersEntity>> getAll() {
 		return ResponseEntity.ok(ordersServImpl.getAllOrders());

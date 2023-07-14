@@ -4,6 +4,8 @@ import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import { Link, useNavigate } from "react-router-dom";
 import ErrorPage from "../Error/ErrorPage";
 import ChatBot from '../ChatBot/ChatBot';
+import LogOut from "../Login/LogOut";
+import Rating from "../Items/Rating/Rating";
 
 export default function ItemsList(props) {
 
@@ -19,9 +21,9 @@ export default function ItemsList(props) {
 
     const [errorMessage, setErrorMessage] = useState("");
 
-    const [itemDetails, setItemDetails] = useState({ itemName: "", itemDesc: "", itemImgUrl: "", itemDimensions: "", itemPrice: "", itemSpec: "", itemType: "", trending: false });
+    const [itemDetails, setItemDetails] = useState({ itemName: "", itemDesc: "", itemImgUrl: "", itemDimensions: "", itemPrice: "", itemSpec: "", itemType: "", trending: false, ratingSort: "" });
 
-    const [errors, setErrors] = useState({ itemName: "", itemDesc: "", itemImgUrl: "", itemDimensions: "", itemPrice: "", itemSpec: "", itemType: "", trending: false });
+    const [errors, setErrors] = useState({ itemName: "", itemDesc: "", itemImgUrl: "", itemDimensions: "", itemPrice: "", itemSpec: "", itemType: "", trending: false, ratingSort: "" });
 
     const [isSubmit, setIsSubmit] = useState(false);
 
@@ -35,7 +37,7 @@ export default function ItemsList(props) {
 
     const [informationPop, setInformationPop] = useState("");
 
-    const [sortitems, setSortItems] = useState({ NameSort: false, DescSort: false, SpecSort: false, TypeSort: false, PriceSort: false, TrendingSort: true, DimensionsSort: false })
+    const [sortitems, setSortItems] = useState({ NameSort: false, DescSort: false, SpecSort: false, TypeSort: false, PriceSort: false, TrendingSort: true, DimensionsSort: false, ratingSort: false })
 
     const [itemsLimit, setItemsLimit] = useState(10);
 
@@ -131,25 +133,28 @@ export default function ItemsList(props) {
 
     const sortItems = (a) => {
         if (a === "name") {
-            setSortItems({ NameSort: !sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort, TrendingSort: sortitems.TrendingSort })
+            setSortItems({ NameSort: !sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort, TrendingSort: sortitems.TrendingSort, ratingSort: sortitems.ratingSort })
         }
         if (a === "trending") {
-            setSortItems({ TrendingSort: !sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort })
+            setSortItems({ TrendingSort: !sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort, ratingSort: sortitems.ratingSort })
         }
         if (a === "dimensions") {
-            setSortItems({ DimensionsSort: !sortitems.DimensionsSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort })
+            setSortItems({ DimensionsSort: !sortitems.DimensionsSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, ratingSort: sortitems.ratingSort })
         }
         if (a === "price") {
-            setSortItems({ PriceSort: !sortitems.PriceSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, DimensionsSort: sortitems.DimensionsSort })
+            setSortItems({ PriceSort: !sortitems.PriceSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, DimensionsSort: sortitems.DimensionsSort, ratingSort: sortitems.ratingSort })
         }
         if (a === "type") {
-            setSortItems({ TypeSort: !sortitems.TypeSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort })
+            setSortItems({ TypeSort: !sortitems.TypeSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort, ratingSort: sortitems.ratingSort })
         }
         if (a === "spec") {
-            setSortItems({ SpecSort: !sortitems.SpecSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort })
+            setSortItems({ SpecSort: !sortitems.SpecSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort, ratingSort: sortitems.ratingSort })
+        }
+        if (a === "rating") {
+            setSortItems({ ratingSort: !sortitems.ratingSort, DescSort: sortitems.DescSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort })
         }
         if (a === "desc") {
-            setSortItems({ DescSort: !sortitems.DescSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort })
+            setSortItems({ DescSort: !sortitems.DescSort, ratingSort: sortitems.ratingSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort })
         }
     }
 
@@ -450,6 +455,7 @@ export default function ItemsList(props) {
                                     <th scope="col" onClick={() => { return (sortItems("type")) }}>Type {sortitems.TypeSort ? <i className="bi bi-sort-down-alt"></i> : <i className="bi bi-sort-up"></i>}</th>
                                     <th scope="col" onClick={() => { return (sortItems("price")) }}>Price {sortitems.PriceSort ? <i className="bi bi-sort-down-alt"></i> : <i className="bi bi-sort-up"></i>}</th>
                                     <th scope="col" onClick={() => { return (sortItems("dimensions")) }}>Dimensions {sortitems.DimensionsSort ? <i className="bi bi-sort-down-alt"></i> : <i className="bi bi-sort-up"></i>}</th>
+                                    <th scope="col" onClick={() => { return (sortItems("rating")) }}>Rating {sortitems.ratingSort ? <i className="bi bi-sort-down-alt"></i> : <i className="bi bi-sort-up"></i>}</th>
                                     <th scope="col" onClick={() => { return (sortItems("trending")) }}>Trending {!sortitems.TrendingSort ? <i className="bi bi-sort-down-alt"></i> : <i className="bi bi-sort-up"></i>}</th>
                                 </tr>
                             </thead>
@@ -494,6 +500,11 @@ export default function ItemsList(props) {
                                             return b.trending - a.trending
                                         }
                                     })
+                                    .sort((a, b) => {
+                                        if (sortitems.ratingSort) {
+                                            return b.ratingOfItem - a.ratingOfItem
+                                        }
+                                    })
                                     .filter(a => {
                                         if (search === "") {
                                             return a;
@@ -529,6 +540,7 @@ export default function ItemsList(props) {
                                                     <td className="text-truncate">{a.itemType.length > 15 ? a.itemType.substring(0, 15) + "..." : a.itemType}</td>
                                                     <td className="text-truncate text-warning">₹{a.itemPrice}</td>
                                                     <td className="text-truncate">{a.itemDimensions.length > 15 ? a.itemDimensions.substring(0, 15) + "..." : a.itemDimensions}</td>
+                                                    <td className="text-truncate"><Rating times={a.ratingOfItem} /></td>
                                                     <td className="text-truncate">{a.trending ? <span className=" badge text-bg-success">Yes</span> : <span className=" badge text-bg-danger">No</span>}</td>
                                                 </tr>
                                             </tbody>
@@ -587,7 +599,7 @@ export default function ItemsList(props) {
 
 
                         {/* Pagination */}
-                        {(!(filters || search) && !(itemsLimit == itemsList.length) )&&
+                        {(!(filters || search) && !(itemsLimit == itemsList.length)) &&
                             <nav aria-label="Page navigation">
                                 <ul className="pagination justify-content-xl-end justify-content-center mx-3 gap-2">
 
@@ -621,7 +633,7 @@ export default function ItemsList(props) {
 
                                     {pageNumber != paginationsAttributes[paginationsAttributes.length - 1] + 1 &&
                                         <li className={pageNumber == paginationsAttributes[paginationsAttributes.length - 1] + 1 ? "page-item active" : "page-item"} hidden={pageNumber == paginationsAttributes[paginationsAttributes.length - 1] ? true : false}>
-                                            <Link className="page-link" to={"/admin/itemsList?page=" + paginationsAttributes[paginationsAttributes.length - 1]}>{paginationsAttributes[paginationsAttributes.length - 1] + 1}</Link>
+                                            <Link className="page-link" to={"/admin/itemsList?page=" + (paginationsAttributes[paginationsAttributes.length - 1] + 1)}>{paginationsAttributes[paginationsAttributes.length - 1] + 1}</Link>
                                         </li>}
 
                                     <li className={pageNumber == paginationsAttributes[paginationsAttributes.length - 1] + 1 ? "page-item disabled" : "page-item active"}>
@@ -795,28 +807,7 @@ export default function ItemsList(props) {
                 </div>}
 
                 {/* Logout Pop */}
-                <div className="modal fade " id="exampleModal3" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
-                        <div className="modal-content logout-model">
-                            <div className="modal-header">
-                                <h5 className="modal-title " id="exampleModalLabel"><img src={img} alt="" width="30" height="30" className="d-inline-block align-text-top" /> Shopping mart</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body text-center">
-                                <h5>Conform to logout</h5>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-outline-success" data-bs-dismiss="modal">No</button>
-                                <button type="button" className="btn btn-outline-danger"
-                                    onClick={() => {
-                                        return (localStorage.removeItem("currentuser"),
-                                            window.location.reload())
-                                    }}
-                                >Yes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <LogOut user={props.user} />
             </div>
         )
     } else {

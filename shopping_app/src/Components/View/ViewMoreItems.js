@@ -5,6 +5,8 @@ import loadingImg from "../Resources/Loading_Card.png";
 import Footer from '../Footer/Footer';
 import ChatBot from '../ChatBot/ChatBot';
 import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
+import LogOut from '../Login/LogOut';
+import Rating from '../Items/Rating/Rating';
 
 export default function ViewMoreItems(props) {
 
@@ -62,7 +64,7 @@ export default function ViewMoreItems(props) {
     }
 
     window.onscroll = () => {
-        if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 620) {
+        if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 420) {
             setScroll(true)
         } else {
             setScroll(false)
@@ -263,45 +265,50 @@ export default function ViewMoreItems(props) {
                                         return (
                                             <div className=' col row ' key={e.itemId}>&nbsp;
                                                 <div className="card " data-aos="fade-up" >
-                                                    <div className='card-header justify-content-end text-end'>
-                                                        <button className='btn  m-2' onClick={() => {
-                                                            if (localStorage.getItem("currentuser")) {
-                                                                axios.post("http://localhost:8083/cart/", {
-                                                                    "itemId": e.itemId,
-                                                                    "userId": localStorage.getItem("currentuser")
-                                                                }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
-                                                                    .catch((error) => {
-                                                                        setError(true);
-                                                                        if (error.response.data === undefined) {
-                                                                            setErrorMessage("Something went wrong")
-                                                                        } else {
-                                                                            setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-                                                                        }
-                                                                    })
-                                                            } else {
-                                                                return (setInfo("Login required !"), setShowToast(true), timeout())
-                                                            }
-                                                        }}
-                                                        ><i className='fa-solid fa-cart-shopping text-info'></i></button>
-                                                        <button className='btn ' onClick={() => {
-                                                            if (localStorage.getItem("currentuser")) {
-                                                                axios.post("http://localhost:8083/fav/", {
-                                                                    "itemId": e.itemId,
-                                                                    "userId": localStorage.getItem("currentuser")
-                                                                }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
-                                                                    .catch((error) => {
-                                                                        setError(true);
-                                                                        if (error.response.data === undefined) {
-                                                                            setErrorMessage("Something went wrong")
-                                                                        } else {
-                                                                            setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-                                                                        }
-                                                                    })
-                                                            } else {
-                                                                return (setInfo("Login required !"), setShowToast(true), timeout())
-                                                            }
-                                                        }}
-                                                        ><i className="fa-solid fa-heart text-danger"></i> </button>
+                                                    <div className='card-header row'>
+                                                        <div className='col-5 justify-content-start text-start gap-1 d-flex'>
+                                                            <Rating times={e.ratingOfItem} />
+                                                        </div>
+                                                        <div className='col-7 justify-content-end text-end'>
+                                                            <button className='btn  m-2' onClick={() => {
+                                                                if (localStorage.getItem("currentuser")) {
+                                                                    axios.post("http://localhost:8083/cart/", {
+                                                                        "itemId": e.itemId,
+                                                                        "userId": localStorage.getItem("currentuser")
+                                                                    }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
+                                                                        .catch((error) => {
+                                                                            setError(true);
+                                                                            if (error.response.data === undefined) {
+                                                                                setErrorMessage("Something went wrong")
+                                                                            } else {
+                                                                                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                                            }
+                                                                        })
+                                                                } else {
+                                                                    return (setInfo("Login required !"), setShowToast(true), timeout())
+                                                                }
+                                                            }}
+                                                            ><i className='fa-solid fa-cart-shopping text-info'></i></button>
+                                                            <button className='btn ' onClick={() => {
+                                                                if (localStorage.getItem("currentuser")) {
+                                                                    axios.post("http://localhost:8083/fav/", {
+                                                                        "itemId": e.itemId,
+                                                                        "userId": localStorage.getItem("currentuser")
+                                                                    }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) })
+                                                                        .catch((error) => {
+                                                                            setError(true);
+                                                                            if (error.response.data === undefined) {
+                                                                                setErrorMessage("Something went wrong")
+                                                                            } else {
+                                                                                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                                            }
+                                                                        })
+                                                                } else {
+                                                                    return (setInfo("Login required !"), setShowToast(true), timeout())
+                                                                }
+                                                            }}
+                                                            ><i className="fa-solid fa-heart text-danger"></i> </button>
+                                                        </div>
                                                     </div>
                                                     <img src={e.itemImgUrl} className="card-img-top" alt={e.itemName} />
 
@@ -433,58 +440,39 @@ export default function ViewMoreItems(props) {
 
             <Footer />
 
-            {showToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">
-                <div className="d-flex">
-                    <div className="toast-body ">
-                        <p className='text-truncate'>{info}</p>
-                        <div className="mt-2 pt-2">
-                            <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast">Ok</button>
-                        </div>
-                    </div>
-                </div>
-            </div>}
-
-            {/* Logout pop */}
-            <div className="modal fade " id="exampleModal3" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <div className="modal-content logout-model">
-                        <div className="modal-header">
-                            <h5 className="modal-title " id="exampleModalLabel"><img src={img} alt="" width="30" height="30" className="d-inline-block align-text-top" /> Shopping mart</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body text-center">
-                            <h5>Conform to logout</h5>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-outline-success" data-bs-dismiss="modal">No</button>
-                            <button type="button" className="btn btn-outline-danger"
-                                onClick={() => {
-                                    return (localStorage.removeItem("currentuser"),
-                                        localStorage.removeItem("Raghu"),
-                                        window.location.reload())
-                                }}
-                            >Yes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Error pop */}
-            {error && <>
-                <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+            {
+                showToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">
                     <div className="d-flex">
-                        <div className="toast-body text-danger text-center">
-                            <h6>Error !</h6>
-                            {errorMessage}
+                        <div className="toast-body ">
+                            <p className='text-truncate'>{info}</p>
                             <div className="mt-2 pt-2">
-                                <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { setError(false); setErrorMessage("") }}>Ok</button>
+                                <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast">Ok</button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </>
             }
-        </div>
+
+            {/* Logout pop */}
+            <LogOut user={props.user} />
+
+            {/* Error pop */}
+            {
+                error && <>
+                    <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div className="d-flex">
+                            <div className="toast-body text-danger text-center">
+                                <h6>Error !</h6>
+                                {errorMessage}
+                                <div className="mt-2 pt-2">
+                                    <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { setError(false); setErrorMessage("") }}>Ok</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            }
+        </div >
     )
 }
 

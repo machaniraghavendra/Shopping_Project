@@ -4,6 +4,7 @@ import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import { Link, useNavigate } from "react-router-dom";
 import ErrorPage from "../Error/ErrorPage";
 import ChatBot from '../ChatBot/ChatBot';
+import LogOut from "../Login/LogOut";
 
 export default function UsersList(props) {
 
@@ -274,7 +275,7 @@ export default function UsersList(props) {
                     </table>
                 </div>
 
-                            <ChatBot/>
+                <ChatBot />
 
                 {/* Delete pop */}
                 {showDeletePop &&
@@ -314,28 +315,7 @@ export default function UsersList(props) {
                 }
 
                 {/* Logout Pop */}
-                <div className="modal fade " id="exampleModal3" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
-                        <div className="modal-content logout-model">
-                            <div className="modal-header">
-                                <h5 className="modal-title " id="exampleModalLabel"><img src={img} alt="" width="30" height="30" className="d-inline-block align-text-top" /> Shopping mart</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body text-center">
-                                <h5>Conform to logout</h5>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-outline-success" data-bs-dismiss="modal">No</button>
-                                <button type="button" className="btn btn-outline-danger"
-                                    onClick={() => {
-                                        return (localStorage.removeItem("currentuser"),
-                                            window.location.reload())
-                                    }}
-                                >Yes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <LogOut user={props.user}/>
 
             </div>
         )

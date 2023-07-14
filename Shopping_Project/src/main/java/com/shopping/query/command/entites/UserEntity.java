@@ -33,5 +33,6 @@ public class UserEntity implements Serializable {
 	private String mobileNumber;
 	@Column(length = 23000)
 	private String profileImgUrl;
+	private boolean isLoggedIn;
 	private boolean admin;
 }

@@ -18,6 +18,7 @@ public class UserDetailDto {
 	private String userName;
 	private String mobileNumber;
 	private String profileImgUrl;
+	private boolean isLoggedIn;
 	private boolean admin;
 
 }

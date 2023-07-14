@@ -18,8 +18,6 @@ export default function Login(props) {
 
     const [userName, setUserName] = useState([]);
 
-    const [what, setWhat] = useState(false);
-
     const nav = useNavigate();
 
     const [error, setError] = useState(false);
@@ -49,11 +47,11 @@ export default function Login(props) {
                 axios.get("http://localhost:8083/user/" + user.userEmail + "/" + user.userPassword)
                     .then(res => {
                         if (res.data) {
-                            {  localStorage.setItem("currentuser", userName.userId) };
+                            { localStorage.setItem("currentuser", userName.userId) };
                             if (localStorage.getItem("currentuser")) {
                                 return (setInfo(""),
-                                    setShowToast(true), timeout(),
-                                    axios.get("http://localhost:8083/user/id/" + props.user).then(res => { return (setWhat(true)) })
+                                    setShowToast(true), timeout(), updateUserAsLogin(true),
+                                    axios.get("http://localhost:8083/user/id/" + props.user)
                                         .catch((error) => {
                                             setError(true);
                                             if (error.response.data === undefined) {
@@ -62,7 +60,6 @@ export default function Login(props) {
                                                 setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
                                             }
                                         }),
-
                                     setTimeout(() => {
                                         return (
                                             window.location.reload(),
@@ -89,12 +86,31 @@ export default function Login(props) {
         }
     }
 
+    const updateUserAsLogin = (status) => {
+        axios.put("http://localhost:8083/user/", {
+            "userEmail": userName.userEmail,
+            "userName": userName.userName,
+            "userId": userName.userId,
+            "userPassword": userName.userPassword,
+            "mobileNumber": userName.mobileNumber,
+            "profileImgUrl": userName.profileImgUrl,
+            "loggedIn": status,
+            "admin": userName.admin
+        }, []).then(a => { return (a) }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
+    }
+
     const timeout = () => {
         setTimeout(() => {
             setShowToast(false);
         }, 6500);
     }
-
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -136,7 +152,7 @@ export default function Login(props) {
     }, [])
 
 
-    if ( localStorage.getItem("currentuser")) {
+    if (localStorage.getItem("currentuser")) {
         return (
             <section className="vh-100 py-5 position-absolute" style={{ backgroundColor: "BLACK", width: "100%", height: "100%" }}>
                 <div className='container-fluid justify-content-center text-center text-light'>

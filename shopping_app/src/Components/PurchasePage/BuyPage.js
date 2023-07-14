@@ -5,6 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import ChatBot from '../ChatBot/ChatBot';
 import loadingImg from "../Resources/Loading_Card.png";
+import LogOut from "../Login/LogOut";
+import Rating from "../Items/Rating/Rating";
 
 export default function Buypage(props) {
 
@@ -31,6 +33,10 @@ export default function Buypage(props) {
     const [error, setError] = useState(false);
 
     const [errorMessage, setErrorMessage] = useState("");
+
+    var number = 1;
+
+    let itemId = "";
 
     const getItem = () => {
         axios.get("http://localhost:8083/purchase/?userId=" + props.user).then(a => {
@@ -184,10 +190,13 @@ export default function Buypage(props) {
         details.paymentOption = type;
     }
 
-    var number = 1;
     const increaseNumber = () => {
         document.getElementById("quantityNumbers").innerHTML = number
         details.orderQuantity = number
+        // let orderButtons=document.getElementsByClassName("orderButton")
+        // for (const orderButton of orderButtons) {
+        //     orderButton.innerHTML="Place Order Now of ₹"+totalAmountOfPurchase*number
+        // }
     }
 
     const validate = (e) => {
@@ -219,8 +228,6 @@ export default function Buypage(props) {
         }
         setErrors(errors);
     }
-
-    let itemId = "";
 
     const timeout = () => {
         setTimeout(() => {
@@ -321,6 +328,9 @@ export default function Buypage(props) {
                                                 <div className="col-md-6 d-md-block d-none">
                                                     <div className="col-md-4 float-md-end h-auto w-25">
                                                         <img src={itemData.itemImgUrl} className="rounded float-end w-50 h-100 d-block" alt={itemData.itemName} style={{ marginLeft: "auto", marginRight: "auto" }} />
+                                                        <div className='justify-content-center float-end my-3  fs-6'>
+                                                            <Rating times={itemData.ratingOfItem} />
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -501,29 +511,7 @@ export default function Buypage(props) {
                 </div>
 
                 {/* Logout popup */}
-                <div className="modal fade " id="exampleModal3" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
-                        <div className="modal-content logout-model">
-                            <div className="modal-header">
-                                <h5 className="modal-title " id="exampleModalLabel"><img src={img} alt="" width="30" height="30" className="d-inline-block align-text-top" /> Shopping mart</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body text-center">
-                                <h5>Conform to logout</h5>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-outline-success" data-bs-dismiss="modal">No</button>
-                                <button type="button" className="btn btn-outline-danger"
-                                    onClick={() => {
-                                        return (localStorage.removeItem("currentuser"),
-                                            localStorage.removeItem("Raghu"),
-                                            window.location.reload())
-                                    }}
-                                >Yes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <LogOut user={props.user} />
 
                 {/* Address popup */}
                 {showAddressToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">

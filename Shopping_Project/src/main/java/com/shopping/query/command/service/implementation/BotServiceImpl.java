@@ -124,7 +124,7 @@ public class BotServiceImpl implements BotService {
 			message = "The order details are " + entity.getItemName() + " of price " + entity.getItemPrice()
 					+ " of type " + entity.getItemType() + " its status is now "
 					+ ordersEntity.getOrderStatus() + " "
-					+ (!ordersEntity.getOrderStatus().equalsIgnoreCase("cancelled")
+					+ (!ordersEntity.getOrderStatus().equalsIgnoreCase("cancelled")&&!ordersEntity.getOrderStatus().equalsIgnoreCase("delivered")
 							? "and to be delivered by " + ordersEntity.getDeliveryDate()
 							: "")
 					+ entity.getItemImgUrl();
