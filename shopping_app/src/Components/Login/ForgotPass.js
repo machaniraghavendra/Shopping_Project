@@ -25,7 +25,6 @@ export default function ForgotPass(props) {
     const [errorMessage, setErrorMessage] = useState("");
 
     const check = () => {
-
         if (isSubmit == true) {
             if (formErrors.userEmail == "" && formErrors.userPassword == "") {
                 if (valueCon == values.userPassword) {
@@ -38,6 +37,7 @@ export default function ForgotPass(props) {
                                 "userName": res.data.userName,
                                 "mobileNumber": res.data.mobileNumber,
                                 "userId": res.data.userId,
+                                "loggedIn": res.data.loggedin,
                                 "admin":res.data.admin
                             })
                                 .then(res => {
@@ -62,8 +62,6 @@ export default function ForgotPass(props) {
             }
         }
     }
-
-
 
     const timeout = () => {
         setTimeout(() => {

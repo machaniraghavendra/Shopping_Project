@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import Footer from "../Footer/Footer";
 import ChatBot from "../ChatBot/ChatBot";
 import loadingImg from "../Resources/Loading_Card.png";
+import LogOut from "../Login/LogOut";
+import Rating from "../Items/Rating/Rating";
 
 export default function Wishlist(props) {
   const [search, setSearch] = useState("");
@@ -367,73 +369,34 @@ export default function Wishlist(props) {
                         <div className=" col row " key={e.itemId}>
                           &nbsp;
                           <div className="card" data-aos="fade-up">
-                            <div className="card-header justify-content-end text-end">
-                              <button
-                                className="btn  m-2"
-                                onClick={() => {
-                                  axios
-                                    .delete(
-                                      "http://localhost:8083/fav/" +
-                                      e.itemName +
-                                      "?" +
-                                      "userEmail=" +
-                                      localStorage.getItem("currentuser")
-                                    )
-                                    .then((res) => {
-                                      return (
-                                        setInfo(res.data),
-                                        setShowToast(true),
-                                        timeout(),
-                                        fetch()
-                                      );
-                                    })
-                                    .catch((error) => {
-                                      setError(true);
-                                      if (error.response.data === undefined) {
-                                        setErrorMessage("Something went wrong");
-                                      } else {
-                                        setErrorMessage(
-                                          error.response.data.message +
-                                          " of status = '" +
-                                          error.response.data.status +
-                                          "'"
-                                        );
-                                      }
-                                    });
-                                }}
-                              >
-                                <i className="fa-solid fa-trash text-danger"></i>
-                              </button>
-                              <button
-                                className="btn "
-                                onClick={() => {
-                                  if (
-                                    
-                                    localStorage.getItem("currentuser")
-                                  ) {
+                            <div className="card-header row">
+                              <div className='col-5 justify-content-start text-start gap-1 d-flex'>
+                                <Rating times={e.ratingOfItem} />
+                              </div>
+                              <div className='col-7 justify-content-end text-end'>
+                                <button
+                                  className="btn  m-2"
+                                  onClick={() => {
                                     axios
-                                      .post(
-                                        "http://localhost:8083/cart/",
-                                        {
-                                          itemId: e.itemId,
-                                          userId:
-                                            localStorage.getItem("currentuser"),
-                                        },
-                                        []
+                                      .delete(
+                                        "http://localhost:8083/fav/" +
+                                        e.itemName +
+                                        "?" +
+                                        "userId=" +
+                                        localStorage.getItem("currentuser")
                                       )
                                       .then((res) => {
                                         return (
                                           setInfo(res.data),
                                           setShowToast(true),
-                                          timeout()
+                                          timeout(),
+                                          fetch()
                                         );
                                       })
                                       .catch((error) => {
                                         setError(true);
                                         if (error.response.data === undefined) {
-                                          setErrorMessage(
-                                            "Something went wrong"
-                                          );
+                                          setErrorMessage("Something went wrong");
                                         } else {
                                           setErrorMessage(
                                             error.response.data.message +
@@ -443,13 +406,57 @@ export default function Wishlist(props) {
                                           );
                                         }
                                       });
-                                  } else {
-                                    setInfo("Login required !");
-                                  }
-                                }}
-                              >
-                                <i className="fa-solid fa-cart-shopping text-info"></i>{" "}
-                              </button>
+                                  }}
+                                >
+                                  <i className="fa-solid fa-trash text-danger"></i>
+                                </button>
+                                <button
+                                  className="btn "
+                                  onClick={() => {
+                                    if (
+
+                                      localStorage.getItem("currentuser")
+                                    ) {
+                                      axios
+                                        .post(
+                                          "http://localhost:8083/cart/",
+                                          {
+                                            itemId: e.itemId,
+                                            userId:
+                                              localStorage.getItem("currentuser"),
+                                          },
+                                          []
+                                        )
+                                        .then((res) => {
+                                          return (
+                                            setInfo(res.data),
+                                            setShowToast(true),
+                                            timeout()
+                                          );
+                                        })
+                                        .catch((error) => {
+                                          setError(true);
+                                          if (error.response.data === undefined) {
+                                            setErrorMessage(
+                                              "Something went wrong"
+                                            );
+                                          } else {
+                                            setErrorMessage(
+                                              error.response.data.message +
+                                              " of status = '" +
+                                              error.response.data.status +
+                                              "'"
+                                            );
+                                          }
+                                        });
+                                    } else {
+                                      setInfo("Login required !");
+                                    }
+                                  }}
+                                >
+                                  <i className="fa-solid fa-cart-shopping text-info"></i>{" "}
+                                </button>
+                              </div>
                             </div>
                             <img
                               src={e.itemImgUrl}
@@ -509,7 +516,7 @@ export default function Wishlist(props) {
                                       "http://localhost:8083/fav/" +
                                       e.itemName +
                                       "?" +
-                                      "userEmail=" +
+                                      "userId=" +
                                       localStorage.getItem("currentuser")
                                     )
                                     .then((res) => {
@@ -534,9 +541,6 @@ export default function Wishlist(props) {
                                       }
                                     });
                                 }}
-                                data-bs-toggle="modal"
-                                data-bs-target="#exampleModal2"
-                                data-bs-whatever="@mdo"
                               >
                                 <i className="fa-solid fa-trash "></i>
                               </button>
@@ -784,98 +788,78 @@ export default function Wishlist(props) {
                           <div className=" col row " key={e.itemId}>
                             &nbsp;
                             <div className="card " data-aos="fade-up">
-                              <div className="card-header justify-content-end text-end">
-                                <button
-                                  className="btn  m-2"
-                                  onClick={() => {
+                              <div className="card-header row'">
+                                <div className='col-5 justify-content-start text-start gap-1 d-flex'>
+                                  <Rating times={e.ratingOfItem} />
+                                </div>
+                                <div className='col-7 justify-content-end text-end'>
+                                  <button className="btn m-2" onClick={() => {
                                     setfetchDone(false);
-                                    axios
-                                      .delete(
-                                        "http://localhost:8083/fav/" +
-                                        e.itemName +
-                                        "?" +
-                                        "userEmail=" +
-                                        localStorage.getItem("currentuser")
-                                      )
-                                      .then((res) => {
-                                        return (
-                                          setInfo(res.data),
-                                          setShowToast(true),
-                                          timeout(),
-                                          fetch()
-                                        );
-                                      })
+                                    axios.delete("http://localhost:8083/fav/" + e.itemName + "?" + "userEmail=" + localStorage.getItem("currentuser")).then((res) => {
+                                      return (
+                                        setInfo(res.data), setShowToast(true), timeout(), fetch());
+                                    })
                                       .catch((error) => {
                                         setError(true);
                                         if (error.response.data === undefined) {
-                                          setErrorMessage(
-                                            "Something went wrong"
-                                          );
+                                          setErrorMessage("Something went wrong");
                                         } else {
-                                          setErrorMessage(
-                                            error.response.data.message +
-                                            " of status = '" +
-                                            error.response.data.status +
-                                            "'"
-                                          );
+                                          setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
                                         }
                                       });
-                                  }}
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#staticBackdrop"
-                                  data-bs-whatever="@mdo"
-                                >
-                                  <i className="fa-solid fa-trash text-danger"></i>
-                                </button>
-                                <button
-                                  className="btn "
-                                  onClick={() => {
-                                    if (
-                                      localStorage.getItem("currentuser")
-                                    ) {
-                                      axios
-                                        .post(
-                                          "http://localhost:8083/cart/",
-                                          {
-                                            itemId: e.itemId,
-                                            userId:
-                                              localStorage.getItem(
-                                                "currentuser"
-                                              ),
-                                          },
-                                          []
-                                        )
-                                        .then((res) => {
-                                          return (
-                                            setInfo(res.data),
-                                            setShowToast(true),
-                                            timeout()
-                                          );
-                                        })
-                                        .catch((error) => {
-                                          setError(true);
-                                          if (
-                                            error.response.data === undefined
-                                          ) {
-                                            setErrorMessage(
-                                              "Something went wrong"
+                                  }}>
+                                    <i className="fa-solid fa-trash text-danger"></i>
+                                  </button>
+                                  <button
+                                    className="btn "
+                                    onClick={() => {
+                                      if (
+                                        localStorage.getItem("currentuser")
+                                      ) {
+                                        axios
+                                          .post(
+                                            "http://localhost:8083/cart/",
+                                            {
+                                              itemId: e.itemId,
+                                              userId:
+                                                localStorage.getItem(
+                                                  "currentuser"
+                                                ),
+                                            },
+                                            []
+                                          )
+                                          .then((res) => {
+                                            return (
+                                              setInfo(res.data),
+                                              setShowToast(true),
+                                              timeout()
                                             );
-                                          } else {
-                                            setErrorMessage(
-                                              error.response.data.message +
-                                              " of status = '" +
-                                              error.response.data.status +
-                                              "'"
-                                            );
-                                          }
-                                        });
-                                    } else {
-                                      setInfo("Login required !");
-                                    }
-                                  }}
-                                >
-                                  <i className="fa-solid fa-cart-shopping text-info"></i>{" "}
-                                </button>
+                                          })
+                                          .catch((error) => {
+                                            setError(true);
+                                            if (
+                                              error.response.data === undefined
+                                            ) {
+                                              setErrorMessage(
+                                                "Something went wrong"
+                                              );
+                                            } else {
+                                              setErrorMessage(
+                                                error.response.data.message +
+                                                " of status = '" +
+                                                error.response.data.status +
+                                                "'"
+                                              );
+                                            }
+                                          });
+                                      } else {
+                                        setInfo("Login required !");
+                                      }
+                                    }}
+                                  >
+                                    <i className="fa-solid fa-cart-shopping text-info"></i>{" "}
+                                  </button>
+                                </div>
                               </div>
                               <img
                                 src={e.itemImgUrl}
@@ -915,66 +899,13 @@ export default function Wishlist(props) {
               </button>
             </div>
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
       <ChatBot />
 
       {/* Logout Popup */}
-      <div
-        className="modal fade "
-        id="exampleModal3"
-        tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog">
-          <div className="modal-content logout-model">
-            <div className="modal-header">
-              <h5 className="modal-title " id="exampleModalLabel">
-                <img
-                  src={img}
-                  alt=""
-                  width="30"
-                  height="30"
-                  className="d-inline-block align-text-top"
-                />{" "}
-                Shopping mart
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body text-center">
-              <h5>Conform to logout</h5>
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-outline-success"
-                data-bs-dismiss="modal"
-              >
-                No
-              </button>
-              <button
-                type="button"
-                className="btn btn-outline-danger"
-                onClick={() => {
-                  return (
-                    localStorage.removeItem("currentuser"),
-                    localStorage.removeItem("Raghu"),
-                    window.location.reload()
-                  );
-                }}
-              >
-                Yes
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      <LogOut user={props.user} />
+
+    </div >
   );
 }

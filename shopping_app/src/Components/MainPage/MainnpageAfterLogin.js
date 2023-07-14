@@ -4,6 +4,8 @@ import axios from "axios";
 import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import { Link, useNavigate } from "react-router-dom";
 import ChatBot from "../ChatBot/ChatBot";
+import LogOut from "../Login/LogOut";
+import Rating from "../Items/Rating/Rating";
 
 export default function MainPageAfterlogin(props) {
 
@@ -101,7 +103,7 @@ export default function MainPageAfterlogin(props) {
             if (!localStorage.getItem("currentuser")) {
                 nav("/login")
             }
-        }, 2000);
+        }, 1000);
         return (fetch())
     }, [])
 
@@ -165,7 +167,7 @@ export default function MainPageAfterlogin(props) {
                                         &nbsp;Shopping Mart</h1>
                                     :
                                     <h1 className="navbar-brand" >Contents</h1>}
-                                    
+
                                 <div className="collapse navbar-collapse " id="navbarTogglerDemo02">
                                     <ul className="navbar-nav me-auto mb-2 mb-lg-0  ">
                                         <li className="nav-item ">
@@ -257,24 +259,29 @@ export default function MainPageAfterlogin(props) {
                                         return (
                                             <div className=' col row ' key={e.itemId}>&nbsp;
                                                 <div className="card " data-aos="fade-up" >
-                                                    <div className='card-header justify-content-end text-end'>
-                                                        <button className='btn  m-2' onClick={() => {
-                                                            axios.post("http://localhost:8083/cart/", {
-                                                                "itemId": e.itemId,
-                                                                "userId": localStorage.getItem("currentuser")
-                                                            }, []).then((res) => { return (setInfo(res.data)) })
-                                                        }}
-                                                            data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-whatever="@mdo"
+                                                    <div className='card-header row'>
+                                                        <div className='col-5 justify-content-start text-start gap-1 d-flex'>
+                                                            <Rating times={e.ratingOfItem} />
+                                                        </div>
+                                                        <div className='col-7 justify-content-end text-end'>
+                                                            <button className='btn  m-2' onClick={() => {
+                                                                axios.post("http://localhost:8083/cart/", {
+                                                                    "itemId": e.itemId,
+                                                                    "userId": localStorage.getItem("currentuser")
+                                                                }, []).then((res) => { return (setInfo(res.data)) })
+                                                            }}
+                                                                data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-whatever="@mdo"
 
-                                                        ><i className='fa-solid fa-cart-shopping text-info'></i></button>
-                                                        <button className='btn ' onClick={() => {
-                                                            axios.post("http://localhost:8083/fav/", {
-                                                                "itemId": e.itemId,
-                                                                "userId": localStorage.getItem("currentuser")
-                                                            }, []).then((res) => { return (setInfo(res.data)) })
-                                                        }}
-                                                            data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-whatever="@mdo"
-                                                        ><i className="fa-solid fa-heart text-danger"></i> </button>
+                                                            ><i className='fa-solid fa-cart-shopping text-info'></i></button>
+                                                            <button className='btn ' onClick={() => {
+                                                                axios.post("http://localhost:8083/fav/", {
+                                                                    "itemId": e.itemId,
+                                                                    "userId": localStorage.getItem("currentuser")
+                                                                }, []).then((res) => { return (setInfo(res.data)) })
+                                                            }}
+                                                                data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-whatever="@mdo"
+                                                            ><i className="fa-solid fa-heart text-danger"></i> </button>
+                                                        </div>
                                                     </div>
                                                     <img src={e.itemImgUrl} className="card-img-top" alt="..." />
                                                     <div className="card-body">
@@ -390,27 +397,8 @@ export default function MainPageAfterlogin(props) {
                 <ChatBot />
 
                 {/* LogOut pop */}
-                <div className="modal fade " id="exampleModal3" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
-                        <div className="modal-content logout-model">
-                            <div className="modal-header">
-                                <h5 className="modal-title " id="exampleModalLabel"><img src={img} alt="" width="30" height="30" className="d-inline-block align-text-top" /> Shopping mart</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body text-center">
-                                <h5>Conform to logout</h5>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-outline-success" data-bs-dismiss="modal">No</button>
-                                <button type="button" className="btn btn-outline-danger"
-                                    onClick={() => {
-                                        return (localStorage.removeItem("currentuser"), window.location.reload())
-                                    }}
-                                >Yes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <LogOut user={props.user} />
+
                 {/* Switch user popup */}
                 <div className="modal fade " id="exampleModal2" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog">

@@ -4,6 +4,7 @@ import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import { Link, useNavigate } from "react-router-dom";
 import ErrorPage from "../Error/ErrorPage";
 import ChatBot from '../ChatBot/ChatBot';
+import LogOut from "../Login/LogOut";
 
 export default function UpdateItem(props) {
 
@@ -124,6 +125,7 @@ export default function UpdateItem(props) {
         const { name, value } = a.target
         setItemDetails({ ...itemDetails, [name]: value })
         validate(itemDetails)
+        console.log(itemDetails.trending);
     }
 
     const validate = (item) => {
@@ -286,7 +288,7 @@ export default function UpdateItem(props) {
                                     <img src={itemDetails.itemImgUrl} width={200} height={200} alt="No image found with URL" />
                                 </div>
                                 <div className="row  p-3">
-                                    <form className="card-color bg-warning col-12 col-lg-9" onSubmit={(e) => { updateItem(); return (e.preventDefault()) }}>
+                                    <form className="card-color bg-dark col-12 col-lg-9" onSubmit={(e) => { updateItem(); return (e.preventDefault()) }}>
                                         <div className="row text-black" >
                                             <div className='row'>
                                                 <div className="col-md g-4">
@@ -360,7 +362,8 @@ export default function UpdateItem(props) {
                                                 </div>
                                                 <div className="col-md g-4">
                                                     <div className="form-check">
-                                                        <input className="form-check-input" type="checkbox" name="trending" value={itemDetails.trending}
+                                                        <input className="form-check-input" type="checkbox" name="trending" value={!itemDetails.trending}
+                                                            checked={itemDetails.trending}
                                                             onChange={setToItemDetails}
                                                             id="flexCheckDefault" />
                                                         <label className="form-check-label text-light" htmlFor="flexCheckDefault">
@@ -414,7 +417,7 @@ export default function UpdateItem(props) {
                 </div>
 
                 <ChatBot />
-                
+
                 {/* Delete Item */}
                 {deleteItemPop && <>
                     <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
@@ -448,28 +451,7 @@ export default function UpdateItem(props) {
                 }
 
                 {/* Logout Pop */}
-                <div className="modal fade " id="exampleModal3" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
-                        <div className="modal-content logout-model">
-                            <div className="modal-header">
-                                <h5 className="modal-title " id="exampleModalLabel"><img src={img} alt="" width="30" height="30" className="d-inline-block align-text-top" /> Shopping mart</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body text-center">
-                                <h5>Conform to logout</h5>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-outline-success" data-bs-dismiss="modal">No</button>
-                                <button type="button" className="btn btn-outline-danger"
-                                    onClick={() => {
-                                        return (localStorage.removeItem("currentuser"),
-                                            window.location.reload())
-                                    }}
-                                >Yes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <LogOut user={props.user}/>
             </div>
         )
     } else {

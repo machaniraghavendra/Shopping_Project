@@ -7,6 +7,7 @@ import Footer from '../Footer/Footer';
 import ChatBot from '../ChatBot/ChatBot';
 import ProfilePictureEdit from './ProfilePictureEdit';
 import UsersLinks from '../AdminPages/UsersLinks';
+import LogOut from '../Login/LogOut';
 
 export default function Settings(props) {
 
@@ -469,7 +470,7 @@ export default function Settings(props) {
                                     <UsersLinks />
                                 </div>
                             }
-                            
+
                             <section>
                                 <div className='container-md data p-2'>
                                     <div className="row ">
@@ -515,7 +516,9 @@ export default function Settings(props) {
                                                                 "userId": localStorage.getItem("currentuser"),
                                                                 "userEmail": user.userEmail,
                                                                 "profileImgUrl": user.profileImgUrl,
-                                                                "mobileNumber": user.mobileNumber
+                                                                "mobileNumber": user.mobileNumber,
+                                                                "loggedIn":user.loggedin,
+                                                                "admin":user.admin
                                                             }).then(res => { setInfo(res.data); }).catch((error) => {
                                                                 setError(true);
                                                                 if (error.response.data === undefined) {
@@ -549,7 +552,9 @@ export default function Settings(props) {
                                                                 "userId": localStorage.getItem("currentuser"),
                                                                 "userEmail": user.userEmail,
                                                                 "profileImgUrl": user.profileImgUrl,
-                                                                "mobileNumber": values.mobileNumber
+                                                                "mobileNumber": values.mobileNumber,
+                                                                "loggedIn":user.loggedin,
+                                                                "admin":user.admin
                                                             }).then(res => { setInfo(res.data); }).catch((error) => {
                                                                 setError(true);
                                                                 if (error.response.data === undefined) {
@@ -661,28 +666,7 @@ export default function Settings(props) {
                 </div>
 
                 {/* Logout Pop */}
-                <div className="modal fade " id="exampleModal3" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
-                        <div className="modal-content logout-model">
-                            <div className="modal-header">
-                                <h5 className="modal-title " id="exampleModalLabel"><img src={img} alt="" width="30" height="30" className="d-inline-block align-text-top" /> Shopping mart</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body text-center">
-                                <h5>Conform to logout</h5>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-outline-success" data-bs-dismiss="modal">No</button>
-                                <button type="button" className="btn btn-outline-danger"
-                                    onClick={() => {
-                                        return (localStorage.removeItem("currentuser"),
-                                            window.location.reload())
-                                    }}
-                                >Yes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <LogOut user={props.user}/>
 
                 {/* PopUp for address saving */}
                 <div className="modal fade" id="popupforaddress" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

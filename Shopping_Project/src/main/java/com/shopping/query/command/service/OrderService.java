@@ -14,7 +14,7 @@ import com.shopping.query.command.exceptions.UserNotFoundException;
 public interface OrderService {
 
 	boolean saveOrderByCheckingAddress(OrdersEntity ordersEntity) throws UserNotFoundException;
-	
+
 	String saveOrderDetails(OrdersEntity ordersEntity)
 			throws OrderNotFoundException, ItemNotFoundException, OrderWithSameItemExistsException;
 
@@ -33,6 +33,8 @@ public interface OrderService {
 	List<Object> getSavedOrder();
 
 	List<OrdersDto> getOrdersofUser(UUID userId);
+
+	void updateOrderStatus(UUID orderid) throws OrderNotFoundException;
 
 	String getDate(LocalDateTime date);
 

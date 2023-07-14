@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link } from 'react-router-dom';
 import "./Tv.css"
 import loadingImg from "/Shopping_Project/shopping_app/src/Components/Resources/Loading_Card.png";
+import Rating from '../Rating/Rating';
 
 export default function TV() {
 
@@ -45,15 +46,15 @@ export default function TV() {
 
   const addIntoInterest = (id) => {
     axios.post("http://localhost:8083/items/history?userId=" + localStorage.getItem("currentuser") + "&id=" + id)
-    .catch((error) => {
+      .catch((error) => {
         setError(true);
         if (error.response.data === undefined) {
-            setErrorMessage("Something went wrong")
+          setErrorMessage("Something went wrong")
         } else {
-            setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+          setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
         }
-    })
-}
+      })
+  }
 
   useEffect(() => {
     return (fetch())
@@ -77,43 +78,48 @@ export default function TV() {
                     return (
                       <div className='col row' key={e.itemId}>&nbsp;
                         <div className="card" data-aos="fade-right">
-                          <div className='card-header justify-content-end text-end'>
-                            <button className='btn  m-2' onClick={() => {
-                              if ( localStorage.getItem("currentuser")) {
-                                axios.post("http://localhost:8083/cart/", {
-                                  "itemId": e.itemId,
-                                  "userId": localStorage.getItem("currentuser")
-                                }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
-                                  setError(true);
-                                  if (error.response.data === undefined) {
-                                    setErrorMessage("Something went wrong")
-                                  } else {
-                                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-                                  }
-                                })
-                              } else {
-                                return (setInfo("Login required !"), setShowToast(true), timeout())
-                              }
-                            }}
-                            ><i className='fa-solid fa-cart-shopping text-info'></i></button>
-                            <button className='btn ' onClick={() => {
-                              if ( localStorage.getItem("currentuser")) {
-                                axios.post("http://localhost:8083/fav/", {
-                                  "itemId": e.itemId,
-                                  "userId": localStorage.getItem("currentuser")
-                                }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
-                                  setError(true);
-                                  if (error.response.data === undefined) {
-                                    setErrorMessage("Something went wrong")
-                                  } else {
-                                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-                                  }
-                                })
-                              } else {
-                                return (setInfo("Login required !"), setShowToast(true), timeout())
-                              }
-                            }}
-                            ><i className="fa-solid fa-heart text-danger"></i> </button>
+                          <div className='card-header row'>
+                            <div className='col-5 justify-content-start text-start gap-1 d-flex'>
+                              <Rating times={e.ratingOfItem} />
+                            </div>
+                            <div className='col-7 justify-content-end text-end'>
+                              <button className='btn  m-2' onClick={() => {
+                                if (localStorage.getItem("currentuser")) {
+                                  axios.post("http://localhost:8083/cart/", {
+                                    "itemId": e.itemId,
+                                    "userId": localStorage.getItem("currentuser")
+                                  }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
+                                    setError(true);
+                                    if (error.response.data === undefined) {
+                                      setErrorMessage("Something went wrong")
+                                    } else {
+                                      setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                    }
+                                  })
+                                } else {
+                                  return (setInfo("Login required !"), setShowToast(true), timeout())
+                                }
+                              }}
+                              ><i className='fa-solid fa-cart-shopping text-info'></i></button>
+                              <button className='btn ' onClick={() => {
+                                if (localStorage.getItem("currentuser")) {
+                                  axios.post("http://localhost:8083/fav/", {
+                                    "itemId": e.itemId,
+                                    "userId": localStorage.getItem("currentuser")
+                                  }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
+                                    setError(true);
+                                    if (error.response.data === undefined) {
+                                      setErrorMessage("Something went wrong")
+                                    } else {
+                                      setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                    }
+                                  })
+                                } else {
+                                  return (setInfo("Login required !"), setShowToast(true), timeout())
+                                }
+                              }}
+                              ><i className="fa-solid fa-heart text-danger"></i> </button>
+                            </div>
                           </div>
                           <img src={e.itemImgUrl} className="card-img-top" alt="..." />
                           <div className="card-body">

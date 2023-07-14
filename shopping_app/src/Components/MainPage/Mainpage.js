@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from "react-router-dom";
 import axios from "axios";
 import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
+import Rating from "../Items/Rating/Rating";
 
 export default function MainPage() {
 
@@ -184,32 +185,37 @@ export default function MainPage() {
                                     return (
                                         <div className=' col row ' key={e.itemId}>&nbsp;
                                             <div className="card " data-aos="fade-up" >
-                                                <div className='card-header justify-content-end text-end'>
-                                                    <button className='btn  m-2' onClick={() => {
-                                                        if ( localStorage.getItem("currentuser")) {
-                                                            axios.post("http://localhost:8083/cart/", {
-                                                                "itemId": e.itemId,
-                                                                "userId": localStorage.getItem("currentuser")
-                                                            }, []).then((res) => { return (setInfo(res.data)) })
-                                                        } else {
-                                                            setInfo("Login required")
-                                                        }
-                                                    }}
-                                                        data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-whatever="@mdo"
+                                                <div className='card-header row'>
+                                                    <div className='col-5 justify-content-start text-start gap-1 d-flex'>
+                                                        <Rating times={e.ratingOfItem} />
+                                                    </div>
+                                                    <div className='col-7 justify-content-end text-end'>
+                                                        <button className='btn  m-2' onClick={() => {
+                                                            if (localStorage.getItem("currentuser")) {
+                                                                axios.post("http://localhost:8083/cart/", {
+                                                                    "itemId": e.itemId,
+                                                                    "userId": localStorage.getItem("currentuser")
+                                                                }, []).then((res) => { return (setInfo(res.data)) })
+                                                            } else {
+                                                                setInfo("Login required")
+                                                            }
+                                                        }}
+                                                            data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-whatever="@mdo"
 
-                                                    ><i className='fa-solid fa-cart-shopping text-info'></i></button>
-                                                    <button className='btn ' onClick={() => {
-                                                        if ( localStorage.getItem("currentuser")) {
-                                                            axios.post("http://localhost:8083/fav/", {
-                                                                "itemId": e.itemId,
-                                                                "userId": localStorage.getItem("currentuser")
-                                                            }, []).then((res) => { return (setInfo(res.data)) })
-                                                        } else {
-                                                            setInfo("Login required !")
-                                                        }
-                                                    }}
-                                                        data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-whatever="@mdo"
-                                                    ><i className="fa-solid fa-heart text-danger"></i> </button>
+                                                        ><i className='fa-solid fa-cart-shopping text-info'></i></button>
+                                                        <button className='btn ' onClick={() => {
+                                                            if (localStorage.getItem("currentuser")) {
+                                                                axios.post("http://localhost:8083/fav/", {
+                                                                    "itemId": e.itemId,
+                                                                    "userId": localStorage.getItem("currentuser")
+                                                                }, []).then((res) => { return (setInfo(res.data)) })
+                                                            } else {
+                                                                setInfo("Login required !")
+                                                            }
+                                                        }}
+                                                            data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-whatever="@mdo"
+                                                        ><i className="fa-solid fa-heart text-danger"></i> </button>
+                                                    </div>
                                                 </div>
                                                 <img src={e.itemImgUrl} className="card-img-top" alt="..." />
                                                 <div className="card-body">
@@ -333,7 +339,7 @@ export default function MainPage() {
                     </div>
                 </div>
             </>
-            }F
+            }
         </div >
     )
 }

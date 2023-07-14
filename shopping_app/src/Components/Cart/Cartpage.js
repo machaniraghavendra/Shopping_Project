@@ -6,6 +6,8 @@ import "../Cart/Cart.css"
 import Footer from '../Footer/Footer';
 import ChatBot from '../ChatBot/ChatBot';
 import loadingImg from "../Resources/Loading_Card.png";
+import LogOut from '../Login/LogOut';
+import Rating from '../Items/Rating/Rating';
 
 export default function Cartpage(props) {
 
@@ -57,14 +59,14 @@ export default function Cartpage(props) {
 
     const addIntoInterest = (id) => {
         axios.post("http://localhost:8083/items/history?user=" + localStorage.getItem("currentuser") + "&id=" + id)
-        .catch((error) => {
-            setError(true);
-            if (error.response.data === undefined) {
-                setErrorMessage("Something went wrong")
-            } else {
-                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-            }
-        })
+            .catch((error) => {
+                setError(true);
+                if (error.response.data === undefined) {
+                    setErrorMessage("Something went wrong")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
+            })
     }
 
     setTimeout(() => {
@@ -208,12 +210,12 @@ export default function Cartpage(props) {
                                 </ul>
                             </div>
                             <div className='offcanvas-footer down my-3 d-lg-none '>
-                                        <h5>Name :  {fetchDone ? <span> {user.userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
-                                        </h5>
-                                        <button className="btn btn-outline-danger  justify-content-end " data-bs-toggle="modal" data-bs-target="#exampleModal3" data-bs-whatever="@fat"
-                                        ><i className="fa-solid fa-power-off"></i>
-                                        </button>
-                                    </div>
+                                <h5>Name :  {fetchDone ? <span> {user.userName}</span> : <span className="placeholder-glow"><span className="placeholder col-12"></span> </span>}
+                                </h5>
+                                <button className="btn btn-outline-danger  justify-content-end " data-bs-toggle="modal" data-bs-target="#exampleModal3" data-bs-whatever="@fat"
+                                ><i className="fa-solid fa-power-off"></i>
+                                </button>
+                            </div>
                         </div>
                     </aside>
                 </div>
@@ -234,37 +236,40 @@ export default function Cartpage(props) {
                                                 return (
                                                     <div className=' col row ' key={e.itemId}>&nbsp;
                                                         <div className="card" data-aos="fade-up" >
-
-                                                            <div className='card-header justify-content-end text-end'>
-                                                                <button className='btn  m-2' onClick={() => {
-                                                                    setfetchDone(false);
-                                                                    axios.delete("http://localhost:8083/cart/" + e.itemName + "?" + "userEmail=" + localStorage.getItem("currentuser")).then((res) => { return (setInfo(res.data), fetch(), setShowToast(true), timeout()) }).catch((error) => {
-                                                                        setError(true);
-                                                                        if (error.response.data === undefined) {
-                                                                            setErrorMessage("Something went wrong")
-                                                                        } else {
-                                                                            setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-                                                                        }
-                                                                    })
-                                                                }}
-                                                                ><i className='fa-solid fa-trash text-danger'></i></button>
-                                                                <button className='btn ' onClick={() => {
-                                                                    if ( localStorage.getItem("currentuser")) {
-                                                                        axios.post("http://localhost:8083/fav/", {
-                                                                            "itemId": e.itemId,
-                                                                            "userId": localStorage.getItem("currentuser")
-                                                                        }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
+                                                            <div className='card-header row'>
+                                                                <div className='col-5 justify-content-start text-start gap-1 d-flex'>
+                                                                    <Rating times={e.ratingOfItem} />
+                                                                </div>
+                                                                <div className='col-7 justify-content-end text-end'>
+                                                                    <button className='btn  m-2' onClick={() => {
+                                                                        setfetchDone(false);
+                                                                        axios.delete("http://localhost:8083/cart/" + e.itemName + "?" + "userId=" + localStorage.getItem("currentuser")).then((res) => { return (setInfo(res.data), fetch(), setShowToast(true), timeout()) }).catch((error) => {
                                                                             setError(true);
-                                                                            setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                                            if (error.response.data === undefined) {
+                                                                                setErrorMessage("Something went wrong")
+                                                                            } else {
+                                                                                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                                            }
                                                                         })
-                                                                    } else {
-                                                                        setInfo("Login required !")
-                                                                    }
-                                                                }}
-                                                                ><i className="fa-solid fa-heart text-danger"></i> </button>
+                                                                    }}
+                                                                    ><i className='fa-solid fa-trash text-danger'></i></button>
+                                                                    <button className='btn ' onClick={() => {
+                                                                        if (localStorage.getItem("currentuser")) {
+                                                                            axios.post("http://localhost:8083/fav/", {
+                                                                                "itemId": e.itemId,
+                                                                                "userId": localStorage.getItem("currentuser")
+                                                                            }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
+                                                                                setError(true);
+                                                                                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                                            })
+                                                                        } else {
+                                                                            setInfo("Login required !")
+                                                                        }
+                                                                    }}
+                                                                    ><i className="fa-solid fa-heart text-danger"></i> </button>
+                                                                </div>
                                                             </div>
                                                             <img src={e.itemImgUrl} className="card-img-top" alt="..." />
-
                                                             <div className="card-body">
                                                                 <h5 className="card-title text-truncate" id={e.itemName}>{e.itemName}</h5>
                                                                 <p className="card-text text-truncate"> ₹{e.itemPrice}</p>
@@ -434,30 +439,35 @@ export default function Cartpage(props) {
                                                     return (
                                                         <div className=' col row ' key={e.itemId}>&nbsp;
                                                             <div className="card " data-aos="fade-up" >
-                                                                <div className='card-header justify-content-end text-end'>
-                                                                    <button className='btn  m-2' onClick={() => {
-                                                                        setfetchDone(false);
-                                                                        axios.delete("http://localhost:8083/cart/" + e.itemName + "?" + "userEmail=" + localStorage.getItem("currentuser")).then((res) => { return (setInfo(res.data), fetch(), setShowToast(true), timeout(), setSearch("")) }).catch((error) => {
-                                                                            setError(true);
-                                                                            setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-                                                                        })
-                                                                    }}
-                                                                        data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-whatever="@mdo"
-                                                                    ><i className='fa-solid fa-trash text-danger'></i></button>
-                                                                    <button className='btn ' onClick={() => {
-                                                                        if ( localStorage.getItem("currentuser")) {
-                                                                            axios.post("http://localhost:8083/fav/", {
-                                                                                "itemId": e.itemId,
-                                                                                "userId": localStorage.getItem("currentuser")
-                                                                            }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
+                                                                <div className='card-header row'>
+                                                                    <div className='col-5 justify-content-start text-start gap-1 d-flex'>
+                                                                        <Rating times={e.ratingOfItem} />
+                                                                    </div>
+                                                                    <div className='col-7 justify-content-end text-end'>
+                                                                        <button className='btn  m-2' onClick={() => {
+                                                                            setfetchDone(false);
+                                                                            axios.delete("http://localhost:8083/cart/" + e.itemName + "?" + "userEmail=" + localStorage.getItem("currentuser")).then((res) => { return (setInfo(res.data), fetch(), setShowToast(true), timeout(), setSearch("")) }).catch((error) => {
                                                                                 setError(true);
                                                                                 setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
                                                                             })
-                                                                        } else {
-                                                                            setInfo("Login required !")
-                                                                        }
-                                                                    }}
-                                                                    ><i className="fa-solid fa-heart text-danger"></i> </button>
+                                                                        }}
+                                                                            data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-whatever="@mdo"
+                                                                        ><i className='fa-solid fa-trash text-danger'></i></button>
+                                                                        <button className='btn ' onClick={() => {
+                                                                            if (localStorage.getItem("currentuser")) {
+                                                                                axios.post("http://localhost:8083/fav/", {
+                                                                                    "itemId": e.itemId,
+                                                                                    "userId": localStorage.getItem("currentuser")
+                                                                                }, []).then((res) => { return (setInfo(res.data), setShowToast(true), timeout()) }).catch((error) => {
+                                                                                    setError(true);
+                                                                                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                                                                                })
+                                                                            } else {
+                                                                                setInfo("Login required !")
+                                                                            }
+                                                                        }}
+                                                                        ><i className="fa-solid fa-heart text-danger"></i> </button>
+                                                                    </div>
                                                                 </div>
                                                                 <img src={e.itemImgUrl} className="card-img-top" alt="..." />
                                                                 <div className="card-body">
@@ -501,29 +511,8 @@ export default function Cartpage(props) {
             <ChatBot />
 
             {/* Logout popup */}
-            <div className="modal fade " id="exampleModal3" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
-                    <div className="modal-content logout-model">
-                        <div className="modal-header">
-                            <h5 className="modal-title " id="exampleModalLabel"><img src={img} alt="" width="30" height="30" className="d-inline-block align-text-top" /> Shopping mart</h5>
-                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body text-center">
-                            <h5>Conform to logout</h5>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className="btn btn-outline-success" data-bs-dismiss="modal">No</button>
-                            <button type="button" className="btn btn-outline-danger"
-                                onClick={() => {
-                                    return (localStorage.removeItem("currentuser"),
-                                        localStorage.removeItem("Raghu"),
-                                        window.location.reload())
-                                }}
-                            >Yes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <LogOut user={props.user} />
+
         </div>
     )
 }

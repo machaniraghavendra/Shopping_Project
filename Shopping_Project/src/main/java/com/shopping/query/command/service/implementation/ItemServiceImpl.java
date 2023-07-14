@@ -125,6 +125,7 @@ public class ItemServiceImpl implements ItemService {
 				.sorted(Comparator.comparing(ItemEntity::getItemName, Comparator.reverseOrder()))
 				.sorted(Comparator.comparing(ItemEntity::getItemUpdatedOn, Comparator.reverseOrder()))
 				.sorted(Comparator.comparing(ItemEntity::isTrending, Comparator.reverseOrder())).toList());
+		listToShow.sort(Comparator.comparing(ItemEntity::getRatingOfItem,Comparator.reverseOrder()));
 		return listToShow;
 	}
 

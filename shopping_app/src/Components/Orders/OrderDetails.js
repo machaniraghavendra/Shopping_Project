@@ -6,6 +6,8 @@ import Footer from '../Footer/Footer';
 import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import ChatBot from '../ChatBot/ChatBot';
 import loadingImg from "../Resources/Loading_Card.png";
+import LogOut from '../Login/LogOut';
+import Rating from '../Items/Rating/Rating';
 
 export default function OrderDetails(props) {
 
@@ -23,11 +25,18 @@ export default function OrderDetails(props) {
 
     const [errorMessage, setErrorMessage] = useState("");
 
+    const [ratingOfUserForItem, setRatingOfUserForItem] = useState([]);
+
+    const [userRatingforItem, setUserRatingforItem] = useState("");
+
+    const [showThankYou, setShowThankYou] = useState(false);
+
     const nav = useNavigate();
 
     const fetchOrders = () => {
         axios.get("http://localhost:8083/orders/").then((res) => {
             setOrder(res.data)
+            Promise.resolve(getRatingOfUserForItem(res.data))
         }).catch((error) => {
             setError(true);
             if (error.response.data === undefined) {
@@ -44,6 +53,43 @@ export default function OrderDetails(props) {
         setTimeout(() => {
             document.getElementById("showMessage").innerHTML = ""
         }, 2000)
+    }
+
+    const getRatingOfUserForItem = (item) => {
+        axios.get('http://localhost:8083/rating/user/' + props.user + "/" + item.map(a => { return (a.item.itemId) }))
+            .then(a => {
+                a.data == "" ? setRatingOfUserForItem({ itemId: Number(item.map(a => { return (a.item.itemId) })), userId: props.user, rating: 0 }) : setRatingOfUserForItem(a.data);
+                a.data == "" ? setUserRatingforItem(0) : setUserRatingforItem(a.data.rating);
+            })
+            .catch((error) => {
+                setError(true);
+                if (error.response === undefined) {
+                    setErrorMessage("Something went wrong")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
+            });
+    }
+
+    const updateRating = () => {
+        axios.post("http://localhost:8083/rating/", {
+            "itemId": ratingOfUserForItem.itemId,
+            "userId": ratingOfUserForItem.userId,
+            "rating": userRatingforItem
+        }).then(a => {
+            getRatingOfUserForItem(order);
+            setShowThankYou(true)
+            setTimeout(() => {
+                setShowThankYou(false);
+            }, 2000);
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong1")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        });
     }
 
     useEffect(() => {
@@ -103,7 +149,7 @@ export default function OrderDetails(props) {
                                 <div className="collapse navbar-collapse justify-content-end gap-2" id="navbarTogglerDemo03">
                                     <br></br>
                                     <div className="btn-group">
-                                    <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                                        <button type="button" className="btn btn-none dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
                                             {fetchDone ?
                                                 <span>{user.profileImgUrl ? <img src={user.profileImgUrl} width={25} height={25} />
                                                     : <i className="fa-solid fa-user"></i>}&nbsp;{user.userName}
@@ -128,6 +174,7 @@ export default function OrderDetails(props) {
                         </nav>
                     </div>
                 </header>
+
                 <div className='container my-4'>
                     {fetchDone ?
                         <div className='card-color p-3'>
@@ -137,21 +184,31 @@ export default function OrderDetails(props) {
                                         <small className='text-muted'>Order id : {a.orderUUIDId} &nbsp;<i className="bi bi-clipboard btn btn-sm btn-outline-info" onClick={() => {
                                             showCopyMessage(a.orderUUIDId)
                                         }}></i>&nbsp;<span id='showMessage' className='text-success'></span></small>
+                                        <div className="justify-content-center d-flex my-3 d-md-none">
+                                            <Link to={'/view/' + a.item.itemId + "/" + a.item.itemName} className=''>
+                                                <img src={a.item.itemImgUrl} className="img-fluid rounded-start" width={100} height={100} alt={a.item.itemName} />
+                                            </Link>
+                                        </div>
+                                        <div className='d-flex justify-content-center my-3 d-md-none'>
+                                            <Rating times={a.item.ratingOfItem} />
+                                        </div>
                                         <div className='row'>
-                                            <div className='col-12 col-md-8'>   <hr></hr>
+                                            <div className='col-12 col-md-8'> <hr></hr>
                                                 <div className='row'>
-                                                    <h4 className='col-6'>{a.item.itemName} </h4>
-                                                    {a.orderStatus == "success" && <h6 className='text-end col-6 text-success'>Placed</h6>}
-                                                    {a.orderStatus == "dispatched" && <h6 className='text-end col-6 text-primary'>Dispatched</h6>}
-                                                    {a.orderStatus == "near by hub" && <h6 className='text-end col-6 text-info'>Near by Hub</h6>}
-                                                    {a.orderStatus == "cancelled" && <h6 className='text-end col-6 text-danger'>Cancelled</h6>}
+                                                    <h4 className='col-6 col-md-9 text-capitalize'>{a.item.itemName} </h4>
+                                                    {a.orderStatus == "success" && <h6 className='text-end col-6 col-md-3 text-success'>Placed</h6>}
+                                                    {a.orderStatus == "dispatched" && <h6 className='text-end col-6 col-md-3 text-primary'>Dispatched</h6>}
+                                                    {a.orderStatus == "near by hub" && <h6 className='text-end col-6 col-md-3 text-info'>Near by Hub</h6>}
+                                                    {a.orderStatus == "cancelled" && <h6 className='text-end col-6 col-md-3 text-danger'>Cancelled</h6>}
+                                                    {a.orderStatus == "delivered" && <h6 className='text-end col-6 col-md-3 text-warning'><i className="bi bi-check-circle-fill"></i> Delivered</h6>}
                                                 </div>
                                                 <p className='p-3 h6'><b> Price :  ₹{a.item.itemPrice}</b></p>
                                                 <h6>Order Details</h6>
                                                 <div className='px-3'>
                                                     <p>Ordered on  <b>{a.orderedOn}</b> at <b>{a.orderedAt}</b> sec</p>
                                                     {a.orderStatus == "cancelled" ? <p className='text-decoration-line-through'>Expected delivery on {a.deliveryDate}</p> :
-                                                        <p>Expected delivery on <b>{a.deliveryDate}</b></p>}
+                                                        a.orderStatus == "delivered" ? <p>Delivered on <b>{a.deliveryDate}</b></p> :
+                                                            <p>Expected delivery on <b>{a.deliveryDate}</b></p>}
                                                 </div>
                                                 <h6>Delivery Details</h6>
                                                 <div className="container text-center g-3 ">
@@ -169,21 +226,84 @@ export default function OrderDetails(props) {
                                                         {a.deliveryAddress != null && <div className="col"> <p><b>Delivery Address</b> : {a.deliveryAddress}</p></div>}
                                                     </div>
                                                 </div>
-                                                {a.orderStatus != "cancelled" && a.orderStatus != "near by hub" && <>
+                                                {a.orderStatus != "cancelled" && a.orderStatus != "near by hub" && a.orderStatus != "delivered" && <>
                                                     <hr></hr>
-                                                    <div className='text-center'>
-                                                        <p>Do you want to cancel this order (You can cancel this before reaching to near by hub)? <button className='btn btn-danger btn-sm' onClick={() => {
+                                                    <div className=''>
+                                                        <p className='text-info text-muted text-start'> Note : You can cancel this before reaching to near by hub</p>
+                                                        <p className='text-center'>Do you want to cancel this order? &nbsp;<button className='btn btn-danger btn-sm' onClick={() => {
                                                             setOrderId(a.orderUUIDId);
                                                             setShowToast(true);
                                                         }}>Cancel Order</button></p>
                                                     </div>
                                                 </>
                                                 }
+
+                                                {/* Rating */}
+                                                {a.orderStatus == "delivered" &&
+                                                    <div className='justify-content-center text-center'>
+                                                        <hr></hr>
+                                                        <h6>Rate this Product</h6>
+                                                        <span className='fs-4' style={{ cursor: "pointer" }}>
+                                                            <span >
+                                                                {userRatingforItem == 5 &&
+                                                                    <span className='d-inline-flex gap-1'>
+                                                                        <i className="bi bi-star-fill text-success" onMouseMove={() => { setUserRatingforItem(1) }}></i>
+                                                                        <i className="bi bi-star-fill text-success" onMouseMove={() => { setUserRatingforItem(2) }}></i>
+                                                                        <i className="bi bi-star-fill text-success" onMouseMove={() => { setUserRatingforItem(3) }}></i>
+                                                                        <i className="bi bi-star-fill text-success" onMouseMove={() => { setUserRatingforItem(4) }}></i>
+                                                                        <i className="bi bi-star-fill text-success" onMouseMove={() => { setUserRatingforItem(5) }}></i>
+                                                                    </span>
+                                                                }
+                                                                {userRatingforItem == 4 &&
+                                                                    <span className='d-inline-flex gap-1'>
+                                                                        <i className="bi bi-star-fill text-success" onMouseMove={() => { setUserRatingforItem(1) }} ></i>
+                                                                        <i className="bi bi-star-fill text-success" onMouseMove={() => { setUserRatingforItem(2) }}></i>
+                                                                        <i className="bi bi-star-fill text-success" onMouseMove={() => { setUserRatingforItem(3) }}></i>
+                                                                        <i className="bi bi-star-fill text-success" onMouseMove={() => { setUserRatingforItem(4) }}></i>
+                                                                        <i className="bi bi-star text-success" onMouseMove={() => { setUserRatingforItem(5) }}></i>
+                                                                    </span>
+                                                                }
+                                                                {userRatingforItem == 3 &&
+                                                                    <span className='d-inline-flex gap-1'>
+                                                                        <i className="bi bi-star-fill text-success" onMouseMove={() => { setUserRatingforItem(1) }}></i>
+                                                                        <i className="bi bi-star-fill text-success" onMouseMove={() => { setUserRatingforItem(2) }}></i>
+                                                                        <i className="bi bi-star-fill text-success" onMouseMove={() => { setUserRatingforItem(3) }}></i>
+                                                                        <i className="bi bi-star text-success" onMouseMove={() => { setUserRatingforItem(4) }}></i>
+                                                                        <i className="bi bi-star text-success" onMouseMove={() => { setUserRatingforItem(5) }}></i>
+                                                                    </span>
+                                                                }
+                                                                {userRatingforItem == 2 &&
+                                                                    <span className='d-inline-flex gap-1'>
+                                                                        <i className="bi bi-star-fill text-success" onMouseMove={() => { setUserRatingforItem(1) }}></i>
+                                                                        <i className="bi bi-star-fill text-success" onMouseMove={() => { setUserRatingforItem(2) }}></i>
+                                                                        <i className="bi bi-star text-success" onMouseMove={() => { setUserRatingforItem(3) }}></i>
+                                                                        <i className="bi bi-star text-success" onMouseMove={() => { setUserRatingforItem(4) }}></i>
+                                                                        <i className="bi bi-star text-success" onMouseMove={() => { setUserRatingforItem(5) }}></i>
+                                                                    </span>
+                                                                }
+                                                                {(userRatingforItem == 1 || userRatingforItem == 0) &&
+                                                                    <span className='d-inline-flex gap-1'>
+                                                                        <i className="bi bi-star-fill text-success" onMouseMove={() => { setUserRatingforItem(1) }}></i>
+                                                                        <i className="bi bi-star text-success" onMouseMove={() => { setUserRatingforItem(2) }}></i>
+                                                                        <i className="bi bi-star text-success" onMouseMove={() => { setUserRatingforItem(3) }}></i>
+                                                                        <i className="bi bi-star text-success" onMouseMove={() => { setUserRatingforItem(4) }}></i>
+                                                                        <i className="bi bi-star text-success" onMouseMove={() => { setUserRatingforItem(5) }}></i>
+                                                                    </span>
+                                                                }
+                                                            </span>
+                                                        </span>
+                                                        <br></br>
+                                                        <div className={(userRatingforItem != ratingOfUserForItem.rating) ? 'btn btn-sm btn-success px-5' : 'btn btn-sm  btn-success px-5 disabled'} onClick={() => { updateRating() }}>Submit</div>
+                                                        <div className={showThankYou ? "d-lg-inline-flex text-light bg-success px-5 d-none" : "d-none text-light bg-success px-5 d-none"} id='thank-you-rating'>Thank You</div>
+                                                    </div>}
                                                 <hr></hr>
                                             </div>
-                                            <div className='col-4 text-end w-25 h-25'>
+                                            <div className='col-4 text-center w-25 h-25 d-md-block d-none '>
+                                                <div className='justify-content-center my-3  fs-6'>
+                                                    <Rating times={a.item.ratingOfItem} />
+                                                </div>
                                                 <Link to={'/view/' + a.item.itemId + "/" + a.item.itemName} className=''>
-                                                    <img src={a.item.itemImgUrl} className="img-fluid rounded-start d-lg-block d-none float-end " alt={a.item.itemName} />
+                                                    <img src={a.item.itemImgUrl} className="img-fluid rounded-start d-md-block d-none float-end " alt={a.item.itemName} />
                                                 </Link>
                                             </div>
                                         </div>
@@ -272,29 +392,7 @@ export default function OrderDetails(props) {
                 </div>}
 
                 {/* Logout popup */}
-                <div className="modal fade " id="exampleModal3" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
-                        <div className="modal-content logout-model">
-                            <div className="modal-header">
-                                <h5 className="modal-title " id="exampleModalLabel"><img src={img} alt="" width="30" height="30" className="d-inline-block align-text-top" /> Shopping mart</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body text-center">
-                                <h5>Conform to logout</h5>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-outline-success" data-bs-dismiss="modal">No</button>
-                                <button type="button" className="btn btn-outline-danger"
-                                    onClick={() => {
-                                        return (localStorage.removeItem("currentuser"),
-                                            localStorage.removeItem("Raghu"),
-                                            window.location.reload())
-                                    }}
-                                >Yes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <LogOut user={props.user} />
             </div>
             {/* Error pop */}
             {error && <>

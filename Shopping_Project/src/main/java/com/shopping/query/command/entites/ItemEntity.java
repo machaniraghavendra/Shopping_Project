@@ -38,5 +38,5 @@ public class ItemEntity {
 	private boolean isTrending;
 	private LocalDateTime itemAddedOn;
 	private LocalDateTime itemUpdatedOn;
-
+	private float ratingOfItem;
 }

@@ -6,9 +6,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
+@Getter
+@NoArgsConstructor
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+	private static final long serialVersionUID = 1L;
+
+	private HttpStatus statusCode;
+
+	private String thrownByMethod;
+
+	private String[] thrownByMethodArgs;
+	
+	public ResponseEntity<String> globalException(Exception e){
+		return  ResponseEntity.ok(e.getMessage());
+	}
 	
 	@ExceptionHandler(value=ItemNotFoundInCartException.class)
 	public ResponseEntity<String> itemNotFoundInCartException(ItemNotFoundInCartException e){
@@ -96,6 +114,28 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(value = AddressNotFoundException.class)
 	public ResponseEntity<TraceableError> addressNotFoundException(AddressNotFoundException e) {
+		if (e.getStatusCode() == null) {
+			e.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		TraceableError traceError = TraceableError.builder().errorMessage(e.getMessage())
+				.errorCode(String.valueOf(e.getStatusCode().value())).exceptionType(e.getClass().getSimpleName())
+				.errorDescription(e.getStatusCode().getReasonPhrase()).correlationId(MDC.get("correltionId")).build();
+		return new ResponseEntity<>(traceError, e.getStatusCode());
+	}
+	
+	@ExceptionHandler(value = RatingsOfUserAlreadyExistsException.class)
+	public ResponseEntity<TraceableError> ratingsOfUserAlreadyExistsException(RatingsOfUserAlreadyExistsException e){
+		if (e.getStatusCode() == null) {
+			e.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		TraceableError traceError = TraceableError.builder().errorMessage(e.getMessage())
+				.errorCode(String.valueOf(e.getStatusCode().value())).exceptionType(e.getClass().getSimpleName())
+				.errorDescription(e.getStatusCode().getReasonPhrase()).correlationId(MDC.get("correltionId")).build();
+		return new ResponseEntity<>(traceError, e.getStatusCode());
+	}
+	
+	@ExceptionHandler(value = RatingsOfUserNotFoundException.class)
+	public ResponseEntity<TraceableError> ratingsOfUserNotFoundException(RatingsOfUserNotFoundException e){
 		if (e.getStatusCode() == null) {
 			e.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
 		}

@@ -3,6 +3,7 @@ package com.shopping.query.command.service.implementation;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -36,6 +37,7 @@ public class OrdersServImpl implements OrderService {
 	private static final String STATUS_DISPATCH = "dispatched";
 	private static final String STATUS_NEARBYHUB = "near by hub";
 	private static final String STATUS_CANCELLED = "cancelled";
+	private static final String STATUS_DELIVERED = "delivered";
 
 	private GlobalExceptionHandler globalExceptionHandler;
 
@@ -126,6 +128,9 @@ public class OrdersServImpl implements OrderService {
 				case STATUS_CANCELLED:
 					detailsEntity.setOrderStatus(STATUS_CANCELLED);
 					break;
+				case STATUS_DELIVERED:
+					detailsEntity.setOrderStatus(STATUS_DELIVERED);
+					break;
 				}
 				orderRepo.save(detailsEntity);
 				value.add(detailsEntity);
@@ -185,10 +190,36 @@ public class OrdersServImpl implements OrderService {
 	}
 
 	@Override
+	public void updateOrderStatus(UUID orderId) throws OrderNotFoundException {
+		OrdersEntity order = getWithUUID(orderId);
+		LocalDate now = LocalDate.now();
+		LocalDate dateOfOrder = LocalDate.parse(order.getOrderedOn(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+		int days = Period.between(dateOfOrder, now).getDays();
+		switch (days) {
+		case 1:
+			updateOrder(orderId, STATUS_DISPATCH);
+			break;
+		case 3:
+			updateOrder(orderId, STATUS_NEARBYHUB);
+			break;
+		case 5:
+			updateOrder(orderId, STATUS_DELIVERED);
+			break;
+		default:
+			if (days > 5) {
+				updateOrder(orderId, STATUS_DELIVERED);
+			} else {
+				updateOrder(orderId, order.getOrderStatus());
+			}
+			break;
+		}
+	}
+
+	@Override
 	public String getDate(LocalDateTime date) {
 		return date == null ? null
 				: LocalDate.of(date.getYear(), date.getMonth(), date.getDayOfMonth())
-						.format(DateTimeFormatter.ofPattern("dd-MM-YYYY"));
+						.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 	}
 
 	@Override

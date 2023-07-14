@@ -1,3 +1,83 @@
 .orderCard {
     box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
 }
+
+#thank-you-rating {
+    font-size: xx-large;
+    z-index: 9;
+    top: 0%;
+    justify-content: center;
+    text-align: center;
+    position: fixed;
+    opacity: 0;
+    display: inline-flex;
+    animation: thankyoufromdowntoup 1 linear alternate 2s;
+}
+
+@keyframes thankyoufromdowntoup {
+    0% {
+        top: 100%;
+        opacity: 1;
+        font-size: 300%;
+    }
+
+    10% {
+        top: 90%;
+        opacity: 1;
+        font-size: 290%;
+    }
+
+    20% {
+        top: 80%;
+        opacity: 1;
+        font-size: 280%;
+    }
+
+    30% {
+        top: 70%;
+        opacity: 1;
+        font-size: 270%;
+    }
+
+    40% {
+        top: 60%;
+        opacity: 1;
+        font-size: 260%;
+    }
+
+    50% {
+        top: 50%;
+        opacity: 0.9;
+        font-size: 250%;
+    }
+
+    60% {
+        top: 40%;
+        opacity: 0.8;
+        font-size: 240%;
+    }
+
+    70% {
+        top: 30%;
+        opacity: 0.7;
+        font-size: 230%;
+    }
+
+    80% {
+        top: 20%;
+        opacity: 0.6;
+        font-size: 220%;
+    }
+
+    90% {
+        top: 10%;
+        opacity: 0.5;
+        font-size: 210%;
+    }
+
+    100% {
+        top: 0%;
+        opacity: 0.4;
+        font-size: 200%;
+    }
+}

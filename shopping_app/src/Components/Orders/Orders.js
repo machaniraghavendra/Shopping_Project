@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import ChatBot from '../ChatBot/ChatBot';
 import loadingImg from "../Resources/Loading_Card.png";
+import LogOut from '../Login/LogOut';
 
 export default function Orders(props) {
 
@@ -17,6 +18,10 @@ export default function Orders(props) {
     const [error, setError] = useState(false);
 
     const [errorMessage, setErrorMessage] = useState("");
+
+    const [deliveryItemsView, setDeliveryItemsView] = useState(false);
+
+    let deliveryitemsCount = 0;
 
     const fetchOrders = () => {
         axios.get("http://localhost:8083/orders/orderWithUser?userId=" + props.user).then((res) => {
@@ -31,6 +36,19 @@ export default function Orders(props) {
             } else {
                 setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
             }
+        })
+    }
+
+    const updateOrder = () => {
+        orders.forEach(order => {
+            axios.put("http://localhost:8083/orders/updateOrderStatus/" + order.orderUUIDId).catch((error) => {
+                setError(true);
+                if (error.response.data === undefined) {
+                    setErrorMessage("Something went wrong")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
+            })
         })
     }
 
@@ -61,6 +79,8 @@ export default function Orders(props) {
     setTimeout(() => {
         if (fetchDone) {
             check();
+            updateOrder();
+
         }
     }, 10);
 
@@ -81,7 +101,7 @@ export default function Orders(props) {
     }, []);
 
     return (
-        <div>
+        <div className='container-fluid'>
             <div className='container-fluid' style={{ fontSize: "13px" }}>
                 {/* Header */}
                 < header className='cart-head' >
@@ -125,10 +145,72 @@ export default function Orders(props) {
                         </nav>
                     </div>
                 </header>
+
                 <div className='container my-4'>
                     <h2 className='align-items-center d-flex justify-content-center text-info'>Your Orders </h2>
                     {fetchDone ?
                         <div className='row rounded-5 justify-content-center d-flex g-3 '>
+
+                            {/* Delivery toggle */}
+                            <div className='p-1 bg-secondary w-75' style={{ fontSize: "13px", cursor: "pointer" }} onClick={() => { setDeliveryItemsView(!deliveryItemsView) }}>
+                                <span className='text-light px-2'>Delivered Items {deliveryItemsView ? <i className="bi bi-caret-down"></i> : <i className="bi bi-caret-right"></i>}</span>
+                            </div>
+                            <div className='viewbg'>
+                                {
+                                    orders
+                                        .filter(item => {
+                                            if (item.orderStatus === "delivered") {
+                                                return item;
+                                            }
+                                        })
+                                        .map(item => {
+                                            deliveryitemsCount++;
+                                            return (
+                                                <div className={deliveryItemsView ? 'py-3 d-block' : 'py-3 d-none'} key={item.item.itemId}>
+                                                    <div className='col-lg-6'>
+                                                        <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                                            <div className="row g-0" >
+                                                                <div className="col-md-3 d-none d-md-flex justify-content-center">
+                                                                    <img src={item.item.itemImgUrl} className="img-fluid rounded-start d-md-block d-none w-50 h-100 d-block" alt={item.item.itemName} style={{ marginLeft: "auto", marginRight: "auto" }} />
+                                                                </div>
+                                                                <div className="col-md-8 ">
+                                                                    <small className='text-muted '>Order id : {item.orderUUIDId}</small>
+                                                                    <div className="card-body">
+                                                                        <Link to={'/orderdetails'} className="link-info  stretched-link" onClick={() => { viewOrder(item.orderUUIDId) }}></Link>
+                                                                        <div className='row'>
+                                                                            <h5 className="card-title float-start col-6 text-truncate text-capitalize">{item.item.itemName} </h5>
+                                                                            {item.orderStatus == "success" && <p className='col-3 badge text-bg-success'><b>Placed</b></p>}
+                                                                            {item.orderStatus == "dispatched" && <p className='col-3 text-center  badge text-bg-primary'><b>Dispatched</b></p>}
+                                                                            {item.orderStatus == "near by hub" && <p className='col-3 text-center  badge text-bg-info'><b>Near by Hub</b></p>}
+                                                                            {item.orderStatus == "cancelled" && <p className='col-3 text-center  badge text-bg-danger'><b>Cancelled</b></p>}
+                                                                            {item.orderStatus == "delivered" && <p className='col-3 text-center  badge text-bg-warning'><b><i className="bi bi-check-circle-fill"></i> Delivered</b></p>}
+                                                                            <p className="card-title float-end col-3 text-end text-truncate"><b> ₹{item.item.itemPrice}</b></p>
+                                                                        </div>
+                                                                        <div className='row py-2'> <p className="card-text">Ordered on {item.orderedOn}</p></div>
+                                                                        <div className='row'>
+                                                                            {item.orderStatus == "cancelled" ? <p className='text-decoration-line-through'>Expected delivery on {item.deliveryDate}</p> :
+                                                                                item.orderStatus == "delivered" ? <p>Delivered on <b>{item.deliveryDate}</b></p> :
+                                                                                    <p>Expected delivery on <b>{item.deliveryDate}</b></p>}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )
+                                        })
+                                }
+
+                                {(deliveryitemsCount === 0 && deliveryItemsView) && <div className='container justify-content-center d-flex g-3 w-100 h-100 '>
+                                    <div className='text-center card-color p-3 m-2 '>
+                                        <h5>No delivery orders found !</h5>
+                                        <Link to={"/mart"} className="btn btn-outline-primary m-2 ">View products</Link>
+                                    </div>
+                                </div>}
+                            </div>
+
+                            {/* All products */}
                             {orders.length == 0 ?
                                 <div className='container justify-content-center d-flex g-3 w-100 h-100 '>
                                     <div className='text-center card-color p-3 w-50'>
@@ -138,36 +220,46 @@ export default function Orders(props) {
                                     </div>
                                 </div>
                                 :
-                                orders.map(item => {
-                                    return (
-                                        <div className='col-lg-6' key={item.item.itemId}>
-                                            <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
-                                                <div className="row g-0" >
-                                                    <div className="col-md-4 d-none d-lg-flex justify-content-center">
-                                                        <img src={item.item.itemImgUrl} className="img-fluid rounded-start d-lg-block d-none w-25 h-100 d-block" alt={item.item.itemName} style={{ marginLeft: "auto", marginRight: "auto" }} />
-                                                    </div>
-                                                    <div className="col-md-8 ">
-                                                        <div className="card-body">
-                                                            <Link to={'/orderdetails'} className="link-info  stretched-link" onClick={() => { viewOrder(item.orderUUIDId) }}></Link>
-                                                            <div className='row'>
-                                                                <h5 className="card-title float-start col-6 text-truncate">{item.item.itemName} </h5>
-                                                                {item.orderStatus == "success" && <p className='col-3 text-center text-success'><b>Placed</b></p>}
-                                                                {item.orderStatus == "dispatched" && <p className='col-3 text-center text-primary'><b>Dispatched</b></p>}
-                                                                {item.orderStatus == "near by hub" && <p className='col-3 text-center text-info'><b>Near by Hub</b></p>}
-                                                                {item.orderStatus == "cancelled" && <p className='col-3 text-center text-danger'><b>Cancelled</b></p>}
-                                                                <p className="card-title float-end col-3 text-end"><b> ₹{item.item.itemPrice}</b></p>
+                                orders
+                                    .filter(item => {
+                                        if (item.orderStatus != "delivered") {
+                                            return item;
+                                        }
+                                    })
+                                    .map(item => {
+                                        return (
+                                            <div className='col-lg-6' key={item.item.itemId}>
+                                                <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                                    <div className="row g-0" >
+                                                        <div className="col-md-3 d-none d-md-flex justify-content-center">
+                                                            <img src={item.item.itemImgUrl} className="img-fluid rounded-start d-md-block d-none w-50 h-100 d-block" alt={item.item.itemName} style={{ marginLeft: "auto", marginRight: "auto" }} />
+                                                        </div>
+                                                        <div className="col-md-8 ">
+                                                            <small className='text-muted '>Order id : {item.orderUUIDId}</small>
+                                                            <div className="card-body">
+                                                                <Link to={'/orderdetails'} className="link-info  stretched-link" onClick={() => { viewOrder(item.orderUUIDId) }}></Link>
+                                                                <div className='row'>
+                                                                    <h5 className="card-title float-start col-6 text-truncate text-capitalize">{item.item.itemName} </h5>
+                                                                    {item.orderStatus == "success" && <p className='col-3 badge text-bg-success'><b>Placed</b></p>}
+                                                                    {item.orderStatus == "dispatched" && <p className='col-3 text-center  badge text-bg-primary'><b>Dispatched</b></p>}
+                                                                    {item.orderStatus == "near by hub" && <p className='col-3 text-center  badge text-bg-info'><b>Near by Hub</b></p>}
+                                                                    {item.orderStatus == "cancelled" && <p className='col-3 text-center  badge text-bg-danger'><b>Cancelled</b></p>}
+                                                                    {item.orderStatus == "delivered" && <p className='col-3 text-center  badge text-bg-warning'><b><i className="bi bi-check-circle-fill"></i> Delivered</b></p>}
+                                                                    <p className="card-title float-end col-3 text-end text-truncate"><b> ₹{item.item.itemPrice}</b></p>
+                                                                </div>
+                                                                <div className='row py-2'> <p className="card-text">Ordered on {item.orderedOn}</p></div>
+                                                                <div className='row'>
+                                                                    {item.orderStatus == "cancelled" ? <p className='text-decoration-line-through'>Expected delivery on {item.deliveryDate}</p> :
+                                                                        item.orderStatus == "delivered" ? <p>Delivered on <b>{item.deliveryDate}</b></p> :
+                                                                            <p>Expected delivery on <b>{item.deliveryDate}</b></p>}
+                                                                </div>
                                                             </div>
-                                                            <div className='row py-2'> <p className="card-text">Ordered on {item.orderedOn}</p></div>
-                                                            <div className='row'>
-                                                                {item.orderStatus == "cancelled" ? <p className='text-decoration-line-through'>Expected delivery on {item.deliveryDate}</p> :
-                                                                    <p>Expected delivery on <b>{item.deliveryDate}</b></p>}</div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    )
-                                })
+                                        )
+                                    })
                             }
                         </div>
                         :
@@ -297,30 +389,9 @@ export default function Orders(props) {
                 </div>
 
                 {/* Logout popup */}
-                <div className="modal fade " id="exampleModal3" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
-                        <div className="modal-content logout-model">
-                            <div className="modal-header">
-                                <h5 className="modal-title " id="exampleModalLabel"><img src={img} alt="" width="30" height="30" className="d-inline-block align-text-top" /> Shopping mart</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body text-center">
-                                <h5>Conform to logout</h5>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-outline-success" data-bs-dismiss="modal">No</button>
-                                <button type="button" className="btn btn-outline-danger"
-                                    onClick={() => {
-                                        return (localStorage.removeItem("currentuser"),
-                                            localStorage.removeItem("Raghu"),
-                                            window.location.reload())
-                                    }}
-                                >Yes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <LogOut user={props.user}/>
             </div>
+
             {/* Error pop */}
             {error && <>
                 <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
