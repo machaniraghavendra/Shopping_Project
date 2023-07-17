@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import "./shirt.css"
 import axios from "axios";
 import { Link } from 'react-router-dom';
-import loadingImg from "/Shopping_Project/shopping_app/src/Components/Resources/Loading_Card.png";
+import loadingImg from "../Loading_Card.png";
 import Rating from '../Rating/Rating';
 
 export default function Shirts() {
