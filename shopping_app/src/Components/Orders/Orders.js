@@ -153,82 +153,20 @@ export default function Orders(props) {
 
                             {/* Delivery toggle */}
                             <div className='p-1 bg-secondary w-75' style={{ fontSize: "13px", cursor: "pointer" }} onClick={() => { setDeliveryItemsView(!deliveryItemsView) }}>
-                                <span className='text-light px-2'>Delivered Items {deliveryItemsView ? <i className="bi bi-caret-down"></i> : <i className="bi bi-caret-right"></i>}</span>
+                                <span className='text-light px-2 fs-6'>Delivered Items {deliveryItemsView ? <i className="bi bi-caret-down"></i> : <i className="bi bi-caret-right"></i>}</span>
                             </div>
-                            <div className='viewbg'>
-                                {
-                                    orders
-                                        .filter(item => {
-                                            if (item.orderStatus === "delivered") {
-                                                return item;
-                                            }
-                                        })
-                                        .map(item => {
-                                            deliveryitemsCount++;
-                                            return (
-                                                <div className={deliveryItemsView ? 'py-3 d-block' : 'py-3 d-none'} key={item.item.itemId}>
-                                                    <div className='col-lg-6'>
-                                                        <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
-                                                            <div className="row g-0" >
-                                                                <div className="col-md-3 d-none d-md-flex justify-content-center">
-                                                                    <img src={item.item.itemImgUrl} className="img-fluid rounded-start d-md-block d-none w-50 h-100 d-block" alt={item.item.itemName} style={{ marginLeft: "auto", marginRight: "auto" }} />
-                                                                </div>
-                                                                <div className="col-md-8 ">
-                                                                    <small className='text-muted '>Order id : {item.orderUUIDId}</small>
-                                                                    <div className="card-body">
-                                                                        <Link to={'/orderdetails'} className="link-info  stretched-link" onClick={() => { viewOrder(item.orderUUIDId) }}></Link>
-                                                                        <div className='row'>
-                                                                            <h5 className="card-title float-start col-6 text-truncate text-capitalize">{item.item.itemName} </h5>
-                                                                            {item.orderStatus == "success" && <p className='col-3 badge text-bg-success'><b>Placed</b></p>}
-                                                                            {item.orderStatus == "dispatched" && <p className='col-3 text-center  badge text-bg-primary'><b>Dispatched</b></p>}
-                                                                            {item.orderStatus == "near by hub" && <p className='col-3 text-center  badge text-bg-info'><b>Near by Hub</b></p>}
-                                                                            {item.orderStatus == "cancelled" && <p className='col-3 text-center  badge text-bg-danger'><b>Cancelled</b></p>}
-                                                                            {item.orderStatus == "delivered" && <p className='col-3 text-center  badge text-bg-warning'><b><i className="bi bi-check-circle-fill"></i> Delivered</b></p>}
-                                                                            <p className="card-title float-end col-3 text-end text-truncate"><b> ₹{item.item.itemPrice}</b></p>
-                                                                        </div>
-                                                                        <div className='row py-2'> <p className="card-text">Ordered on {item.orderedOn}</p></div>
-                                                                        <div className='row'>
-                                                                            {item.orderStatus == "cancelled" ? <p className='text-decoration-line-through'>Expected delivery on {item.deliveryDate}</p> :
-                                                                                item.orderStatus == "delivered" ? <p>Delivered on <b>{item.deliveryDate}</b></p> :
-                                                                                    <p>Expected delivery on <b>{item.deliveryDate}</b></p>}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )
-                                        })
-                                }
-
-                                {(deliveryitemsCount === 0 && deliveryItemsView) && <div className='container justify-content-center d-flex g-3 w-100 h-100 '>
-                                    <div className='text-center card-color p-3 m-2 '>
-                                        <h5>No delivery orders found !</h5>
-                                        <Link to={"/mart"} className="btn btn-outline-primary m-2 ">View products</Link>
-                                    </div>
-                                </div>}
-                            </div>
-
-                            {/* All products */}
-                            {orders.length == 0 ?
-                                <div className='container justify-content-center d-flex g-3 w-100 h-100 '>
-                                    <div className='text-center card-color p-3 w-50'>
-                                        <img src={img} alt="" width="100" height="100" className="d-inline-block align-text-top m-4" />
-                                        <h5>No orders Found</h5>
-                                        <Link to={"/mart"} className="btn btn-outline-primary m-2 ">View products</Link>
-                                    </div>
-                                </div>
-                                :
+                            {/* <div className={deliveryItemsView ? 'py-2 d-block viewbg' : 'py-2 d-none viewbg'}> */}
+                            {
                                 orders
                                     .filter(item => {
-                                        if (item.orderStatus != "delivered") {
+                                        if (item.orderStatus === "delivered") {
                                             return item;
                                         }
                                     })
                                     .map(item => {
+                                        deliveryitemsCount++;
                                         return (
-                                            <div className='col-lg-6' key={item.item.itemId}>
+                                            <div className={deliveryItemsView ? 'py-2 d-block col-lg-6' : 'py-2 d-none col-lg-6'} key={item.item.itemId}>
                                                 <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
                                                     <div className="row g-0" >
                                                         <div className="col-md-3 d-none d-md-flex justify-content-center">
@@ -257,6 +195,70 @@ export default function Orders(props) {
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        )
+                                    })
+                            }
+
+                            {(deliveryitemsCount === 0 && deliveryItemsView) && <div className='container justify-content-center d-flex g-3 w-100 h-100 '>
+                                <div className='text-center card-color p-3 m-2 '>
+                                    <h5 className='text-light'>No delivery orders found !</h5>
+                                    <Link to={"/mart"} className="btn btn-outline-primary m-2 ">View products</Link>
+                                </div>
+                            </div>}
+                            {/* </div> */}
+
+                            <hr></hr>
+                            <span className='bg-secondary text-light mx-2 py-2 w-75 fs-6' style={{ cursor: "pointer" }} onClick={() => { setDeliveryItemsView(!deliveryItemsView) }}>Non- delivered products {!deliveryItemsView ? <i className="bi bi-caret-down"></i> : <i className="bi bi-caret-right"></i>}</span>
+                            {/* All products */}
+                            {orders.length == 0 ?
+                                <div className='container justify-content-center d-flex g-3 w-100 h-100 '>
+                                    <div className='text-center card-color p-3 w-50'>
+                                        <img src={img} alt="" width="100" height="100" className="d-inline-block align-text-top m-4" />
+                                        <h5>No orders Found</h5>
+                                        <Link to={"/mart"} className="btn btn-outline-primary m-2 ">View products</Link>
+                                    </div>
+                                </div>
+                                :
+                                orders
+                                    .filter(item => {
+                                        if (item.orderStatus != "delivered") {
+                                            return item;
+                                        }
+                                    })
+                                    .map(item => {
+                                        return (
+                                            <div className={!deliveryItemsView ? 'py-2 d-block col-lg-6' : 'py-2 d-none col-lg-6'} key={item.item.itemId}>
+                                                {/* <div className='col-lg-6'> */}
+                                                <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                                    <div className="row g-0" >
+                                                        <div className="col-md-3 d-none d-md-flex justify-content-center">
+                                                            <img src={item.item.itemImgUrl} className="img-fluid rounded-start d-md-block d-none w-50 h-100 d-block" alt={item.item.itemName} style={{ marginLeft: "auto", marginRight: "auto" }} />
+                                                        </div>
+                                                        <div className="col-md-8 ">
+                                                            <small className='text-muted '>Order id : {item.orderUUIDId}</small>
+                                                            <div className="card-body">
+                                                                <Link to={'/orderdetails'} className="link-info  stretched-link" onClick={() => { viewOrder(item.orderUUIDId) }}></Link>
+                                                                <div className='row'>
+                                                                    <h5 className="card-title float-start col-6 text-truncate text-capitalize">{item.item.itemName} </h5>
+                                                                    {item.orderStatus == "success" && <p className='col-3 badge text-bg-success'><b>Placed</b></p>}
+                                                                    {item.orderStatus == "dispatched" && <p className='col-3 text-center  badge text-bg-primary'><b>Dispatched</b></p>}
+                                                                    {item.orderStatus == "near by hub" && <p className='col-3 text-center  badge text-bg-info'><b>Near by Hub</b></p>}
+                                                                    {item.orderStatus == "cancelled" && <p className='col-3 text-center  badge text-bg-danger'><b>Cancelled</b></p>}
+                                                                    {item.orderStatus == "delivered" && <p className='col-3 text-center  badge text-bg-warning'><b><i className="bi bi-check-circle-fill"></i> Delivered</b></p>}
+                                                                    <p className="card-title float-end col-3 text-end text-truncate"><b> ₹{item.item.itemPrice}</b></p>
+                                                                </div>
+                                                                <div className='row py-2'> <p className="card-text">Ordered on {item.orderedOn}</p></div>
+                                                                <div className='row'>
+                                                                    {item.orderStatus == "cancelled" ? <p className='text-decoration-line-through'>Expected delivery on {item.deliveryDate}</p> :
+                                                                        item.orderStatus == "delivered" ? <p>Delivered on <b>{item.deliveryDate}</b></p> :
+                                                                            <p>Expected delivery on <b>{item.deliveryDate}</b></p>}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {/* </div> */}
                                             </div>
                                         )
                                     })
@@ -389,7 +391,7 @@ export default function Orders(props) {
                 </div>
 
                 {/* Logout popup */}
-                <LogOut user={props.user}/>
+                <LogOut user={props.user} />
             </div>
 
             {/* Error pop */}
