@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import { Link } from 'react-router-dom';
-import loadingImg from "../Resources/Loading_Card.png";
+import loadingImg from "../Loading_Card.png";
 import Footer from '../Footer/Footer';
 import ChatBot from '../ChatBot/ChatBot';
 import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"

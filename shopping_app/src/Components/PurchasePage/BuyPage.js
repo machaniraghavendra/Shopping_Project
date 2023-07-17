@@ -4,7 +4,7 @@ import axios from "axios"
 import { Link, useNavigate } from "react-router-dom";
 import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import ChatBot from '../ChatBot/ChatBot';
-import loadingImg from "../Resources/Loading_Card.png";
+import loadingImg from "../Loading_Card.png";
 import LogOut from "../Login/LogOut";
 import Rating from "../Items/Rating/Rating";
 
