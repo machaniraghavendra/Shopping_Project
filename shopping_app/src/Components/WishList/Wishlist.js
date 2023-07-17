@@ -4,7 +4,7 @@ import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png";
 import { Link } from "react-router-dom";
 import Footer from "../Footer/Footer";
 import ChatBot from "../ChatBot/ChatBot";
-import loadingImg from "../Resources/Loading_Card.png";
+import loadingImg from "../Loading_Card.png";
 import LogOut from "../Login/LogOut";
 import Rating from "../Items/Rating/Rating";
 

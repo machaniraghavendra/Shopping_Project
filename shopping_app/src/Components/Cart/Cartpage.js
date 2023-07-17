@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import "../Cart/Cart.css"
 import Footer from '../Footer/Footer';
 import ChatBot from '../ChatBot/ChatBot';
-import loadingImg from "../Resources/Loading_Card.png";
+import loadingImg from "../Loading_Card.png";
 import LogOut from '../Login/LogOut';
 import Rating from '../Items/Rating/Rating';
 
