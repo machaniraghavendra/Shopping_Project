@@ -8,6 +8,7 @@ import ChatBot from '../ChatBot/ChatBot';
 import loadingImg from "../Loading_Card.png";
 import LogOut from '../Login/LogOut';
 import Rating from '../Items/Rating/Rating';
+import Review from './Review';
 
 export default function OrderDetails(props) {
 
@@ -294,9 +295,13 @@ export default function OrderDetails(props) {
                                                         </span>
                                                         <br></br>
                                                         <div className={(userRatingforItem != ratingOfUserForItem.rating) ? 'btn btn-sm btn-success px-5' : 'btn btn-sm  btn-success px-5 disabled'} onClick={() => { updateRating() }}>Submit</div>
-                                                        <div className={showThankYou ? "d-lg-inline-flex text-light bg-success px-5 d-none" : "d-none text-light bg-success px-5 d-none"} id='thank-you-rating'>Thank You</div>
+                                                        <div className={showThankYou ? "d-lg-inline-flex text-dark bg-warning px-5 d-none" : "d-none text-dark bg-warning px-5 d-none"} id='thank-you-rating'>Thanks for giving {ratingOfUserForItem.rating} stars</div>
                                                     </div>}
                                                 <hr></hr>
+                                                
+                                                {/* Review */}
+                                                {a.orderStatus == "delivered" &&<Review itemId={a.item.itemId}/>}
+                                                
                                             </div>
                                             <div className='col-4 text-center w-25 h-25 d-md-block d-none '>
                                                 <div className='justify-content-center my-3  fs-6'>

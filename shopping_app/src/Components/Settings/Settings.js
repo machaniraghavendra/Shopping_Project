@@ -43,6 +43,10 @@ export default function Settings(props) {
 
     const [errorMessage, setErrorMessage] = useState("");
 
+    const [isDarkModeInSystem, setIsDarkModeInSystem] = useState(false);
+
+    const [isCustom, setIsCustom] = useState(false);
+
     const check = (mode) => {
         getTheme(mode)
         // updateTheme(mode)
@@ -172,7 +176,6 @@ export default function Settings(props) {
             }).then((res) => {
                 setClose("modal")
                 setInfo(res.data[0])
-                console.log(res.data[0]);
                 if (res.data[0] != "Address got updated") {
                     setInfo(res.data[0].errorMessage);
                 }
@@ -324,9 +327,20 @@ export default function Settings(props) {
         return errors;
     }
 
+    const checkSystemTheme = () => {
+        if (window.matchMedia) {
+            if (localStorage.getItem("customMode") == "true" ? false : true) {
+                setIsDarkModeInSystem(window.matchMedia('(prefers-color-scheme: dark)').matches);
+                check(window.matchMedia('(prefers-color-scheme: dark)').matches)
+                getTheme(window.matchMedia('(prefers-color-scheme: dark)').matches);
+            }
+        }
+    }
+
     useEffect(() => {
         currentuser();
         fetchAddress();
+        checkSystemTheme();
         // axios.get("http://localhost:8083/user/theme/" + props.user).then(a => setTheme(a.data)).catch((error) => {
         //     setError(true);
         //     if (error.response.data === undefined) {
@@ -517,8 +531,8 @@ export default function Settings(props) {
                                                                 "userEmail": user.userEmail,
                                                                 "profileImgUrl": user.profileImgUrl,
                                                                 "mobileNumber": user.mobileNumber,
-                                                                "loggedIn":user.loggedin,
-                                                                "admin":user.admin
+                                                                "loggedIn": user.loggedin,
+                                                                "admin": user.admin
                                                             }).then(res => { setInfo(res.data); }).catch((error) => {
                                                                 setError(true);
                                                                 if (error.response.data === undefined) {
@@ -553,8 +567,8 @@ export default function Settings(props) {
                                                                 "userEmail": user.userEmail,
                                                                 "profileImgUrl": user.profileImgUrl,
                                                                 "mobileNumber": values.mobileNumber,
-                                                                "loggedIn":user.loggedin,
-                                                                "admin":user.admin
+                                                                "loggedIn": user.loggedin,
+                                                                "admin": user.admin
                                                             }).then(res => { setInfo(res.data); }).catch((error) => {
                                                                 setError(true);
                                                                 if (error.response.data === undefined) {
@@ -589,12 +603,29 @@ export default function Settings(props) {
                             </section>
                         </div>
                         <div className='container data text-light w-75 py-2 my-3' >
-                            <div className="form-switch text-center"  >
+                            Set Theme :
+                            <div className="form-switch text-center" >
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" name="inlineRadioOptions" id="systemdefault" value="system"
+                                        checked={isDarkModeInSystem && localStorage.getItem("customMode") === "true" ? false : true}
+                                        onClick={(a) => { setIsCustom(false); checkSystemTheme(); localStorage.setItem("customMode", false); check(localStorage.getItem("customMode") === "true" ? false : true); }} />
+                                    <label className="form-check-label" htmlFor="systemdefault">System default</label>
+                                </div> &nbsp;
+                                <div className="form-check form-check-inline">
+                                    <input className="form-check-input" type="radio" name="inlineRadioOptions" id="custom" value="custom"
+                                        onClick={(a) => { setIsCustom(true); check(a.target.checked); localStorage.setItem("customMode", a.target.checked) }}
+                                        checked={localStorage.getItem("customMode") === "true" ? true : false} />
+                                    <label className="form-check-label" htmlFor="custom">Custom</label>
+                                </div>
                                 <label className="form-check-label" htmlFor="flexSwitchCheckChecked">Dark Mode :</label>
-                                <input className="form-check-input mx-3" type="checkbox" role="switch" onClick={(a) => { return (check(a.target.checked)) }} id="flexSwitchCheckChecked" checked={sessionStorage.getItem("dark") === "true" ? true : false} />
-                                <div className='rounds ' id='round'> </div>
-                                <div className='rounds ' id='round1'> </div>
+                                <input className="form-check-input mx-3" type="checkbox" role="switch"
+                                    onClick={(a) => { return (check(a.target.checked)) }}
+                                    id="flexSwitchCheckChecked"
+                                    disabled={localStorage.getItem("customMode") === "true" ? false : true}
+                                    checked={sessionStorage.getItem("dark") === "true" ? true : false} />
                             </div>
+                            <div className='rounds ' id='round'> </div>
+                            <div className='rounds ' id='round1'> </div>
                         </div>
 
                         <div className='container-md data text-light p-3'>
@@ -666,7 +697,7 @@ export default function Settings(props) {
                 </div>
 
                 {/* Logout Pop */}
-                <LogOut user={props.user}/>
+                <LogOut user={props.user} />
 
                 {/* PopUp for address saving */}
                 <div className="modal fade" id="popupforaddress" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

@@ -144,4 +144,26 @@ public class GlobalExceptionHandler {
 				.errorDescription(e.getStatusCode().getReasonPhrase()).correlationId(MDC.get("correltionId")).build();
 		return new ResponseEntity<>(traceError, e.getStatusCode());
 	}
+	
+	@ExceptionHandler(value = ItemReviewNotExistsException.class)
+	public ResponseEntity<TraceableError> itemReviewNotExistsException(ItemReviewNotExistsException e){
+		if (e.getStatusCode() == null) {
+			e.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		TraceableError traceError = TraceableError.builder().errorMessage(e.getMessage())
+				.errorCode(String.valueOf(e.getStatusCode().value())).exceptionType(e.getClass().getSimpleName())
+				.errorDescription(e.getStatusCode().getReasonPhrase()).correlationId(MDC.get("correltionId")).build();
+		return new ResponseEntity<>(traceError, e.getStatusCode());
+	}
+	
+	@ExceptionHandler(value = ReviewImageNotExistsException.class)
+	public ResponseEntity<TraceableError> reviewImageNotExistsException(ReviewImageNotExistsException e){
+		if (e.getStatusCode() == null) {
+			e.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		TraceableError traceError = TraceableError.builder().errorMessage(e.getMessage())
+				.errorCode(String.valueOf(e.getStatusCode().value())).exceptionType(e.getClass().getSimpleName())
+				.errorDescription(e.getStatusCode().getReasonPhrase()).correlationId(MDC.get("correltionId")).build();
+		return new ResponseEntity<>(traceError, e.getStatusCode());
+	}
 }
