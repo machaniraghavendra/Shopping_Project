@@ -35,6 +35,12 @@ export default function View(props) {
 
     const [scroll, setScroll] = useState(false);
 
+    const [reviewsOfItem, setReviewsOfItem] = useState([]);
+
+    const [showImagePop, setShowImagePop] = useState(false);
+
+    const [imageUrlForToShow, setImageUrlForToShow] = useState("");
+
     const timeout = () => {
         setTimeout(() => {
             setShowToast(false);
@@ -141,6 +147,19 @@ export default function View(props) {
         })
     }
 
+    const getReviewsOfThisItem = () => {
+        axios.get("http://localhost:8083/review/item?itemId=" + num).then(a => {
+            setReviewsOfItem(a.data)
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
+    }
+
     window.onscroll = () => {
         if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 620) {
             setScroll(true)
@@ -169,6 +188,7 @@ export default function View(props) {
             }
         });
         getItem();
+        getReviewsOfThisItem();
         getInterests();
     }, []
     )
@@ -324,6 +344,34 @@ export default function View(props) {
                     </div>
                 }
             </div>
+
+            <div className='container '>
+                <h3 className='view p-2 '>Reviews </h3>
+                <div className='row rounded-5 justify-content-center d-flex g-3 '>
+                    {reviewsOfItem.length != 0 ? reviewsOfItem.map((a, i) => {
+                        check()
+                        return (
+                            <div className="container col-lg-4 col-12 my-4 mx-2 view" key={i}>
+                                <div className="container-fluid p-2">
+                                    <Rating times={a.rating.rating} /><span className="mx-2  fw-bold">{a.commentTitle}</span> {a.user.userId === localStorage.getItem("currentuser") &&
+                                        <span className='fs-6 float-end'><i className="bi bi-bookmark-fill your_comment"><span className="your_comment_text">Your comment</span></i></span>}
+                                    <p className="my-1 mx-1">{a.comment}</p>
+                                    {(a.imageDto != null && a.imageDto != [] && a.imageDto.length < 4) && a.imageDto.map((a, i) => {
+                                        return (
+                                            <img key={i} src={a.imageUrl} className="mx-2 d-inline-flex justify-content-center" style={{ cursor: "zoom-in" }} width={70} height={100} onClick={() => { setShowImagePop(true); setImageUrlForToShow(a.imageUrl) }} />
+                                        )
+                                    })}
+                                    <p className="my-2">User : {a.user.userName}</p>
+                                    <p className="my-2">Added on : {a.commentAddedOn} at {a.commentAddedAt} IST</p>
+                                </div>
+                            </div>
+                        )
+                    })
+                        :
+                        <div className='text-light container mx-4 my-2 mx-4 fs-6'>No reviews for this item</div>}
+                </div>
+            </div>
+
             <div className='container'>
                 <h3 className='view p-2'>Similar Products </h3>
                 {fetchItemDone ?
@@ -734,6 +782,16 @@ export default function View(props) {
                 </div>
             </>
             }
+
+            {/* ImagePop */}
+            {showImagePop &&
+                <div className="d-inline-flex position-fixed" style={{ zIndex: "9", top: "10%", left: "37%" }}>
+                    <img src={imageUrlForToShow} height={550} style={{ boxShadow: " rgba(0, 0, 0, 0.5) 100px 220px 700px 3000px" }} />
+                    <span className="float-end mx-2 fs-4"><i className="bi bi-x-circle-fill text-light"
+                        onClick={() => { setShowImagePop(false); setImageUrlForToShow("") }} style={{ cursor: "pointer" }}></i>
+                    </span>
+                </div>}
+                
         </div>
 
     )

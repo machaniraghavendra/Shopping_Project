@@ -18,18 +18,18 @@ import com.shopping.query.command.entites.dto.UserDetailDto;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.RatingsOfUserNotFoundException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
-import com.shopping.query.command.service.ItemService;
 import com.shopping.query.command.service.RatingsService;
-import com.shopping.query.command.service.UserService;
+import com.shopping.query.command.service.implementation.ItemServiceImpl;
+import com.shopping.query.command.service.implementation.UserServiceImpl;
 
 @Service
 public class MappersClass {
 
 	@Autowired
-	private UserService userService;
+	private UserServiceImpl userService;
 
 	@Autowired
-	private ItemService itemServiceImpl;
+	private ItemServiceImpl itemServiceImpl;
 
 	@Autowired
 	private RatingsService ratingsService;

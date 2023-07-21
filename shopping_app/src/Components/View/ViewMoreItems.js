@@ -132,25 +132,25 @@ export default function ViewMoreItems(props) {
                         <input type="radio" className="btn-check " name="btnradio" id="all" autoComplete="off" onClick={() => setfilters("")} checked={filters === "" && true} />
                         <label className="btn btn-outline-light " htmlFor="all">All</label>
 
-                        <input type="radio" className="btn-check " name="btnradio" id="500" autoComplete="off" onClick={() => setfilters("500")} />
+                        <input type="radio" className="btn-check " name="btnradio" id="500" autoComplete="off" onClick={() => setfilters(filters == "" ? "500" : "")} />
                         <label className="btn btn-outline-warning " htmlFor="500">Below 500</label>
 
-                        <input type="radio" className="btn-check " name="btnradio" id="1000" autoComplete="off" onClick={() => setfilters("1000")} />
+                        <input type="radio" className="btn-check " name="btnradio" id="1000" autoComplete="off" onClick={() => setfilters(filters == "" ? "1000" : "")} />
                         <label className="btn btn-outline-warning " htmlFor="1000">Below 1,000</label>
 
-                        <input type="radio" className="btn-check " name="btnradio" id="5000" autoComplete="off" onClick={() => setfilters("5000")} />
+                        <input type="radio" className="btn-check " name="btnradio" id="5000" autoComplete="off" onClick={() => setfilters(filters == "" ? "5000" : "")} />
                         <label className="btn btn-outline-warning " htmlFor="5000">Below 5,000</label>
 
-                        <input type="radio" className="btn-check " name="btnradio" id="10000" autoComplete="off" onClick={() => { setfilters("10000") }} />
+                        <input type="radio" className="btn-check " name="btnradio" id="10000" autoComplete="off" onClick={() => { setfilters(filters == "" ? "10000" : "") }} />
                         <label className="btn btn-outline-warning " htmlFor="10000">Below 10,000</label>
 
-                        <input type="radio" className="btn-check " name="btnradio" id="50000" autoComplete="off" onClick={() => setfilters("50000")} />
+                        <input type="radio" className="btn-check " name="btnradio" id="50000" autoComplete="off" onClick={() => setfilters(filters == "" ? "50000" : "")} />
                         <label className="btn btn-outline-warning " htmlFor="50000">Below 50,000</label>
 
-                        <input type="radio" className="btn-check " name="btnradio" id="100000" autoComplete="off" onClick={() => setfilters("100000")} />
+                        <input type="radio" className="btn-check " name="btnradio" id="100000" autoComplete="off" onClick={() => setfilters(filters == "" ? "100000" : "")} />
                         <label className="btn btn-outline-warning " htmlFor="100000">Below 1,00,000</label>
 
-                        <input type="radio" className="btn-check " name="btnradio" id=">100000" autoComplete="off" onClick={() => setfilters(">100000")} />
+                        <input type="radio" className="btn-check " name="btnradio" id=">100000" autoComplete="off" onClick={() => setfilters(filters == "" ? ">100000" : "")} />
                         <label className="btn btn-outline-warning " htmlFor=">100000">Above 1,000,00</label>
                     </div>
                     <div className="btn-group d-block d-xl-none d-flex gap-2 justify-content-center">
