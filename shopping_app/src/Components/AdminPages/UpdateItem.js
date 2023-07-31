@@ -78,7 +78,7 @@ export default function UpdateItem(props) {
     const updateItem = () => {
         if (isSubmit) {
             axios.put("http://localhost:8083/items/", itemDetails).then(a => {
-                nav("/admin/itemsList")
+               window.history.back();
             }).catch((error) => {
                 setError(true);
                 if (error.response.data === undefined) {

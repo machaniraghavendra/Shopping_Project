@@ -76,7 +76,7 @@
     display: flex;
 }
 
-.round {
+/* .round {
     content: " ";
     width: 100%;
     height: 100%;
@@ -86,7 +86,7 @@
     z-index: 10;
     animation: dark 1 ease-out 1.2s alternate;
     transition: all 2s;
-}
+} */
 
 @keyframes dark {
     from {
@@ -108,7 +108,7 @@
     }
 }
 
-.round-light {
+/* .round-light {
     content: " ";
     width: 100%;
     height: 100%;
@@ -118,7 +118,7 @@
     z-index: 10;
     animation: dark 1 ease-out 1.2s alternate;
     transition: all 2s;
-}
+} */
 
 .editOptionAddress {
     position: relative;

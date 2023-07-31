@@ -39,4 +39,8 @@ public interface OrderService {
 	String getDate(LocalDateTime date);
 
 	String getTime(LocalDateTime date);
+
+	OrdersDto getOrderDtowithOrderUUID(UUID orderId) throws ItemNotFoundException;
+	
+	OrdersEntity getWithUUID(UUID uuid);
 }

@@ -18,18 +18,18 @@ import com.shopping.query.command.entites.dto.UserDetailDto;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.RatingsOfUserNotFoundException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
-import com.shopping.query.command.service.ItemService;
 import com.shopping.query.command.service.RatingsService;
-import com.shopping.query.command.service.UserService;
+import com.shopping.query.command.service.implementation.ItemServiceImpl;
+import com.shopping.query.command.service.implementation.UserServiceImpl;
 
 @Service
 public class MappersClass {
 
 	@Autowired
-	private UserService userService;
+	private UserServiceImpl userService;
 
 	@Autowired
-	private ItemService itemServiceImpl;
+	private ItemServiceImpl itemServiceImpl;
 
 	@Autowired
 	private RatingsService ratingsService;
@@ -73,7 +73,7 @@ public class MappersClass {
 				.orderedOn(ordersEntity.getOrderedOn()).orderQuantity(ordersEntity.getOrderQuantity())
 				.orderStatus(ordersEntity.getOrderStatus()).paymentType(ordersEntity.getPaymentType())
 				.phoneNumber(ordersEntity.getPhoneNumber()).pincode(ordersEntity.getPincode())
-				.orderUUIDId(ordersEntity.getOrderUUIDId()).build();
+				.orderUUIDId(ordersEntity.getOrderUUIDId()).totalOrderAmount(ordersEntity.getTotalOrderAmount()).build();
 	}
 
 	public AddressDto addressDtoMapper(AddressEntity addressEntity) throws UserNotFoundException {

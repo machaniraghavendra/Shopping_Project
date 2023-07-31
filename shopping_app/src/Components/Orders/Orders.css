@@ -3,81 +3,55 @@
 }
 
 #thank-you-rating {
-    font-size: xx-large;
     z-index: 9;
     top: 0%;
+    font-size: 130%;
     justify-content: center;
     text-align: center;
     position: fixed;
     opacity: 0;
     display: inline-flex;
-    animation: thankyoufromdowntoup 1 linear alternate 2s;
+    animation: thankyoufromdowntoup 1 linear alternate 3s;
 }
 
 @keyframes thankyoufromdowntoup {
     0% {
         top: 100%;
-        opacity: 1;
-        font-size: 300%;
+        opacity: 0.5;
     }
 
-    10% {
+    
+    20% {
         top: 90%;
         opacity: 1;
-        font-size: 290%;
     }
-
-    20% {
-        top: 80%;
-        opacity: 1;
-        font-size: 280%;
-    }
-
     30% {
-        top: 70%;
+        top: 90%;
         opacity: 1;
-        font-size: 270%;
     }
-
     40% {
-        top: 60%;
+        top: 90%;
         opacity: 1;
-        font-size: 260%;
     }
-
     50% {
-        top: 50%;
-        opacity: 0.9;
-        font-size: 250%;
+        top: 90%;
+        opacity: 1;
     }
-
     60% {
-        top: 40%;
-        opacity: 0.8;
-        font-size: 240%;
+        top: 90%;
+        opacity: 1;
     }
-
     70% {
-        top: 30%;
-        opacity: 0.7;
-        font-size: 230%;
+        top: 90%;
+        opacity: 1;
     }
-
     80% {
-        top: 20%;
-        opacity: 0.6;
-        font-size: 220%;
-    }
-
-    90% {
-        top: 10%;
-        opacity: 0.5;
-        font-size: 210%;
+        top: 90%;
+        opacity: 1;
     }
 
     100% {
-        top: 0%;
-        opacity: 0.4;
-        font-size: 200%;
+        top: 100%;
+        opacity: 0.5;
     }
 }

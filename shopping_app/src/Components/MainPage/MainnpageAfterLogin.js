@@ -177,7 +177,7 @@ export default function MainPageAfterlogin(props) {
                                             <Link className="nav-link text-dark" to="/wishlist"><h5><i className="fa-solid fa-heart fa-beat text-danger"></i> Wishlist</h5></Link>
                                         </li>
                                         <li className="nav-item">
-                                            <Link className="nav-link text-dark" to="/orders"><h5><i className="fa-solid fa-bag-shopping fa-fade text-warning"></i>  My Orders</h5></Link>
+                                            <Link className="nav-link text-dark" to="/orders"><h5><i className="fa-solid fa-bag-shopping fa-fade text-warning"></i>  My Orders ({fetchDone ? user.totalOrdersCountOfUser:"Loading.."})</h5></Link>
                                         </li>
                                     </ul>
 

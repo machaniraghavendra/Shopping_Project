@@ -6,6 +6,7 @@ import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import ChatBot from '../ChatBot/ChatBot';
 import loadingImg from "../Loading_Card.png";
 import LogOut from '../Login/LogOut';
+import timePeriodCalculator from './TimePeriodCalculator';
 
 export default function Orders(props) {
 
@@ -152,8 +153,8 @@ export default function Orders(props) {
                         <div className='row rounded-5 justify-content-center d-flex g-3 '>
 
                             {/* Delivery toggle */}
-                            <div className='p-1 bg-secondary w-75' style={{ fontSize: "13px", cursor: "pointer" }} onClick={() => { setDeliveryItemsView(!deliveryItemsView) }}>
-                                <span className='text-light px-2 fs-6'>Delivered Items {deliveryItemsView ? <i className="bi bi-caret-down"></i> : <i className="bi bi-caret-right"></i>}</span>
+                            <div className='p-1 bg-secondary w-75' style={{ fontSize: "13px", cursor: "pointer" }} onClick={() => { setDeliveryItemsView(!deliveryItemsView); sessionStorage.setItem("showDeliveryItems", !deliveryItemsView) }}>
+                                <span className='text-light px-2 fs-6'>Delivered Items {(deliveryItemsView || sessionStorage.getItem("showDeliveryItems") === "true" ? true : false) ? <i className="bi bi-caret-down"></i> : <i className="bi bi-caret-right"></i>}</span>
                             </div>
                             {/* <div className={deliveryItemsView ? 'py-2 d-block viewbg' : 'py-2 d-none viewbg'}> */}
                             {
@@ -166,7 +167,7 @@ export default function Orders(props) {
                                     .map(item => {
                                         deliveryitemsCount++;
                                         return (
-                                            <div className={deliveryItemsView ? 'py-2 d-block col-lg-6' : 'py-2 d-none col-lg-6'} key={item.item.itemId}>
+                                            <div className={(deliveryItemsView || sessionStorage.getItem("showDeliveryItems") === "true" ? true : false) ? 'py-2 d-block col-lg-6' : 'py-2 d-none col-lg-6'} key={item.item.itemId}>
                                                 <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
                                                     <div className="row g-0" >
                                                         <div className="col-md-3 d-none d-md-flex justify-content-center">
@@ -188,7 +189,7 @@ export default function Orders(props) {
                                                                 <div className='row py-2'> <p className="card-text">Ordered on {item.orderedOn}</p></div>
                                                                 <div className='row'>
                                                                     {item.orderStatus == "cancelled" ? <p className='text-decoration-line-through'>Expected delivery on {item.deliveryDate}</p> :
-                                                                        item.orderStatus == "delivered" ? <p>Delivered on <b>{item.deliveryDate}</b></p> :
+                                                                        item.orderStatus == "delivered" ? <p>Delivered on {timePeriodCalculator(item.deliveryDate)}  <b>{item.deliveryDate}</b></p> :
                                                                             <p>Expected delivery on <b>{item.deliveryDate}</b></p>}
                                                                 </div>
                                                             </div>
@@ -209,7 +210,7 @@ export default function Orders(props) {
                             {/* </div> */}
 
                             <hr></hr>
-                            <span className='bg-secondary text-light mx-2 py-2 w-75 fs-6' style={{ cursor: "pointer" }} onClick={() => { setDeliveryItemsView(!deliveryItemsView) }}>Non- delivered products {!deliveryItemsView ? <i className="bi bi-caret-down"></i> : <i className="bi bi-caret-right"></i>}</span>
+                            <span className='bg-secondary text-light mx-2 py-2 w-75 fs-6' style={{ cursor: "pointer" }} onClick={() => { setDeliveryItemsView(!deliveryItemsView); sessionStorage.setItem("showDeliveryItems", !deliveryItemsView) }}>Non- delivered products {!(deliveryItemsView || sessionStorage.getItem("showDeliveryItems") === "true" ? true : false) ? <i className="bi bi-caret-down"></i> : <i className="bi bi-caret-right"></i>}</span>
                             {/* All products */}
                             {orders.length == 0 ?
                                 <div className='container justify-content-center d-flex g-3 w-100 h-100 '>
@@ -228,7 +229,7 @@ export default function Orders(props) {
                                     })
                                     .map(item => {
                                         return (
-                                            <div className={!deliveryItemsView ? 'py-2 d-block col-lg-6' : 'py-2 d-none col-lg-6'} key={item.item.itemId}>
+                                            <div className={!(deliveryItemsView || sessionStorage.getItem("showDeliveryItems") === "true" ? true : false) ? 'py-2 d-block col-lg-6' : 'py-2 d-none col-lg-6'} key={item.item.itemId}>
                                                 {/* <div className='col-lg-6'> */}
                                                 <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
                                                     <div className="row g-0" >

@@ -28,5 +28,6 @@ public class OrdersDto {
 	private String deliveryDate;
 	private String orderStatus;
 	private UUID orderUUIDId;
+	private String totalOrderAmount;
 	private ItemsDto item;
 }

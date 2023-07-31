@@ -1,6 +1,8 @@
 import "../ChatBot/chatBot.css"
 import axios from "axios"
 import { React, Component } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
 
 class ChatBot extends Component {
     constructor(props) {
@@ -16,7 +18,7 @@ class ChatBot extends Component {
             error: false
         };
     }
-    
+
     setUser = (user) => {
         this.setState({
             user: user
@@ -94,6 +96,10 @@ class ChatBot extends Component {
         this.setMessage("");
     }
 
+    viewOrder = (e) => {
+        axios.get("http://localhost:8083/orders/saveorder/" + e);
+    }
+
     render() {
         return (
             <div className="text-white ">
@@ -139,8 +145,8 @@ class ChatBot extends Component {
                                                         <div className=" align-self-start">
                                                             {a.botMessage.includes("http") ?
                                                                 a.botMessage.length > 70 ? <>
-                                                                    <div className="justify-content-center d-flex">
-                                                                        <img className="w-50 h-50 " src={a.botMessage.substr(a.botMessage.indexOf("http"))} /><br></br>
+                                                                    <div className="justify-content-center d-block">
+                                                                       <Link to={'/orderDetails'}> <img className="w-50 h-50 " src={a.botMessage.substr(a.botMessage.indexOf("http"))}  onClick={()=>{this.viewOrder(a.userMessage.split(" "))}}/></Link><br></br>
                                                                     </div>
                                                                     {a.botMessage.substr(0, a.botMessage.indexOf("http")).trim()}
                                                                 </> :
@@ -152,7 +158,7 @@ class ChatBot extends Component {
                                                                     </>
                                                                 : a.botMessage
                                                             }</div>
-                                                        <div className=" align-self-end float-end text-muted fst-italic fw-bold" style={{ fontSize: "12px" }}>{a.botReturnedAt}</div>
+                                                        <div className="align-self-end float-end text-muted fst-italic fw-bold" style={{ fontSize: "12px" }}>{a.botReturnedAt}</div>
                                                     </div>
                                                     <div className="col-4"></div>
                                                 </div>

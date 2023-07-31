@@ -286,7 +286,7 @@ export default function Cartpage(props) {
 
                                 </div><br></br>
                                 &nbsp;
-                                <div className='card' style={{ height: "10%" }}>
+                                <div className='card card-color' style={{ height: "10%" }}>
                                     <div className='card-footer'>
                                         <h5>List of products in cart :</h5>
                                         {data.map(a => {

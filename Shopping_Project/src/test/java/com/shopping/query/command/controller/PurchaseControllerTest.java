@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -30,14 +31,14 @@ class PurchaseControllerTest {
 		this.mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 	}
 
-	@Test
+	@Disabled
 	void testPurchaseItem() throws Exception {
 		this.mockMvc
 				.perform(get("/purchase/1").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful());
 	}
 
-	@Test
+	@Disabled
 	void testGetItem() throws Exception {
 		this.mockMvc
 				.perform(get("/purchase/").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))

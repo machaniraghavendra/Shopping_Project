@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import com.shopping.query.command.entites.AddressEntity;
 import com.shopping.query.command.entites.OrdersEntity;
 import com.shopping.query.command.entites.dto.AddressDto;
+import com.shopping.query.command.entites.dto.ItemsDto;
 import com.shopping.query.command.entites.dto.OrdersDto;
 import com.shopping.query.command.exceptions.GlobalExceptionHandler;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
@@ -45,7 +46,7 @@ public class OrdersServImpl implements OrderService {
 	private OrderRepo orderRepo;
 
 	@Autowired
-	private MappersClass mapper;
+	private MappersClass mapper ;
 
 	@Autowired
 	private AddressService addressService;
@@ -79,6 +80,13 @@ public class OrdersServImpl implements OrderService {
 							Objects.isNull(ordersEntity.getOrderQuantity()) ? 1 : ordersEntity.getOrderQuantity())
 					.orderStatus(STATUS_SUCCESS).deliveryDate(getDate(LocalDateTime.now().plusDays(5)))
 					.orderUUIDId(UUID.randomUUID()).userId(ordersEntity.getUserId()).build();
+			if (detailsEntity.getOrderUUIDId().toString().startsWith("1")) {
+				saveOrderDetails(ordersEntity);
+			}
+			ItemsDto item = mapper.itemDtoMapperById(detailsEntity.getItemId());
+			detailsEntity.setTotalOrderAmount(String.valueOf(Math.multiplyExact(
+					Long.valueOf(item.getItemPrice().replace(",", "").replace("₹", "").replace(".00", "")),
+					detailsEntity.getOrderQuantity())));
 			orderRepo.save(detailsEntity);
 			return "Saved order";
 		}
@@ -107,6 +115,11 @@ public class OrdersServImpl implements OrderService {
 		} else {
 			return "Not deleted";
 		}
+	}
+
+	@Override
+	public OrdersDto getOrderDtowithOrderUUID(UUID orderId) throws ItemNotFoundException {
+		return mapper.deliveryDetailsMapper(getWithUUID(orderId));
 	}
 
 	@Override
@@ -229,7 +242,8 @@ public class OrdersServImpl implements OrderService {
 						.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 	}
 
-	private OrdersEntity getWithUUID(UUID uuid) {
+	@Override
+	public OrdersEntity getWithUUID(UUID uuid) {
 		return getAllOrders().stream().filter(a -> a.getOrderUUIDId().equals(uuid)).findFirst().get();
 	}
 }
