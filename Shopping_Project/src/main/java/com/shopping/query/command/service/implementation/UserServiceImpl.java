@@ -3,6 +3,7 @@ package com.shopping.query.command.service.implementation;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import com.shopping.query.command.entites.UserEntity;
 import com.shopping.query.command.entites.dto.UserDetailDto;
 import com.shopping.query.command.exceptions.UserAlreadyExistsException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.repos.OrderRepo;
 import com.shopping.query.command.repos.UserRepo;
 import com.shopping.query.command.service.UserService;
 
@@ -19,7 +21,10 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepo userRepo;
-
+	
+	@Autowired
+	private OrderRepo orderRepo;
+	
 	@Override
 	public String save(UserEntity userEntity) throws UserAlreadyExistsException {
 		userEntity.setUserEmail(userEntity.getUserEmail().toLowerCase());
@@ -134,9 +139,14 @@ public class UserServiceImpl implements UserService {
 		detailDto.setProfileImgUrl(entity.getProfileImgUrl());
 		detailDto.setLoggedIn(entity.isLoggedIn());
 		detailDto.setAdmin(entity.isAdmin());
+		detailDto.setTotalOrdersCountOfUser(getOrdersCountofUser(entity.getUserId()));
 		return detailDto;
 	}
 
+	private int getOrdersCountofUser(UUID userId) {
+		return orderRepo.findAll().stream().filter(a -> a.getUserId().equals(userId)).collect(Collectors.toList()).size();
+	}
+	
 	private UserEntity getUserEntity(UUID userId) throws UserNotFoundException {
 		return findall().stream().filter(a -> a.getUserId().equals(userId)).findFirst()
 				.orElseThrow(() -> new UserNotFoundException("Not present"));

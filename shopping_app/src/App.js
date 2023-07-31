@@ -44,6 +44,8 @@ function App() {
 
   const [fetchUserDone, setfetchUserDone] = useState(false);
 
+  const [isDarkModeInSystem, setIsDarkModeInSystem] = useState(false);
+
   const currentuser = () => {
     if (user) {
       axios.get("http://localhost:8083/user/userid/" + user).then(res => {
@@ -52,15 +54,28 @@ function App() {
           setcurrentUser(res.data);
           setUserPresent(true);
         }
-      }).catch(a=>{localStorage.removeItem("currentuser")})
-    }else{
+      }).catch(a => { localStorage.removeItem("currentuser") })
+    } else {
       setfetchUserDone(true);
       setUserPresent(false);
     }
   }
 
+  const getTheme = (mode) => {
+    sessionStorage.setItem("dark", mode);
+  }
+  
+  const checkSystemTheme = () => {
+    if (window.matchMedia) {
+      if (localStorage.getItem("customMode") == "true" ? false : true) {
+        setIsDarkModeInSystem(window.matchMedia('(prefers-color-scheme: dark)').matches);
+        getTheme(window.matchMedia('(prefers-color-scheme: dark)').matches);
+      }
+    }
+  }
+
   useEffect(() => {
-    currentuser()
+    currentuser(); checkSystemTheme()
   }, [])
 
   if (fetchUserDone) {

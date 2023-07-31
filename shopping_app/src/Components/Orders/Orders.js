@@ -6,6 +6,7 @@ import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import ChatBot from '../ChatBot/ChatBot';
 import loadingImg from "../Loading_Card.png";
 import LogOut from '../Login/LogOut';
+import timePeriodCalculator from './TimePeriodCalculator';
 
 export default function Orders(props) {
 
@@ -188,7 +189,7 @@ export default function Orders(props) {
                                                                 <div className='row py-2'> <p className="card-text">Ordered on {item.orderedOn}</p></div>
                                                                 <div className='row'>
                                                                     {item.orderStatus == "cancelled" ? <p className='text-decoration-line-through'>Expected delivery on {item.deliveryDate}</p> :
-                                                                        item.orderStatus == "delivered" ? <p>Delivered on <b>{item.deliveryDate}</b></p> :
+                                                                        item.orderStatus == "delivered" ? <p>Delivered on {timePeriodCalculator(item.deliveryDate)}  <b>{item.deliveryDate}</b></p> :
                                                                             <p>Expected delivery on <b>{item.deliveryDate}</b></p>}
                                                                 </div>
                                                             </div>

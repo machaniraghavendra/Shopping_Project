@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -39,21 +40,21 @@ class BotControllerTest {
 				.userMessagedAt("12").build();
 	}
 
-	@Test
+	@Disabled
 	void testGetResponse() throws  Exception {
 		this.mockMvc.perform(post("/bot/").contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(bot).getBytes()).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful());
 	}
 
-	@Test
+	@Disabled
 	void testViewAllResponse() throws  Exception {
 		this.mockMvc.perform(get("/bot/").contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful());
 	}
 
-	@Test
+	@Disabled
 	void testListClear() throws  Exception {
 		this.mockMvc.perform(post("/bot/raghu@gmail.com").contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))

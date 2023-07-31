@@ -24,7 +24,7 @@ import lombok.ToString;
 public class OrdersEntity {
 
 	@Id
-	@GeneratedValue (strategy = GenerationType.AUTO)
+	@GeneratedValue (strategy = GenerationType.SEQUENCE)
 	private Integer orderId;
 	@NonNull
 	private UUID userId;
@@ -46,5 +46,5 @@ public class OrdersEntity {
 	private String deliveryDate;
 	private String orderStatus;
 	private UUID orderUUIDId;
-
+	private String totalOrderAmount;
 }

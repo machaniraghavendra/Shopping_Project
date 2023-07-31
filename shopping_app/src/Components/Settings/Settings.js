@@ -53,23 +53,23 @@ export default function Settings(props) {
         if (!document.getElementById("flexSwitchCheckChecked").checked) {
             document.getElementById("round").classList.remove("round")
             document.getElementById("round1").classList.add("round-light")
-            setTimeout(() => {
-                document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
-                // sessionStorage.removeItem("dark")
-                document.getElementById("flexSwitchCheckChecked").checked = false
-                document.querySelector(".listss").classList.add("text-dark")
-                document.querySelector(".listss").classList.remove("text-light")
-            }, 500);
+            // setTimeout(() => {
+            document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
+            // sessionStorage.removeItem("dark")
+            document.getElementById("flexSwitchCheckChecked").checked = false
+            document.querySelector(".listss").classList.add("text-dark")
+            document.querySelector(".listss").classList.remove("text-light")
+            // }, 500);
         } else {
             document.getElementById("round1").classList.remove("round-light")
             document.getElementById("round").classList.add("round")
-            setTimeout(() => {
-                document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
-                document.getElementById("flexSwitchCheckChecked").checked = true
-                // sessionStorage.setItem("dark", theme)
-                document.querySelector(".listss").classList.add("text-light")
-                document.querySelector(".listss").classList.remove("text-dark")
-            }, 500);
+            // setTimeout(() => {
+            document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
+            document.getElementById("flexSwitchCheckChecked").checked = true
+            // sessionStorage.setItem("dark", theme)
+            document.querySelector(".listss").classList.add("text-light")
+            document.querySelector(".listss").classList.remove("text-dark")
+            // }, 500);
         }
     }
 
@@ -437,7 +437,7 @@ export default function Settings(props) {
                                                 <Link className="nav-link " to="/wishlist"><i className="fa-solid fa-heart text-danger"></i> Wishlist</Link>
                                             </li>
                                             <li className="nav-item">
-                                                <Link className="nav-link " to="/orders"><i className="fa-solid fa-bag-shopping text-warning"></i> My Orders</Link>
+                                                <Link className="nav-link " to="/orders"><i className="fa-solid fa-bag-shopping text-warning"></i> My Orders ({user.totalOrdersCountOfUser}) </Link>
                                             </li>
                                         </ul>
 

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import Avatar from "react-avatar-edit";
 import axios from "axios";
 import Rating from "../Items/Rating/Rating";
+import timePeriodCalculator from "./TimePeriodCalculator";
 
 export default function Review(item) {
     const [images, setImages] = useState([]);
@@ -21,7 +22,6 @@ export default function Review(item) {
     const [showImagePop, setShowImagePop] = useState(false);
 
     const [imageUrlForToShow, setImageUrlForToShow] = useState("");
-
 
     let listOfImages = [];
 
@@ -111,32 +111,110 @@ export default function Review(item) {
         });
     }
 
+    // const timePeriodCalculator = (date) => {
+    //     if (reviewsOfUserForItem && date) {
+    //         let returnStatement = "";
+    //         let currentDate = new Date();
+    //         let setGivenDate = new Date();
+    //         let needTosetDate = date.substr(0, 2).trim();
+    //         let needTosetMonth = Number(date.substr(3, 2).trim()) - 1;
+    //         let needTosetYear = date.substr(6).trim();
+    //         setGivenDate.setDate(needTosetDate);
+    //         setGivenDate.setMonth(needTosetMonth);
+    //         setGivenDate.setFullYear(needTosetYear);
+    //         switch (currentDate.getMonth() - setGivenDate.getMonth()) {
+    //             case 0:
+    //                 if (currentDate.getDay() - setGivenDate.getDay() == 0) {
+    //                     returnStatement = "Today"
+    //                 } else if (Math.abs(currentDate.getDay() - setGivenDate.getDay()) == 1) {
+    //                     returnStatement = "! day ago"
+    //                 } else if (Math.abs(currentDate.getDay() - setGivenDate.getDay()) == 2) {
+    //                     returnStatement = "2 days ago"
+    //                 } else if (Math.abs(currentDate.getDay() - setGivenDate.getDay()) == 3) {
+    //                     returnStatement = "3 days ago"
+    //                 } else if (Math.abs(currentDate.getDay() - setGivenDate.getDay()) == 4) {
+    //                     returnStatement = "4 days ago"
+    //                 } else if (Math.abs(currentDate.getDay() - setGivenDate.getDay()) == 5) {
+    //                     returnStatement = "5 days ago"
+    //                 } else if (Math.abs(currentDate.getDay() - setGivenDate.getDay()) == 6) {
+    //                     returnStatement = "6 days ago"
+    //                 } else {
+    //                     returnStatement = "1 week ago"
+    //                 }
+    //                 break;
+    //             case 1:
+    //                 returnStatement = "1 month ago";
+    //                 break;
+    //             case 2:
+    //                 returnStatement = "2 months ago";
+    //                 break;
+    //             case 3:
+    //                 returnStatement = "3 months ago";
+    //                 break;
+    //             case 4:
+    //                 returnStatement = "4 months ago";
+    //                 break;
+    //             case 4:
+    //                 returnStatement = "4 months ago";
+    //                 break;
+    //             case 5:
+    //                 returnStatement = "5 months ago";
+    //                 break;
+    //             case 6:
+    //                 returnStatement = "6 months ago";
+    //                 break;
+    //             case 7:
+    //                 returnStatement = "7 months ago";
+    //                 break;
+    //             case 8:
+    //                 returnStatement = "8 months ago";
+    //                 break;
+    //             case 9:
+    //                 returnStatement = "9 months ago";
+    //                 break;
+    //             case 10:
+    //                 returnStatement = "10 months ago";
+    //                 break;
+    //             case 11:
+    //                 returnStatement = "11 months ago";
+    //                 break;
+    //             case 12:
+    //                 returnStatement = "12 months ago";
+    //                 break;
+    //             default:
+    //                 returnStatement = "1 year ago";
+    //                 break;
+    //         }
+    //         return returnStatement;
+    //     }
+    // }
+
     if (listOfImages.length == 0) {
         removeElemets()
     }
 
     useEffect(() => {
-        getReviewOfItem()
+        getReviewOfItem();
     }, [])
 
     return (
         <div className="container-fluid">
             <div className="container-fluid my-3">
+                {reviewsOfUserForItem && <h6>Your Reviews</h6>}
                 {reviewsOfUserForItem && reviewsOfUserForItem.map((a, i) => {
                     return (
                         <div className="" key={i}>
-                            <h6>Your Comments</h6>
                             <span className="d-flex float-end fs-5"><i style={{ cursor: "pointer" }} className="bi bi-trash-fill text-danger" onClick={() => { deleteReview(a.imageDto.map(a => { return (a.reviewId) })) }}></i></span>
                             <div className="container-fluid">
-                                <Rating times={a.rating.rating} /><span className="mx-2  fw-bold">{a.commentTitle}</span>
+                                <Rating times={a.rating.rating} /><span className="mx-2  fw-bold">{a.commentTitle} : {timePeriodCalculator(a.commentAddedOn)}</span>
                                 <p className="my-1 mx-1">{a.comment}</p>
                                 {(a.imageDto != null || a.imageDto != []) && a.imageDto.map((a, i) => {
                                     return (
-                                        <img key={i} src={a.imageUrl} className="mx-2 d-inline-flex justify-content-center" style={{cursor:"zoom-in"}} width={70} height={100} onClick={() => { setShowImagePop(true); setImageUrlForToShow(a.imageUrl) }} />
+                                        <img key={i} src={a.imageUrl} className="mx-2 d-inline-flex justify-content-center" style={{ cursor: "zoom-in" }} width={70} height={100} onClick={() => { setShowImagePop(true); setImageUrlForToShow(a.imageUrl) }} />
                                     )
                                 })}
                                 <p className="my-2">Customer : {a.user.userName}</p>
-                                <p className="my-2">Added on : {a.commentAddedOn} at {a.commentAddedAt} IST</p>
+                                <p className="my-2">Added on : {a.commentAddedOn} at {a.commentAddedAt} IST </p>
                             </div>
                             <hr></hr>
                         </div>
@@ -192,14 +270,15 @@ export default function Review(item) {
             }
 
             {showImagePop &&
-            <div className="justify-content-center d-inline-flex ">
-                <div className="d-inline-flex position-fixed" style={{ zIndex: "9", top: "10%", left: "30%" }}>
-                    <img src={imageUrlForToShow} height={550} style={{ boxShadow: " rgba(0, 0, 0, 0.5) 100px 220px 700px 3000px" }} />
-                    <span className="float-end mx-2 fs-4"><i className="bi bi-x-circle-fill"
-                        onClick={() => { setShowImagePop(false); setImageUrlForToShow("") }} style={{ cursor: "pointer" }}></i>
-                    </span>
-                </div>
+                <div className="justify-content-center d-inline-flex ">
+                    <div className="d-inline-flex position-fixed" style={{ zIndex: "9", top: "10%", left: "30%" }}>
+                        <img src={imageUrlForToShow} height={550} style={{ boxShadow: " rgba(0, 0, 0, 0.5) 100px 220px 700px 3000px" }} />
+                        <span className="float-end mx-2 fs-4"><i className="bi bi-x-circle-fill"
+                            onClick={() => { setShowImagePop(false); setImageUrlForToShow("") }} style={{ cursor: "pointer" }}></i>
+                        </span>
+                    </div>
                 </div>}
         </div >
     )
 }
+

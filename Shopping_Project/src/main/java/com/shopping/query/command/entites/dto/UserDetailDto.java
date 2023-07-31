@@ -20,5 +20,6 @@ public class UserDetailDto {
 	private String profileImgUrl;
 	private boolean isLoggedIn;
 	private boolean admin;
+	private Integer totalOrdersCountOfUser;
 
 }

@@ -493,9 +493,9 @@ export default function Buypage(props) {
                         <div className="text-center">
                             <button className="btn btn-outline-warning btn-lg  m-auto  orderButton" onClick={(e) => {
                                 if (details.firstName != "" && details.phoneNumber != "" && details.pincode != "" && details.address != "" && details.paymentOption != "") {
-                                    return (checkAddress())
+                                    return (checkAddress(e))
                                 } else {
-                                    validate()
+                                    validate(e)
                                 }
                             }}>Place Order Now</button>
                         </div>
