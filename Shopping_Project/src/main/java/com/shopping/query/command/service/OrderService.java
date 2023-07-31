@@ -36,6 +36,8 @@ public interface OrderService {
 
 	void updateOrderStatus(UUID orderid) throws OrderNotFoundException;
 
+	List<String> getAllEmailsOfUser(UUID userId) throws UserNotFoundException;
+	
 	String getDate(LocalDateTime date);
 
 	String getTime(LocalDateTime date);

@@ -1,25 +1,27 @@
 package com.shopping.query.command.service.implementation;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.shopping.query.command.entites.AddressEntity;
+import com.shopping.query.command.entites.ItemEntity;
 import com.shopping.query.command.entites.OrdersEntity;
 import com.shopping.query.command.entites.dto.AddressDto;
 import com.shopping.query.command.entites.dto.ItemsDto;
@@ -211,15 +213,30 @@ public class OrdersServImpl implements OrderService {
 		LocalDate now = LocalDate.now();
 		LocalDate dateOfOrder = LocalDate.parse(order.getOrderedOn(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
 		int days = (int) ChronoUnit.DAYS.between(dateOfOrder, now);
-		if (days == 1 || 3 > days) {
-			updateOrder(orderId, STATUS_DISPATCH);
-		} else if (days == 3 || 5 > days) {
-			updateOrder(orderId, STATUS_NEARBYHUB);
-		} else if (days == 5 || 5 < days) {
-			updateOrder(orderId, STATUS_DELIVERED);
-		} else {
-			updateOrder(orderId, order.getOrderStatus());
+		if (days != 0 && days >= 1) {
+			if (days == 1 || 3 > days) {
+				updateOrder(orderId, STATUS_DISPATCH);
+			} else if (days < 2 && days == 3 || 5 > days) {
+				updateOrder(orderId, STATUS_NEARBYHUB);
+			} else if (days == 5 || 5 < days) {
+				updateOrder(orderId, STATUS_DELIVERED);
+			} else {
+				updateOrder(orderId, order.getOrderStatus());
+			}
 		}
+	}
+
+	@Override
+	public List<String> getAllEmailsOfUser(UUID userId) throws UserNotFoundException {
+		Set<String> emails = new HashSet<>();
+		String userEmail = mapper.userDetailDtoMapper(userId).getUserEmail();
+		if (Objects.nonNull(userId) && StringUtils.hasLength(userEmail)) {
+			getAllOrders().stream().filter(order -> order.getUserId().equals(userId))
+					.map(order -> order.getEmailAddress()).forEach(email -> emails.add(email));
+			emails.add(userEmail);
+		}
+		return emails.stream().filter(email -> Objects.nonNull(email) && StringUtils.hasLength(email))
+				.sorted().toList();
 	}
 
 	@Override

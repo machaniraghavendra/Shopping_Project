@@ -112,7 +112,7 @@ public class PdfGeneratorServiceImpl implements PdfGeneratorService {
 				table.addCell(ordersDto.getFirstName() + " " + ordersDto.getLastName());
 				table.addCell(String.valueOf(2));
 				table.addCell("Email address");
-				table.addCell(ordersDto.getEmailAddress());
+				table.addCell(ordersDto.getEmailAddress()==""?"---":ordersDto.getEmailAddress());
 				table.addCell(String.valueOf(3));
 				table.addCell("Phone Number");
 				table.addCell(ordersDto.getPhoneNumber());
