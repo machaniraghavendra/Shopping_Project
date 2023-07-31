@@ -57,7 +57,7 @@ public class OrdersController {
 	public void updateOrderStatus(@PathVariable("id") UUID id) throws OrderNotFoundException {
 		ordersServImpl.updateOrderStatus(id);
 	}
-	
+
 	@GetMapping("/all")
 	public ResponseEntity<List<OrdersEntity>> getAll() {
 		return ResponseEntity.ok(ordersServImpl.getAllOrders());
@@ -78,6 +78,11 @@ public class OrdersController {
 	@GetMapping("/saveorder/{id}")
 	public ResponseEntity<List<Object>> saveOrderToView(@PathVariable("id") UUID id) throws ItemNotFoundException {
 		return ResponseEntity.ok(ordersServImpl.saveOrderToView(id));
+	}
+
+	@GetMapping("/getAllMailsOfUser")
+	public ResponseEntity<List<String>> getAllEmailsOfUser(@RequestParam("id") UUID id) throws UserNotFoundException {
+		return ResponseEntity.ok(ordersServImpl.getAllEmailsOfUser(id));
 	}
 
 	@GetMapping("/")

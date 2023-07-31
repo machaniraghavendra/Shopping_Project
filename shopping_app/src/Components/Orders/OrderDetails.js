@@ -37,11 +37,16 @@ export default function OrderDetails(props) {
 
     const [mailMsge, setMailMsge] = useState("Sending...");
 
+    const [mailsToSendEmail, setMailsToSendEmail] = useState([]);
+
+    const [selectedMail, setSelectedEmail] = useState("");
+
     const nav = useNavigate();
 
     const fetchOrders = () => {
         axios.get("http://localhost:8083/orders/").then((res) => {
-            setOrder(res.data)
+            setOrder(res.data);
+            getAllMailsOfUser();
             Promise.resolve(getRatingOfUserForItem(res.data))
         }).catch((error) => {
             setError(true);
@@ -99,9 +104,9 @@ export default function OrderDetails(props) {
     }
 
     const sendMail = async (itemName, url) => {
-        if (itemName) {
+        if (itemName && selectedMail) {
             await axios.post("http://localhost:8083/mail/sendMailWithAttachment?url=" + url + "&itemName=" + itemName, {
-                "recipient": user.userEmail,
+                "recipient": selectedMail,
                 "msgBody": `Hi ${user.userName},
     Here is the invoice bill attached to this mail you can use it for reference.
     Thank you for shopping with us.`,
@@ -122,6 +127,21 @@ export default function OrderDetails(props) {
                 setError(true);
                 if (error.response.data === undefined) {
                     setErrorMessage("Something went wrong")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
+            });
+        }
+    }
+
+    const getAllMailsOfUser = async () => {
+        if (fetchDone) {
+            await axios.get("http://localhost:8083/orders/getAllMailsOfUser?id=" + user.userId).then(a => {
+                setMailsToSendEmail(a.data);
+            }).catch((error) => {
+                setError(true);
+                if (error.response.data === undefined) {
+                    setErrorMessage("Something went wrong1")
                 } else {
                     setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
                 }
@@ -227,7 +247,8 @@ export default function OrderDetails(props) {
                                             {a.orderStatus == "delivered" && <>
                                                 <div className='col-12 col-md-6 justify-content-md-end justify-content-center my-1 d-flex gap-2' >
                                                     <a href={"http://localhost:8083/pdf/generate/" + a.orderUUIDId} className='btn btn-sm btn-primary' disabled={showMsgeSendPopUp}>Download e-bill here <i className='bi bi-download'></i></a>
-                                                    <button className='btn btn-sm btn-warning' onClick={() => { sendMail(a.item.itemName, "http://localhost:8083/pdf/generate/" + a.orderUUIDId); setShowMsgeSendPopUp(true); setMailMsge("Sending...") }} disabled={showMsgeSendPopUp}>Send e-bill to mail <i className="bi bi-forward-fill"></i></button>
+                                                    {/* <button className='btn btn-sm btn-warning' onClick={() => { sendMail(a.item.itemName, "http://localhost:8083/pdf/generate/" + a.orderUUIDId); setShowMsgeSendPopUp(true); setMailMsge("Sending...") }} disabled={showMsgeSendPopUp}>Send e-bill to mail <i className="bi bi-forward-fill"></i></button> */}
+                                                    <button className='btn btn-sm btn-warning' disabled={showMsgeSendPopUp} data-bs-target="#emailsModal" data-bs-toggle="modal" onClick={() => { getAllMailsOfUser() }} >Send e-bill to mail <i className="bi bi-forward-fill"></i></button>
                                                 </div>
                                             </>
                                             }
@@ -260,19 +281,20 @@ export default function OrderDetails(props) {
                                                             <p>Expected delivery on <b>{a.deliveryDate}</b></p>}
                                                 </div>
                                                 <h6>Delivery Details</h6>
-                                                <div className="container text-center g-3 ">
+                                                <div className="container text-md-center text-start g-3 ">
                                                     <div className="row">
-                                                        <div className="col"> <p><b>Name</b> : {a.firstName + " " + a.lastName}</p>  </div>
-                                                        {a.emailAddress != "" && <div className="col">  <p><b>Email address</b> : {a.emailAddress}</p></div>}
-                                                        <div className="col">  <p><b>Mobile Number</b> : {a.phoneNumber}</p></div>
+                                                        <div className="col-12 col-md-4"> <p><b>Name</b> : {a.firstName + " " + a.lastName}</p>  </div>
+                                                        {a.emailAddress != "" && <div className="col-12 col-md-4">  <p><b>Email address</b> : {a.emailAddress}</p></div>}
+                                                        <div className="col-12 col-md-4">  <p><b>Mobile Number</b> : {a.phoneNumber}</p></div>
                                                     </div>
                                                     <div className='row'>
-                                                        {a.pincode != null && <div className="col"> <p><b>Pincode</b> : {a.pincode}</p></div>}
-                                                        {a.orderQuantity != null && <div className="col">  <p><b>Quantity</b> : {a.orderQuantity}</p></div>}
-                                                        {a.paymentType != null && <div className="col"> <p><b>Payment type</b> : {a.paymentType.toUpperCase()}</p></div>}
+                                                        {a.pincode != null && <div className="col-12 col-md-4"> <p><b>Pincode</b> : {a.pincode}</p></div>}
+                                                        {a.orderQuantity != null && <div className="col-12 col-md-4">  <p><b>Quantity</b> : {a.orderQuantity}</p></div>}
+                                                        {a.paymentType != null && <div className="col-12 col-md-4"> <p><b>Payment type</b> : {a.paymentType.toUpperCase()}</p></div>}
                                                     </div>
                                                     <div className='row'>
-                                                        {a.deliveryAddress != null && <div className="col"> <p><b>Delivery Address</b> : {a.deliveryAddress}</p></div>}
+                                                        {a.deliveryAddress != null && <div className="col-12 col-md-6"> <p><b>Delivery Address</b> : {a.deliveryAddress}</p></div>}
+                                                        {(a.totalOrderAmount != null && a.totalOrderAmount !== "") && <div className="col-12 col-md-6 fs-6 text-center "> <p><b>Total amount : ₹{a.item.itemPrice} x {a.orderQuantity} = ₹ {a.totalOrderAmount}.00</b></p></div>}
                                                     </div>
                                                 </div>
                                                 {a.orderStatus != "cancelled" && a.orderStatus != "near by hub" && a.orderStatus != "delivered" && <>
@@ -471,6 +493,52 @@ export default function OrderDetails(props) {
                 </div>
             </>
             }
+
+            {/* Send Email popup */}
+            <div className="modal fade" id="emailsModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabIndex="-1">
+                <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                    <div className={sessionStorage.getItem("dark") === "true" ? "modal-content bg-dark text-light" : "modal-content"}>
+                        <div className="modal-header">
+                            <h1 className="modal-title fs-5" id="exampleModalToggleLabel"> Select emails you want to send</h1>
+                            <button type="button" className="btn-close bg-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            {mailsToSendEmail && mailsToSendEmail.map((a, i) => {
+                                return (
+                                    <div className="form-check" key={i}>
+                                        <input className="form-check-input" type="radio" name="emails" id={a} onClick={() => { setSelectedEmail(a) }} />
+                                        <label className="form-check-label" for={a}>
+                                            {a}
+                                        </label>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                        <div className="modal-footer">
+                            <button className="btn btn-primary" data-bs-target="#emailsModal2" data-bs-toggle="modal" disabled={!selectedMail}>Send Mail</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="modal fade" id="emailsModal2" aria-hidden="true" aria-labelledby="emailsModal2" tabIndex="-1">
+                <div className="modal-dialog modal-dialog-centered">
+                    <div className={sessionStorage.getItem("dark") === "true" ? "modal-content bg-dark text-light" : "modal-content"}>
+                        <div className="modal-header">
+                            <h1 className="modal-title fs-5" id="emailsModal2">Sure to send mail ?</h1>
+                            <button type="button" className="btn-close bg-danger" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            The e-bill will be sent to <b>'{selectedMail}'</b>
+                        </div>
+                        <div className="modal-footer">
+                            <button className="btn btn-warning" data-bs-target="#emailsModal" data-bs-toggle="modal">Select again</button>
+                            <button className="btn btn-success" data-bs-dismiss="modal"
+                                onClick={() => { { order.map(a => { return (sendMail(a.item.itemName, "http://localhost:8083/pdf/generate/" + a.orderUUIDId)) }) }; setShowMsgeSendPopUp(true); setMailMsge("Sending...") }}>Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <ChatBot />
 
         </div>

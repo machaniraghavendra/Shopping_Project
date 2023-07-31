@@ -239,12 +239,14 @@ export default function Review(item) {
                             })}
                         </div>
                         <div className="form-floating my-3">
-                            <input type="text" className="form-control bg-secondary text-light" placeholder="Give opinion on this product..." name="commentTitle" id="commentTitle" value={comment.commentTitle} onChange={setComments} />
-                            <label htmlFor="commentTitle" className="text-light">Comment in one to five word (s)</label>
+                            <input type="text" className="form-control bg-secondary text-light" maxLength={20} placeholder="Give opinion on this product..." name="commentTitle" id="commentTitle" value={comment.commentTitle} onChange={setComments} />
+                            <label htmlFor="commentTitle" className="text-light">Add short review of product (20 letters)</label>
+                            {comment.commentTitle && <span className={comment.commentTitle.length === 20 ? "text-danger" : "text-light"}>Letters can type upto : {20 - comment.commentTitle.length}</span>}
                         </div>
                         <div className="form-floating">
-                            <textarea className="form-control bg-secondary text-light" value={comment.comment} name="comment" placeholder="Leave a comment here" id="itemComment" style={{ height: "120px", width: "100%" }} onChange={setComments}></textarea>
-                            <label htmlFor="itemComment" className="text-light">Describe product here</label>
+                            <textarea className="form-control bg-secondary text-light" maxLength={250} value={comment.comment} name="comment" placeholder="Leave a comment here" id="itemComment" style={{ height: "120px", width: "100%" }} onChange={setComments}></textarea>
+                            <label htmlFor="itemComment" className="text-light">Describe product here (250 letters)</label>
+                            {comment.comment && <span className={comment.comment.length === 250 ? "text-danger" : "text-light"}>Letters can type upto : {250 - comment.comment.length}</span>}
                             <span className="my-3 d-flex justify-content-center">
                                 <button className="btn btn-secondary" type="button" disabled={!(showView || comment.commentTitle)} onClick={() => { addComment() }}>Add comment</button>
                             </span>
