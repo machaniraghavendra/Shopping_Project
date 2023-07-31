@@ -9,6 +9,7 @@ import loadingImg from "../Loading_Card.png";
 import LogOut from '../Login/LogOut';
 import Rating from '../Items/Rating/Rating';
 import Review from './Review';
+import timePeriodCalculator from './TimePeriodCalculator';
 
 export default function OrderDetails(props) {
 
@@ -31,6 +32,10 @@ export default function OrderDetails(props) {
     const [userRatingforItem, setUserRatingforItem] = useState("");
 
     const [showThankYou, setShowThankYou] = useState(false);
+
+    const [showMsgeSendPopUp, setShowMsgeSendPopUp] = useState(false);
+
+    const [mailMsge, setMailMsge] = useState("Sending...");
 
     const nav = useNavigate();
 
@@ -91,6 +96,37 @@ export default function OrderDetails(props) {
                 setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
             }
         });
+    }
+
+    const sendMail = async (itemName, url) => {
+        if (itemName) {
+            await axios.post("http://localhost:8083/mail/sendMailWithAttachment?url=" + url + "&itemName=" + itemName, {
+                "recipient": user.userEmail,
+                "msgBody": `Hi ${user.userName},
+    Here is the invoice bill attached to this mail you can use it for reference.
+    Thank you for shopping with us.`,
+                "subject": "Order details of " + itemName
+            }).then(a => {
+                setMailMsge(a.data);
+                setTimeout(() => {
+                    setShowMsgeSendPopUp(false);
+                    setMailMsge("");
+                }, 3000);
+                console.log(a.data);
+            }).catch((error) => {
+                setMailMsge("Something went wrong");
+                setTimeout(() => {
+                    setShowMsgeSendPopUp(false);
+                    setMailMsge("");
+                }, 3000);
+                setError(true);
+                if (error.response.data === undefined) {
+                    setErrorMessage("Something went wrong")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
+            });
+        }
     }
 
     useEffect(() => {
@@ -182,9 +218,21 @@ export default function OrderDetails(props) {
                             {order.map(a => {
                                 return (
                                     <div key={a.orderUUIDId}>
-                                        <small className='text-muted'>Order id : {a.orderUUIDId} &nbsp;<i className="bi bi-clipboard btn btn-sm btn-outline-info" onClick={() => {
-                                            showCopyMessage(a.orderUUIDId)
-                                        }}></i>&nbsp;<span id='showMessage' className='text-success'></span></small>
+                                        <div className='row'>
+                                            <div className='col-12 col-md-6'>
+                                                <small className='text-muted'>Order id : {a.orderUUIDId} &nbsp;<i className="bi bi-clipboard btn btn-sm btn-outline-info" onClick={() => {
+                                                    showCopyMessage(a.orderUUIDId)
+                                                }}></i>&nbsp;<span id='showMessage' className='text-success'></span></small>
+                                            </div>
+                                            {a.orderStatus == "delivered" && <>
+                                                <div className='col-12 col-md-6 justify-content-md-end justify-content-center my-1 d-flex gap-2' >
+                                                    <a href={"http://localhost:8083/pdf/generate/" + a.orderUUIDId} className='btn btn-sm btn-primary' disabled={showMsgeSendPopUp}>Download e-bill here <i className='bi bi-download'></i></a>
+                                                    <button className='btn btn-sm btn-warning' onClick={() => { sendMail(a.item.itemName, "http://localhost:8083/pdf/generate/" + a.orderUUIDId); setShowMsgeSendPopUp(true); setMailMsge("Sending...") }} disabled={showMsgeSendPopUp}>Send e-bill to mail <i className="bi bi-forward-fill"></i></button>
+                                                </div>
+                                            </>
+                                            }
+                                        </div>
+
                                         <div className="justify-content-center d-flex my-3 d-md-none">
                                             <Link to={'/view/' + a.item.itemId + "/" + a.item.itemName} className=''>
                                                 <img src={a.item.itemImgUrl} className="img-fluid rounded-start" width={100} height={100} alt={a.item.itemName} />
@@ -208,7 +256,7 @@ export default function OrderDetails(props) {
                                                 <div className='px-3'>
                                                     <p>Ordered on  <b>{a.orderedOn}</b> at <b>{a.orderedAt}</b> sec</p>
                                                     {a.orderStatus == "cancelled" ? <p className='text-decoration-line-through'>Expected delivery on {a.deliveryDate}</p> :
-                                                        a.orderStatus == "delivered" ? <p>Delivered on <b>{a.deliveryDate}</b></p> :
+                                                        a.orderStatus == "delivered" ? <p>Delivered on <b> {timePeriodCalculator(a.deliveryDate)} {a.deliveryDate}</b></p> :
                                                             <p>Expected delivery on <b>{a.deliveryDate}</b></p>}
                                                 </div>
                                                 <h6>Delivery Details</h6>
@@ -298,10 +346,10 @@ export default function OrderDetails(props) {
                                                         <div className={showThankYou ? "d-lg-inline-flex text-dark bg-warning px-5 d-none" : "d-none text-dark bg-warning px-5 d-none"} id='thank-you-rating'>Thanks for giving {ratingOfUserForItem.rating} stars</div>
                                                     </div>}
                                                 <hr></hr>
-                                                
+
                                                 {/* Review */}
-                                                {a.orderStatus == "delivered" &&<Review itemId={a.item.itemId}/>}
-                                                
+                                                {a.orderStatus == "delivered" && <Review itemId={a.item.itemId} />}
+
                                             </div>
                                             <div className='col-4 text-center w-25 h-25 d-md-block d-none '>
                                                 <div className='justify-content-center my-3  fs-6'>
@@ -399,6 +447,15 @@ export default function OrderDetails(props) {
                 {/* Logout popup */}
                 <LogOut user={props.user} />
             </div>
+
+            {/* Mail popup */}
+            {showMsgeSendPopUp &&
+                <div className="justify-content-center d-inline-flex ">
+                    <div className={mailMsge == "Sending..." ? "d-inline-flex position-fixed bg-info text-dark px-5 py-3" : mailMsge == "Something went wrong" ? "d-inline-flex position-fixed bg-danger text-light px-5 py-3" : "d-inline-flex position-fixed bg-success text-light px-5 py-3"} style={{ zIndex: "9", top: "25%", left: "40%", boxShadow: " rgba(0, 0, 0, 0.5) 100px 220px 700px 3000px" }}>
+                        <h5>{mailMsge}</h5>
+                    </div>
+                </div>}
+
             {/* Error pop */}
             {error && <>
                 <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">

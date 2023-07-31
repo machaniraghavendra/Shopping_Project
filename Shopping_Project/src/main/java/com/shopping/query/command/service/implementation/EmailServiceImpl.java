@@ -75,11 +75,10 @@ public class EmailServiceImpl implements EmailService {
 		URL url = new URL(pdfUrl);
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("GET");
-
 		int responseCode = connection.getResponseCode();
 		if (responseCode == HttpURLConnection.HTTP_OK) {
 			String dateTime = LocalDateTime.now().toString().replace("T", "_").replace("-", "_").replace(":", "_");
-			File tempFile = new File(itemName+"_" + dateTime + ".pdf");
+			File tempFile = File.createTempFile(itemName + "_" + dateTime, ".pdf");
 			try (InputStream inputStream = new BufferedInputStream(connection.getInputStream());
 					FileOutputStream outputStream = new FileOutputStream(tempFile)) {
 				byte[] buffer = new byte[4096];

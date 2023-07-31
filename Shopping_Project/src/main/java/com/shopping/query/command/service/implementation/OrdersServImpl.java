@@ -1,10 +1,13 @@
 package com.shopping.query.command.service.implementation;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -46,7 +49,7 @@ public class OrdersServImpl implements OrderService {
 	private OrderRepo orderRepo;
 
 	@Autowired
-	private MappersClass mapper ;
+	private MappersClass mapper;
 
 	@Autowired
 	private AddressService addressService;
@@ -207,24 +210,15 @@ public class OrdersServImpl implements OrderService {
 		OrdersEntity order = getWithUUID(orderId);
 		LocalDate now = LocalDate.now();
 		LocalDate dateOfOrder = LocalDate.parse(order.getOrderedOn(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-		int days = Period.between(dateOfOrder, now).getDays();
-		switch (days) {
-		case 1:
+		int days = (int) ChronoUnit.DAYS.between(dateOfOrder, now);
+		if (days == 1 || 3 > days) {
 			updateOrder(orderId, STATUS_DISPATCH);
-			break;
-		case 3:
+		} else if (days == 3 || 5 > days) {
 			updateOrder(orderId, STATUS_NEARBYHUB);
-			break;
-		case 5:
+		} else if (days == 5 || 5 < days) {
 			updateOrder(orderId, STATUS_DELIVERED);
-			break;
-		default:
-			if (days > 5) {
-				updateOrder(orderId, STATUS_DELIVERED);
-			} else {
-				updateOrder(orderId, order.getOrderStatus());
-			}
-			break;
+		} else {
+			updateOrder(orderId, order.getOrderStatus());
 		}
 	}
 
