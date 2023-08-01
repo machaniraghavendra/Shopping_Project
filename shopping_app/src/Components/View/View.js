@@ -9,6 +9,8 @@ import loadingImg from "../Loading_Card.png";
 import LogOut from '../Login/LogOut';
 import Rating from '../Items/Rating/Rating';
 import timePeriodCalculator from '../Orders/TimePeriodCalculator';
+import ShowFullComments from './ShowFullComments';
+
 export default function View(props) {
 
     let num = window.location.href.replaceAll("%20", " ").replaceAll("/", " ").split(" ", 5)[4];
@@ -40,6 +42,8 @@ export default function View(props) {
     const [showImagePop, setShowImagePop] = useState(false);
 
     const [imageUrlForToShow, setImageUrlForToShow] = useState("");
+
+    const [showFullLength, setShowFullLength] = useState(false);
 
     const timeout = () => {
         setTimeout(() => {
@@ -168,6 +172,10 @@ export default function View(props) {
         }
     }
 
+    // const getComment = (sentence) => {
+    //     return showFullComments(sentence);
+    // }
+
     window.onload = document.title = viewItem.map(a => { return (a.itemName) }) + " | Shopping Mart";
 
     useEffect(() => {
@@ -294,11 +302,11 @@ export default function View(props) {
                                     <h4 style={{ letterSpacing: "2px", textTransform: "capitalize" }}>{item.itemName}</h4>
                                     <div className='mx-3'>
                                         <p>Price : <b> ₹{item.itemPrice}</b></p>
-                                        {item.itemSpec != "" && <p>Specifications : {item.itemSpec}</p>}
+                                        {item.itemSpec != "" && <p>Specifications : <ShowFullComments comment={item.itemSpec} /></p>}
                                         {item.itemDimensions != "null" || item.itemDimensions != "" &&
                                             <p>Dimensions : {item.itemDimensions}</p>}
                                         <p>Type : {item.itemType}</p>
-                                        <p>Description : {item.itemDesc}</p>
+                                        <p>Description : <ShowFullComments comment={item.itemDesc} /></p>
                                     </div>
                                     <div className='view-buy'>
                                         <span>Total amount : <b> ₹{item.itemPrice}</b>-&gt;</span>
@@ -346,16 +354,16 @@ export default function View(props) {
             </div>
 
             <div className='container '>
-                <h3 className='view p-2 '>Reviews {reviewsOfItem.length != 0 &&("("+reviewsOfItem.length+")")}</h3>
+                <h3 className='view p-2 '>Reviews {reviewsOfItem.length != 0 && ("(" + reviewsOfItem.length + ")")}</h3>
                 <div className='row rounded-5 justify-content-center d-flex g-3 '>
                     {reviewsOfItem.length != 0 ? reviewsOfItem.map((a, i) => {
                         check()
                         return (
-                            <div className="container col-lg-3 col-12 my-4 mx-2 view" key={i}>
-                                <div className="container-fluid p-2">
-                                    <Rating times={a.rating.rating} /><span className="mx-2  fw-bold">{a.commentTitle} : {timePeriodCalculator(a.commentAddedOn)}</span> {a.user.userId === localStorage.getItem("currentuser") &&
+                            <div className="container col-md-3 col-12 my-2 view" key={i}>
+                                <div className="container-fluid p-1">
+                                    <Rating times={a.rating.rating} /><span className="mx-2 fw-bold">{a.commentTitle} : {timePeriodCalculator(a.commentAddedOn)}</span> {a.user.userId === localStorage.getItem("currentuser") &&
                                         <span className='fs-6 float-end'><i className="bi bi-bookmark-fill your_comment"><span className="your_comment_text">Your comment</span></i></span>}
-                                    <p className="my-1 mx-1">{a.comment}</p>
+                                    <p className="my-1 mx-1"><ShowFullComments comment={a.comment} /></p>
                                     {(a.imageDto != null && a.imageDto != []) && a.imageDto.map((a, i) => {
                                         return (
                                             <img key={i} src={a.imageUrl} className="mx-2 d-inline-flex justify-content-center" style={{ cursor: "zoom-in" }} width={70} height={100} onClick={() => { setShowImagePop(true); setImageUrlForToShow(a.imageUrl) }} />

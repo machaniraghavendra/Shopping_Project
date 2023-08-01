@@ -165,7 +165,7 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 		List<ItemReviewDto> reviewDtos = new ArrayList<>();
 		if (itemId > 0 && (reviewRepo.count() != 0)) {
 			List<ItemReview> itemReviews = getAllReviews().stream().filter(review -> (review.getItemId() == itemId))
-					.sorted(Comparator.comparing(ItemReview::getCommentAddedOn, Comparator.reverseOrder()))
+					.sorted(Comparator.comparing(ItemReview::getCommentAddedOn))
 					.collect(Collectors.toList());
 			itemReviews.forEach(review -> {
 				try {
