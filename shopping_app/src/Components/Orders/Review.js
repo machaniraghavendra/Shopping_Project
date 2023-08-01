@@ -3,6 +3,7 @@ import Avatar from "react-avatar-edit";
 import axios from "axios";
 import Rating from "../Items/Rating/Rating";
 import timePeriodCalculator from "./TimePeriodCalculator";
+import ShowFullComments from "../View/ShowFullComments";
 
 export default function Review(item) {
     const [images, setImages] = useState([]);
@@ -207,7 +208,7 @@ export default function Review(item) {
                             <span className="d-flex float-end fs-5"><i style={{ cursor: "pointer" }} className="bi bi-trash-fill text-danger" onClick={() => { deleteReview(a.imageDto.map(a => { return (a.reviewId) })) }}></i></span>
                             <div className="container-fluid">
                                 <Rating times={a.rating.rating} /><span className="mx-2  fw-bold">{a.commentTitle} : {timePeriodCalculator(a.commentAddedOn)}</span>
-                                <p className="my-1 mx-1">{a.comment}</p>
+                                <p className="my-1 mx-1"><ShowFullComments comment={a.comment} /></p>
                                 {(a.imageDto != null || a.imageDto != []) && a.imageDto.map((a, i) => {
                                     return (
                                         <img key={i} src={a.imageUrl} className="mx-2 d-inline-flex justify-content-center" style={{ cursor: "zoom-in" }} width={70} height={100} onClick={() => { setShowImagePop(true); setImageUrlForToShow(a.imageUrl) }} />
