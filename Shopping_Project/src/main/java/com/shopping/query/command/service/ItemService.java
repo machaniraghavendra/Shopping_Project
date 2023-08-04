@@ -31,4 +31,6 @@ public interface ItemService {
 	Map<UUID, List<ItemsDto>> viewedHistory(UUID userId, int itemId) throws ItemNotFoundException;
 
 	List<ItemsDto> getViewedHistory(UUID userId);
+	
+	List<ItemsDto> itemSearch(String searchword) throws ItemNotFoundException;
 }

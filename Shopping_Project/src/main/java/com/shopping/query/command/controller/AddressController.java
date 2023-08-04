@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,9 +19,11 @@ import com.shopping.query.command.entites.dto.AddressDto;
 import com.shopping.query.command.exceptions.UserNotFoundException;
 import com.shopping.query.command.service.AddressService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/address")
-@CrossOrigin(origins = "*")
+@Tag(name = "Saved Address of user", description = "Gets and posting will be done in this controller of address")
 public class AddressController {
 
 	@Autowired

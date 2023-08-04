@@ -1,10 +1,6 @@
 package com.shopping.query.command.service.implementation;
 
-import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -105,7 +101,7 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 		if (Objects.isNull(reviewImage)) {
 			return NOT_SAVED_MSGE;
 		} else {
-			if (Objects.nonNull(reviewImage.getImageUrl()) || !StringUtils.isEmpty(reviewImage.getImageUrl())) {
+			if (!StringUtils.isEmpty(reviewImage.getImageUrl()) || Objects.nonNull(reviewImage.getImageUrl())) {
 				if (Objects.nonNull(reviewImage.getImageId()) && !imagesRepo.existsById(reviewImage.getImageId())) {
 					imagesRepo.save(reviewImage);
 				} else {
@@ -165,8 +161,7 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 		List<ItemReviewDto> reviewDtos = new ArrayList<>();
 		if (itemId > 0 && (reviewRepo.count() != 0)) {
 			List<ItemReview> itemReviews = getAllReviews().stream().filter(review -> (review.getItemId() == itemId))
-					.sorted(Comparator.comparing(ItemReview::getCommentAddedOn))
-					.collect(Collectors.toList());
+					.sorted(Comparator.comparing(ItemReview::getCommentAddedOn)).toList();
 			itemReviews.forEach(review -> {
 				try {
 					reviewDtos.add(mapItemReviewEntityWithDto(review));
@@ -219,8 +214,7 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 		if (Objects.nonNull(userId) && itemId > 0) {
 			List<ItemReview> itemReviews = getAllReviews().stream()
 					.filter(review -> (review.getItemId() == itemId && review.getUserId().equals(userId)))
-					.sorted(Comparator.comparing(ItemReview::getCommentAddedOn, Comparator.reverseOrder()))
-					.collect(Collectors.toList());
+					.sorted(Comparator.comparing(ItemReview::getCommentAddedOn, Comparator.reverseOrder())).toList();
 			itemReviews.forEach(review -> {
 				try {
 					userCommentsOnItem.add(mapItemReviewEntityWithDto(review));
@@ -246,8 +240,7 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 		if (Objects.nonNull(reviewId) && itemId > 0 && Objects.nonNull(mappersClass.itemDtoMapperById(itemId))
 				&& Objects.nonNull(mapItemReviewEntityWithDto(reviewId))) {
 			List<ReviewImages> reviewImages = getAllImages().stream()
-					.filter(image -> image.getItemId() == itemId && image.getReviewId().equals(reviewId))
-					.collect(Collectors.toList());
+					.filter(image -> image.getItemId() == itemId && image.getReviewId().equals(reviewId)).toList();
 			List<ReviewImageDto> reviewImageDtos = new ArrayList<>();
 			reviewImages.forEach(image -> reviewImageDtos.add(mapReviewImageEntityWithDto(image)));
 			return reviewImageDtos;
@@ -295,6 +288,14 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 			returnList.add(exceptionHandler.reviewImageNotExistsException(e));
 		}
 		return returnList;
+	}
+
+	@Override
+	public List<String> getAllimages(int itemId) throws ItemNotFoundException {
+		if (imagesRepo.findAll().isEmpty() && mappersClass.itemDtoMapperById(itemId).getItemName().isEmpty())
+			return Collections.emptyList();
+		return getAllImages().stream().filter(image -> Objects.equals(image.getItemId(), itemId))
+				.map(ReviewImages::getImageUrl).toList();
 	}
 
 	public ItemReviewDto mapItemReviewEntityWithDto(UUID reviewId) throws UserNotFoundException,
@@ -350,50 +351,4 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 				.reviewId(reviewImages.getReviewId()).build();
 	}
 
-//	public String timePeriodCalculator(LocalDate dateOn) {
-//		String period = null;
-//		long days = ChronoUnit.DAYS.between(dateOn, LocalDate.now());
-//		switch ((int) (days / 30)) {
-//		case 1: {
-//			period = "1 month ago";
-//		}
-//		case 2: {
-//			period = "2 months ago";
-//		}
-//		case 3: {
-//			period = "3 months ago";
-//		}
-//		case 4: {
-//			period = "4 months ago";
-//		}
-//		case 5: {
-//			period = "5 months ago";
-//		}
-//		case 6: {
-//			period = "6 months ago";
-//		}
-//		case 7: {
-//			period = "7 months ago";
-//		}
-//		case 8: {
-//			period = "8 months ago";
-//		}
-//		case 9: {
-//			period = "9 months ago";
-//		}
-//		case 10: {
-//			period = "10 months ago";
-//		}
-//		case 11: {
-//			period = "11 months ago";
-//		}
-//		case 12: {
-//			period = "12 months ago";
-//		}
-//		default:
-//			period = "Below one month";
-//
-//			return period;
-//		}
-//	}
 }

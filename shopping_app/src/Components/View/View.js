@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import "../View/Viewcss.css";
 import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import Footer from '../Footer/Footer';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ChatBot from '../ChatBot/ChatBot';
 import loadingImg from "../Loading_Card.png";
 import LogOut from '../Login/LogOut';
@@ -43,8 +43,6 @@ export default function View(props) {
 
     const [imageUrlForToShow, setImageUrlForToShow] = useState("");
 
-    const [showFullLength, setShowFullLength] = useState(false);
-
     const timeout = () => {
         setTimeout(() => {
             setShowToast(false);
@@ -60,6 +58,22 @@ export default function View(props) {
                 setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
             }
         })
+    }
+
+    const getUser = () => {
+        axios.get("http://localhost:8083/user/userid/" + props.user).then(a => {
+            if (a.status == "200") {
+                setfetchUserDone(true)
+            }
+            setUser(a.data)
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        });
     }
 
     const getItem = (click) => {
@@ -109,6 +123,8 @@ export default function View(props) {
     }
 
     const check = () => {
+        sessionStorage.getItem("dark") === "true" ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
+            : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
         let darks = document.getElementsByClassName("view")
         for (const dark of darks) {
             if (sessionStorage.getItem("dark") === "true") {
@@ -176,25 +192,13 @@ export default function View(props) {
     //     return showFullComments(sentence);
     // }
 
+    let nav = useNavigate();
+
     window.onload = document.title = viewItem.map(a => { return (a.itemName) }) + " | Shopping Mart";
 
     useEffect(() => {
         check();
-        sessionStorage.getItem("dark") === "true" ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
-            : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
-        axios.get("http://localhost:8083/user/userid/" + props.user).then(a => {
-            if (a.status == "200") {
-                setfetchUserDone(true)
-            }
-            setUser(a.data)
-        }).catch((error) => {
-            setError(true);
-            if (error.response.data === undefined) {
-                setErrorMessage("Something went wrong")
-            } else {
-                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-            }
-        });
+        getUser();
         getItem();
         getReviewsOfThisItem();
         getInterests();
@@ -254,7 +258,7 @@ export default function View(props) {
                                     <img src={item.itemImgUrl} alt={item.itemName} className="img-fluid mx-auto rounded view-img p-5" id='view-img' onMouseMove={(e) => { zoom(e) }} onMouseOut={() => { zoomout() }} />
                                     <div id='view-img-zoom' style={{ backgroundImage: "url(" + item.itemImgUrl + ")" }}></div>
                                 </div>
-                                <div className="col-lg-8 my-3" id='right-view'>
+                                <div className="col-lg-8 my-3" id='verticalLine'>
                                     <div className='row'>
                                         <div className='col-5 justify-content-start text-start gap-1 d-flex'>
                                             <Rating times={item.ratingOfItem} />
@@ -358,26 +362,33 @@ export default function View(props) {
                 <div className='row rounded-5 justify-content-center d-flex g-3 '>
                     {reviewsOfItem.length != 0 ? reviewsOfItem.map((a, i) => {
                         check()
-                        return (
-                            <div className="container col-md-3 col-12 my-2 view" key={i}>
-                                <div className="container-fluid p-1">
-                                    <Rating times={a.rating.rating} /><span className="mx-2 fw-bold">{a.commentTitle} : {timePeriodCalculator(a.commentAddedOn)}</span> {a.user.userId === localStorage.getItem("currentuser") &&
-                                        <span className='fs-6 float-end'><i className="bi bi-bookmark-fill your_comment"><span className="your_comment_text">Your comment</span></i></span>}
-                                    <p className="my-1 mx-1"><ShowFullComments comment={a.comment} /></p>
-                                    {(a.imageDto != null && a.imageDto != []) && a.imageDto.map((a, i) => {
-                                        return (
-                                            <img key={i} src={a.imageUrl} className="mx-2 d-inline-flex justify-content-center" style={{ cursor: "zoom-in" }} width={70} height={100} onClick={() => { setShowImagePop(true); setImageUrlForToShow(a.imageUrl) }} />
-                                        )
-                                    })}
-                                    <p className="my-2">User : {a.user.userName}</p>
-                                    <p className="my-2">Added on : {a.commentAddedOn} at {a.commentAddedAt} IST</p>
+                        if (i < 3) {
+                            return (
+                                <div className="container col-md-3 col-12 my-2 view" key={i}>
+                                    <div className="container-fluid p-1">
+                                        <Rating times={a.rating.rating} /><span className="mx-2 fw-bold">{a.commentTitle} : {timePeriodCalculator(a.commentAddedOn)}</span> {a.user.userId === localStorage.getItem("currentuser") &&
+                                            <span className='fs-6 float-end'><i className="bi bi-bookmark-fill your_comment"><span className="your_comment_text">Your comment</span></i></span>}
+                                        <p className="my-1 mx-1"><ShowFullComments comment={a.comment} /></p>
+                                        {(a.imageDto != null && a.imageDto != []) && a.imageDto.map((a, i) => {
+                                            return (
+                                                <img key={i} src={a.imageUrl} className="mx-2 d-inline-flex justify-content-center" style={{ cursor: "zoom-in" }} width={70} height={100} onClick={() => { setShowImagePop(true); setImageUrlForToShow(a.imageUrl) }} />
+                                            )
+                                        })}
+                                        <p className="my-2">User : {a.user.userName}</p>
+                                        <p className="my-2">Added on : {a.commentAddedOn} at {a.commentAddedAt} IST</p>
+                                    </div>
                                 </div>
-                            </div>
-                        )
+                            )
+                        }
                     })
                         :
                         <div className='text-light container mx-4 my-2 mx-4 fs-6'>No reviews for this item</div>}
+                    {reviewsOfItem.length > 3 && <div className='d-flex justify-content-center m-1 my-2'>
+                        <span className='btn btn-dark btn-sm' onClick={() => { nav("/view/review?item=" + num) }}>View more...+{reviewsOfItem.length-3}</span>
+                    </div>}
+
                 </div>
+
             </div>
 
             <div className='container'>

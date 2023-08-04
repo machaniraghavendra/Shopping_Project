@@ -33,7 +33,7 @@ import ViewMoreItems from "./Components/View/ViewMoreItems";
 import UsersList from "./Components/AdminPages/UsersList";
 import ItemsList from "./Components/AdminPages/ItemsList";
 import UpdateItem from "./Components/AdminPages/UpdateItem";
-
+import AllReviewOfItem from "./Components/View/AllReviewOfItem";
 
 function App() {
   let user = localStorage.getItem("currentuser");
@@ -90,6 +90,7 @@ function App() {
               <Route path="/wishlist" element={<Wishlist user={user} />} />
               <Route path="/login/forgot/password" element={<ForgotPass user={user} />} />
               <Route path="/view/*" element={<View user={user} />} />
+              <Route path="/view/review" element={<AllReviewOfItem user={user} />} />
               <Route path="/purchase" element={<Buypage user={user} />} />
               <Route path="/profile/settings" element={<Settings user={user} />} />
               <Route path="/orders" element={<Orders user={user} />} />

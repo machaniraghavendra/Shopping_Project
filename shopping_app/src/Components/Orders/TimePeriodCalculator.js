@@ -15,19 +15,19 @@ export default function timePeriodCalculator(date) {
         } else {
             switch (currentDate.getMonth() - setGivenDate.getMonth()) {
                 case 0:
-                    if (Math.abs(currentDate.getDate() - setGivenDate.getDate()) == 0) {
+                    if (Math.abs(currentDate.getDate() - setGivenDate.getDate()) === 0) {
                         returnStatement = "Today"
-                    } else if (Math.abs(currentDate.getDate() - setGivenDate.getDate()) == 1) {
-                        returnStatement = "1 day ago"
-                    } else if (Math.abs(currentDate.getDate() - setGivenDate.getDate()) == 2) {
+                    } else if (Math.abs(currentDate.getDate() - setGivenDate.getDate()) === 1) {
+                        returnStatement = "Yesterday"
+                    } else if (Math.abs(currentDate.getDate() - setGivenDate.getDate()) === 2) {
                         returnStatement = "2 days ago"
-                    } else if (Math.abs(currentDate.getDate() - setGivenDate.getDate()) == 3) {
+                    } else if (Math.abs(currentDate.getDate() - setGivenDate.getDate()) === 3) {
                         returnStatement = "3 days ago"
-                    } else if (Math.abs(currentDate.getDate() - setGivenDate.getDate()) == 4) {
+                    } else if (Math.abs(currentDate.getDate() - setGivenDate.getDate()) === 4) {
                         returnStatement = "4 days ago"
-                    } else if (Math.abs(currentDate.getDate() - setGivenDate.getDate()) == 5) {
+                    } else if (Math.abs(currentDate.getDate() - setGivenDate.getDate()) === 5) {
                         returnStatement = "5 days ago"
-                    } else if (Math.abs(currentDate.getDate() - setGivenDate.getDate()) == 6) {
+                    } else if (Math.abs(currentDate.getDate() - setGivenDate.getDate()) === 6) {
                         returnStatement = "6 days ago"
                     } else if (Math.abs(currentDate.getDate() - setGivenDate.getDate()) > 6 && Math.abs(currentDate.getDate() - setGivenDate.getDate()) < 14) {
                         returnStatement = "1 week ago"
