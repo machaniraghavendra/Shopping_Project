@@ -20,9 +20,8 @@ export default function ShowFullComments(comment) {
     }
 
     return (
-        <span>
-            {sentence.length > minLetters ? "" : ""}
-            <span>{loadsentence()}
+        <span onClick={() => { viewMoreToggle() }}>
+            <span >{loadsentence()}
                 <span className="text-info" style={{ cursor: "pointer" }} onClick={() => { viewMoreToggle() }}>{sentence.length > minLetters ? !showFullLength ? " ...view more" : <span className="mx-1">&nbsp;-view less</span> : ""}</span>
             </span>
         </span>

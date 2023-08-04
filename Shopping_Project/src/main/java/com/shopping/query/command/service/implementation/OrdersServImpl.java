@@ -7,21 +7,18 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.shopping.query.command.entites.AddressEntity;
-import com.shopping.query.command.entites.ItemEntity;
 import com.shopping.query.command.entites.OrdersEntity;
 import com.shopping.query.command.entites.dto.AddressDto;
 import com.shopping.query.command.entites.dto.ItemsDto;
@@ -90,7 +87,7 @@ public class OrdersServImpl implements OrderService {
 			}
 			ItemsDto item = mapper.itemDtoMapperById(detailsEntity.getItemId());
 			detailsEntity.setTotalOrderAmount(String.valueOf(Math.multiplyExact(
-					Long.valueOf(item.getItemPrice().replace(",", "").replace("₹", "").replace(".00", "")),
+					Long.parseLong(item.getItemPrice().replace(",", "").replace("₹", "").replace(".00", "")),
 					detailsEntity.getOrderQuantity())));
 			orderRepo.save(detailsEntity);
 			return "Saved order";
@@ -192,7 +189,7 @@ public class OrdersServImpl implements OrderService {
 		List<OrdersEntity> ordersEntities = getAllOrders().stream().filter(a -> a.getUserId().equals(userId))
 				.sorted(Comparator.comparing(OrdersEntity::getOrderedAt, Comparator.reverseOrder()))
 				.sorted(Comparator.comparing(OrdersEntity::getOrderedOn, Comparator.reverseOrder()))
-				.collect(Collectors.toList());
+				.toList();
 		List<OrdersDto> list = new ArrayList<>();
 
 		if (!ordersEntities.isEmpty()) {
@@ -232,7 +229,7 @@ public class OrdersServImpl implements OrderService {
 		String userEmail = mapper.userDetailDtoMapper(userId).getUserEmail();
 		if (Objects.nonNull(userId) && StringUtils.hasLength(userEmail)) {
 			getAllOrders().stream().filter(order -> order.getUserId().equals(userId))
-					.map(order -> order.getEmailAddress()).forEach(email -> emails.add(email));
+					.map(OrdersEntity::getEmailAddress).forEach(emails::add);
 			emails.add(userEmail);
 		}
 		return emails.stream().filter(email -> Objects.nonNull(email) && StringUtils.hasLength(email))

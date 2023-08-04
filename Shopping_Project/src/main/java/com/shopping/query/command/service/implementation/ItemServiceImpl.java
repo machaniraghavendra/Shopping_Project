@@ -234,4 +234,39 @@ public class ItemServiceImpl implements ItemService {
 		}
 	}
 
+	@Override
+	public List<ItemsDto> itemSearch(String searchItem) throws ItemNotFoundException{
+//        List<ItemEntity> items= viewall();
+//	        int m = searchItem.length();
+//	        int n = items.size();
+//	        List<ItemsDto> returnList= new ArrayList<>();
+//	        int[] badCharTable = new int[256];
+//
+//	        // Preprocessing for bad character table
+//	        for (int i = 0; i < 256; i++) {
+//	            badCharTable[i] = m;
+//	        }
+//	        for (int i = 0; i < m - 1; i++) {
+//	            badCharTable[searchItem.charAt(i)] = m - 1 - i;
+//	        }
+//
+//	        int i = m - 1;
+//	        while (i < n) {
+//	            int j = m - 1;
+//	            while (j >= 0 && items.get(i).getItemName().charAt(j) == searchItem.charAt(j)) {
+//	                j--;
+//	            }
+//
+//	            if (j == -1) {
+//	                // Item found
+//	            	returnList.add(mappersClass.itemDtoMapperByEntity(items.get(i - m + 1)));
+//	            } else {
+//	                // Move based on bad character table and good suffix table
+//	                i += Math.max(badCharTable[viewall().get(i).getItemName().charAt(j)], m - j);
+//	            }
+//	        }
+//
+//	        // Item not found
+	        return null;
+	}
 }

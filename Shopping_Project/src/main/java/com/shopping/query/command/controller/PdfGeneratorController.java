@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,11 +18,12 @@ import com.shopping.query.command.exceptions.UserNotFoundException;
 import com.shopping.query.command.service.OrderService;
 import com.shopping.query.command.service.PdfGeneratorService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("/pdf/generate")
-@CrossOrigin(origins = "*")
+@Tag(name = "Pdf generating Api's", description = "Get's, delete and post operations will be done here")
 public class PdfGeneratorController {
 
 	@Autowired

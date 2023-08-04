@@ -117,7 +117,6 @@ export default function OrderDetails(props) {
                     setShowMsgeSendPopUp(false);
                     setMailMsge("");
                 }, 3000);
-                console.log(a.data);
             }).catch((error) => {
                 setMailMsge("Something went wrong");
                 setTimeout(() => {
@@ -507,7 +506,7 @@ export default function OrderDetails(props) {
                                 return (
                                     <div className="form-check" key={i}>
                                         <input className="form-check-input" type="radio" name="emails" id={a} onClick={() => { setSelectedEmail(a) }} />
-                                        <label className="form-check-label" for={a}>
+                                        <label className="form-check-label" htmlFor={a}>
                                             {a}
                                         </label>
                                     </div>

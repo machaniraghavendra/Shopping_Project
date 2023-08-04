@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,9 +25,11 @@ import com.shopping.query.command.exceptions.ItemNotFoundInFavException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
 import com.shopping.query.command.service.FavService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/fav")
-@CrossOrigin(origins = "*")
+@Tag(name = "Favourite's Api's", description = "Get's, delete and post operations will be done here")
 public class FavController {
 
 	@Autowired

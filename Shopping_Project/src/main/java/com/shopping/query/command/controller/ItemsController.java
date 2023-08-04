@@ -4,12 +4,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,27 +24,34 @@ import com.shopping.query.command.exceptions.ItemAlreadyException;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.service.ItemService;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/items/")
-@Api(tags = "Items", description = "Gives all items data")
+@Tag (name= "Items", description = "Gives all items data")
 public class ItemsController {
 
 	@Autowired
 	private ItemService itemService;
 
 	@PostMapping("/")
+	@Parameter(hidden = true, name = "Posting of single Item")
 	public ResponseEntity<String> save(@RequestBody ItemEntity itemEntity) throws ItemAlreadyException {
 		itemEntity.setItemId(itemService.viewall().stream().sorted(Comparator.comparing(ItemEntity::getItemId, Comparator.reverseOrder()))
-				.collect(Collectors.toList()).get(0).getItemId() + 1);
+				.toList().get(0).getItemId() + 1);
 		return new ResponseEntity<>(itemService.save(itemEntity), HttpStatus.OK);
 	}
 
 	@PostMapping("/all")
 	public ResponseEntity<String> saveall(@RequestBody List<ItemEntity> itemEntity) throws ItemAlreadyException {
 		return new ResponseEntity<>(itemService.saveAll(itemEntity), HttpStatus.OK);
+	}
+
+	@PostMapping("/history")
+	public ResponseEntity<Map<UUID, List<ItemsDto>>> viewedHistory(@RequestParam("userId") UUID userId,
+			@RequestParam("id") int id) throws ItemNotFoundException {
+		return new ResponseEntity<>(itemService.viewedHistory(userId, id), HttpStatus.OK);
 	}
 
 	@PutMapping("/")
@@ -84,14 +89,13 @@ public class ItemsController {
 		return new ResponseEntity<>(itemService.getTrendingItems(), HttpStatus.OK);
 	}
 
-	@PostMapping("/history")
-	public ResponseEntity<Map<UUID, List<ItemsDto>>> viewedHistory(@RequestParam("userId") UUID userId,
-			@RequestParam("id") int id) throws ItemNotFoundException {
-		return new ResponseEntity<>(itemService.viewedHistory(userId, id), HttpStatus.OK);
-	}
-
 	@GetMapping("/historyget")
-	public ResponseEntity<List<ItemsDto>> getHistory(@RequestParam("userId") UUID userId) throws ItemNotFoundException {
+	public ResponseEntity<List<ItemsDto>> getHistory(@RequestParam("userId") UUID userId) {
 		return new ResponseEntity<>(itemService.getViewedHistory(userId), HttpStatus.OK);
+	}
+	
+	@GetMapping("/search")
+	public ResponseEntity<List<ItemsDto>> itemSearch(@RequestParam("query") String query) throws ItemNotFoundException {
+		return new ResponseEntity<>(itemService.itemSearch(query), HttpStatus.OK);
 	}
 }

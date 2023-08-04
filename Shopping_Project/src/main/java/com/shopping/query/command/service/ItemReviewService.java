@@ -30,5 +30,7 @@ public interface ItemReviewService {
 
 	List<ItemReview> getAllReviews();
 
+	List<String> getAllimages(int itemId) throws ItemNotFoundException;
+	
 	List<ItemReviewDto> getReviewsOfUser(UUID userId, int itemId);
 }

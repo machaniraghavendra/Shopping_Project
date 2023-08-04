@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,9 +24,11 @@ import com.shopping.query.command.exceptions.RatingsOfUserNotFoundException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
 import com.shopping.query.command.service.ItemReviewService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/review/")
+@Tag(name = "We can review the item and add comments", description = "Get's, delete and post operations will be done here")
 public class ItemReviewController {
 
 	@Autowired
@@ -73,6 +74,11 @@ public class ItemReviewController {
 	@GetMapping("/item")
 	public ResponseEntity<List<ItemReviewDto>> getReviewsOfItem(@RequestParam int itemId) {
 		return ResponseEntity.ok(reviewService.getReviewsOfItem(itemId));
+	}
+	
+	@GetMapping("/images")
+	public ResponseEntity<List<String>> getAllimages(@RequestParam int itemId) throws ItemNotFoundException {
+		return ResponseEntity.ok(reviewService.getAllimages(itemId));
 	}
 
 	@GetMapping("/useritemreview/{itemId}")

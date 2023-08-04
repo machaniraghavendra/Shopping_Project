@@ -1,4 +1,4 @@
-#right-view {
+#verticalLine {
     border-left: 1px solid black;
     border-radius: 0%;
 
@@ -95,7 +95,28 @@
         background-size: 230%;
     }
 }
-
+.reviewpageImg{
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+.reviewItemName{
+    position: relative;
+}
+@media screen and (min-width:767px) {
+    .reviewpageImg {
+        width: 23%;
+        height: 70%;
+        display: flex;
+        justify-content: center;
+        position: fixed;
+        top:20%
+    }
+    .reviewItemName{
+        position: fixed;
+    }
+}
 @media screen and (max-width:512px) {
     #view-img-zoom {
         left: 15%;
@@ -105,3 +126,4 @@
         background-size: 230%;
     }
 }
+

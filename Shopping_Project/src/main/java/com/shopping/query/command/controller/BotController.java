@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,9 +17,11 @@ import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
 import com.shopping.query.command.service.BotService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/bot/")
+@Tag(name = "Gets bot messages" , description = "Sending and getting messages from Bot")
 public class BotController {
 
 	@Autowired

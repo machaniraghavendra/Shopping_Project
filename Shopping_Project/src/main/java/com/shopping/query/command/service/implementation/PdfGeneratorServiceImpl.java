@@ -76,12 +76,14 @@ public class PdfGeneratorServiceImpl implements PdfGeneratorService {
 
 				Paragraph imagePara = new Paragraph();
 				imagePara.setAlignment(Element.ALIGN_CENTER);
-
-				Image image = Image.getInstance(item.getItemImgUrl());
-				image.scalePercent(13);
-				image.setAlignment(Element.ALIGN_CENTER);
-				imagePara.add(image);
-
+				try {
+					Image image = Image.getInstance(item.getItemImgUrl());
+					image.scalePercent(13);
+					image.setAlignment(Element.ALIGN_CENTER);
+					imagePara.add(image);
+				} catch (Exception e) {
+					 exceptionHandler.globalException(e);
+				}
 				Paragraph itemIntro = new Paragraph("	  The order of " + item.getItemName() + " with quantity of "
 						+ ordersDto.getOrderQuantity() + " had " + ordersDto.getOrderStatus().toUpperCase(),
 						invoiceBillfont);

@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,12 +23,11 @@ import com.shopping.query.command.exceptions.OrderWithSameItemExistsException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
 import com.shopping.query.command.service.OrderService;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/orders/")
-@Api(tags = "Order Details", description = "Gives all order data")
+@Tag(name = "Order Details", description = "Gives all order data")
 public class OrdersController {
 
 	@Autowired

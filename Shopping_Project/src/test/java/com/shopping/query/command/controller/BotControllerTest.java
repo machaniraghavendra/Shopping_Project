@@ -40,23 +40,26 @@ class BotControllerTest {
 				.userMessagedAt("12").build();
 	}
 
-	@Disabled
+	@Test
 	void testGetResponse() throws  Exception {
 		this.mockMvc.perform(post("/bot/").contentType(MediaType.APPLICATION_JSON)
 				.content(new ObjectMapper().writeValueAsString(bot).getBytes()).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful());
+		bot.setUserMessage(UUID.randomUUID().toString());
+		this.mockMvc.perform(post("/bot/").contentType(MediaType.APPLICATION_JSON)
+				.content(new ObjectMapper().writeValueAsString(bot).getBytes()).accept(MediaType.APPLICATION_JSON))
+		.andExpect(status().is2xxSuccessful());
 	}
 
-	@Disabled
+	@Test
 	void testViewAllResponse() throws  Exception {
 		this.mockMvc.perform(get("/bot/").contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful());
 	}
-
-	@Disabled
+@Test
 	void testListClear() throws  Exception {
-		this.mockMvc.perform(post("/bot/raghu@gmail.com").contentType(MediaType.APPLICATION_JSON)
+		this.mockMvc.perform(post("/bot/"+UUID.randomUUID()).contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().is2xxSuccessful());
 	}

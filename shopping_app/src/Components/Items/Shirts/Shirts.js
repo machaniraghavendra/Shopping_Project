@@ -148,7 +148,7 @@ export default function Shirts() {
                                 {shirt.map(e => {
                                     if (e.itemType.toLowerCase().includes("Dresses for Women".toLowerCase())) {
                                         i++
-                                        if (i <= 9) {
+                                        if (i <= 10) {
                                             return (
                                                 <div className='col row' key={e.itemId}>
                                                     <div className="card" data-aos="zoom-in-right">
