@@ -13,9 +13,11 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.shopping.query.command.configuration.ItemsInstaller;
 import com.shopping.query.command.entites.ItemEntity;
 import com.shopping.query.command.entites.dto.ItemsDto;
 import com.shopping.query.command.exceptions.GlobalExceptionHandler;
@@ -31,6 +33,10 @@ public class ItemServiceImpl implements ItemService {
 	@Autowired
 	private ItemsRepo itemsRepo;
 
+	@Autowired
+	@Lazy
+	private ItemsInstaller installer;
+
 	private GlobalExceptionHandler globalExceptionHandler;
 
 	private MappersClass mappersClass = new MappersClass();
@@ -43,8 +49,11 @@ public class ItemServiceImpl implements ItemService {
 			if (itemsRepo.existsById(itemEntity.getItemId()))
 				throw new ItemAlreadyException("The item " + itemEntity.getItemName() + " already there");
 			else {
-				itemEntity.setItemPrice(String.format("%,.2f", Double.valueOf(itemEntity.getItemPrice())));
+				if (!itemEntity.getItemPrice().contains(",")) {
+					itemEntity.setItemPrice(String.format("%,.2f", Double.valueOf(itemEntity.getItemPrice())));
+				}
 				itemEntity.setItemAddedOn(LocalDateTime.now());
+//				addItemIntoFile(itemEntity);
 				itemsRepo.save(itemEntity);
 				return "Added !";
 			}
@@ -125,7 +134,7 @@ public class ItemServiceImpl implements ItemService {
 				.sorted(Comparator.comparing(ItemEntity::getItemName, Comparator.reverseOrder()))
 				.sorted(Comparator.comparing(ItemEntity::getItemUpdatedOn, Comparator.reverseOrder()))
 				.sorted(Comparator.comparing(ItemEntity::isTrending, Comparator.reverseOrder())).toList());
-		listToShow.sort(Comparator.comparing(ItemEntity::getRatingOfItem,Comparator.reverseOrder()));
+		listToShow.sort(Comparator.comparing(ItemEntity::getRatingOfItem, Comparator.reverseOrder()));
 		return listToShow;
 	}
 
@@ -140,7 +149,7 @@ public class ItemServiceImpl implements ItemService {
 					throw new ItemAlreadyException("Already exists in data");
 				else {
 					item.setItemAddedOn(LocalDateTime.now());
-					itemsRepo.save(item);
+					save(item);
 				}
 			}
 			return "Saved list of Items";
@@ -226,16 +235,19 @@ public class ItemServiceImpl implements ItemService {
 					return Collections.emptyList();
 				} else {
 					return history.get(userId).stream()
-							.sorted(Comparator.comparing(ItemsDto::getItemPrice, Comparator.reverseOrder()))
-							.collect(Collectors.toList());
+							.sorted(Comparator.comparing(ItemsDto::getItemPrice, Comparator.reverseOrder())).toList();
 				}
 			}
 			return Collections.emptyList();
 		}
 	}
 
+//	private void addItemIntoFile(ItemEntity item) {
+//		
+//	}
+
 	@Override
-	public List<ItemsDto> itemSearch(String searchItem) throws ItemNotFoundException{
+	public List<ItemsDto> itemSearch(String searchItem) throws ItemNotFoundException {
 //        List<ItemEntity> items= viewall();
 //	        int m = searchItem.length();
 //	        int n = items.size();
@@ -267,6 +279,6 @@ public class ItemServiceImpl implements ItemService {
 //	        }
 //
 //	        // Item not found
-	        return null;
+		return null;
 	}
 }
