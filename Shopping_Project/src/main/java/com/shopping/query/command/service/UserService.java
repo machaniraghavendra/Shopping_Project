@@ -18,11 +18,11 @@ public interface UserService {
 
 	List<UserEntity> findall();
 
-	String delete(String userEmail) throws UserNotFoundException;
+	String delete(UUID userId) throws UserNotFoundException;
 
 	String update(UserEntity userEntity) throws UserNotFoundException;
 
-	boolean check(String userEmail, String Password);
+	boolean check(String userEmail, String Password) throws UserNotFoundException;
 	
 	boolean checkIsAdmin(UUID userId) throws UserNotFoundException;
 }

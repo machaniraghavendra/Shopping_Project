@@ -188,8 +188,7 @@ public class OrdersServImpl implements OrderService {
 	public List<OrdersDto> getOrdersofUser(UUID userId) {
 		List<OrdersEntity> ordersEntities = getAllOrders().stream().filter(a -> a.getUserId().equals(userId))
 				.sorted(Comparator.comparing(OrdersEntity::getOrderedAt, Comparator.reverseOrder()))
-				.sorted(Comparator.comparing(OrdersEntity::getOrderedOn, Comparator.reverseOrder()))
-				.toList();
+				.sorted(Comparator.comparing(OrdersEntity::getOrderedOn, Comparator.reverseOrder())).toList();
 		List<OrdersDto> list = new ArrayList<>();
 
 		if (!ordersEntities.isEmpty()) {
@@ -228,12 +227,12 @@ public class OrdersServImpl implements OrderService {
 		Set<String> emails = new HashSet<>();
 		String userEmail = mapper.userDetailDtoMapper(userId).getUserEmail();
 		if (Objects.nonNull(userId) && StringUtils.hasLength(userEmail)) {
-			getAllOrders().stream().filter(order -> order.getUserId().equals(userId))
-					.map(OrdersEntity::getEmailAddress).forEach(emails::add);
+			getAllOrders().stream().filter(order -> order.getUserId().equals(userId)).map(OrdersEntity::getEmailAddress)
+					.forEach(emails::add);
 			emails.add(userEmail);
 		}
-		return emails.stream().filter(email -> Objects.nonNull(email) && StringUtils.hasLength(email))
-				.sorted().toList();
+		return emails.stream().filter(email -> Objects.nonNull(email) && StringUtils.hasLength(email)).sorted()
+				.toList();
 	}
 
 	@Override
@@ -253,5 +252,14 @@ public class OrdersServImpl implements OrderService {
 	@Override
 	public OrdersEntity getWithUUID(UUID uuid) {
 		return getAllOrders().stream().filter(a -> a.getOrderUUIDId().equals(uuid)).findFirst().get();
+	}
+
+	@Override
+	public void deleteAllOrdersofUser(UUID userId) throws UserNotFoundException {
+		try {
+			orderRepo.deleteAll(getAllOrders().stream().filter(a -> Objects.equals(a.getUserId(), userId)).toList());
+		} catch (Exception e) {
+			throw new UserNotFoundException(e.getMessage());
+		}
 	}
 }

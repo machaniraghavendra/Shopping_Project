@@ -130,6 +130,15 @@ public class FavServiceImpl implements FavService {
 		return list;
 	}
 
+	@Override
+	public void deleteAllCartItemsOfUser(UUID userId) throws UserNotFoundException {
+		try {
+			favRepo.deleteAll(viewall().stream().filter(a -> a.getUserId().equals(userId)).toList());
+		} catch (Exception e) {
+			throw new UserNotFoundException(e.getMessage());
+		}
+	}
+	
 	private List<ItemsDto> checkandgetlistWithUserId(UUID userId) {
 		List<FavouritesEntity> entities = viewall();
 		return entities.stream().filter(a -> a.getUserId().equals(userId)).map(a -> {

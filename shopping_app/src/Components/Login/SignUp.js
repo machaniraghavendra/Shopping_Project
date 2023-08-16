@@ -157,6 +157,7 @@ export default function SignUp() {
                                                     onChange={set}
                                                     value={user.mobileNumber}
                                                     onInput={handleSubmit}
+                                                    maxLength={10}
                                                     placeholder="Email address" />
                                                 <label className="form-label" htmlFor="floatingInputGroup2">Mobile number</label>
                                                 <span className='text-danger'>{formErrors.mobileNumber}</span>
@@ -168,6 +169,8 @@ export default function SignUp() {
                                                     name='userPassword'
                                                     value={user.userPassword}
                                                     onChange={set}
+                                                    maxLength={10}
+                                                    minLength={4}
                                                     onInput={handleSubmit}
                                                     placeholder="Password" />
                                                 <label className="form-label" htmlFor="floatingPassword">Password</label>

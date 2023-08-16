@@ -90,13 +90,22 @@
 }
 
 .search {
-    color: #020202;
+    /* color: #020202;
     transition: .3s;
-    cursor: pointer;
+    cursor: pointer; */
+
+    /* display: block; */
+}
+
+.search{
+    /* display: none; */
+    /* height: 100%; */
+    /* position: relative; */
+    /* display: inline; */
 }
 
 .search:hover {
-    scale: 1.1;
+    /* scale: 1.1; */
 }
 
 .logout-model {

@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ChatBot from "../ChatBot/ChatBot";
 import LogOut from "../Login/LogOut";
 import Rating from "../Items/Rating/Rating";
+import SearchScreen from "./SearchScreen";
 
 export default function MainPageAfterlogin(props) {
 
@@ -133,7 +134,8 @@ export default function MainPageAfterlogin(props) {
                                                 :
                                                 <span className="placeholder-glow">
                                                     <span className="placeholder col-12"></span>
-                                                </span>}                                        </button>
+                                                </span>}
+                                        </button>
                                         <ul className="dropdown-menu bg-secondary-warning dropdown-menu-lg-end user">
                                             <li><Link className="dropdown-item" to={"/profile/settings"}><i className='fa-solid fa-gear'></i> Settings</Link></li>
                                             <li>
@@ -177,13 +179,25 @@ export default function MainPageAfterlogin(props) {
                                             <Link className="nav-link text-dark" to="/wishlist"><h5><i className="fa-solid fa-heart fa-beat text-danger"></i> Wishlist</h5></Link>
                                         </li>
                                         <li className="nav-item">
-                                            <Link className="nav-link text-dark" to="/orders"><h5><i className="fa-solid fa-bag-shopping fa-fade text-warning"></i>  My Orders ({fetchDone ? user.totalOrdersCountOfUser!=0?user.totalOrdersCountOfUser:"No orders":"Loading.."})</h5></Link>
+                                            <Link className="nav-link text-dark" to="/orders"><h5><i className="fa-solid fa-bag-shopping fa-fade text-warning"></i>  My Orders ({fetchDone ? user.totalOrdersCountOfUser != 0 ? user.totalOrdersCountOfUser : "No orders" : "Loading.."})</h5></Link>
                                         </li>
                                     </ul>
 
                                     <div className="d-flex justify-content-center gap-3" >
-                                        <div className="search p-2" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">
+                                        {/* <div className="search p-2" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">
                                             <i className="fa-solid fa-search"></i>
+                                        </div> */}
+                                        <div className=" ">
+                                            <form onSubmit={(e) => { return (e.preventDefault, nav("search?query=" + search)) }}>
+                                                <div className="form-floating">
+                                                    <input type="search"
+                                                        className="form-control form-control-sm"
+                                                        onChange={(e) => { return (setSearch(e.target.value)) }}
+                                                        id="floatingInput"
+                                                        placeholder="Search here..." />
+                                                    <label htmlFor="floatingInput">Search/Name...</label>
+                                                </div>
+                                            </form>
                                         </div>
 
                                         <div className="btn-group ">
@@ -219,14 +233,14 @@ export default function MainPageAfterlogin(props) {
                 <hr />
 
                 <div className="modal fade " id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog modal-fullscreen-lg-down modal-dialog-scrollable modal-lg ">
+                    <div className="modal-dialog modal-fullscreen modal-dialog-scrollable modal-lg ">
                         <div className="modal-content bg-info">
                             <div className="modal-header ">
                                 <h5 className="modal-title text-end" id="exampleModalLabel"></h5>
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
-                                <form>
+                                <form onSubmit={(e) => { return (e.preventDefault, nav("search?query=" + search)) }}>
                                     <div className="form-floating mb-3 ">
                                         <input type="search"
                                             className="form-control"
@@ -245,7 +259,7 @@ export default function MainPageAfterlogin(props) {
                                             </>}
                                     </div>
                                 </form>
-                                <div className="   row row-cols-1 row-cols-sm-3 row-cols-md-4 row-cols-lg-3 gap-4 justify-content-center text-center ">
+                                {/* <div className="   row row-cols-1 row-cols-sm-3 row-cols-md-4 row-cols-lg-3 gap-4 justify-content-center text-center ">
                                     {data.filter((val) => {
                                         if (search == "") {
                                             count = 0;
@@ -294,7 +308,9 @@ export default function MainPageAfterlogin(props) {
                                         )
                                     })
                                     }
-                                </div>
+                                </div> */}
+                                {/* <SearchScreen query={search} /> */}
+                                {/* <div>{SearchScreen()}</div> */}
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn=outline-secondary" data-bs-dismiss="modal">Close</button>

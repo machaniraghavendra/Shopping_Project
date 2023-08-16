@@ -22,6 +22,8 @@ public interface FavService {
 
 	FavouriteDto find(int favId) throws ItemNotFoundInFavException, UserNotFoundException, ItemNotFoundException;
 
+	void deleteAllCartItemsOfUser(UUID userId) throws UserNotFoundException;
+
 	List<FavouritesEntity> viewall();
 	
 	List<Map<UUID, List<ItemsDto>>> viewallMap() throws UserNotFoundException, ItemNotFoundException ;

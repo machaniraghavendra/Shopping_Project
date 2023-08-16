@@ -21,14 +21,16 @@ public interface AddressService {
 	AddressDto findAddressWithUserId(UUID userId, String address);
 
 	String deleteAddressWithUserIdAndAddress(UUID userId, String address);
-	
+
 	List<AddressEntity> viewAllAddress();
 
 	List<AddressDto> viewAllAddressWithUserId(UUID userId);
 
 	List<Object> findAddressEntity(Integer id);
-	
+
 	Optional<AddressEntity> getAddressWithUserIdandAddress(UUID userId, String address);
 
 	Optional<AddressEntity> findWIthReferenceId(UUID referenceId);
+
+	void deleteAlladdressOfUser(UUID userId) throws UserNotFoundException;
 }

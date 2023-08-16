@@ -34,6 +34,7 @@ import UsersList from "./Components/AdminPages/UsersList";
 import ItemsList from "./Components/AdminPages/ItemsList";
 import UpdateItem from "./Components/AdminPages/UpdateItem";
 import AllReviewOfItem from "./Components/View/AllReviewOfItem";
+import SearchScreen from "./Components/MainPage/SearchScreen";
 
 function App() {
   let user = localStorage.getItem("currentuser");
@@ -116,6 +117,7 @@ function App() {
                   <Footer />
                 </>
               } />
+              <Route path="/mart/search" element={<SearchScreen user={user}/>}/>
               <Route path="/*" element={<ErrorPage />} />
             </Routes>
           </Router>

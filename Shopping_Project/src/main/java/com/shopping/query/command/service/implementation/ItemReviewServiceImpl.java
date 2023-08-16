@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.shopping.query.command.entites.ItemReview;
+import com.shopping.query.command.entites.RatingsOfUser;
 import com.shopping.query.command.entites.ReviewImages;
 import com.shopping.query.command.entites.dto.ItemReviewDto;
 import com.shopping.query.command.entites.dto.RatingDto;
@@ -349,6 +350,29 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 		}
 		return ReviewImageDto.builder().imageUrl(reviewImages.getImageUrl()).itemId(reviewImages.getItemId())
 				.reviewId(reviewImages.getReviewId()).build();
+	}
+
+	public void deleteAllReviewOfUser(UUID userId) throws RatingsOfUserNotFoundException, UserNotFoundException {
+		try {
+			List<ItemReview> itemReviews = getAllReviews().stream().filter(a -> Objects.equals(a.getUserId(), userId))
+					.toList();
+			List<ReviewImages> images = getAllImages();
+			List<ReviewImages> imagesToDelete = new ArrayList<>();
+			List<RatingsOfUser> ratingsOfUsers = ratingsService.getAllRatings().stream()
+					.filter(a -> a.getUserId().equals(userId)).toList();
+			for (ItemReview itemReview : itemReviews) {
+				imagesToDelete
+						.addAll(images.stream().filter(a -> a.getReviewId().equals(itemReview.getReviewId())).toList());
+			}
+			reviewRepo.deleteAll(itemReviews);
+			imagesRepo.deleteAll(imagesToDelete);
+			for (RatingsOfUser ratingOfUser : ratingsOfUsers) {
+				ratingsService.delete(userId, ratingOfUser.getItemId());
+			}
+
+		} catch (Exception e) {
+			throw new UserNotFoundException(e.getMessage());
+		}
 	}
 
 }
