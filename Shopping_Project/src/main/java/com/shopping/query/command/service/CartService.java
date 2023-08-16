@@ -24,6 +24,8 @@ public interface CartService {
 
 	List<CartEntity> viewall();
 
+	void deleteAllCartItemsOfUser(UUID userId) throws UserNotFoundException;
+	
 	List<Map<UUID, List<ItemsDto>>> viewallMap() throws UserNotFoundException, ItemNotFoundException;
 
 	List<List<ItemsDto>> getListofCartItemswithUserId(UUID userId)

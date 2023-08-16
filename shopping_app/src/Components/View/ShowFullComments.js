@@ -5,7 +5,7 @@ export default function ShowFullComments(comment) {
 
     const [showFullLength, setShowFullLength] = useState(false);
     
-    const minLetters = 45
+    const minLetters = 30
 
     const viewMoreToggle = () => {
         setShowFullLength(!showFullLength)

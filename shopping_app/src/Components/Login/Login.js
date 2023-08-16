@@ -207,6 +207,7 @@ export default function Login(props) {
                                                         value={user.userPassword}
                                                         onChange={set}
                                                         onInput={handleSubmit}
+                                                        maxLength={10}
                                                         placeholder="Password" />
                                                     <label className="form-label" htmlFor="floatingPassword">Password</label>
                                                     <span className='text-danger'>{formErrors.password}</span>

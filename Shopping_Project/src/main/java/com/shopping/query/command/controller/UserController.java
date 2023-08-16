@@ -42,7 +42,7 @@ public class UserController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable("id") String userId) throws UserNotFoundException {
+	public ResponseEntity<String> delete(@PathVariable("id") UUID userId) throws UserNotFoundException {
 		return ResponseEntity.ok(userServiceImpl.delete(userId));
 	}
 
@@ -64,7 +64,7 @@ public class UserController {
 
 	@GetMapping("/{useremail}/{password}")
 	public ResponseEntity<Boolean> check(@PathVariable("useremail") String userEmail,
-			@PathVariable("password") String userPassword) {
+			@PathVariable("password") String userPassword) throws UserNotFoundException {
 		return ResponseEntity.ok(userServiceImpl.check(userEmail, userPassword));
 	}
 	

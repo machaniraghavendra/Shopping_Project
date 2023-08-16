@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.shopping.query.command.entites.ItemEntity;
 import com.shopping.query.command.entites.dto.ItemsDto;
+import com.shopping.query.command.entites.dto.SearchDto;
 import com.shopping.query.command.exceptions.ItemAlreadyException;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 
@@ -32,5 +33,5 @@ public interface ItemService {
 
 	List<ItemsDto> getViewedHistory(UUID userId);
 	
-	List<ItemsDto> itemSearch(String searchword) throws ItemNotFoundException;
+	SearchDto itemSearch(String searchword, UUID userId) throws ItemNotFoundException;
 }

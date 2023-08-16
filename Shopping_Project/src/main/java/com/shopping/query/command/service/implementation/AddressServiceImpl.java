@@ -144,7 +144,7 @@ public class AddressServiceImpl implements AddressService {
 	@Override
 	public List<AddressDto> viewAllAddressWithUserId(UUID userId) {
 		List<AddressEntity> list = viewAllAddress().stream().filter(a -> a.getUserId().equals(userId))
-				.sorted(Comparator.comparing(AddressEntity::getAddedOn,Comparator.reverseOrder()))
+				.sorted(Comparator.comparing(AddressEntity::getAddedOn, Comparator.reverseOrder()))
 				.collect(Collectors.toList());
 		List<AddressDto> returnList = new ArrayList<>();
 		list.forEach(a -> {
@@ -170,5 +170,14 @@ public class AddressServiceImpl implements AddressService {
 	@Override
 	public Optional<AddressEntity> findWIthReferenceId(UUID referenceId) {
 		return viewAllAddress().stream().filter(a -> a.getReferenceId().equals(referenceId)).findFirst();
+	}
+
+	@Override
+	public void deleteAlladdressOfUser(UUID userId) throws UserNotFoundException {
+		try {
+			repo.deleteAll(viewAllAddress().stream().filter(a -> a.getUserId().equals(userId)).toList());
+		} catch (Exception e) {
+			throw new UserNotFoundException(e.getMessage());
+		}
 	}
 }

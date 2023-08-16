@@ -34,6 +34,8 @@ public interface OrderService {
 
 	List<OrdersDto> getOrdersofUser(UUID userId);
 
+	void deleteAllOrdersofUser(UUID userId) throws UserNotFoundException;
+	
 	void updateOrderStatus(UUID orderid) throws OrderNotFoundException;
 
 	List<String> getAllEmailsOfUser(UUID userId) throws UserNotFoundException;

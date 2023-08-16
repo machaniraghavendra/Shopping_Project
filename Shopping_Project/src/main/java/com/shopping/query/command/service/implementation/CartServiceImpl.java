@@ -37,8 +37,7 @@ public class CartServiceImpl implements CartService {
 
 		String itemName = mapper.itemDtoMapperById(cartEntity.getItemId()).getItemName();
 		try {
-			List<CartEntity> listEntity = viewall().stream()
-					.filter(a -> a.getUserId().equals(cartEntity.getUserId()))
+			List<CartEntity> listEntity = viewall().stream().filter(a -> a.getUserId().equals(cartEntity.getUserId()))
 					.filter(a -> Objects.equals(a.getItemId(), cartEntity.getItemId())).collect(Collectors.toList());
 			if (!listEntity.isEmpty()) {
 				throw new ItemAlreadyInCartException("The item " + itemName + " already in your cart");
@@ -130,6 +129,15 @@ public class CartServiceImpl implements CartService {
 		return list;
 	}
 
+	@Override
+	public void deleteAllCartItemsOfUser(UUID userId) throws UserNotFoundException {
+		try {
+			cartRepo.deleteAll(viewall().stream().filter(a -> a.getUserId().equals(userId)).toList());
+		} catch (Exception e) {
+			throw new UserNotFoundException(e.getMessage());
+		}
+	}
+
 	private List<ItemsDto> checkandgetlistWithUserId(UUID userId) {
 		List<CartEntity> entities = viewall();
 		return entities.stream().filter(a -> a.getUserId().equals(userId)).map(a -> {
@@ -151,7 +159,7 @@ public class CartServiceImpl implements CartService {
 			} else {
 				return null;
 			}
-		}).collect(Collectors.toList());
+		}).toList();
 	}
 // public String total() {
 // int amount=0;

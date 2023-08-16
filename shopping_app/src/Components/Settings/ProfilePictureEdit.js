@@ -26,7 +26,9 @@ export default function ProfilePictureEdit(props) {
             "userId": localStorage.getItem("currentuser"),
             "userName": user.userName,
             "mobileNumber": user.mobileNumber,
-            "profileImgUrl": store
+            "profileImgUrl": store,
+            "admin": user.admin,
+            "loggedIn": user.loggedIn
         }).then(a => {
             window.location.reload();
         })

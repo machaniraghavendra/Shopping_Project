@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ErrorPage from "../Error/ErrorPage";
 import ChatBot from '../ChatBot/ChatBot';
 import LogOut from "../Login/LogOut";
-
+import ShowFullComments from "../View/ShowFullComments";
 export default function UsersList(props) {
 
     const [isAdmin, setIsAdmin] = useState(false);
@@ -71,6 +71,7 @@ export default function UsersList(props) {
     }
 
     const deleteUser = () => {
+        console.log(deletingEmail);
         if (deletingEmail && deletingEmail != user.userEmail) {
             axios.delete("http://localhost:8083/user/" + deletingEmail).then(a => {
                 getAllUsersList()
@@ -160,7 +161,7 @@ export default function UsersList(props) {
 
                 <div className="container my-3">
                     <div className="col-lg-6 col">
-                        <input type='search' className='form-control form-control-sm w-lg-75 w-100 ' id="viewSearchbar" placeholder='Search for Email/Name'
+                        <input type='search' className='form-control form-control-sm w-lg-75 w-100 ' id="viewSearchbar" placeholder='Search for Name'
                             onChange={(a) => {
                                 setSearch(a.target.value)
                             }} />
@@ -179,6 +180,7 @@ export default function UsersList(props) {
                                 <th scope="col">Mobile Number</th>
                                 <th scope="col">Password</th>
                                 <th scope="col">Admin <input className="form-check-input" type="checkbox" checked={onlyAdmin} onClick={() => { setOnlyAdmin(!onlyAdmin) }} /></th>
+                                <th scope="col">Status</th>
                                 <th scope="col">Delete</th>
                             </tr>
                         </thead>
@@ -188,8 +190,7 @@ export default function UsersList(props) {
                                     if (search === "") {
                                         return a;
                                     }
-                                    if (a.userName.toLowerCase().includes(search.toLowerCase())
-                                        || a.userEmail.toLowerCase().includes(search.toLowerCase())) {
+                                    if (a.userName.toLowerCase().includes(search.toLowerCase())) {
                                         return a;
                                     }
                                 })
@@ -208,14 +209,15 @@ export default function UsersList(props) {
                                             <tr >
                                                 <th scope="row">{index + 1}</th>
                                                 <td>{a.profileImgUrl ? <img src={a.profileImgUrl} width="30" height="30" /> : <i className='fa-solid fa-user'></i>}</td>
-                                                <td>{a.userEmail}</td>
+                                                <td ><ShowFullComments comment={a.userEmail} /></td>
                                                 <td>{a.userName}</td>
                                                 <td className="text-truncate">{a.userId}</td>
                                                 <td>{a.mobileNumber}</td>
-                                                <td>{a.userPassword}</td>
+                                                <td><ShowFullComments comment={a.userPassword} /></td>
                                                 <td>{a.admin ? <span className=" badge text-bg-success">Yes</span> : <span className=" badge text-bg-danger">No</span>}</td>
-                                                <td>{a.userEmail === user.userEmail ? <span className="text-info">Not to be done</span> :
-                                                    <i className="fa-solid fa-trash-can fa-sm" style={{ color: "#f81616", cursor: "pointer" }} onClick={() => { setShowDeletePop(true); setdeletingEmail(user.userEmail); setInfo("Want to delete user " + a.userName) }}></i>
+                                                <td>{a.loggedIn?<span className=" badge text-bg-success">Active</span> : <span className=" badge text-bg-danger">In-Active</span>}</td>
+                                                <td>{a.userId === user.userId ? <span className="text-info">Not to be done</span> :
+                                                    <i className="fa-solid fa-trash-can fa-sm" style={{ color: "#f81616", cursor: "pointer" }} onClick={() => { setShowDeletePop(true); setdeletingEmail(a.userId); setInfo("Want to delete user " + a.userName) }}></i>
                                                 }</td>
                                             </tr>
                                         </tbody>
@@ -315,7 +317,7 @@ export default function UsersList(props) {
                 }
 
                 {/* Logout Pop */}
-                <LogOut user={props.user}/>
+                <LogOut user={props.user} />
 
             </div>
         )
