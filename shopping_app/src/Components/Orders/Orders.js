@@ -40,18 +40,18 @@ export default function Orders(props) {
         })
     }
 
-    const updateOrder = () => {
-        orders.forEach(order => {
-            axios.put("http://localhost:8083/orders/updateOrderStatus/" + order.orderUUIDId).catch((error) => {
-                setError(true);
-                if (error.response.data === undefined) {
-                    setErrorMessage("Something went wrong")
-                } else {
-                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-                }
-            })
-        })
-    }
+    // const updateOrder = () => {
+    //     orders.forEach(order => {
+    //         axios.put("http://localhost:8083/orders/updateOrderStatus/" + order.orderUUIDId).catch((error) => {
+    //             setError(true);
+    //             if (error.response.data === undefined) {
+    //                 setErrorMessage("Something went wrong")
+    //             } else {
+    //                 setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+    //             }
+    //         })
+    //     })
+    // }
 
     const viewOrder = (e) => {
         axios.get("http://localhost:8083/orders/saveorder/" + e);
@@ -80,8 +80,6 @@ export default function Orders(props) {
     setTimeout(() => {
         if (fetchDone) {
             check();
-            updateOrder();
-
         }
     }, 10);
 
@@ -164,10 +162,10 @@ export default function Orders(props) {
                                             return item;
                                         }
                                     })
-                                    .map(item => {
+                                    .map((item,i) => {
                                         deliveryitemsCount++;
                                         return (
-                                            <div className={(deliveryItemsView || sessionStorage.getItem("showDeliveryItems") === "true" ? true : false) ? 'py-2 d-block col-lg-6' : 'py-2 d-none col-lg-6'} key={item.item.itemId}>
+                                            <div className={(deliveryItemsView || sessionStorage.getItem("showDeliveryItems") === "true" ? true : false) ? 'py-2 d-block col-lg-6' : 'py-2 d-none col-lg-6'} key={i}>
                                                 <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
                                                     <div className="row g-0" >
                                                         <div className="col-md-3 d-none d-md-flex justify-content-center">

@@ -47,12 +47,12 @@ public class OrdersController {
 
 	@PutMapping("updateOrder/{id}/{status}")
 	public ResponseEntity<List<Object>> updateOrder(@PathVariable("id") UUID id, @PathVariable("status") String status)
-			throws OrderNotFoundException {
+			throws OrderNotFoundException, ItemNotFoundException {
 		return ResponseEntity.ok(ordersServImpl.updateOrder(id, status));
 	}
 
 	@PutMapping("updateOrderStatus/{id}")
-	public void updateOrderStatus(@PathVariable("id") UUID id) throws OrderNotFoundException {
+	public void updateOrderStatus(@PathVariable("id") UUID id) throws OrderNotFoundException, ItemNotFoundException {
 		ordersServImpl.updateOrderStatus(id);
 	}
 

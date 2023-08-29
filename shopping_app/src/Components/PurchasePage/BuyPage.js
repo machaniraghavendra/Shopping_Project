@@ -34,6 +34,8 @@ export default function Buypage(props) {
 
     const [errorMessage, setErrorMessage] = useState("");
 
+    const [orderButtonEnabled, setOrderButtonEnabled] = useState(true);
+
     var number = 1;
 
     let itemId = "";
@@ -73,6 +75,7 @@ export default function Buypage(props) {
                     pop.classList.remove("d-none")
                     setTimeout(() => {
                         return (
+                            setOrderButtonEnabled(true),
                             nav("/orders")
                         )
                     }, 3000)
@@ -130,6 +133,7 @@ export default function Buypage(props) {
     }
 
     const checkAddress = () => {
+        setOrderButtonEnabled(false)
         axios.post("http://localhost:8083/orders/check/", {
             "userId": props.user,
             "itemId": 1,
@@ -491,7 +495,7 @@ export default function Buypage(props) {
                             </div>
                         </div>
                         <div className="text-center">
-                            <button className="btn btn-outline-warning btn-lg  m-auto  orderButton" onClick={(e) => {
+                            <button className="btn btn-outline-warning btn-lg  m-auto  orderButton" disabled={!orderButtonEnabled} onClick={(e) => {
                                 if (details.firstName != "" && details.phoneNumber != "" && details.pincode != "" && details.address != "" && details.paymentOption != "") {
                                     return (checkAddress(e))
                                 } else {

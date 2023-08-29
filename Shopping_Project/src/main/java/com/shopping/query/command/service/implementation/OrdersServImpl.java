@@ -15,12 +15,15 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.shopping.query.command.entites.AddressEntity;
 import com.shopping.query.command.entites.OrdersEntity;
 import com.shopping.query.command.entites.dto.AddressDto;
+import com.shopping.query.command.entites.dto.EmailDto;
 import com.shopping.query.command.entites.dto.ItemsDto;
 import com.shopping.query.command.entites.dto.OrdersDto;
 import com.shopping.query.command.exceptions.GlobalExceptionHandler;
@@ -31,9 +34,14 @@ import com.shopping.query.command.exceptions.UserNotFoundException;
 import com.shopping.query.command.mapper.MappersClass;
 import com.shopping.query.command.repos.OrderRepo;
 import com.shopping.query.command.service.AddressService;
+import com.shopping.query.command.service.EmailService;
 import com.shopping.query.command.service.OrderService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
+@EnableAsync
 public class OrdersServImpl implements OrderService {
 
 	private static final String STATUS_SUCCESS = "success";
@@ -49,6 +57,9 @@ public class OrdersServImpl implements OrderService {
 
 	@Autowired
 	private MappersClass mapper;
+
+	@Autowired
+	private EmailService emailService;
 
 	@Autowired
 	private AddressService addressService;
@@ -89,6 +100,7 @@ public class OrdersServImpl implements OrderService {
 			detailsEntity.setTotalOrderAmount(String.valueOf(Math.multiplyExact(
 					Long.parseLong(item.getItemPrice().replace(",", "").replace("₹", "").replace(".00", "")),
 					detailsEntity.getOrderQuantity())));
+			sendMailOfOrderStatus(detailsEntity, detailsEntity.getOrderStatus());
 			orderRepo.save(detailsEntity);
 			return "Saved order";
 		}
@@ -125,7 +137,8 @@ public class OrdersServImpl implements OrderService {
 	}
 
 	@Override
-	public List<Object> updateOrder(UUID orderUUID, String orderStatus) throws OrderNotFoundException {
+	public List<Object> updateOrder(UUID orderUUID, String orderStatus)
+			throws OrderNotFoundException, ItemNotFoundException {
 		List<Object> value = new ArrayList<>();
 		try {
 			OrdersEntity detailsEntity = getWithUUID(orderUUID);
@@ -135,15 +148,27 @@ public class OrdersServImpl implements OrderService {
 					detailsEntity.setOrderStatus(STATUS_SUCCESS);
 					break;
 				case STATUS_DISPATCH:
+					if (detailsEntity.getOrderStatus() != STATUS_DISPATCH) {
+						sendMailOfOrderStatus(detailsEntity, STATUS_DISPATCH);
+					}
 					detailsEntity.setOrderStatus(STATUS_DISPATCH);
 					break;
 				case STATUS_NEARBYHUB:
+					if (detailsEntity.getOrderStatus() != STATUS_NEARBYHUB) {
+						sendMailOfOrderStatus(detailsEntity, STATUS_NEARBYHUB);
+					}
 					detailsEntity.setOrderStatus(STATUS_NEARBYHUB);
 					break;
 				case STATUS_CANCELLED:
+					if (detailsEntity.getOrderStatus() != STATUS_CANCELLED) {
+						sendMailOfOrderStatus(detailsEntity, STATUS_CANCELLED);
+					}
 					detailsEntity.setOrderStatus(STATUS_CANCELLED);
 					break;
 				case STATUS_DELIVERED:
+					if (!detailsEntity.getOrderStatus().equalsIgnoreCase(STATUS_DELIVERED)) {
+						sendMailOfOrderStatus(detailsEntity, STATUS_DELIVERED);
+					}
 					detailsEntity.setOrderStatus(STATUS_DELIVERED);
 					break;
 				}
@@ -156,6 +181,17 @@ public class OrdersServImpl implements OrderService {
 			value.add(globalExceptionHandler.orderNotFoundException(e));
 		}
 		return value;
+	}
+
+	@Async
+	private void sendMailOfOrderStatus(OrdersEntity order, String status) throws ItemNotFoundException {
+		ItemsDto item = mapper.itemDtoMapperById(order.getItemId());
+		emailService.sendSimplemail(EmailDto.builder().subject("Update for order of " + item.getItemName())
+				.msgBody("Hi " + order.getFirstName() + ",\n" + "\t Your order of " + item.getItemName()
+						+ " has updated with status of " + status.toUpperCase() + " and its order id is "
+						+ order.getOrderUUIDId() + ", the payment type is " + order.getPaymentType()
+						+ " and its total amount of order is ₹" + order.getTotalOrderAmount()+".00")
+				.recipient(order.getEmailAddress()).build());
 	}
 
 	@Override
@@ -204,7 +240,7 @@ public class OrdersServImpl implements OrderService {
 	}
 
 	@Override
-	public void updateOrderStatus(UUID orderId) throws OrderNotFoundException {
+	public void updateOrderStatus(UUID orderId) throws OrderNotFoundException, ItemNotFoundException {
 		OrdersEntity order = getWithUUID(orderId);
 		LocalDate now = LocalDate.now();
 		LocalDate dateOfOrder = LocalDate.parse(order.getOrderedOn(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
