@@ -24,7 +24,7 @@ public interface OrderService {
 
 	String deleteDetailsWithId(Integer id);
 
-	List<Object> updateOrder(UUID orderUUID, String orderStatus) throws OrderNotFoundException;
+	List<Object> updateOrder(UUID orderUUID, String orderStatus) throws OrderNotFoundException, ItemNotFoundException;
 
 	OrdersDto findItemDetailsWithId(Integer id) throws ItemNotFoundException;
 
@@ -36,7 +36,7 @@ public interface OrderService {
 
 	void deleteAllOrdersofUser(UUID userId) throws UserNotFoundException;
 	
-	void updateOrderStatus(UUID orderid) throws OrderNotFoundException;
+	void updateOrderStatus(UUID orderid) throws OrderNotFoundException, ItemNotFoundException;
 
 	List<String> getAllEmailsOfUser(UUID userId) throws UserNotFoundException;
 	

@@ -1,5 +1,6 @@
 package com.shopping.query.command.service.implementation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -87,7 +88,6 @@ public class UserServiceImpl extends SecurityServiceImpl implements UserService 
 				throw new UserNotFoundException("The user " + userEmail + " does not exists");
 			}
 		} catch (UserNotFoundException e) {
-//			e.printStackTrace();
 			log.error(e.getMessage());
 		}
 		return null;
@@ -104,7 +104,13 @@ public class UserServiceImpl extends SecurityServiceImpl implements UserService 
 
 	@Override
 	public List<UserEntity> findall() {
-		return userRepo.findAll();
+		List<UserEntity> duplicateEntities = new ArrayList<>();
+		userRepo.findAll().forEach(user -> {
+			user.setMobileNumber("XXXXXX" + user.getMobileNumber().substring(user.getMobileNumber().length() - 4,
+					user.getMobileNumber().length()));
+			duplicateEntities.add(user);
+		});
+		return duplicateEntities;
 	}
 
 	@Override
@@ -114,23 +120,23 @@ public class UserServiceImpl extends SecurityServiceImpl implements UserService 
 			if (!userRepo.existsById(user.getUserEmail())) {
 				throw new UserNotFoundException("The user " + user.getUserEmail() + " does not exists");
 			} else {
-				log.info("Cart deleting of user {}",userId);
+				log.info("Cart deleting of user {}", userId);
 				cartService.deleteAllCartItemsOfUser(userId);
-				log.info("Cart deletedof user {}",userId);
-				log.info("fav deletingof user {}",userId);
+				log.info("Cart deletedof user {}", userId);
+				log.info("fav deletingof user {}", userId);
 				favService.deleteAllCartItemsOfUser(userId);
-				log.info("fav deleted of user {}",userId);
-				log.info("Bot deleting of user {}",userId);
+				log.info("fav deleted of user {}", userId);
+				log.info("Bot deleting of user {}", userId);
 				botService.listClear(userId);
-				log.info("Orders deleting of user {}",userId);
+				log.info("Orders deleting of user {}", userId);
 				orderService.deleteAllOrdersofUser(userId);
-				log.info("Review deleting of user {}",userId);
+				log.info("Review deleting of user {}", userId);
 				itemReviewService.deleteAllReviews();
-				log.info("Address deleting of user {}",userId);
+				log.info("Address deleting of user {}", userId);
 				addressService.deleteAlladdressOfUser(userId);
-				log.info("User data deleting of user {}",userId);
+				log.info("User data deleting of user {}", userId);
 				userRepo.deleteById(user.getUserEmail());
-				log.info("User deleted of user {}",userId);
+				log.info("User deleted of user {}", userId);
 				return "The profile has been deleted with email " + user.getUserEmail();
 			}
 		} catch (UserNotFoundException e) {
