@@ -23,6 +23,8 @@ public interface ItemService {
 
 	List<Object> find(int itemId) throws ItemNotFoundException;
 
+	boolean existsItemWithId(int itemId) throws ItemNotFoundException;
+
 	List<ItemEntity> viewall();
 
 	List<ItemsDto> getItemsByType(String itemType);
