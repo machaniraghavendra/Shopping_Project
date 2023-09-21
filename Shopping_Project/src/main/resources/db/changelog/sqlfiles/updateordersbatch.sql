@@ -1,0 +1,6 @@
+CREATE TABLE UPDATEORDERSBATCH (
+    BatchRunID INT PRIMARY KEY,
+    TotalOrdersUpdated INT NOT NULL,
+    StartDate DATE NOT NULL,
+    EndDate DATE NOT NULL
+);

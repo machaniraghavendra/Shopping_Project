@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+	<changeSet author="RAGHU" id="1" context="ddl"
+		runInTransaction="false">
+		<preConditions>
+			<not>
+				<tableExists tableName="UPDATEORDERSBATCH" />
+			</not>
+		</preConditions>
+		<comment>Adding table of UPDATEORDERSBATCH</comment>
+		<sqlFile path="sqlfiles/updateordersbatch.sql"
+			relativeToChangelogFile="true" />
+		<!-- <rollback>
+			<sqlFile path="sqlfiles/dropupdateordersbatch.sql"
+				relativeToChangelogFile="true" />
+		</rollback> -->
+	</changeSet>
+
+	<changeSet author="RAGHU" id="2" context="ddl"
+			   runInTransaction="false">
+		<preConditions>
+			<not>
+				<columnExists columnName="BATCHNAME"  tableName="UPDATEORDERSBATCH"/>
+			</not>
+		</preConditions>
+		<comment>Adding coloum in UPDATEORDERSBATCH</comment>
+		<addColumn tableName="UPDATEORDERSBATCH">
+			<column name="BATCHNAME" type="VARCHAR(20)"/>
+		</addColumn>
+	</changeSet>
+</databaseChangeLog>

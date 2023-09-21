@@ -69,7 +69,7 @@ public class ItemServiceImpl implements ItemService {
 				return "Added !";
 			}
 		} catch (ItemAlreadyException e) {
-			e.printStackTrace();
+			log.error("The item " + itemEntity.getItemName() + " already there");
 		}
 		return "The item " + itemEntity.getItemName() + " already there";
 	}
@@ -131,6 +131,11 @@ public class ItemServiceImpl implements ItemService {
 			value.add(globalExceptionHandler.itemNotFoundException(e));
 		}
 		return value;
+	}
+
+	@Override
+	public boolean existsItemWithId(int itemId) throws ItemNotFoundException {
+		return itemsRepo.existsById(itemId);
 	}
 
 	@Override
