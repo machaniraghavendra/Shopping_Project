@@ -60,7 +60,7 @@ export default function UsersList(props) {
     }
 
     const getAllUsersList = () => {
-        axios.get("http://localhost:8083/user/").then(a => { setUsersList(a.data) }).catch((error) => {
+        axios.get("http://localhost:8083/user/all").then(a => { setUsersList(a.data) }).catch((error) => {
             setError(true);
             if (error.response === undefined) {
                 setErrorMessage("Something went wrong")

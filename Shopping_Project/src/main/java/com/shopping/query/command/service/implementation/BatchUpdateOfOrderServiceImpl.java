@@ -1,14 +1,15 @@
-package com.shopping.query.command.service;
+package com.shopping.query.command.service.implementation;
 
 import com.shopping.query.command.entites.BatchUpdateOfOrder;
 import com.shopping.query.command.repos.BatchUpdateOfOrderRepo;
+import com.shopping.query.command.service.BatchUpdateOfOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
 @Service
-public class BatchUpdateOfOrderServiceImpl implements BatchUpdateOfOrderService{
+public class BatchUpdateOfOrderServiceImpl implements BatchUpdateOfOrderService {
 
     @Autowired
     private BatchUpdateOfOrderRepo updateOfOrderRepo;
