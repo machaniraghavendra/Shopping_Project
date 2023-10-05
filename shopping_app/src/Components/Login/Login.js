@@ -27,7 +27,9 @@ export default function Login(props) {
     const set = (e) => {
         const { name, value } = e.target;
         setUser({ ...user, [name]: value });
-        userCheck();
+        if (user.userEmail) {
+            userCheck();
+        }
     }
 
     const userCheck = () => {

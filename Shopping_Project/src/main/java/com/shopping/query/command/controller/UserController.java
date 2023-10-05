@@ -57,7 +57,7 @@ public class UserController {
 		return ResponseEntity.ok(userServiceImpl.getUserWithId(userId));
 	}
 
-	@GetMapping("/")
+	@GetMapping("/all")
 	public ResponseEntity<List<UserEntity>> findall() {
 		return ResponseEntity.ok(userServiceImpl.findall());
 	}

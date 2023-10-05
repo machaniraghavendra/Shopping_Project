@@ -1,18 +1,13 @@
 package com.shopping.query.command.batch;
 
-import com.shopping.query.command.entites.BatchUpdateOfOrder;
-import com.shopping.query.command.entites.OrdersEntity;
-import com.shopping.query.command.service.BatchUpdateOfOrderService;
-import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.ItemWriteListener;
 import org.springframework.batch.item.Chunk;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
+import com.shopping.query.command.entites.OrdersEntity;
+
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j

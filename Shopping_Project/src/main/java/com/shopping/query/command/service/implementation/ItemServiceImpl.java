@@ -251,9 +251,6 @@ public class ItemServiceImpl implements ItemService {
 		}
 	}
 
-//	private void addItemIntoFile(ItemEntity item) {
-//		
-//	}
 
 	@Override
 	public SearchDto itemSearch(String searchItem, UUID userId) throws ItemNotFoundException {
