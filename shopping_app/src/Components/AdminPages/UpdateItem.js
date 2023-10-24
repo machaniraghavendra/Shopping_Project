@@ -317,7 +317,7 @@ export default function UpdateItem(props) {
                                             <div className='row'>
                                                 <div className="col-md g-4">
                                                     <div className="form-floating">
-                                                        <textarea className="form-control" name="itemDesc"
+                                                        <textarea className="form-control" name="itemDesc" maxLength={220}
                                                             placeholder="description here" type={"text"} id="floatingTextarea2" style={{ height: "130px" }}
                                                             value={itemDetails.itemDesc}
                                                             onChange={setToItemDetails}
@@ -330,7 +330,7 @@ export default function UpdateItem(props) {
                                                 <div className='row'>
                                                     <div className="col-md g-4">
                                                         <div className="form-floating">
-                                                            <textarea className="form-control" name="itemSpec"
+                                                            <textarea className="form-control" name="itemSpec"  maxLength={220}
                                                                 placeholder="Specifications here" type={"text"} id="floatingTextarea2" style={{ height: "130px" }}
                                                                 value={itemDetails.itemSpec} onChange={setToItemDetails}
                                                             ></textarea>
@@ -384,7 +384,7 @@ export default function UpdateItem(props) {
 
                                                 <div className="col-md g-4">
                                                     <div className="form-floating">
-                                                        <textarea className="form-control" name="itemDimensions"
+                                                        <textarea className="form-control" name="itemDimensions"  maxLength={220}
                                                             placeholder="Dimensions here" id="floatingTextarea2" style={{ height: "130px" }} value={itemDetails.itemDimensions} onChange={setToItemDetails}></textarea>
                                                         <label htmlFor="floatingTextarea">Dimensions </label>
                                                         <span className="text-info text-muted fs-6">{250 - itemDetails.itemDimensions.length < 0 ? "" : <span> Characters can fill : {250 - itemDetails.itemDimensions.length}</span>}</span><br></br>

@@ -138,7 +138,7 @@ public class BatchConfiguration {
 	public ItemWriter<? super ItemEntity> itemwriter() {
 		return list -> {
 			for (ItemEntity item : list) {
-				itemService.save(item);
+				itemService.addItem(item);
 			}
 		};
 	}

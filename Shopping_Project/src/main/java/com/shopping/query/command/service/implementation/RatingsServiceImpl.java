@@ -147,7 +147,7 @@ public class RatingsServiceImpl implements RatingsService {
 						+ totalAmountOf4starRating + totalAmountOf5starRating);
 
 		itemEntity.setRatingOfItem(totalAmount_Of_Ratings);
-		itemService.update(itemEntity);
+		itemService.updateItem(itemEntity);
 	}
 
 	@Override

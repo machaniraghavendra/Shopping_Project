@@ -1,5 +1,6 @@
 package com.shopping.query.command.entites;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ import lombok.NonNull;
 @AllArgsConstructor
 @Table(name = UserEntity.TABLE_NAME)
 public class UserEntity implements Serializable {
+	@Serial
 	private static final long serialVersionUID = 12345L;
 
 	protected static final String TABLE_NAME = "USER_STORY";

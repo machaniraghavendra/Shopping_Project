@@ -120,7 +120,7 @@ public class BotServiceImpl implements BotService {
 			ordersEntity = ordersServImpl.findByDeliveryDetailId(detailsOfUser.getOrderId());
 		}
 		if (!Objects.isNull(detailsOfUser)) {
-			ItemsDto entity = mappersClass.itemDtoMapperById(detailsOfUser.getItemId());
+			ItemsDto entity = mappersClass.getItemDtoById(detailsOfUser.getItemId());
 			message = "The order details are " + entity.getItemName() + " of price " + entity.getItemPrice()
 					+ " of type " + entity.getItemType() + " its status is now "
 					+ ordersEntity.getOrderStatus() + " "

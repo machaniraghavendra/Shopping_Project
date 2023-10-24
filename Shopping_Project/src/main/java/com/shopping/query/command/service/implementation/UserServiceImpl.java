@@ -156,6 +156,9 @@ public class UserServiceImpl extends SecurityServiceImpl implements UserService 
 				UserEntity presentUserEntity = getUserEntity(userEntity.getUserId());
 				if (Objects.isNull(userEntity.getUserPassword())) {
 					userEntity.setUserPassword(presentUserEntity.getUserPassword());
+				}else{
+					userEntity.setUserPassword(Objects.isNull(decrypt(userEntity.getUserPassword())) ? encrypt(userEntity.getUserPassword())
+							: userEntity.getUserPassword());
 				}
 				userRepo.save(userEntity);
 				return "You are profile has been updated with " + userEntity.getUserName();

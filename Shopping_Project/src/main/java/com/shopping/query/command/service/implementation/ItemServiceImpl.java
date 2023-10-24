@@ -1,25 +1,5 @@
 package com.shopping.query.command.service.implementation;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.shopping.query.command.configuration.ItemsInstaller;
 import com.shopping.query.command.entites.ItemEntity;
 import com.shopping.query.command.entites.dto.ItemsDto;
@@ -31,8 +11,18 @@ import com.shopping.query.command.exceptions.UserNotFoundException;
 import com.shopping.query.command.mapper.MappersClass;
 import com.shopping.query.command.repos.ItemsRepo;
 import com.shopping.query.command.service.ItemService;
-
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -54,8 +44,26 @@ public class ItemServiceImpl implements ItemService {
 
 	private Map<UUID, List<ItemsDto>> history = new HashMap<>();
 
+//	public String save(ItemEntity itemEntity) throws ItemAlreadyException {
+//		try {
+//			if (itemsRepo.existsById(itemEntity.getItemId()))
+//				throw new ItemAlreadyException("The item " + itemEntity.getItemName() + " already there");
+//			else {
+//				if (!itemEntity.getItemPrice().contains(",")) {
+//					itemEntity.setItemPrice(String.format("%,.2f", Double.valueOf(itemEntity.getItemPrice())));
+//				}
+////				itemEntity.setItemAddedOn(LocalDateTime.now());
+////				addItemIntoFile(itemEntity);
+//				itemsRepo.save(itemEntity);
+//				return "Added !";
+//			}
+//		} catch (ItemAlreadyException e) {
+//			log.error("The item " + itemEntity.getItemName() + " already there");
+//		}
+//		return "The item " + itemEntity.getItemName() + " already there";
+//	}
 	@Override
-	public String save(ItemEntity itemEntity) throws ItemAlreadyException {
+	public String addItem(ItemEntity itemEntity) throws ItemAlreadyException{
 		try {
 			if (itemsRepo.existsById(itemEntity.getItemId()))
 				throw new ItemAlreadyException("The item " + itemEntity.getItemName() + " already there");
@@ -63,42 +71,90 @@ public class ItemServiceImpl implements ItemService {
 				if (!itemEntity.getItemPrice().contains(",")) {
 					itemEntity.setItemPrice(String.format("%,.2f", Double.valueOf(itemEntity.getItemPrice())));
 				}
-				itemEntity.setItemAddedOn(LocalDateTime.now());
-//				addItemIntoFile(itemEntity);
+				if (itemEntity.isTrending()){
+					checkAndDeleteTrendingItems();
+				}
 				itemsRepo.save(itemEntity);
 				return "Added !";
+
 			}
-		} catch (ItemAlreadyException e) {
-			log.error("The item " + itemEntity.getItemName() + " already there");
+		}catch (ItemAlreadyException | ItemNotFoundException e){
+			log.error(e.getMessage());
 		}
 		return "The item " + itemEntity.getItemName() + " already there";
 	}
 
+	private void checkAndDeleteTrendingItems() throws ItemNotFoundException {
+		List<ItemEntity> trendingItems = new ArrayList<>();
+		getTrendingItems().forEach(item-> {
+			try {
+				trendingItems.add(mappersClass.getItemEntityById(item.getItemId()));
+			} catch (ItemNotFoundException e) {
+				throw new RuntimeException(e);
+			}
+		});
+		if (trendingItems.size()>=9) {
+			trendingItems.sort(Comparator.comparing(ItemEntity::getItemAddedOn));
+			LinkedList<ItemEntity> trending = new LinkedList<>(trendingItems);
+			ItemEntity itemEntity = trending.removeLast();
+			itemEntity.setTrending(Boolean.FALSE);
+			updateAsNonTrending(itemEntity);
+		}
+	}
+
+	private void updateAsNonTrending(ItemEntity itemEntity) throws ItemNotFoundException {
+		try{
+			if (!itemsRepo.existsById(itemEntity.getItemId()))
+				throw new ItemNotFoundException("The item " + itemEntity.getItemName() + " not exists");
+			else {
+				itemsRepo.save(itemEntity);
+			}
+		}catch (ItemNotFoundException e){
+			log.error(e.getMessage());
+		}
+	}
+
+//	public String update(ItemEntity itemEntity) throws ItemNotFoundException {
+//		boolean check = false;
+//		try {
+//			if (!itemsRepo.existsById(itemEntity.getItemId()))
+//				throw new ItemNotFoundException("The item " + itemEntity.getItemName() + " not exists");
+//			else {
+//				if (itemEntity.isTrending()) {
+////					check = true;
+//				} else {
+//					if (!getTrendingItems().isEmpty() && getTrendingItems().size() <= 9 && !itemEntity.isTrending()) {
+//						check = true;
+//					} else {
+//						return "Trending items are enough more";
+//					}
+//				}
+//				if (check) {
+//					itemEntity.setItemUpdatedOn(LocalDateTime.now());
+//					itemsRepo.save(itemEntity);
+//					return "Updated !";
+//				}
+//			}
+//		} catch (ItemNotFoundException e) {
+//			e.printStackTrace();
+//		}
+//		return "The item " + itemEntity.getItemName() + " not exists";
+//	}
+
 	@Override
-	public String update(ItemEntity itemEntity) throws ItemNotFoundException {
-		boolean check = false;
+	public String updateItem(ItemEntity itemEntity) throws ItemNotFoundException {
 		try {
 			if (!itemsRepo.existsById(itemEntity.getItemId()))
 				throw new ItemNotFoundException("The item " + itemEntity.getItemName() + " not exists");
 			else {
-				if (itemEntity.isTrending()) {
-//					check = true;
-				} else {
-					if (!getTrendingItems().isEmpty() && getTrendingItems().size() <= 9 && !itemEntity.isTrending()) {
-						check = true;
-					} else {
-						check = false;
-						return "Trending items are enough more";
-					}
+				if (!Objects.equals(itemEntity.isTrending(),mappersClass.getItemDtoById(itemEntity.getItemId()).isTrending())&&itemEntity.isTrending()){
+					checkAndDeleteTrendingItems();
 				}
-				if (check) {
-					itemEntity.setItemUpdatedOn(LocalDateTime.now());
-					itemsRepo.save(itemEntity);
-					return "Updated !";
-				}
+				itemsRepo.save(itemEntity);
+				return "Updated !";
 			}
-		} catch (ItemNotFoundException e) {
-			e.printStackTrace();
+		}catch (ItemNotFoundException e){
+			log.error(e.getMessage());
 		}
 		return "The item " + itemEntity.getItemName() + " not exists";
 	}
@@ -156,7 +212,6 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	@Transactional
 	public String saveAll(List<ItemEntity> itemEntity) throws ItemAlreadyException {
 		int val = 0;
 		try {
@@ -166,7 +221,7 @@ public class ItemServiceImpl implements ItemService {
 					throw new ItemAlreadyException("Already exists in data");
 				else {
 					item.setItemAddedOn(LocalDateTime.now());
-					save(item);
+					this.addItem(item);
 				}
 			}
 			return "Saved list of Items";
@@ -190,7 +245,7 @@ public class ItemServiceImpl implements ItemService {
 				items.stream().filter(item -> item.getItemType().toLowerCase().contains(itemType.trim().toLowerCase()))
 						.collect(Collectors.toList()).forEach(i -> {
 							try {
-								itemsOfGivenType.add(mappersClass.itemDtoMapperByEntity(i));
+								itemsOfGivenType.add(mappersClass.convertItemEntityToDto(i));
 							} catch (ItemNotFoundException e) {
 								globalExceptionHandler.itemNotFoundException(e);
 							}
@@ -204,25 +259,25 @@ public class ItemServiceImpl implements ItemService {
 	public List<ItemsDto> getTrendingItems() {
 		List<ItemsDto> itemsOfTrending = new ArrayList<>();
 		Optional.ofNullable(viewall())
-				.ifPresentOrElse(items -> items.stream().filter(item -> item.isTrending()).toList().forEach(i -> {
+				.ifPresentOrElse(items -> items.stream().filter(ItemEntity::isTrending).toList().forEach(i -> {
 					try {
-						itemsOfTrending.add(mappersClass.itemDtoMapperByEntity(i));
+						itemsOfTrending.add(mappersClass.convertItemEntityToDto(i));
 					} catch (ItemNotFoundException e) {
 						globalExceptionHandler.itemNotFoundException(e);
 					}
 				}), () -> Collections.emptyList());
-		return itemsOfTrending;
+		return itemsOfTrending.stream().sorted(Comparator.comparing(ItemsDto::getRatingOfItem)).toList();
 	}
 
 	@Override
 	public Map<UUID, List<ItemsDto>> viewedHistory(UUID userId, int itemId) throws ItemNotFoundException {
 		List<ItemsDto> items = new ArrayList<>();
 		if (!(Objects.isNull(userId)) && itemId > 0 && (history.isEmpty() || !history.containsKey(userId))) {
-			items.add(mappersClass.itemDtoMapperByEntity((ItemEntity) find(itemId).get(0)));
+			items.add(mappersClass.convertItemEntityToDto((ItemEntity) find(itemId).get(0)));
 			history.put(userId, items);
 		} else {
 			List<ItemsDto> itemsDtos = history.get(userId);
-			ItemsDto dto = mappersClass.itemDtoMapperByEntity((ItemEntity) find(itemId).get(0));
+			ItemsDto dto = mappersClass.convertItemEntityToDto((ItemEntity) find(itemId).get(0));
 			if (!itemsDtos.isEmpty() && itemsDtos.size() <= 4 && !itemsDtos.contains(dto)) {
 				itemsDtos.add(dto);
 			} else if (!itemsDtos.contains(dto)) {
@@ -252,6 +307,20 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 
+	public List<ItemsDto> getItemsWithPagination(final Integer page, final Integer size){
+		Pageable pageable = PageRequest.of(page, size);
+		List<ItemsDto> listOfItemsDto = new ArrayList<>();
+		var listOfItems = itemsRepo.findAll(pageable).get().collect(Collectors.toCollection(ArrayList::new));
+		listOfItems.forEach(item -> {
+			try {
+				listOfItemsDto.add(mappersClass.convertItemEntityToDto(item));
+			} catch (ItemNotFoundException e) {
+				throw new RuntimeException(e);
+			}
+		});
+		return listOfItemsDto;
+	}
+
 	@Override
 	public SearchDto itemSearch(String searchItem, UUID userId) throws ItemNotFoundException {
 		searchItem = searchItem.trim().toLowerCase();
@@ -268,7 +337,7 @@ public class ItemServiceImpl implements ItemService {
 		try {
 			log.info("Mapping with entity to dto");
 			for (ItemEntity item : viewall()) {
-				items.add(mappersClass.itemDtoMapperByEntity(item));
+				items.add(mappersClass.convertItemEntityToDto(item));
 			}
 			relatedResult = getFoundItems(items, searchItem);
 			log.info("Got found items for query {}", searchItem);

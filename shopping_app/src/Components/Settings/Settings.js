@@ -531,7 +531,7 @@ export default function Settings(props) {
                                                                 "userEmail": user.userEmail,
                                                                 "profileImgUrl": user.profileImgUrl,
                                                                 "mobileNumber": user.mobileNumber,
-                                                                "loggedIn": user.loggedin,
+                                                                "loggedIn": user.loggedIn,
                                                                 "admin": user.admin
                                                             }).then(res => { setInfo(res.data); }).catch((error) => {
                                                                 setError(true);
@@ -567,7 +567,7 @@ export default function Settings(props) {
                                                                 "userEmail": user.userEmail,
                                                                 "profileImgUrl": user.profileImgUrl,
                                                                 "mobileNumber": values.mobileNumber,
-                                                                "loggedIn": user.loggedin,
+                                                                "loggedIn": user.loggedIn,
                                                                 "admin": user.admin
                                                             }).then(res => { setInfo(res.data); }).catch((error) => {
                                                                 setError(true);

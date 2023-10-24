@@ -501,7 +501,7 @@ export default function Buypage(props) {
                                 } else {
                                     validate(e)
                                 }
-                            }}>Place Order Now</button>
+                            }}>{orderButtonEnabled&&"Place Order Now"} {!orderButtonEnabled&&"Making order wait a min..."}</button>
                         </div>
                     </section>
                 </div>

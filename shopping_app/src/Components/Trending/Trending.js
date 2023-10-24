@@ -39,21 +39,21 @@ export default function Trending() {
                 }
             })
     }
-    
+
     const addIntoInterest = (id) => {
         axios.post("http://localhost:8083/items/history?user=" + localStorage.getItem("currentuser") + "&id=" + id)
-        .catch((error) => {
-            setError(true);
-            if (error.response.data === undefined) {
-                setErrorMessage("Something went wrong")
-            } else {
-                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-            }
-        })
+            .catch((error) => {
+                setError(true);
+                if (error.response.data === undefined) {
+                    setErrorMessage("Something went wrong")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
+            })
     }
 
     const cartAdd = (id) => {
-        if ( localStorage.getItem("currentuser")) {
+        if (localStorage.getItem("currentuser")) {
             axios.post("http://localhost:8083/cart/", {
                 "itemId": id,
                 "userId": localStorage.getItem("currentuser")
@@ -71,7 +71,7 @@ export default function Trending() {
     }
 
     const favAdd = (id) => {
-        if ( localStorage.getItem("currentuser")) {
+        if (localStorage.getItem("currentuser")) {
             axios.post("http://localhost:8083/fav/", {
                 "itemId": id,
                 "userId": localStorage.getItem("currentuser")
@@ -95,158 +95,171 @@ export default function Trending() {
     }, 200);
 
     const check = () => {
-        let dark = document.getElementById("trending")
-        if (fetchDone && trendingItems != []) {
-            if (sessionStorage.getItem("dark") === "true") {
-                dark.classList.remove("text-dark")
-                dark.classList.add("text-light")
-            } else {
-                dark.classList.remove("text-light")
-                dark.classList.add("text-dark")
-            }
-        }
+        // let dark = document.getElementById("trending")
+        // if (fetchDone && trendingItems != []) {
+        //     if (sessionStorage.getItem("dark") === "true") {
+        //         dark.classList.remove("text-dark")
+        //         dark.classList.add("text-light")
+        //     } else {
+        //         dark.classList.remove("text-light")
+        //         dark.classList.add("text-dark")
+        //     }
+        // }
     }
 
     useEffect(() => {
         return (fetch())
     }, [])
 
-    if (fetchDone&&trendingItems!=[]) {
+    if (fetchDone && trendingItems != []) {
         return (
             <div className='container-fluid'>
                 <h2 id='trending' className='dark'>Trending <i className="bi bi-stars"></i></h2>
                 <div id="carouselExampleIndicators" data-aos="fade-up" data-aos-offset="200" data-aos-easing="ease-in-sine" className="carousel slide" data-bs-ride="true">
-                    <div className="carousel-inner text-center container">
-                        <div className="carousel-item active" data-bs-interval="3000">
-                            <div className="row row-cols-1 row-cols-md-3 g-4" >
-                                <div className="col">
-                                    <div className="card">
-                                        <span className='d-flex position-fixed justify-content-end align-items-end' ><p className=' badge text-bg-success'>1</p></span>
-                                        <img src={trendingItems[0].itemImgUrl} className="card-img-top " alt="Image not found" />
-                                        <div className="card-body">
-                                            <h5 className="card-title text-truncate">{trendingItems[0].itemName}</h5>
-                                            <p className="card-text">₹{trendingItems[0].itemPrice}</p>
-                                            <Link to={'/view/' + trendingItems[0].itemId + "/" + trendingItems[0].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[0].itemId) }}>View More...</Link>
-                                            <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[0].itemId) }}>Add to Cart</button>
-                                            <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[0].itemId) }}>Add to Wishlist</button>
-                                        </div>
+                    {trendingItems &&
+                        <div className="carousel-inner text-center container">
+                            {trendingItems.length > 0 &&
+                                <div className="carousel-item active" data-bs-interval="3000">
+                                    <div className="row row-cols-1 row-cols-md-3 g-4" >
+                                        {trendingItems.length > 0 &&
+                                            <div className="col">
+                                                <div className="card">
+                                                    <span className='d-flex position-fixed justify-content-end align-items-end' ><p className=' badge text-bg-success'>1</p></span>
+                                                    <img src={trendingItems[0].itemImgUrl} className="card-img-top " alt="Image not found" />
+                                                    <div className="card-body">
+                                                        <h5 className="card-title text-truncate">{trendingItems[0].itemName}</h5>
+                                                        <p className="card-text">₹{trendingItems[0].itemPrice}</p>
+                                                        <Link to={'/view/' + trendingItems[0].itemId + "/" + trendingItems[0].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[0].itemId) }}>View More...</Link>
+                                                        <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[0].itemId) }}>Add to Cart</button>
+                                                        <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[0].itemId) }}>Add to Wishlist</button>
+                                                    </div>
+                                                </div>
+                                            </div>}
+                                        {trendingItems.length > 1 &&
+                                            <div className="col">
+                                                <div className="card">
+                                                    <span className='d-flex position-fixed  justify-content-end align-items-end'><p className=' badge text-bg-success'>2</p></span>
+                                                    <img src={trendingItems[1].itemImgUrl} className="card-img-top " alt="Image not found" />
+                                                    <div className="card-body">
+                                                        <h5 className="card-title text-truncate">{trendingItems[1].itemName}</h5>
+                                                        <p className="card-text">₹{trendingItems[1].itemPrice}</p>
+                                                        <Link to={'/view/' + trendingItems[1].itemId + "/" + trendingItems[1].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[1].itemId) }}>View More...</Link>
+                                                        <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[1].itemId) }}>Add to Cart</button>
+                                                        <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[1].itemId) }}>Add to Wishlist</button>
+                                                    </div>
+                                                </div>
+                                            </div>}
+                                        {trendingItems.length > 2 &&
+                                            <div className="col">
+                                                <div className="card">
+                                                    <span className='d-flex position-fixed justify-content-end align-items-end'><p className=' badge text-bg-success'>3</p></span>
+                                                    <img src={trendingItems[2].itemImgUrl} className="card-img-top " alt="Image not found" />
+                                                    <div className="card-body">
+                                                        <h5 className="card-title text-truncate">{trendingItems[2].itemName}</h5>
+                                                        <p className="card-text">₹{trendingItems[2].itemPrice}</p>
+                                                        <Link to={'/view/' + trendingItems[2].itemId + "/" + trendingItems[2].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[2].itemId) }}>View More...</Link>
+                                                        <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[2].itemId) }}>Add to Cart</button>
+                                                        <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[2].itemId) }}>Add to Wishlist</button>
+                                                    </div>
+                                                </div>
+                                            </div>}
                                     </div>
-                                </div>
-                                <div className="col">
-                                    <div className="card">
-                                        <span className='d-flex position-fixed  justify-content-end align-items-end'><p className=' badge text-bg-success'>2</p></span>
-                                        <img src={trendingItems[1].itemImgUrl} className="card-img-top " alt="Image not found" />
-                                        <div className="card-body">
-                                            <h5 className="card-title text-truncate">{trendingItems[1].itemName}</h5>
-                                            <p className="card-text">₹{trendingItems[1].itemPrice}</p>
-                                            <Link to={'/view/' + trendingItems[1].itemId + "/" + trendingItems[1].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[1].itemId) }}>View More...</Link>
-                                            <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[1].itemId) }}>Add to Cart</button>
-                                            <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[1].itemId) }}>Add to Wishlist</button>
-                                        </div>
+                                </div>}
+                            {trendingItems.length > 3 &&
+                                <div className="carousel-item" data-bs-interval="4000">
+                                    <div className="row row-cols-1 row-cols-md-3 g-4" >
+                                        {trendingItems.length > 3 &&
+                                            <div className="col">
+                                                <div className="card">
+                                                    <span className='d-flex position-fixed  justify-content-end align-items-end'><p className=' badge text-bg-success'>4</p></span>
+                                                    <img src={trendingItems[3].itemImgUrl} className="card-img-top " alt="Image not found" />
+                                                    <div className="card-body">
+                                                        <h5 className="card-title text-truncate">{trendingItems[3].itemName}</h5>
+                                                        <p className="card-text">₹{trendingItems[3].itemPrice}</p>
+                                                        <Link to={'/view/' + trendingItems[3].itemId + "/" + trendingItems[3].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[3].itemId) }}>View More...</Link>
+                                                        <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[3].itemId) }}>Add to Cart</button>
+                                                        <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[3].itemId) }}>Add to Wishlist</button>
+                                                    </div>
+                                                </div>
+                                            </div>}
+                                        {trendingItems.length > 4 &&
+                                            <div className="col">
+                                                <div className="card">
+                                                    <span className='d-flex position-fixed  justify-content-end align-items-end'><p className=' badge text-bg-success'>5</p></span>
+                                                    <img src={trendingItems[4].itemImgUrl} className="card-img-top " alt="Image not found" />
+                                                    <div className="card-body">
+                                                        <h5 className="card-title text-truncate">{trendingItems[4].itemName}</h5>
+                                                        <p className="card-text">₹{trendingItems[4].itemPrice}</p>
+                                                        <Link to={'/view/' + trendingItems[4].itemId + "/" + trendingItems[4].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[4].itemId) }}>View More...</Link>
+                                                        <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[4].itemId) }}>Add to Cart</button>
+                                                        <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[4].itemId) }}>Add to Wishlist</button>
+                                                    </div>
+                                                </div>
+                                            </div>}
+                                        {trendingItems.length > 5 &&
+                                            <div className="col">
+                                                <div className="card">
+                                                    <span className='d-flex position-fixed  justify-content-end align-items-end'><p className=' badge text-bg-success'>6</p></span>
+                                                    <img src={trendingItems[5].itemImgUrl} className="card-img-top " alt="Image not found" />
+                                                    <div className="card-body">
+                                                        <h5 className="card-title text-truncate">{trendingItems[5].itemName}</h5>
+                                                        <p className="card-text">₹{trendingItems[5].itemPrice}</p>
+                                                        <Link to={'/view/' + trendingItems[5].itemId + "/" + trendingItems[5].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[5].itemId) }}>View More...</Link>
+                                                        <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[5].itemId) }}>Add to Cart</button>
+                                                        <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[5].itemId) }}>Add to Wishlist</button>
+                                                    </div>
+                                                </div>
+                                            </div>}
                                     </div>
-                                </div>
-                                <div className="col">
-                                    <div className="card">
-                                        <span className='d-flex position-fixed justify-content-end align-items-end'><p className=' badge text-bg-success'>3</p></span>
-                                        <img src={trendingItems[2].itemImgUrl} className="card-img-top " alt="Image not found" />
-                                        <div className="card-body">
-                                            <h5 className="card-title text-truncate">{trendingItems[2].itemName}</h5>
-                                            <p className="card-text">₹{trendingItems[2].itemPrice}</p>
-                                            <Link to={'/view/' + trendingItems[2].itemId + "/" + trendingItems[2].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[2].itemId) }}>View More...</Link>
-                                            <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[2].itemId) }}>Add to Cart</button>
-                                            <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[2].itemId) }}>Add to Wishlist</button>
-                                        </div>
+                                </div>}
+                            {trendingItems.length > 5 &&
+                                <div className="carousel-item" data-bs-interval="4000">
+                                    <div className="row row-cols-1 row-cols-md-3 g-4" >
+                                        {trendingItems.length > 6 &&
+                                            <div className="col">
+                                                <div className="card">
+                                                    <span className='d-flex position-fixed  justify-content-end align-items-end'><p className=' badge text-bg-success'>7</p></span>
+                                                    <img src={trendingItems[6].itemImgUrl} className="card-img-top " alt="Image not found" />
+                                                    <div className="card-body">
+                                                        <h5 className="card-title text-truncate">{trendingItems[6].itemName}</h5>
+                                                        <p className="card-text">₹{trendingItems[6].itemPrice}</p>
+                                                        <Link to={'/view/' + trendingItems[6].itemId + "/" + trendingItems[6].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[6].itemId) }}>View More...</Link>
+                                                        <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[6].itemId) }}>Add to Cart</button>
+                                                        <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[6].itemId) }}>Add to Wishlist</button>
+                                                    </div>
+                                                </div>
+                                            </div>}
+                                        {trendingItems.length > 7 &&
+                                            <div className="col">
+                                                <div className="card">
+                                                    <span className='d-flex  position-fixed  justify-content-end align-items-end'><p className=' badge text-bg-success'>8</p></span>
+                                                    <img src={trendingItems[7].itemImgUrl} className="card-img-top " alt="Image not found" />
+                                                    <div className="card-body">
+                                                        <h5 className="card-title text-truncate">{trendingItems[7].itemName}</h5>
+                                                        <p className="card-text">₹{trendingItems[7].itemPrice}</p>
+                                                        <Link to={'/view/' + trendingItems[7].itemId + "/" + trendingItems[7].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[7].itemId) }}>View More...</Link>
+                                                        <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[7].itemId) }}>Add to Cart</button>
+                                                        <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[7].itemId) }}>Add to Wishlist</button>
+                                                    </div>
+                                                </div>
+                                            </div>}
+                                        {trendingItems.length > 8 &&
+                                            <div className="col">
+                                                <div className="card">
+                                                    <span className='d-flex  position-fixed justify-content-end align-items-end'><p className=' badge text-bg-success'>9</p></span>
+                                                    <img src={trendingItems[8].itemImgUrl} className="card-img-top " alt="Image not found" />
+                                                    <div className="card-body">
+                                                        <h5 className="card-title text-truncate">{trendingItems[8].itemName}</h5>
+                                                        <p className="card-text">₹{trendingItems[8].itemPrice}</p>
+                                                        <Link to={'/view/' + trendingItems[8].itemId + "/" + trendingItems[8].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[8].itemId) }}>View More...</Link>
+                                                        <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[8].itemId) }}>Add to Cart</button>
+                                                        <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[8].itemId) }}>Add to Wishlist</button>
+                                                    </div>
+                                                </div>
+                                            </div>}
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="carousel-item" data-bs-interval="4000">
-                            <div className="row row-cols-1 row-cols-md-3 g-4" >
-                                <div className="col">
-                                    <div className="card">
-                                        <span className='d-flex position-fixed  justify-content-end align-items-end'><p className=' badge text-bg-success'>4</p></span>
-                                        <img src={trendingItems[3].itemImgUrl} className="card-img-top " alt="Image not found" />
-                                        <div className="card-body">
-                                            <h5 className="card-title text-truncate">{trendingItems[3].itemName}</h5>
-                                            <p className="card-text">₹{trendingItems[3].itemPrice}</p>
-                                            <Link to={'/view/' + trendingItems[3].itemId + "/" + trendingItems[3].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[3].itemId) }}>View More...</Link>
-                                            <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[3].itemId) }}>Add to Cart</button>
-                                            <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[3].itemId) }}>Add to Wishlist</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col">
-                                    <div className="card">
-                                        <span className='d-flex position-fixed  justify-content-end align-items-end'><p className=' badge text-bg-success'>5</p></span>
-                                        <img src={trendingItems[4].itemImgUrl} className="card-img-top " alt="Image not found" />
-                                        <div className="card-body">
-                                            <h5 className="card-title text-truncate">{trendingItems[4].itemName}</h5>
-                                            <p className="card-text">₹{trendingItems[4].itemPrice}</p>
-                                            <Link to={'/view/' + trendingItems[4].itemId + "/" + trendingItems[4].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[4].itemId) }}>View More...</Link>
-                                            <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[4].itemId) }}>Add to Cart</button>
-                                            <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[4].itemId) }}>Add to Wishlist</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col">
-                                    <div className="card">
-                                        <span className='d-flex position-fixed  justify-content-end align-items-end'><p className=' badge text-bg-success'>6</p></span>
-                                        <img src={trendingItems[5].itemImgUrl} className="card-img-top " alt="Image not found" />
-                                        <div className="card-body">
-                                            <h5 className="card-title text-truncate">{trendingItems[5].itemName}</h5>
-                                            <p className="card-text">₹{trendingItems[5].itemPrice}</p>
-                                            <Link to={'/view/' + trendingItems[5].itemId + "/" + trendingItems[5].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[5].itemId) }}>View More...</Link>
-                                            <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[5].itemId) }}>Add to Cart</button>
-                                            <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[5].itemId) }}>Add to Wishlist</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="carousel-item" data-bs-interval="4000">
-                            <div className="row row-cols-1 row-cols-md-3 g-4" >
-                                <div className="col">
-                                    <div className="card">
-                                        <span className='d-flex position-fixed  justify-content-end align-items-end'><p className=' badge text-bg-success'>7</p></span>
-                                        <img src={trendingItems[6].itemImgUrl} className="card-img-top " alt="Image not found" />
-                                        <div className="card-body">
-                                            <h5 className="card-title text-truncate">{trendingItems[6].itemName}</h5>
-                                            <p className="card-text">₹{trendingItems[6].itemPrice}</p>
-                                            <Link to={'/view/' + trendingItems[6].itemId + "/" + trendingItems[6].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[6].itemId) }}>View More...</Link>
-                                            <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[6].itemId) }}>Add to Cart</button>
-                                            <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[6].itemId) }}>Add to Wishlist</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col">
-                                    <div className="card">
-                                        <span className='d-flex  position-fixed  justify-content-end align-items-end'><p className=' badge text-bg-success'>8</p></span>
-                                        <img src={trendingItems[7].itemImgUrl} className="card-img-top " alt="Image not found" />
-                                        <div className="card-body">
-                                            <h5 className="card-title text-truncate">{trendingItems[7].itemName}</h5>
-                                            <p className="card-text">₹{trendingItems[7].itemPrice}</p>
-                                            <Link to={'/view/' + trendingItems[7].itemId + "/" + trendingItems[7].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[7].itemId) }}>View More...</Link>
-                                            <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[7].itemId) }}>Add to Cart</button>
-                                            <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[7].itemId) }}>Add to Wishlist</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col">
-                                    <div className="card">
-                                        <span className='d-flex  position-fixed justify-content-end align-items-end'><p className=' badge text-bg-success'>9</p></span>
-                                        <img src={trendingItems[8].itemImgUrl} className="card-img-top " alt="Image not found" />
-                                        <div className="card-body">
-                                            <h5 className="card-title text-truncate">{trendingItems[8].itemName}</h5>
-                                            <p className="card-text">₹{trendingItems[8].itemPrice}</p>
-                                            <Link to={'/view/' + trendingItems[8].itemId + "/" + trendingItems[8].itemName} className='btn btn-info' onClick={() => { addIntoInterest(trendingItems[8].itemId) }}>View More...</Link>
-                                            <button className='btn btn-outline-info m-3 ' onClick={() => { cartAdd(trendingItems[8].itemId) }}>Add to Cart</button>
-                                            <button className='btn btn-outline-info' onClick={() => { favAdd(trendingItems[8].itemId) }}>Add to Wishlist</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                </div>}
+                        </div>}
                     <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
                         <span className="carousel-control-prev-icon" aria-hidden="true"></span>
                         <span className="visually-hidden">Previous</span>

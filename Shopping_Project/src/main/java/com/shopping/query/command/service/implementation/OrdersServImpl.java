@@ -96,7 +96,7 @@ public class OrdersServImpl implements OrderService {
 			if (detailsEntity.getOrderUUIDId().toString().startsWith("1")) {
 				saveOrderDetails(ordersEntity);
 			}
-			ItemsDto item = mapper.itemDtoMapperById(detailsEntity.getItemId());
+			ItemsDto item = mapper.getItemDtoById(detailsEntity.getItemId());
 			detailsEntity.setTotalOrderAmount(String.valueOf(Math.multiplyExact(
 					Long.parseLong(item.getItemPrice().replace(",", "").replace("₹", "").replace(".00", "")),
 					detailsEntity.getOrderQuantity())));
@@ -148,19 +148,19 @@ public class OrdersServImpl implements OrderService {
 					detailsEntity.setOrderStatus(STATUS_SUCCESS);
 					break;
 				case STATUS_DISPATCH:
-					if (detailsEntity.getOrderStatus() != STATUS_DISPATCH) {
+					if (!Objects.equals(detailsEntity.getOrderStatus(), STATUS_DISPATCH)) {
 						sendMailOfOrderStatus(detailsEntity, STATUS_DISPATCH);
 					}
 					detailsEntity.setOrderStatus(STATUS_DISPATCH);
 					break;
 				case STATUS_NEARBYHUB:
-					if (detailsEntity.getOrderStatus() != STATUS_NEARBYHUB) {
+					if (!Objects.equals(detailsEntity.getOrderStatus(), STATUS_NEARBYHUB)) {
 						sendMailOfOrderStatus(detailsEntity, STATUS_NEARBYHUB);
 					}
 					detailsEntity.setOrderStatus(STATUS_NEARBYHUB);
 					break;
 				case STATUS_CANCELLED:
-					if (detailsEntity.getOrderStatus() != STATUS_CANCELLED) {
+					if (!Objects.equals(detailsEntity.getOrderStatus(), STATUS_CANCELLED)) {
 						sendMailOfOrderStatus(detailsEntity, STATUS_CANCELLED);
 					}
 					detailsEntity.setOrderStatus(STATUS_CANCELLED);
@@ -185,7 +185,7 @@ public class OrdersServImpl implements OrderService {
 
 	@Async
 	private void sendMailOfOrderStatus(OrdersEntity order, String status) throws ItemNotFoundException {
-		ItemsDto item = mapper.itemDtoMapperById(order.getItemId());
+		ItemsDto item = mapper.getItemDtoById(order.getItemId());
 		emailService.sendSimplemail(EmailDto.builder().subject("Update for order of " + item.getItemName())
 				.msgBody("Hi " + order.getFirstName() + ",\n" + "\t Your order of " + item.getItemName()
 						+ " has updated with status of " + status.toUpperCase() + " and its order id is "

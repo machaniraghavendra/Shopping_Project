@@ -35,7 +35,7 @@ public class CartServiceImpl implements CartService {
 	@Override
 	public String save(CartEntity cartEntity) throws ItemAlreadyInCartException, ItemNotFoundException {
 
-		String itemName = mapper.itemDtoMapperById(cartEntity.getItemId()).getItemName();
+		String itemName = mapper.getItemDtoById(cartEntity.getItemId()).getItemName();
 		try {
 			List<CartEntity> listEntity = viewall().stream().filter(a -> a.getUserId().equals(cartEntity.getUserId()))
 					.filter(a -> Objects.equals(a.getItemId(), cartEntity.getItemId())).collect(Collectors.toList());
@@ -53,7 +53,7 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	public String update(CartEntity cartEntity) throws ItemNotFoundInCartException, ItemNotFoundException {
-		String itemName = mapper.itemDtoMapperById(cartEntity.getItemId()).getItemName();
+		String itemName = mapper.getItemDtoById(cartEntity.getItemId()).getItemName();
 		try {
 			if (!cartRepo.existsById(cartEntity.getCartId()))
 				throw new ItemNotFoundInCartException("The item " + itemName + " not exists in your cart");
@@ -93,7 +93,7 @@ public class CartServiceImpl implements CartService {
 			else {
 				CartEntity cartEntity = cartRepo.findById(cartId).get();
 				return CartDto.builder().user(mapper.userDetailDtoMapper(cartEntity.getUserId()))
-						.item(mapper.itemDtoMapperById(cartEntity.getItemId())).build();
+						.item(mapper.getItemDtoById(cartEntity.getItemId())).build();
 			}
 		} catch (ItemNotFoundInCartException e) {
 			e.printStackTrace();
@@ -114,7 +114,7 @@ public class CartServiceImpl implements CartService {
 		if (Objects.nonNull(itemEntities)) {
 			for (int i = 0; i < itemEntities.size(); i++) {
 				UUID userId = mapper.userDetailDtoMapper(itemEntities.get(i).getUserId()).getUserId();
-				ItemsDto itemsDto = mapper.itemDtoMapperById(itemEntities.get(i).getItemId());
+				ItemsDto itemsDto = mapper.getItemDtoById(itemEntities.get(i).getItemId());
 				if (checkandgetlistWithUserId(userId).isEmpty()) {
 					item.put(userId, Arrays.asList(itemsDto));
 				} else {
@@ -142,7 +142,7 @@ public class CartServiceImpl implements CartService {
 		List<CartEntity> entities = viewall();
 		return entities.stream().filter(a -> a.getUserId().equals(userId)).map(a -> {
 			try {
-				return mapper.itemDtoMapperById(a.getItemId());
+				return mapper.getItemDtoById(a.getItemId());
 			} catch (ItemNotFoundException e) {
 				e.printStackTrace();
 			}

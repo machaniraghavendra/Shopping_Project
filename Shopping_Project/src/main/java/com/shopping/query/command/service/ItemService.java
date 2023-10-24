@@ -11,11 +11,11 @@ import com.shopping.query.command.exceptions.ItemAlreadyException;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 
 public interface ItemService {
-	String save(ItemEntity itemEntity) throws ItemAlreadyException;
+	String addItem(ItemEntity itemEntity) throws ItemAlreadyException;
 
 	String saveAll(List<ItemEntity> itemEntity) throws ItemAlreadyException;
 
-	String update(ItemEntity itemEntity) throws ItemNotFoundException;
+	String updateItem(ItemEntity itemEntity) throws ItemNotFoundException;
 
 	String delete(int itemId) throws ItemNotFoundException;
 
@@ -26,6 +26,8 @@ public interface ItemService {
 	boolean existsItemWithId(int itemId) throws ItemNotFoundException;
 
 	List<ItemEntity> viewall();
+
+	List<ItemsDto> getItemsWithPagination(final Integer page, final Integer size);
 
 	List<ItemsDto> getItemsByType(String itemType);
 
