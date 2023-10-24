@@ -41,7 +41,7 @@ public class MappersClass {
 		return userEntity;
 	}
 
-	public ItemsDto itemDtoMapperById(int itemId) throws ItemNotFoundException {
+	public ItemsDto getItemDtoById(int itemId) throws ItemNotFoundException {
 		ItemEntity itemEntity = (ItemEntity) itemServiceImpl.find(itemId).get(0);
 		if (Objects.isNull(itemEntity))
 			return new ItemsDto();
@@ -52,7 +52,14 @@ public class MappersClass {
 				.ratingOfItem(itemEntity.getRatingOfItem()).build();
 	}
 
-	public ItemsDto itemDtoMapperByEntity(ItemEntity itemEntity) throws ItemNotFoundException {
+	public ItemEntity getItemEntityById(int itemId) throws ItemNotFoundException {
+		ItemEntity itemEntity = (ItemEntity) itemServiceImpl.find(itemId).get(0);
+		if (Objects.isNull(itemEntity))
+			return new ItemEntity();
+		return itemEntity;
+	}
+
+	public ItemsDto convertItemEntityToDto(ItemEntity itemEntity) throws ItemNotFoundException {
 		if (Objects.isNull(itemEntity))
 			return new ItemsDto();
 		return ItemsDto.builder().itemName(itemEntity.getItemName()).ItemDesc(itemEntity.getItemDesc())
@@ -62,13 +69,14 @@ public class MappersClass {
 				.ratingOfItem(itemEntity.getRatingOfItem()).build();
 	}
 
+
 	public OrdersDto deliveryDetailsMapper(OrdersEntity ordersEntity) throws ItemNotFoundException {
 		if (Objects.isNull(ordersEntity)) {
 			return new OrdersDto();
 		}
 		return OrdersDto.builder().deliveryAddress(ordersEntity.getDeliveryAddress())
 				.deliveryDate(ordersEntity.getDeliveryDate()).emailAddress(ordersEntity.getEmailAddress())
-				.firstName(ordersEntity.getFirstName()).item(itemDtoMapperById(ordersEntity.getItemId()))
+				.firstName(ordersEntity.getFirstName()).item(getItemDtoById(ordersEntity.getItemId()))
 				.lastName(ordersEntity.getLastName()).orderedAt(ordersEntity.getOrderedAt())
 				.orderedOn(ordersEntity.getOrderedOn()).orderQuantity(ordersEntity.getOrderQuantity())
 				.orderStatus(ordersEntity.getOrderStatus()).paymentType(ordersEntity.getPaymentType())

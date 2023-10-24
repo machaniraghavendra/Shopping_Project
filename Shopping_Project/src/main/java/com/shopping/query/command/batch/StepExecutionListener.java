@@ -37,7 +37,7 @@ public class StepExecutionListener implements org.springframework.batch.core.Ste
             setEndDate(stepExecution.getEndTime());
             setBatchName(stepExecution.getStepName());
             batchUpdateOfOrderService.save(updateOfOrder(getBatchName(),getCount(), getStartDate(), getEndDate()));
-            log.info("Saved batch update order data in table {}",stepExecution.getWriteCount());
+            log.info("Saved batch updateItem order data in table {}",stepExecution.getWriteCount());
             return ExitStatus.COMPLETED;
     }
 

@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -59,8 +60,8 @@ public class EmailServiceImpl implements EmailService {
 			mimeMessageHelper.setText(email.getMsgBody());
 			mimeMessageHelper.setSubject(email.getSubject());
 
-			FileSystemResource file = new FileSystemResource(downloadPdf(url, itemName));
-			mimeMessageHelper.addAttachment(file.getFilename(), file);
+			FileSystemResource file = new FileSystemResource(Objects.requireNonNull(downloadPdf(url, itemName)));
+			mimeMessageHelper.addAttachment(Objects.requireNonNull(file.getFilename()), file);
 			javaMailSender.send(mimeMessage);
 			return "Mail sent Successfully";
 		} catch (IOException e) {

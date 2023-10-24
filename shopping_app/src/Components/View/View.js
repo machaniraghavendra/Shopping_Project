@@ -307,8 +307,8 @@ export default function View(props) {
                                     <div className='mx-3'>
                                         <p>Price : <b> ₹{item.itemPrice}</b></p>
                                         {item.itemSpec != "" && <p>Specifications : <ShowFullComments comment={item.itemSpec} /></p>}
-                                        {item.itemDimensions != "null" || item.itemDimensions != "" &&
-                                            <p>Dimensions : {item.itemDimensions}</p>}
+                                        {item.itemDimensions != null && item.itemDimensions != "" &&<>
+                                            Dimensions : <ShowFullComments comment={item.itemDimensions}/></>}
                                         <p>Type : {item.itemType}</p>
                                         <p>Description : <ShowFullComments comment={item.itemDesc} /></p>
                                     </div>

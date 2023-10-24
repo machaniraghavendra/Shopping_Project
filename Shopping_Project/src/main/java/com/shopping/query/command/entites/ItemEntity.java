@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,6 +26,16 @@ import lombok.ToString;
 public class ItemEntity {
 
 	static final String tableName = "ITEMS";
+
+	@PrePersist
+	public void prePersist(){
+		if (itemAddedOn==null){
+			itemAddedOn = LocalDateTime.now();
+		}
+		if (itemUpdatedOn==null){
+			itemUpdatedOn = LocalDateTime.now();
+		}
+	}
 
 	@Id
 	private int ItemId;

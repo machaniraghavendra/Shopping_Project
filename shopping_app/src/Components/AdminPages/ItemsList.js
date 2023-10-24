@@ -689,7 +689,7 @@ export default function ItemsList(props) {
                                         <div className='row'>
                                             <div className="col-md g-4">
                                                 <div className="form-floating">
-                                                    <textarea className="form-control" name="itemDesc"
+                                                    <textarea className="form-control" name="itemDesc" maxLength={250}
                                                         placeholder="description here" type={"text"} id="floatingInput"
                                                         value={itemDetails.itemDesc}
                                                         onChange={setToItemDetails}
@@ -702,7 +702,7 @@ export default function ItemsList(props) {
 
                                             <div className="col-md g-4">
                                                 <div className="form-floating">
-                                                    <textarea className="form-control" name="itemSpec"
+                                                    <textarea className="form-control" name="itemSpec" maxLength={250}
                                                         placeholder="Specifications here" type={"text"} id="floatingInput"
                                                         value={itemDetails.itemSpec} onChange={setToItemDetails}
                                                     ></textarea>
@@ -753,7 +753,7 @@ export default function ItemsList(props) {
                                             </div>
                                             <div className="col-md g-4">
                                                 <div className="form-floating">
-                                                    <textarea className="form-control" name="itemDimensions"
+                                                    <textarea className="form-control" name="itemDimensions" maxLength={250}
                                                         placeholder="Dimensions here" id="floatingInput" value={itemDetails.itemDimensions} onChange={setToItemDetails}></textarea>
                                                     <label htmlFor="floatingTextarea">Dimensions </label>
                                                     <span className="text-info text-muted fs-6">{250 - itemDetails.itemDimensions.length < 0 ? "" : <span> Characters can fill : {250 - itemDetails.itemDimensions.length}</span>}</span><br></br>

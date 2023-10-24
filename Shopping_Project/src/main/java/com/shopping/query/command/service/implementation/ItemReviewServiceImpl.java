@@ -68,7 +68,7 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 				image -> images.add(ReviewImages.builder().imageUrl(image).itemId(itemReview.getItemId()).build()));
 		itemReview.setCommentAddedOn(orderService.getDate(LocalDateTime.now()));
 		itemReview.setCommentAddedAt(orderService.getTime(LocalDateTime.now()));
-		if (Objects.nonNull(mappersClass.itemDtoMapperById(itemReview.getItemId()))
+		if (Objects.nonNull(mappersClass.getItemDtoById(itemReview.getItemId()))
 				&& Objects.nonNull(mappersClass.userDetailDtoMapper(itemReview.getUserId()).getUserId())) {
 			if (Objects.nonNull(itemReview.getReviewId()) && !reviewRepo.existsById(itemReview.getReviewId())) {
 				return saveReview(itemReview, images);
@@ -122,7 +122,7 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 //			return returnList;
 //		} else {
 //			if (Objects.nonNull(itemReview.getReviewId()) && repo.existsById(itemReview.getReviewId())) {
-//				repo.save(itemReview);
+//				repo.addItem(itemReview);
 //				return returnList;
 //			}
 //			returnList.add("Updated comment to the item");
@@ -238,7 +238,7 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 	@Override
 	public List<ReviewImageDto> getAllImagesWithItemAndReviewId(UUID reviewId, int itemId) throws ItemNotFoundException,
 			ItemReviewNotExistsException, UserNotFoundException, RatingsOfUserNotFoundException {
-		if (Objects.nonNull(reviewId) && itemId > 0 && Objects.nonNull(mappersClass.itemDtoMapperById(itemId))
+		if (Objects.nonNull(reviewId) && itemId > 0 && Objects.nonNull(mappersClass.getItemDtoById(itemId))
 				&& Objects.nonNull(mapItemReviewEntityWithDto(reviewId))) {
 			List<ReviewImages> reviewImages = getAllImages().stream()
 					.filter(image -> image.getItemId() == itemId && image.getReviewId().equals(reviewId)).toList();
@@ -293,7 +293,7 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 
 	@Override
 	public List<String> getAllimages(int itemId) throws ItemNotFoundException {
-		if (imagesRepo.findAll().isEmpty() && mappersClass.itemDtoMapperById(itemId).getItemName().isEmpty())
+		if (imagesRepo.findAll().isEmpty() && mappersClass.getItemDtoById(itemId).getItemName().isEmpty())
 			return Collections.emptyList();
 		return getAllImages().stream().filter(image -> Objects.equals(image.getItemId(), itemId))
 				.map(ReviewImages::getImageUrl).toList();

@@ -43,7 +43,7 @@ public class ItemsController {
 		itemEntity.setItemId(itemService.viewall().stream()
 				.sorted(Comparator.comparing(ItemEntity::getItemId, Comparator.reverseOrder())).toList().get(0)
 				.getItemId() + 1);
-		return new ResponseEntity<>(itemService.save(itemEntity), HttpStatus.OK);
+		return new ResponseEntity<>(itemService.addItem(itemEntity), HttpStatus.OK);
 	}
 
 	@PostMapping("/all")
@@ -59,7 +59,7 @@ public class ItemsController {
 
 	@PutMapping("/")
 	public ResponseEntity<String> update(@RequestBody ItemEntity itemEntity) throws ItemNotFoundException {
-		return new ResponseEntity<>(itemService.update(itemEntity), HttpStatus.OK);
+		return new ResponseEntity<>(itemService.updateItem(itemEntity), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
@@ -80,6 +80,11 @@ public class ItemsController {
 	@GetMapping("/")
 	public ResponseEntity<List<ItemEntity>> viewall() {
 		return new ResponseEntity<>(itemService.viewall(), HttpStatus.OK);
+	}
+
+	@GetMapping("/pagination")
+	public ResponseEntity<List<ItemsDto>> getItemsWithPagination(@RequestParam("page") Integer page, @RequestParam("size") Integer size) {
+		return new ResponseEntity<>(itemService.getItemsWithPagination(page, size), HttpStatus.OK);
 	}
 
 	@GetMapping("/type")

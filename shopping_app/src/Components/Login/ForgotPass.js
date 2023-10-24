@@ -27,7 +27,7 @@ export default function ForgotPass(props) {
     const check = () => {
         if (isSubmit == true) {
             if (formErrors.userEmail == "" && formErrors.userPassword == "") {
-                if (valueCon == values.userPassword) {
+                if (valueCon == values.userPassword&&values.userEmail.length>1) {
                     axios.get("http://localhost:8083/user/" + values.userEmail).then(res => {
                         return (
                             axios.put("http://localhost:8083/user/", {
@@ -79,14 +79,16 @@ export default function ForgotPass(props) {
     const set = (e) => {
         const { name, value } = e.target
         setValues({ ...values, [name]: value })
-        axios.get("http://localhost:8083/user/" + values.userEmail).then(res => { return (setuserInfo(res.data)) }).catch((error) => {
-            setError(true);
-            if (error.response.data === undefined) {
-                setErrorMessage("Something went wrong")
-            } else {
-                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-            }
-        })
+        if (values.userEmail) {
+            axios.get("http://localhost:8083/user/" + values.userEmail).then(res => { return (setuserInfo(res.data)) }).catch((error) => {
+                setError(true);
+                if (error.response.data === undefined) {
+                    setErrorMessage("Something went wrong")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
+            })
+        }
         document.getElementById("loginbtn").classList.remove("d-none");
     }
 
@@ -176,6 +178,7 @@ export default function ForgotPass(props) {
                                             <label htmlFor="floatingPassword">Conform New Password</label>
                                         </div>
                                         <div className='text-center d-flex' style={{ justifyContent: "space-around" }}>
+                                            <button type='reset' className='btn btn-outline-close' onClick={()=>window.history.back()}>Go back</button> 
                                             <span id='loginbtn' className='d-none'><Link to='/login' className='btn btn-outline-info' >Login</Link></span>
                                             <button type='submit' className='btn btn-outline-success' onClick={check}>Change</button>
                                         </div>
