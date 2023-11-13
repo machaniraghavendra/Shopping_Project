@@ -7,6 +7,9 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.shopping.query.command.exceptions.OrderNotFoundException;
+import com.shopping.query.command.service.GptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -48,32 +51,37 @@ public class BotServiceImpl implements BotService {
 	@Autowired
 	private OrdersServImpl ordersServImpl;
 
+	@Autowired
+	private GptService gptService;
+
 	private static List<BotEntity> responses = new ArrayList<>();
 
 	@SuppressWarnings("deprecation")
 	@Override
 	public void queryReponse(BotEntity incomeBot) throws UserNotFoundException, ItemNotFoundException {
 		incomeBot.setUserMessage(incomeBot.getUserMessage().trim());
-		if (!StringUtils.isEmpty(incomeBot.getUserMessage())) {
-			if (HI.contains(incomeBot.getUserMessage().toLowerCase())
-					|| HELLO.contains(incomeBot.getUserMessage().toLowerCase())) {
-				botListAdder(botBulider(incomeBot, HI_RESPONSE));
-			} else if (CART_PAGE.contains(incomeBot.getUserMessage().toLowerCase())) {
-				botListAdder(botBulider(incomeBot, CART_PAGE_RESPONSE));
-			} else if (WISHLIST_PAGE.contains(incomeBot.getUserMessage().toLowerCase())) {
-				botListAdder(botBulider(incomeBot, WISHLIST_PAGE_RESPONSE));
-			} else if (HOW_ARE_YOU.contains(incomeBot.getUserMessage().toLowerCase())) {
-				botListAdder(botBulider(incomeBot, HOW_ARE_YOU_RESPONSE));
-			} else if (ORDER_PAGE.contains(incomeBot.getUserMessage().toLowerCase())) {
-				botListAdder(botBulider(incomeBot, ORDER_PAGE_RESPONSE));
-			} else if (SETTING_PAGE.contains(incomeBot.getUserMessage().toLowerCase())) {
-				botListAdder(botBulider(incomeBot, SETTING_PAGE_RESPONSE));
-			} else if (incomeBot.getUserMessage().length() > 20) {
-				botListAdder(
-						botBulider(incomeBot, getOrderDetailsWithUUID(UUID.fromString(incomeBot.getUserMessage()))));
-			} else {
-				botListAdder(botBulider(incomeBot, ERROR_MSGE));
+		try{
+			if (!StringUtils.isEmpty(incomeBot.getUserMessage())) {
+				if (HI.contains(incomeBot.getUserMessage().toLowerCase())
+						|| HELLO.contains(incomeBot.getUserMessage().toLowerCase())) {
+					botListAdder(botBulider(incomeBot, HI_RESPONSE));
+				} else if (CART_PAGE.contains(incomeBot.getUserMessage().toLowerCase())) {
+					botListAdder(botBulider(incomeBot, CART_PAGE_RESPONSE));
+				} else if (WISHLIST_PAGE.contains(incomeBot.getUserMessage().toLowerCase())) {
+					botListAdder(botBulider(incomeBot, WISHLIST_PAGE_RESPONSE));
+				} else if (HOW_ARE_YOU.contains(incomeBot.getUserMessage().toLowerCase())) {
+					botListAdder(botBulider(incomeBot, HOW_ARE_YOU_RESPONSE));
+				} else if (ORDER_PAGE.contains(incomeBot.getUserMessage().toLowerCase())) {
+					botListAdder(botBulider(incomeBot, ORDER_PAGE_RESPONSE));
+				} else if (SETTING_PAGE.contains(incomeBot.getUserMessage().toLowerCase())) {
+					botListAdder(botBulider(incomeBot, SETTING_PAGE_RESPONSE));
+				} else if (incomeBot.getUserMessage().length() > 20) {
+					botListAdder(
+							botBulider(incomeBot, getOrderDetailsWithUUID(incomeBot.getUserDetails().getUserId(), UUID.fromString(incomeBot.getUserMessage()))));
+				}
 			}
+		} catch(Exception e){
+			botListAdder(botBulider(incomeBot, gptService.getResponse(incomeBot.getUserMessage())));
 		}
 	}
 
@@ -111,10 +119,13 @@ public class BotServiceImpl implements BotService {
 	}
 
 	@Override
-	public String getOrderDetailsWithUUID(UUID id) throws ItemNotFoundException {
+	public String getOrderDetailsWithUUID(UUID userId, UUID id) throws ItemNotFoundException, OrderNotFoundException {
 		String message = "";
 		OrdersEntity detailsOfUser = orderRepo.findAll().stream().filter(a -> a.getOrderUUIDId().equals(id))
 				.findFirst().orElse(null);
+		if (Objects.nonNull(detailsOfUser) && !detailsOfUser.getUserId().equals(userId)){
+			return "There is no order with this id "+id;
+		}
 		OrdersEntity ordersEntity = new OrdersEntity();
 		if (!Objects.isNull(detailsOfUser)) {
 			ordersEntity = ordersServImpl.findByDeliveryDetailId(detailsOfUser.getOrderId());
@@ -125,11 +136,11 @@ public class BotServiceImpl implements BotService {
 					+ " of type " + entity.getItemType() + " its status is now "
 					+ ordersEntity.getOrderStatus() + " "
 					+ (!ordersEntity.getOrderStatus().equalsIgnoreCase("cancelled")&&!ordersEntity.getOrderStatus().equalsIgnoreCase("delivered")
-							? "and to be delivered by " + ordersEntity.getDeliveryDate()
-							: "")
+					? "and to be delivered by " + ordersEntity.getDeliveryDate()
+					: "")
 					+ entity.getItemImgUrl();
 		} else {
-			message = "There is no order with this id " + id;
+			throw new OrderNotFoundException("There is no order with this id "+id);
 		}
 		return message;
 	}

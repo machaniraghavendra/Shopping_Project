@@ -6,17 +6,14 @@ import java.util.UUID;
 
 import com.shopping.query.command.entites.OrdersEntity;
 import com.shopping.query.command.entites.dto.OrdersDto;
-import com.shopping.query.command.exceptions.ItemNotFoundException;
-import com.shopping.query.command.exceptions.OrderNotFoundException;
-import com.shopping.query.command.exceptions.OrderWithSameItemExistsException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.*;
 
 public interface OrderService {
 
 	boolean saveOrderByCheckingAddress(OrdersEntity ordersEntity) throws UserNotFoundException;
 
 	String saveOrderDetails(OrdersEntity ordersEntity)
-			throws OrderNotFoundException, ItemNotFoundException, OrderWithSameItemExistsException;
+            throws OrderNotFoundException, ItemNotFoundException, OrderWithSameItemExistsException, MailingException;
 
 	OrdersEntity findByDeliveryDetailId(Integer id);
 

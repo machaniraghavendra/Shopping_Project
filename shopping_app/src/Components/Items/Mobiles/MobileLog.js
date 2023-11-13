@@ -81,7 +81,7 @@ export default function MobileLog(props) {
                         <h1>No Items Found !</h1>
                     </div>
                     :
-                    <div className='container-fluid justify-content-center text-center' id='back-card-bg-mob' >
+                    <div className='container-fluid justify-content-center text-center' >
                         <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gap-4 justify-content-center text-center ">
                             {mobiles.map(e => {
                                 if (e.itemType.toLowerCase().includes("Mobile".toLowerCase())) {

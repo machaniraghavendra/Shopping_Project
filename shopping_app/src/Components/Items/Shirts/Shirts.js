@@ -69,8 +69,8 @@ export default function Shirts() {
                     </div>
                     :
                     <>
-                        <div className='container-fluid justify-content-center text-center' id='back-card-bg-menshirts'>
-                            <h2 id='Shirts-men' className='m-3'>Shirts For Men</h2>
+                        <div className='container-fluid justify-content-center text-center'>
+                            <h2 id='Shirts-men' className='m-3 bg-info'>Shirts For Men</h2>
                             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gap-4 justify-content-center text-center">
                                 {shirt.map(e => {
                                     if (e.itemType.toLowerCase().includes("Dresses for men".toLowerCase())) {
@@ -142,8 +142,8 @@ export default function Shirts() {
                             &nbsp;
                         </div>
                         <br ></br>
-                        <div className='container-fluid justify-content-center text-center' id='back-card-bg-womenshirts'>
-                            <h2 id='Shirts-women' className='m-3'>Shirts For Women</h2>
+                        <div className='container-fluid justify-content-center text-center' >
+                            <h2 id='Shirts-women' className='m-3 bg-info'>Shirts For Women</h2>
                             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 gap-4 justify-content-center text-center">
                                 {shirt.map(e => {
                                     if (e.itemType.toLowerCase().includes("Dresses for Women".toLowerCase())) {
