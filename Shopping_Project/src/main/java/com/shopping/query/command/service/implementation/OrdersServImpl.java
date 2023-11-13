@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import com.shopping.query.command.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -26,11 +27,6 @@ import com.shopping.query.command.entites.dto.AddressDto;
 import com.shopping.query.command.entites.dto.EmailDto;
 import com.shopping.query.command.entites.dto.ItemsDto;
 import com.shopping.query.command.entites.dto.OrdersDto;
-import com.shopping.query.command.exceptions.GlobalExceptionHandler;
-import com.shopping.query.command.exceptions.ItemNotFoundException;
-import com.shopping.query.command.exceptions.OrderNotFoundException;
-import com.shopping.query.command.exceptions.OrderWithSameItemExistsException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
 import com.shopping.query.command.mapper.MappersClass;
 import com.shopping.query.command.repos.OrderRepo;
 import com.shopping.query.command.service.AddressService;
@@ -79,7 +75,7 @@ public class OrdersServImpl implements OrderService {
 
 	@Override
 	public String saveOrderDetails(OrdersEntity ordersEntity)
-			throws OrderNotFoundException, ItemNotFoundException, OrderWithSameItemExistsException {
+			throws OrderNotFoundException, ItemNotFoundException, OrderWithSameItemExistsException, MailingException {
 		boolean exists = getAllOrders().stream().filter(a -> a.getOrderId().equals(ordersEntity.getOrderId()))
 				.findFirst().isPresent();
 		if (!exists) {
@@ -177,21 +173,35 @@ public class OrdersServImpl implements OrderService {
 			} else {
 				throw new OrderNotFoundException("There is no order with id " + orderUUID);
 			}
-		} catch (OrderNotFoundException e) {
-			value.add(globalExceptionHandler.orderNotFoundException(e));
+		} catch (OrderNotFoundException | MailingException e) {
+			if(e instanceof OrderNotFoundException)
+				value.add(globalExceptionHandler.orderNotFoundException((OrderNotFoundException) e));
 		}
 		return value;
 	}
 
 	@Async
-	private void sendMailOfOrderStatus(OrdersEntity order, String status) throws ItemNotFoundException {
+	private void sendMailOfOrderStatus(OrdersEntity order, String status) throws ItemNotFoundException, MailingException {
 		ItemsDto item = mapper.getItemDtoById(order.getItemId());
-		emailService.sendSimplemail(EmailDto.builder().subject("Update for order of " + item.getItemName())
-				.msgBody("Hi " + order.getFirstName() + ",\n" + "\t Your order of " + item.getItemName()
-						+ " has updated with status of " + status.toUpperCase() + " and its order id is "
-						+ order.getOrderUUIDId() + ", the payment type is " + order.getPaymentType()
-						+ " and its total amount of order is ₹" + order.getTotalOrderAmount()+".00")
-				.recipient(order.getEmailAddress()).build());
+		DateTimeFormatter fromFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+		DateTimeFormatter toFormat = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+		try {
+			emailService.sendSimplemail(EmailDto.builder().subject("Update for order of " + item.getItemName())
+					.msgBody("Hi " + order.getFirstName() + ",\n" + "\t Your order of " + item.getItemName()
+							+ " has updated with status of " + status.toUpperCase() + " and its order id is "
+							+ order.getOrderUUIDId() + ", the payment type is " + order.getPaymentType()
+							+ " and its total amount of order is ₹" + order.getTotalOrderAmount()+".00"
+							.concat(
+									(!status.equalsIgnoreCase(STATUS_CANCELLED)
+											?", the order may be delivered by " +LocalDate.parse(order.getDeliveryDate(), fromFormat).format(toFormat)
+											:"")
+							)
+					)
+					.recipient(order.getEmailAddress()).build());
+		}catch (Exception e){
+			throw new MailingException(e.getMessage());
+		}
+
 	}
 
 	@Override
@@ -224,7 +234,7 @@ public class OrdersServImpl implements OrderService {
 	public List<OrdersDto> getOrdersofUser(UUID userId) {
 		List<OrdersEntity> ordersEntities = getAllOrders().stream().filter(a -> a.getUserId().equals(userId))
 				.sorted(Comparator.comparing(OrdersEntity::getOrderedAt, Comparator.reverseOrder()))
-				.sorted(Comparator.comparing(OrdersEntity::getOrderedOn, Comparator.reverseOrder())).toList();
+				.sorted(Comparator.comparing(OrdersEntity::getDeliveryDate)).toList();
 		List<OrdersDto> list = new ArrayList<>();
 
 		if (!ordersEntities.isEmpty()) {

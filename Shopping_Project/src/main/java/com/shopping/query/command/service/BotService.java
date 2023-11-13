@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.shopping.query.command.entites.BotEntity;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
+import com.shopping.query.command.exceptions.OrderNotFoundException;
 import com.shopping.query.command.exceptions.UserNotFoundException;
 
 public interface BotService {
@@ -15,5 +16,5 @@ public interface BotService {
 	
 	List<BotEntity> viewAllResponse() ;
 	
-	String getOrderDetailsWithUUID(UUID id) throws ItemNotFoundException;
+	String getOrderDetailsWithUUID(UUID userId, UUID id) throws ItemNotFoundException, OrderNotFoundException;
 }

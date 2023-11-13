@@ -1,0 +1,72 @@
+server:
+  port: 8083
+
+spring:
+  liquibase:
+    enabled: true
+    change-log: db/changelog-master.xml
+
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+    date-format: "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  datasource:
+    url: jdbc:h2:file:/data/shopping
+    driverClassName: org.h2.Driver
+    username: shopping
+    password: raghu
+
+  batch:
+    job:
+      enabled:
+
+  datasource.batch:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:file:/data/shopping
+    username: shopping
+    password: raghu
+
+  h2:
+    console:
+      enabled: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: raghu1000.rm@gmail.com
+    password: ekpkfbybmfnfmhoq
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  main:
+    allow-circular-references: false
+
+  task:
+    scheduling:
+      pool:
+        size: 5
+
+springdoc:
+  swagger-ui:
+    path: /shopping-swagger
+  api-docs:
+    path: /shopping-api
+
+interval: PT01H
+batchprocesssize: 20
+
+chat-gpt:
+  api:
+    key: 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
+    model: gpt-3.5-turbo
+    url: https://api.openai.com/v1/chat/completions

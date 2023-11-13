@@ -3,6 +3,7 @@ package com.shopping.query.command.controller;
 import java.util.List;
 import java.util.UUID;
 
+import com.shopping.query.command.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,10 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.query.command.entites.OrdersEntity;
 import com.shopping.query.command.entites.dto.OrdersDto;
-import com.shopping.query.command.exceptions.ItemNotFoundException;
-import com.shopping.query.command.exceptions.OrderNotFoundException;
-import com.shopping.query.command.exceptions.OrderWithSameItemExistsException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
 import com.shopping.query.command.service.OrderService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,7 +32,7 @@ public class OrdersController {
 
 	@PostMapping("/")
 	public ResponseEntity<String> saveOrder(@RequestBody OrdersEntity ordersEntity)
-			throws OrderNotFoundException, ItemNotFoundException, OrderWithSameItemExistsException {
+			throws OrderNotFoundException, ItemNotFoundException, OrderWithSameItemExistsException, MailingException {
 		return ResponseEntity.ok(ordersServImpl.saveOrderDetails(ordersEntity));
 	}
 
