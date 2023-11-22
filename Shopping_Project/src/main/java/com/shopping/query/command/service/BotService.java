@@ -6,11 +6,11 @@ import java.util.UUID;
 import com.shopping.query.command.entites.BotEntity;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.OrderNotFoundException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 
 public interface BotService {
 	
-	void queryReponse(BotEntity incomeBot) throws UserNotFoundException, ItemNotFoundException;
+	void queryReponse(BotEntity incomeBot) throws UserException, ItemNotFoundException;
 	
 	void listClear(UUID userEmail) ;
 	

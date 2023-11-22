@@ -13,11 +13,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
 @Slf4j
-public class GptServiceImpl implements GptService {
+public class GptServiceImpl extends SecurityServiceImpl implements GptService {
 
     @Autowired
     private Constants constants;
@@ -26,17 +27,17 @@ public class GptServiceImpl implements GptService {
     public String getResponse(String query) {
         try {
             Message message = Message.builder().role("user").content(query).build();
-            RequestBody requestBody = RequestBody.builder().model(constants.GPT_MODEL)
+            RequestBody requestBody = RequestBody.builder().model(decrypt(constants.GPT_MODEL))
                     .messages(List.of(message)).build();
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization", "Bearer " + constants.GPT_KEY);
+            headers.add("Authorization", "Bearer " + decrypt(constants.GPT_KEY));
             headers.add("Content-Type", "application/json");
             RestTemplate restTemplate = new RestTemplate();
             log.info("Calling to Chat gpt");
-            var response = restTemplate.postForEntity(constants.GPT_URL, new HttpEntity<>(requestBody, headers), ResponseBody.class);
+            var response = restTemplate.postForEntity(decrypt(constants.GPT_URL), new HttpEntity<>(requestBody, headers), ResponseBody.class);
             log.info("Got response ");
             if (response.hasBody()) {
-                return response.getBody().getChoices().get(0).getMessage().getContent();
+                return Objects.requireNonNull(response.getBody()).getChoices().get(0).getMessage().getContent();
             }
         }catch (Exception e ) {
             log.error(e.getMessage());

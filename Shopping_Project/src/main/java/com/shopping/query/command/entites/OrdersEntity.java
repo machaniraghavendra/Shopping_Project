@@ -2,11 +2,7 @@ package com.shopping.query.command.entites;
 
 import java.util.UUID;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -45,6 +41,7 @@ public class OrdersEntity {
 	private Integer orderQuantity;
 	private String deliveryDate;
 	private String orderStatus;
+	@Column(columnDefinition = "binary(16)")
 	private UUID orderUUIDId;
 	private String totalOrderAmount;
 }

@@ -21,7 +21,7 @@ import com.shopping.query.command.entites.dto.ReviewsCombinedDto;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.ItemReviewNotExistsException;
 import com.shopping.query.command.exceptions.RatingsOfUserNotFoundException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 import com.shopping.query.command.service.ItemReviewService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,7 +36,7 @@ public class ItemReviewController {
 
 	@PostMapping("/")
 	public ResponseEntity<String> addComment(@RequestBody ReviewsCombinedDto combinedDto)
-			throws ItemNotFoundException, UserNotFoundException {
+			throws ItemNotFoundException, UserException {
 		return ResponseEntity.ok(reviewService.addComment(combinedDto));
 	}
 
@@ -67,7 +67,7 @@ public class ItemReviewController {
 
 	@GetMapping("/dto")
 	public ResponseEntity<ItemReviewDto> getReviewDto(@RequestParam UUID reviewId) throws ItemReviewNotExistsException,
-			UserNotFoundException, ItemNotFoundException, RatingsOfUserNotFoundException {
+            UserException, ItemNotFoundException, RatingsOfUserNotFoundException {
 		return ResponseEntity.ok(reviewService.getReviewDto(reviewId));
 	}
 

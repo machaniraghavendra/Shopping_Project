@@ -63,10 +63,12 @@ springdoc:
     path: /shopping-api
 
 interval: PT01H
+batchJobTime: 1
+
 batchprocesssize: 20
 
 chat-gpt:
   api:
-    key: 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
-    model: gpt-3.5-turbo
-    url: https://api.openai.com/v1/chat/completions
+    key: aNKW57tCye2DAVvEEL1udNs8BOZ1HWLoGnmT6xVOZsKmNKycOZHq1g0++CvMDuIuCSZ4M7DuCkQjttMiqfzpxQ==
+    model: GC0jfasJ0og2qIzkPVMTCw==
+    url: KGRHjP8RPGcHt22xRTjWlkwYpBL1hwbhjfYLdu1pbitQFOcJLQp156bCyMQ+W0oQ

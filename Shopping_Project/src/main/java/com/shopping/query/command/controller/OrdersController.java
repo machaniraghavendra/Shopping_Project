@@ -38,7 +38,7 @@ public class OrdersController {
 
 	@PostMapping("/check/")
 	public ResponseEntity<Boolean> saveOrderByCheckingAddress(@RequestBody OrdersEntity ordersEntity)
-			throws UserNotFoundException {
+			throws UserException {
 		return ResponseEntity.ok(ordersServImpl.saveOrderByCheckingAddress(ordersEntity));
 	}
 
@@ -76,7 +76,7 @@ public class OrdersController {
 	}
 
 	@GetMapping("/getAllMailsOfUser")
-	public ResponseEntity<List<String>> getAllEmailsOfUser(@RequestParam("id") UUID id) throws UserNotFoundException {
+	public ResponseEntity<List<String>> getAllEmailsOfUser(@RequestParam("id") UUID id) throws UserException {
 		return ResponseEntity.ok(ordersServImpl.getAllEmailsOfUser(id));
 	}
 

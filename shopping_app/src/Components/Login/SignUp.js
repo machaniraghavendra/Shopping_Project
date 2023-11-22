@@ -20,6 +20,13 @@ export default function SignUp() {
 
     const [errorMessage, setErrorMessage] = useState("");
 
+    const [otpSent, setOtpSent] = useState(false);
+
+    const [userEnteredOtp, setUserEnteredOtp] = useState("");
+
+    const [otpVerified, setOtpVerified] = useState(false);
+
+
     const nav = useNavigate();
 
     const set = (e) => {
@@ -50,6 +57,7 @@ export default function SignUp() {
             nav("/login")
         }, 6500);
     }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         setFormErrors(validate(user));
@@ -100,6 +108,68 @@ export default function SignUp() {
         }
         return errors;
     }
+
+    const sendOtp = () => {
+        if (user.userEmail && user.userName) {
+            axios.post("http://localhost:8083/user/sendotp/" + user.userEmail + "/" + user.userName).then(a => {
+                if (a.status == 200 && a.data == "OTP sent to " + user.userEmail) {
+                    setOtpSent(true)
+                }
+                if (a.data == "Old OTP expired and again new OTP sent to " + user.userEmail) {
+                    setError(true);
+                    setErrorMessage(a.data)
+                    setOtpSent(true)
+                }
+                if (a.data == "OTP sending failed") {
+                    setOtpSent(true)
+                    setError(true);
+                    setErrorMessage("OTP is still valid")
+                }
+                if (a.data.includes("already")) {
+                    setInfo(a.data); setIsSubmit(false); setShowToast(true); timeout();
+                }
+            }).catch((error) => {
+                setError(true);
+                if (error.response.data === undefined) {
+                    setErrorMessage("Something went wrong")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
+            })
+        } else {
+            validate(user)
+        }
+    }
+
+    const verifyOtp = () => {
+        if (userEnteredOtp.length == 6) {
+            axios.post("http://localhost:8083/user/verifyotp/" + user.userEmail + "/" + userEnteredOtp).then(a => {
+                console.log(a);
+                if (a.status == 200 && a.data == "OTP is valid") {
+                    setOtpVerified(true)
+                }
+                if (a.data == "The OTP is expired and try to regenerate") {
+                    setOtpVerified(false)
+                    setError(true);
+                    setErrorMessage(a.data)
+                    setOtpSent(false)
+                }
+                if (a.data == "OTP not matched") {
+                    setOtpVerified(false)
+                    setError(true);
+                    setErrorMessage(a.data)
+                }
+            }).catch((error) => {
+                setError(true);
+                if (error || error.response.data === undefined) {
+                    setErrorMessage("Still the OTP is valid")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
+            })
+        }
+    }
+
     useEffect(() => {
         document.title = "Sign | Shopping Mart"
     })
@@ -138,45 +208,74 @@ export default function SignUp() {
                                                 <span className='text-danger'>{formErrors.userName}</span>
                                             </div>
 
-                                            <div className="form-outline mb-4 form-floating mb-3">
-                                                <input type="email" id="floatingInputGroup1"
-                                                    className="form-control form-control-lg"
-                                                    name='userEmail'
-                                                    onChange={set}
-                                                    onInput={handleSubmit}
-                                                    value={user.userEmail}
-                                                    placeholder="Email address" />
-                                                <label className="form-label" htmlFor="floatingInputGroup1">Email address</label>
-                                                <span className='text-danger'>{formErrors.userEmail}</span>
+                                            <div className="row">
+                                                <div className='col-10'>
+                                                    <div className="form-outline mb-4 form-floating mb-3">
+                                                        <input type="email" id="floatingInputGroup1"
+                                                            className="form-control form-control-lg"
+                                                            name='userEmail'
+                                                            onChange={set}
+                                                            onInput={handleSubmit}
+                                                            value={user.userEmail}
+                                                            placeholder="Email address" />
+                                                        <label className="form-label" htmlFor="floatingInputGroup1">Email address</label>
+                                                        <span className='text-danger'>{formErrors.userEmail}</span>
+                                                    </div>
+                                                </div>
+                                                <div className='col-2 '>
+                                                    {otpVerified && <span style={{ fontSize: "230%" }}><i className="bi bi-patch-check-fill text-success"></i></span>}
+                                                    <span className={otpSent ? 'btn btn-outline-success btn-l py-3 d-none' : 'btn btn-outline-success btn-l py-3'} onClick={() => sendOtp()} >Send OTP</span>
+                                                </div>
                                             </div>
+                                            {otpSent && <>
+                                                {!otpVerified &&
+                                                    <div className="row">
+                                                        <div className='col-10'>
+                                                            <div className='form-outline mb-4 form-floating mb-3 '>
+                                                                <input type="text" id="floatingInputGroup1"
+                                                                    className="form-control form-control-lg "
+                                                                    name='otp'
+                                                                    onChange={a => { setUserEnteredOtp(a.target.value) }}
+                                                                    placeholder="Otp" minLength={6} maxLength={6} />
+                                                                <label className="form-label" htmlFor="floatingInputGroup1">Verify email address otp</label>
+                                                            </div>
+                                                        </div>
+                                                        <div className='col-2 '>
+                                                            <span className={otpVerified ? 'btn btn-outline-success btn-l py-3 d-none' : 'btn btn-outline-success btn-l py-3'} onClick={() => verifyOtp()}>Verify OTP</span>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                {otpVerified && <>
+                                                    <div className="form-outline mb-4 form-floating mb-3">
+                                                        <input type="phonenumber" id="floatingInputGroup2"
+                                                            className="form-control form-control-lg"
+                                                            name='mobileNumber'
+                                                            onChange={set}
+                                                            value={user.mobileNumber}
+                                                            onInput={handleSubmit}
+                                                            maxLength={10}
+                                                            placeholder="Email address" />
+                                                        <label className="form-label" htmlFor="floatingInputGroup2">Mobile number</label>
+                                                        <span className='text-danger'>{formErrors.mobileNumber}</span>
+                                                    </div>
 
-                                            <div className="form-outline mb-4 form-floating mb-3">
-                                                <input type="phonenumber" id="floatingInputGroup2"
-                                                    className="form-control form-control-lg"
-                                                    name='mobileNumber'
-                                                    onChange={set}
-                                                    value={user.mobileNumber}
-                                                    onInput={handleSubmit}
-                                                    maxLength={10}
-                                                    placeholder="Email address" />
-                                                <label className="form-label" htmlFor="floatingInputGroup2">Mobile number</label>
-                                                <span className='text-danger'>{formErrors.mobileNumber}</span>
-                                            </div>
-
-                                            <div className="form-outline mb-4 form-floating">
-                                                <input type="password" id="floatingPassword"
-                                                    className="form-control form-control-lg"
-                                                    name='userPassword'
-                                                    value={user.userPassword}
-                                                    onChange={set}
-                                                    maxLength={10}
-                                                    minLength={4}
-                                                    onInput={handleSubmit}
-                                                    placeholder="Password" />
-                                                <label className="form-label" htmlFor="floatingPassword">Password</label>
-                                                <span className='text-danger'>{formErrors.password}</span>
-                                            </div>
-
+                                                    <div className="form-outline mb-4 form-floating">
+                                                        <input type="password" id="floatingPassword"
+                                                            className="form-control form-control-lg"
+                                                            name='userPassword'
+                                                            value={user.userPassword}
+                                                            onChange={set}
+                                                            maxLength={10}
+                                                            minLength={4}
+                                                            onInput={handleSubmit}
+                                                            placeholder="Password" />
+                                                        <label className="form-label" htmlFor="floatingPassword">Password</label>
+                                                        <span className='text-danger'>{formErrors.password}</span>
+                                                    </div>
+                                                </>
+                                                }
+                                            </>
+                                            }
                                             <div className="pt-1 mb-4 text-center">
                                                 <button className="btn btn-dark btn-lg btn-block "
                                                     onClick={() => {
@@ -184,6 +283,7 @@ export default function SignUp() {
                                                             check()
                                                         )
                                                     }}
+                                                    disabled={!otpVerified}
                                                 >Create account</button>
                                             </div>
 

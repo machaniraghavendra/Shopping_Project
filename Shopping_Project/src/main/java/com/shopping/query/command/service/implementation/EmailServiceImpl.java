@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -33,11 +34,15 @@ public class EmailServiceImpl implements EmailService {
 	@Autowired
 	private GlobalExceptionHandler exceptionHandler;
 
+	@Value("spring.mail.username")
+	private String mail ;
+
+
 	@Override
 	public String sendSimplemail(EmailDto email) {
 		try {
 			SimpleMailMessage mailMessage = new SimpleMailMessage();
-			mailMessage.setFrom("raghu1000.rm@gmail.com");
+			mailMessage.setFrom(mail);
 			mailMessage.setTo(email.getRecipient());
 			mailMessage.setText(email.getMsgBody());
 			mailMessage.setSubject(email.getSubject());
@@ -55,7 +60,7 @@ public class EmailServiceImpl implements EmailService {
 		MimeMessageHelper mimeMessageHelper;
 		try {
 			mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-			mimeMessageHelper.setFrom("raghu1000.rm@gmail.com");
+			mimeMessageHelper.setFrom(mail);
 			mimeMessageHelper.setTo(email.getRecipient());
 			mimeMessageHelper.setText(email.getMsgBody());
 			mimeMessageHelper.setSubject(email.getSubject());

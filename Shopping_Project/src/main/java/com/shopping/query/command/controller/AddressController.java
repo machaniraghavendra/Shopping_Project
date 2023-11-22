@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.query.command.entites.AddressEntity;
 import com.shopping.query.command.entites.dto.AddressDto;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 import com.shopping.query.command.service.AddressService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -55,7 +55,7 @@ public class AddressController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<AddressDto> findAddress(@PathVariable Integer id) throws UserNotFoundException {
+	public ResponseEntity<AddressDto> findAddress(@PathVariable Integer id) throws UserException {
 		return ResponseEntity.ok(service.findAddress(id));
 	}
 

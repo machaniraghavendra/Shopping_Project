@@ -18,7 +18,7 @@ import com.shopping.query.command.entites.dto.ItemsDto;
 import com.shopping.query.command.exceptions.ItemAlreadyInFavException;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.ItemNotFoundInFavException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 import com.shopping.query.command.mapper.MappersClass;
 import com.shopping.query.command.repos.FavRepo;
 import com.shopping.query.command.service.FavService;
@@ -87,7 +87,7 @@ public class FavServiceImpl implements FavService {
 	}
 
 	@Override
-	public FavouriteDto find(int favId) throws ItemNotFoundInFavException, UserNotFoundException, ItemNotFoundException {
+	public FavouriteDto find(int favId) throws ItemNotFoundInFavException, UserException, ItemNotFoundException {
 		try {
 			if (!favRepo.existsById(favId))
 				throw new ItemNotFoundInFavException("The item " + favId + " not exists in your Favourites");
@@ -108,7 +108,7 @@ public class FavServiceImpl implements FavService {
 	}
 
 	@Override
-	public List<Map<UUID, List<ItemsDto>>> viewallMap() throws UserNotFoundException, ItemNotFoundException {
+	public List<Map<UUID, List<ItemsDto>>> viewallMap() throws UserException, ItemNotFoundException {
 		List<Map<UUID, List<ItemsDto>>> list = new ArrayList<>();
 		Map<UUID, List<ItemsDto>> item = new HashMap<>();
 		List<FavouritesEntity> itemEntities = viewall();
@@ -131,11 +131,11 @@ public class FavServiceImpl implements FavService {
 	}
 
 	@Override
-	public void deleteAllCartItemsOfUser(UUID userId) throws UserNotFoundException {
+	public void deleteAllCartItemsOfUser(UUID userId) throws UserException {
 		try {
 			favRepo.deleteAll(viewall().stream().filter(a -> a.getUserId().equals(userId)).toList());
 		} catch (Exception e) {
-			throw new UserNotFoundException(e.getMessage());
+			throw new UserException(e.getMessage());
 		}
 	}
 	
@@ -152,7 +152,7 @@ public class FavServiceImpl implements FavService {
 	}
 
 	public List<List<ItemsDto>> getListofFavItemswithUserId(UUID userId)
-			throws UserNotFoundException, ItemNotFoundException {
+			throws UserException, ItemNotFoundException {
 		return viewallMap().stream().map(a -> {
 			if (a.containsKey(userId)) {
 				return a.get(userId);

@@ -17,7 +17,7 @@ import com.shopping.query.command.entites.dto.AddressDto;
 import com.shopping.query.command.exceptions.AddressAlreadyExistsException;
 import com.shopping.query.command.exceptions.AddressNotFoundException;
 import com.shopping.query.command.exceptions.GlobalExceptionHandler;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 import com.shopping.query.command.mapper.MappersClass;
 import com.shopping.query.command.repos.AddressRepo;
 import com.shopping.query.command.service.AddressService;
@@ -129,7 +129,7 @@ public class AddressServiceImpl implements AddressService {
 	}
 
 	@Override
-	public AddressDto findAddress(Integer id) throws UserNotFoundException {
+	public AddressDto findAddress(Integer id) throws UserException {
 		List<Object> entity = findAddressEntity(id);
 		if (entity.stream().anyMatch(a -> a instanceof AddressEntity))
 			return mapper.addressDtoMapper((AddressEntity) entity);
@@ -150,7 +150,7 @@ public class AddressServiceImpl implements AddressService {
 		list.forEach(a -> {
 			try {
 				returnList.add(mapper.addressDtoMapper(a));
-			} catch (UserNotFoundException e) {
+			} catch (UserException e) {
 				e.printStackTrace();
 			}
 		});
@@ -173,11 +173,11 @@ public class AddressServiceImpl implements AddressService {
 	}
 
 	@Override
-	public void deleteAlladdressOfUser(UUID userId) throws UserNotFoundException {
+	public void deleteAlladdressOfUser(UUID userId) throws UserException {
 		try {
 			repo.deleteAll(viewAllAddress().stream().filter(a -> a.getUserId().equals(userId)).toList());
 		} catch (Exception e) {
-			throw new UserNotFoundException(e.getMessage());
+			throw new UserException(e.getMessage());
 		}
 	}
 }

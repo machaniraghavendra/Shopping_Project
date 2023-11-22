@@ -17,7 +17,7 @@ import com.shopping.query.command.exceptions.GlobalExceptionHandler;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.RatingsOfUserAlreadyExistsException;
 import com.shopping.query.command.exceptions.RatingsOfUserNotFoundException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 import com.shopping.query.command.mapper.MappersClass;
 import com.shopping.query.command.repos.RatingsOfUserRepo;
 import com.shopping.query.command.service.ItemService;
@@ -45,7 +45,7 @@ public class RatingsServiceImpl implements RatingsService {
 
 	@Override
 	public Object saveRating(RatingsOfUser ratings) throws RatingsOfUserAlreadyExistsException,
-			RatingsOfUserNotFoundException, UserNotFoundException, ItemNotFoundException {
+			RatingsOfUserNotFoundException, UserException, ItemNotFoundException {
 		returnList = new ArrayList<>();
 		if (Objects.nonNull(ratings.getUserId())) {
 			RatingsOfUser ratingsOfUser = getRatingOfUserWithuserIdAndItemId(ratings.getUserId(), ratings.getItemId());
@@ -65,9 +65,9 @@ public class RatingsServiceImpl implements RatingsService {
 					if (e instanceof RatingsOfUserNotFoundException) {
 						returnList.add(exceptionHandler
 								.ratingsOfUserNotFoundException(new RatingsOfUserNotFoundException(e.getMessage())));
-					} else if (e instanceof UserNotFoundException) {
+					} else if (e instanceof UserException) {
 						returnList
-								.add(exceptionHandler.usernotfoundexception(new UserNotFoundException(e.getMessage())));
+								.add(exceptionHandler.usernotfoundexception(new UserException(e.getMessage())));
 					} else if (e instanceof ItemNotFoundException) {
 						returnList
 								.add(exceptionHandler.itemNotFoundException(new ItemNotFoundException(e.getMessage())));
@@ -109,8 +109,8 @@ public class RatingsServiceImpl implements RatingsService {
 				if (e instanceof RatingsOfUserNotFoundException) {
 					returnList.add(exceptionHandler
 							.ratingsOfUserNotFoundException(new RatingsOfUserNotFoundException(e.getMessage())));
-				} else if (e instanceof UserNotFoundException) {
-					returnList.add(exceptionHandler.usernotfoundexception(new UserNotFoundException(e.getMessage())));
+				} else if (e instanceof UserException) {
+					returnList.add(exceptionHandler.usernotfoundexception(new UserException(e.getMessage())));
 				} else if (e instanceof ItemNotFoundException) {
 					returnList.add(exceptionHandler.itemNotFoundException(new ItemNotFoundException(e.getMessage())));
 				} else {
@@ -152,7 +152,7 @@ public class RatingsServiceImpl implements RatingsService {
 
 	@Override
 	public String delete(UUID userId, int itemId)
-			throws RatingsOfUserNotFoundException, UserNotFoundException, ItemNotFoundException {
+			throws RatingsOfUserNotFoundException, UserException, ItemNotFoundException {
 		if (Objects.nonNull(userId) && itemId > 0) {
 			try {
 				UserDetailDto userDto = userService.getUserWithId(userId);
@@ -165,8 +165,8 @@ public class RatingsServiceImpl implements RatingsService {
 			} catch (Exception e) {
 				if (e instanceof RatingsOfUserNotFoundException) {
 					exceptionHandler.ratingsOfUserNotFoundException(new RatingsOfUserNotFoundException(e.getMessage()));
-				} else if (e instanceof UserNotFoundException) {
-					exceptionHandler.usernotfoundexception(new UserNotFoundException(e.getMessage()));
+				} else if (e instanceof UserException) {
+					exceptionHandler.usernotfoundexception(new UserException(e.getMessage()));
 				} else if (e instanceof ItemNotFoundException) {
 					exceptionHandler.itemNotFoundException(new ItemNotFoundException(e.getMessage()));
 				} else {
@@ -193,7 +193,7 @@ public class RatingsServiceImpl implements RatingsService {
 
 	@Override
 	public RatingsOfUser getRatingOfUserWithuserIdAndItemId(UUID userId, int itemId)
-			throws RatingsOfUserNotFoundException, UserNotFoundException, ItemNotFoundException {
+			throws RatingsOfUserNotFoundException, UserException, ItemNotFoundException {
 		if (Objects.nonNull(userId) && itemId > 0) {
 			try {
 				UserDetailDto userDto = userService.getUserWithId(userId);
@@ -206,8 +206,8 @@ public class RatingsServiceImpl implements RatingsService {
 			} catch (Exception e) {
 				if (e instanceof RatingsOfUserNotFoundException) {
 					exceptionHandler.ratingsOfUserNotFoundException(new RatingsOfUserNotFoundException(e.getMessage()));
-				} else if (e instanceof UserNotFoundException) {
-					exceptionHandler.usernotfoundexception(new UserNotFoundException(e.getMessage()));
+				} else if (e instanceof UserException) {
+					exceptionHandler.usernotfoundexception(new UserException(e.getMessage()));
 				} else if (e instanceof ItemNotFoundException) {
 					exceptionHandler.itemNotFoundException(new ItemNotFoundException(e.getMessage()));
 				} else {
@@ -220,7 +220,7 @@ public class RatingsServiceImpl implements RatingsService {
 
 	@Override
 	public RatingDto getRatingWithuserIdAndItemId(UUID userId, int itemId)
-			throws RatingsOfUserNotFoundException, UserNotFoundException, ItemNotFoundException {
+			throws RatingsOfUserNotFoundException, UserException, ItemNotFoundException {
 		returnList = new ArrayList<>();
 		if (Objects.nonNull(userId) && itemId > 0) {
 			try {
@@ -229,8 +229,8 @@ public class RatingsServiceImpl implements RatingsService {
 			} catch (Exception e) {
 				if (e instanceof RatingsOfUserNotFoundException) {
 					exceptionHandler.ratingsOfUserNotFoundException(new RatingsOfUserNotFoundException(e.getMessage()));
-				} else if (e instanceof UserNotFoundException) {
-					exceptionHandler.usernotfoundexception(new UserNotFoundException(e.getMessage()));
+				} else if (e instanceof UserException) {
+					exceptionHandler.usernotfoundexception(new UserException(e.getMessage()));
 				} else if (e instanceof ItemNotFoundException) {
 					exceptionHandler.itemNotFoundException(new ItemNotFoundException(e.getMessage()));
 				} else {
@@ -242,7 +242,7 @@ public class RatingsServiceImpl implements RatingsService {
 	}
 
 	@Override
-	public List<Object> getRatingWithuserId(UUID userId) throws RatingsOfUserNotFoundException, UserNotFoundException {
+	public List<Object> getRatingWithuserId(UUID userId) throws RatingsOfUserNotFoundException, UserException {
 		List<Object> ratingDto = new ArrayList<>();
 		if (Objects.nonNull(userId)) {
 			try {
@@ -257,15 +257,15 @@ public class RatingsServiceImpl implements RatingsService {
 						throw new RatingsOfUserNotFoundException("No ratings found for the user " + userId);
 					}
 				} else {
-					throw new UserNotFoundException("No user with this Id" + userId);
+					throw new UserException("No user with this Id" + userId);
 				}
 			} catch (Exception e) {
 				ratingDto.clear();
 				if (e instanceof RatingsOfUserNotFoundException) {
 					ratingDto.add(exceptionHandler
 							.ratingsOfUserNotFoundException(new RatingsOfUserNotFoundException(e.getMessage())));
-				} else if (e instanceof UserNotFoundException) {
-					ratingDto.add(exceptionHandler.usernotfoundexception(new UserNotFoundException(e.getMessage())));
+				} else if (e instanceof UserException) {
+					ratingDto.add(exceptionHandler.usernotfoundexception(new UserException(e.getMessage())));
 				} else {
 					ratingDto.add(exceptionHandler.globalException(e));
 				}

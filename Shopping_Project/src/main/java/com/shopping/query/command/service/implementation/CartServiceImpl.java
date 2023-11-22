@@ -18,7 +18,7 @@ import com.shopping.query.command.entites.dto.ItemsDto;
 import com.shopping.query.command.exceptions.ItemAlreadyInCartException;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.ItemNotFoundInCartException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 import com.shopping.query.command.mapper.MappersClass;
 import com.shopping.query.command.repos.CartRepo;
 import com.shopping.query.command.service.CartService;
@@ -86,7 +86,7 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public CartDto find(int cartId) throws ItemNotFoundInCartException, UserNotFoundException, ItemNotFoundException {
+	public CartDto find(int cartId) throws ItemNotFoundInCartException, UserException, ItemNotFoundException {
 		try {
 			if (!cartRepo.existsById(cartId))
 				throw new ItemNotFoundInCartException("The item " + cartId + " not exists in your cart");
@@ -107,7 +107,7 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public List<Map<UUID, List<ItemsDto>>> viewallMap() throws UserNotFoundException, ItemNotFoundException {
+	public List<Map<UUID, List<ItemsDto>>> viewallMap() throws UserException, ItemNotFoundException {
 		List<Map<UUID, List<ItemsDto>>> list = new ArrayList<>();
 		Map<UUID, List<ItemsDto>> item = new HashMap<>();
 		List<CartEntity> itemEntities = viewall();
@@ -130,11 +130,11 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public void deleteAllCartItemsOfUser(UUID userId) throws UserNotFoundException {
+	public void deleteAllCartItemsOfUser(UUID userId) throws UserException {
 		try {
 			cartRepo.deleteAll(viewall().stream().filter(a -> a.getUserId().equals(userId)).toList());
 		} catch (Exception e) {
-			throw new UserNotFoundException(e.getMessage());
+			throw new UserException(e.getMessage());
 		}
 	}
 
@@ -152,7 +152,7 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	public List<List<ItemsDto>> getListofCartItemswithUserId(UUID userId)
-			throws UserNotFoundException, ItemNotFoundException {
+			throws UserException, ItemNotFoundException {
 		return viewallMap().stream().map(a -> {
 			if (a.containsKey(userId)) {
 				return a.get(userId);

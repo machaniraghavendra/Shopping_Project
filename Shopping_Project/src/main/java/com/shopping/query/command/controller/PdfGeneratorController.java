@@ -14,7 +14,7 @@ import com.lowagie.text.DocumentException;
 import com.shopping.query.command.entites.OrdersEntity;
 import com.shopping.query.command.entites.dto.OrdersDto;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 import com.shopping.query.command.service.OrderService;
 import com.shopping.query.command.service.PdfGeneratorService;
 
@@ -33,7 +33,7 @@ public class PdfGeneratorController {
 	private PdfGeneratorService pdfGeneratorService;
 
 	@GetMapping("/{orderId}")
-	public void generatePdf(HttpServletResponse response,@PathVariable UUID orderId) throws ItemNotFoundException, DocumentException, IOException, UserNotFoundException {
+	public void generatePdf(HttpServletResponse response,@PathVariable UUID orderId) throws ItemNotFoundException, DocumentException, IOException, UserException {
 		response.setContentType("application/pdf");
 		OrdersEntity order = orderService.getWithUUID(orderId);
 		OrdersDto  ordersDto = orderService.getOrderDtowithOrderUUID(orderId);
