@@ -22,7 +22,7 @@ import com.shopping.query.command.entites.dto.ItemsDto;
 import com.shopping.query.command.exceptions.ItemAlreadyInFavException;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.ItemNotFoundInFavException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 import com.shopping.query.command.service.FavService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -55,19 +55,19 @@ public class FavController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<FavouriteDto> find(@PathVariable("id") int favId)
-			throws ItemNotFoundInFavException, UserNotFoundException, ItemNotFoundException {
+			throws ItemNotFoundInFavException, UserException, ItemNotFoundException {
 		return ResponseEntity.ok(favServiceImpl.find(favId));
 	}
 
 	@GetMapping("/map")
 	public ResponseEntity<List<Map<UUID, List<ItemsDto>>>> viewallMap()
-			throws UserNotFoundException, ItemNotFoundException {
+			throws UserException, ItemNotFoundException {
 		return ResponseEntity.ok(favServiceImpl.viewallMap());
 	}
 
 	@GetMapping("/userId/{userid}")
 	public ResponseEntity<List<List<ItemsDto>>> getListofCartItemswithUserId(@PathVariable("userid") UUID userid)
-			throws UserNotFoundException, ItemNotFoundException {
+			throws UserException, ItemNotFoundException {
 		return ResponseEntity.ok(favServiceImpl.getListofFavItemswithUserId(userid));
 	}
 

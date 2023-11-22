@@ -22,7 +22,7 @@ import com.shopping.query.command.entites.dto.ItemsDto;
 import com.shopping.query.command.exceptions.ItemAlreadyInCartException;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.ItemNotFoundInCartException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 import com.shopping.query.command.service.CartService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -55,19 +55,19 @@ public class CartController {
 
 	@GetMapping("/{id}")
 	public ResponseEntity<CartDto> find(@PathVariable("id") int cartId)
-			throws ItemNotFoundInCartException, UserNotFoundException, ItemNotFoundException {
+			throws ItemNotFoundInCartException, UserException, ItemNotFoundException {
 		return ResponseEntity.ok(cartServiceImpl.find(cartId));
 	}
 
 	@GetMapping("/map")
 	public ResponseEntity<List<Map<UUID, List<ItemsDto>>>> viewallMap()
-			throws UserNotFoundException, ItemNotFoundException {
+			throws UserException, ItemNotFoundException {
 		return ResponseEntity.ok(cartServiceImpl.viewallMap());
 	}
 
 	@GetMapping("/userId/{userid}")
 	public ResponseEntity<List<List<ItemsDto>>> getListofCartItemswithUserId(@PathVariable("userid") UUID userid)
-			throws UserNotFoundException, ItemNotFoundException {
+			throws UserException, ItemNotFoundException {
 		return ResponseEntity.ok(cartServiceImpl.getListofCartItemswithUserId(userid));
 	}
 

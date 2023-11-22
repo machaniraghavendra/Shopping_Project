@@ -25,7 +25,7 @@ import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.ItemReviewNotExistsException;
 import com.shopping.query.command.exceptions.RatingsOfUserNotFoundException;
 import com.shopping.query.command.exceptions.ReviewImageNotExistsException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 import com.shopping.query.command.mapper.MappersClass;
 import com.shopping.query.command.repos.ItemReviewRepo;
 import com.shopping.query.command.repos.ReviewImagesRepo;
@@ -58,7 +58,7 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 	private final String NOT_SAVED_MSGE = "Not saved";
 
 	@Override
-	public String addComment(ReviewsCombinedDto combinedDto) throws ItemNotFoundException, UserNotFoundException {
+	public String addComment(ReviewsCombinedDto combinedDto) throws ItemNotFoundException, UserException {
 		if (Objects.isNull(combinedDto)) {
 			return NOT_SAVED_MSGE;
 		}
@@ -146,7 +146,7 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 	}
 
 	@Override
-	public ItemReviewDto getReviewDto(UUID reviewId) throws ItemReviewNotExistsException, UserNotFoundException,
+	public ItemReviewDto getReviewDto(UUID reviewId) throws ItemReviewNotExistsException, UserException,
 			ItemNotFoundException, RatingsOfUserNotFoundException {
 		if (Objects.nonNull(reviewId)) {
 			ItemReview itemReview = getReview(reviewId);
@@ -166,7 +166,7 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 			itemReviews.forEach(review -> {
 				try {
 					reviewDtos.add(mapItemReviewEntityWithDto(review));
-				} catch (UserNotFoundException e) {
+				} catch (UserException e) {
 					exceptionHandler.usernotfoundexception(e);
 				} catch (ItemNotFoundException e) {
 					exceptionHandler.itemNotFoundException(e);
@@ -219,7 +219,7 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 			itemReviews.forEach(review -> {
 				try {
 					userCommentsOnItem.add(mapItemReviewEntityWithDto(review));
-				} catch (UserNotFoundException e) {
+				} catch (UserException e) {
 					exceptionHandler.usernotfoundexception(e);
 				} catch (ItemNotFoundException e) {
 					exceptionHandler.itemNotFoundException(e);
@@ -237,7 +237,7 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 
 	@Override
 	public List<ReviewImageDto> getAllImagesWithItemAndReviewId(UUID reviewId, int itemId) throws ItemNotFoundException,
-			ItemReviewNotExistsException, UserNotFoundException, RatingsOfUserNotFoundException {
+			ItemReviewNotExistsException, UserException, RatingsOfUserNotFoundException {
 		if (Objects.nonNull(reviewId) && itemId > 0 && Objects.nonNull(mappersClass.getItemDtoById(itemId))
 				&& Objects.nonNull(mapItemReviewEntityWithDto(reviewId))) {
 			List<ReviewImages> reviewImages = getAllImages().stream()
@@ -299,7 +299,7 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 				.map(ReviewImages::getImageUrl).toList();
 	}
 
-	public ItemReviewDto mapItemReviewEntityWithDto(UUID reviewId) throws UserNotFoundException,
+	public ItemReviewDto mapItemReviewEntityWithDto(UUID reviewId) throws UserException,
 			ItemReviewNotExistsException, RatingsOfUserNotFoundException, ItemNotFoundException {
 		if (Objects.isNull(reviewId)) {
 			return null;
@@ -317,7 +317,7 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 				.build();
 	}
 
-	public ItemReviewDto mapItemReviewEntityWithDto(ItemReview review) throws UserNotFoundException,
+	public ItemReviewDto mapItemReviewEntityWithDto(ItemReview review) throws UserException,
 			ItemNotFoundException, ItemReviewNotExistsException, RatingsOfUserNotFoundException {
 		if (Objects.isNull(review)) {
 			return null;
@@ -352,7 +352,7 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 				.reviewId(reviewImages.getReviewId()).build();
 	}
 
-	public void deleteAllReviewOfUser(UUID userId) throws RatingsOfUserNotFoundException, UserNotFoundException {
+	public void deleteAllReviewOfUser(UUID userId) throws RatingsOfUserNotFoundException, UserException {
 		try {
 			List<ItemReview> itemReviews = getAllReviews().stream().filter(a -> Objects.equals(a.getUserId(), userId))
 					.toList();
@@ -371,7 +371,7 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
 			}
 
 		} catch (Exception e) {
-			throw new UserNotFoundException(e.getMessage());
+			throw new UserException(e.getMessage());
 		}
 	}
 

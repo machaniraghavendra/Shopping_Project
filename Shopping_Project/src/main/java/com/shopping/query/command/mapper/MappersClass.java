@@ -17,7 +17,7 @@ import com.shopping.query.command.entites.dto.RatingDto;
 import com.shopping.query.command.entites.dto.UserDetailDto;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.RatingsOfUserNotFoundException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 import com.shopping.query.command.service.RatingsService;
 import com.shopping.query.command.service.implementation.ItemServiceImpl;
 import com.shopping.query.command.service.implementation.UserServiceImpl;
@@ -34,7 +34,7 @@ public class MappersClass {
 	@Autowired
 	private RatingsService ratingsService;
 
-	public UserDetailDto userDetailDtoMapper(UUID userId) throws UserNotFoundException {
+	public UserDetailDto userDetailDtoMapper(UUID userId) throws UserException {
 		UserDetailDto userEntity = userService.getUserWithId(userId);
 		if (Objects.isNull(userEntity))
 			return new UserDetailDto();
@@ -84,7 +84,7 @@ public class MappersClass {
 				.orderUUIDId(ordersEntity.getOrderUUIDId()).totalOrderAmount(ordersEntity.getTotalOrderAmount()).build();
 	}
 
-	public AddressDto addressDtoMapper(AddressEntity addressEntity) throws UserNotFoundException {
+	public AddressDto addressDtoMapper(AddressEntity addressEntity) throws UserException {
 		return AddressDto.builder().deliveryAddress(addressEntity.getDeliveryAddress())
 				.pincode(addressEntity.getPincode()).userDetails(userDetailDtoMapper(addressEntity.getUserId()))
 				.emailAddress(addressEntity.getEmailAddress()).firstName(addressEntity.getFirstName())
@@ -92,7 +92,7 @@ public class MappersClass {
 				.referenceId(addressEntity.getReferenceId()).build();
 	}
 
-	public AddressDto mapAddressDtoWithOrdersEntity(OrdersEntity ordersEntity) throws UserNotFoundException {
+	public AddressDto mapAddressDtoWithOrdersEntity(OrdersEntity ordersEntity) throws UserException {
 		if (Objects.isNull(ordersEntity)) {
 			return null;
 		}

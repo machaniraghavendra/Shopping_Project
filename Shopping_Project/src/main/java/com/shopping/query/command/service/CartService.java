@@ -10,7 +10,7 @@ import com.shopping.query.command.entites.dto.ItemsDto;
 import com.shopping.query.command.exceptions.ItemAlreadyInCartException;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.ItemNotFoundInCartException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 
 public interface CartService {
 
@@ -20,14 +20,14 @@ public interface CartService {
 
 	String delete(String itemName, UUID userEmail) throws ItemNotFoundInCartException, ItemNotFoundException;
 
-	CartDto find(int cartId) throws ItemNotFoundInCartException, UserNotFoundException, ItemNotFoundException;
+	CartDto find(int cartId) throws ItemNotFoundInCartException, UserException, ItemNotFoundException;
 
 	List<CartEntity> viewall();
 
-	void deleteAllCartItemsOfUser(UUID userId) throws UserNotFoundException;
+	void deleteAllCartItemsOfUser(UUID userId) throws UserException;
 	
-	List<Map<UUID, List<ItemsDto>>> viewallMap() throws UserNotFoundException, ItemNotFoundException;
+	List<Map<UUID, List<ItemsDto>>> viewallMap() throws UserException, ItemNotFoundException;
 
 	List<List<ItemsDto>> getListofCartItemswithUserId(UUID userId)
-			throws UserNotFoundException, ItemNotFoundException;
+			throws UserException, ItemNotFoundException;
 }

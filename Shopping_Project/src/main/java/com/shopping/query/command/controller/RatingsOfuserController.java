@@ -20,7 +20,7 @@ import com.shopping.query.command.entites.dto.RatingDto;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.RatingsOfUserAlreadyExistsException;
 import com.shopping.query.command.exceptions.RatingsOfUserNotFoundException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 import com.shopping.query.command.service.RatingsService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,7 +35,7 @@ public class RatingsOfuserController {
 
 	@PostMapping("/")
 	public ResponseEntity<Object> saveRating(@RequestBody RatingsOfUser ratings)
-			throws RatingsOfUserAlreadyExistsException, RatingsOfUserNotFoundException, UserNotFoundException,
+			throws RatingsOfUserAlreadyExistsException, RatingsOfUserNotFoundException, UserException,
 			ItemNotFoundException {
 		return ResponseEntity.ok(ratingsService.saveRating(ratings));
 	}
@@ -48,7 +48,7 @@ public class RatingsOfuserController {
 
 	@DeleteMapping("/user/{userId}")
 	public ResponseEntity<Object> deleteRating(@PathVariable("userId") UUID userId, @RequestParam int itemId)
-			throws RatingsOfUserNotFoundException, UserNotFoundException, ItemNotFoundException {
+			throws RatingsOfUserNotFoundException, UserException, ItemNotFoundException {
 		return ResponseEntity.ok(ratingsService.delete(userId, itemId));
 	}
 
@@ -71,20 +71,20 @@ public class RatingsOfuserController {
 	@GetMapping("/withuseritem")
 	public ResponseEntity<RatingsOfUser> getRatingOfUserWithuserIdAndItemId(@RequestParam("userId") UUID userId,
 			@RequestParam("itemId") int itemId)
-			throws RatingsOfUserNotFoundException, UserNotFoundException, ItemNotFoundException {
+			throws RatingsOfUserNotFoundException, UserException, ItemNotFoundException {
 		return ResponseEntity.ok(ratingsService.getRatingOfUserWithuserIdAndItemId(userId, itemId));
 	}
 
 	@GetMapping("user/{userId}/{itemId}")
 	public ResponseEntity<RatingDto> getRatingWithuserIdAndItemId(@PathVariable("userId") UUID userId,
 			@PathVariable("itemId") int itemId)
-			throws RatingsOfUserNotFoundException, UserNotFoundException, ItemNotFoundException {
+			throws RatingsOfUserNotFoundException, UserException, ItemNotFoundException {
 		return ResponseEntity.ok(ratingsService.getRatingWithuserIdAndItemId(userId, itemId));
 	}
 	
 	@GetMapping("userId/{userId}")
 	public ResponseEntity<List<Object>> getRatingWithuserId(@PathVariable("userId") UUID userId)
-			throws RatingsOfUserNotFoundException, UserNotFoundException {
+			throws RatingsOfUserNotFoundException, UserException {
 		return ResponseEntity.ok(ratingsService.getRatingWithuserId(userId));
 	}
 }

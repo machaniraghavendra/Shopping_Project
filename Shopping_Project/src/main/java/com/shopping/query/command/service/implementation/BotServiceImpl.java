@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.shopping.query.command.exceptions.OrderNotFoundException;
 import com.shopping.query.command.service.GptService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import com.shopping.query.command.entites.BotEntity;
 import com.shopping.query.command.entites.OrdersEntity;
 import com.shopping.query.command.entites.dto.ItemsDto;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 import com.shopping.query.command.mapper.MappersClass;
 import com.shopping.query.command.repos.OrderRepo;
 import com.shopping.query.command.service.BotService;
@@ -58,7 +57,7 @@ public class BotServiceImpl implements BotService {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void queryReponse(BotEntity incomeBot) throws UserNotFoundException, ItemNotFoundException {
+	public void queryReponse(BotEntity incomeBot) throws UserException, ItemNotFoundException {
 		incomeBot.setUserMessage(incomeBot.getUserMessage().trim());
 		try{
 			if (!StringUtils.isEmpty(incomeBot.getUserMessage())) {
@@ -78,6 +77,8 @@ public class BotServiceImpl implements BotService {
 				} else if (incomeBot.getUserMessage().length() > 20) {
 					botListAdder(
 							botBulider(incomeBot, getOrderDetailsWithUUID(incomeBot.getUserDetails().getUserId(), UUID.fromString(incomeBot.getUserMessage()))));
+				}else{
+					throw new RuntimeException();
 				}
 			}
 		} catch(Exception e){
@@ -86,7 +87,7 @@ public class BotServiceImpl implements BotService {
 	}
 
 	@SuppressWarnings("static-access")
-	private static BotEntity botBulider(BotEntity incomeBot, String message) throws UserNotFoundException {
+	private static BotEntity botBulider(BotEntity incomeBot, String message) throws UserException {
 		try {
 			if (!Objects.isNull(incomeBot.getUserDetails().getUserId())) {
 				return new BotEntity().builder().id(UUID.randomUUID()).userMessage(incomeBot.getUserMessage())
@@ -94,9 +95,9 @@ public class BotServiceImpl implements BotService {
 						.userMessagedAt(orderDetailsServImpl.getTime(LocalDateTime.now()))
 						.userDetails(incomeBot.getUserDetails()).build();
 			} else {
-				throw new UserNotFoundException("There is no user with this email ");
+				throw new UserException("There is no user with this email ");
 			}
-		} catch (UserNotFoundException e) {
+		} catch (UserException e) {
 			e.getStackTrace();
 		}
 		return null;

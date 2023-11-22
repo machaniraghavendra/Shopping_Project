@@ -6,4 +6,7 @@ public interface BatchUpdateOfOrderService {
     BatchUpdateOfOrder save(BatchUpdateOfOrder updateOfOrder);
     BatchUpdateOfOrder update(BatchUpdateOfOrder updateOfOrder);
     int getCount();
+    boolean getLastRunnedTimeinHours();
+
+
 }

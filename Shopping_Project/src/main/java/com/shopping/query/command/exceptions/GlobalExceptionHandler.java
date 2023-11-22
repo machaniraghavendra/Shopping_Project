@@ -91,14 +91,9 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(traceError, e.getStatusCode());
 	}
 
-	@ExceptionHandler(value=UserNotFoundException.class)
-	public ResponseEntity<String> usernotfoundexception(UserNotFoundException e){
+	@ExceptionHandler(value= UserException.class)
+	public ResponseEntity<String> usernotfoundexception(UserException e){
 		return new ResponseEntity<>("User not exists ",HttpStatus.OK);
-	}
-	
-	@ExceptionHandler(value=UserAlreadyExistsException.class)
-	public ResponseEntity<String> useralreadyexception(UserAlreadyExistsException e){
-		return new ResponseEntity<>("User already exists ",HttpStatus.OK);
 	}
 
 	@ExceptionHandler(value = AddressAlreadyExistsException.class)

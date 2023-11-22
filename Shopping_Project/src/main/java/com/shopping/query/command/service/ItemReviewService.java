@@ -9,18 +9,18 @@ import com.shopping.query.command.entites.dto.ReviewsCombinedDto;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.ItemReviewNotExistsException;
 import com.shopping.query.command.exceptions.RatingsOfUserNotFoundException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 
 public interface ItemReviewService {
 
 	String addComment(ReviewsCombinedDto combinedDto)
-			throws ItemNotFoundException, UserNotFoundException;
+			throws ItemNotFoundException, UserException;
 
 	List<Object> updateComment(ItemReview itemReview);
 
 	ItemReview getReview(UUID reviewId) throws ItemReviewNotExistsException;
 
-	ItemReviewDto getReviewDto(UUID reviewId) throws ItemReviewNotExistsException, UserNotFoundException, ItemNotFoundException, RatingsOfUserNotFoundException;
+	ItemReviewDto getReviewDto(UUID reviewId) throws ItemReviewNotExistsException, UserException, ItemNotFoundException, RatingsOfUserNotFoundException;
 
 	List<ItemReviewDto> getReviewsOfItem(int itemId);
 

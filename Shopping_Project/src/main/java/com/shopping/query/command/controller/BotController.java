@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shopping.query.command.entites.BotEntity;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 import com.shopping.query.command.service.BotService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,7 +28,7 @@ public class BotController {
 	private BotService botServiceImpl;
 
 	@PostMapping("/")
-	public void getResponse(@RequestBody BotEntity bot) throws UserNotFoundException, ItemNotFoundException {
+	public void getResponse(@RequestBody BotEntity bot) throws UserException, ItemNotFoundException {
 		String messageArray[]=bot.getUserMessage().split(" ");
 		for (int i = 0; i < messageArray.length; i++) {
 			if (messageArray[i].length()>20) {

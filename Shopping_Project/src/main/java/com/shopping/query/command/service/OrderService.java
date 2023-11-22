@@ -10,7 +10,7 @@ import com.shopping.query.command.exceptions.*;
 
 public interface OrderService {
 
-	boolean saveOrderByCheckingAddress(OrdersEntity ordersEntity) throws UserNotFoundException;
+	boolean saveOrderByCheckingAddress(OrdersEntity ordersEntity) throws UserException;
 
 	String saveOrderDetails(OrdersEntity ordersEntity)
             throws OrderNotFoundException, ItemNotFoundException, OrderWithSameItemExistsException, MailingException;
@@ -31,11 +31,11 @@ public interface OrderService {
 
 	List<OrdersDto> getOrdersofUser(UUID userId);
 
-	void deleteAllOrdersofUser(UUID userId) throws UserNotFoundException;
+	void deleteAllOrdersofUser(UUID userId) throws UserException;
 	
 	void updateOrderStatus(UUID orderid) throws OrderNotFoundException, ItemNotFoundException;
 
-	List<String> getAllEmailsOfUser(UUID userId) throws UserNotFoundException;
+	List<String> getAllEmailsOfUser(UUID userId) throws UserException;
 	
 	String getDate(LocalDateTime date);
 

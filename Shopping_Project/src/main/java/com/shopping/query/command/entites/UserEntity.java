@@ -4,10 +4,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.UUID;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,6 +30,7 @@ public class UserEntity implements Serializable {
 	private String userName;
 	@NonNull
 	private String userPassword;
+//	@Pattern(regexp = "\\d{10}")
 	private String mobileNumber;
 	@Column(length = 23000)
 	private String profileImgUrl;

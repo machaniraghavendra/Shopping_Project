@@ -10,7 +10,7 @@ import com.shopping.query.command.entites.dto.ItemsDto;
 import com.shopping.query.command.exceptions.ItemAlreadyInFavException;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.ItemNotFoundInFavException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 
 public interface FavService {
 
@@ -20,14 +20,14 @@ public interface FavService {
 
 	String delete(String itemName, UUID userId) throws ItemNotFoundInFavException, ItemNotFoundException;
 
-	FavouriteDto find(int favId) throws ItemNotFoundInFavException, UserNotFoundException, ItemNotFoundException;
+	FavouriteDto find(int favId) throws ItemNotFoundInFavException, UserException, ItemNotFoundException;
 
-	void deleteAllCartItemsOfUser(UUID userId) throws UserNotFoundException;
+	void deleteAllCartItemsOfUser(UUID userId) throws UserException;
 
 	List<FavouritesEntity> viewall();
 	
-	List<Map<UUID, List<ItemsDto>>> viewallMap() throws UserNotFoundException, ItemNotFoundException ;
+	List<Map<UUID, List<ItemsDto>>> viewallMap() throws UserException, ItemNotFoundException ;
 
 	List<List<ItemsDto>> getListofFavItemswithUserId(UUID userId)
-			throws UserNotFoundException, ItemNotFoundException ;
+			throws UserException, ItemNotFoundException ;
 }

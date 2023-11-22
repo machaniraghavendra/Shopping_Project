@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import com.shopping.query.command.entites.AddressEntity;
 import com.shopping.query.command.entites.dto.AddressDto;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 
 public interface AddressService {
 
@@ -16,7 +16,7 @@ public interface AddressService {
 
 	List<Object> deleteAddress(Integer id);
 
-	AddressDto findAddress(Integer id) throws UserNotFoundException;
+	AddressDto findAddress(Integer id) throws UserException;
 
 	AddressDto findAddressWithUserId(UUID userId, String address);
 
@@ -32,5 +32,5 @@ public interface AddressService {
 
 	Optional<AddressEntity> findWIthReferenceId(UUID referenceId);
 
-	void deleteAlladdressOfUser(UUID userId) throws UserNotFoundException;
+	void deleteAlladdressOfUser(UUID userId) throws UserException;
 }

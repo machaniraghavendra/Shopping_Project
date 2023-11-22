@@ -23,7 +23,7 @@ import com.shopping.query.command.entites.dto.ItemsDto;
 import com.shopping.query.command.entites.dto.OrdersDto;
 import com.shopping.query.command.entites.dto.UserDetailDto;
 import com.shopping.query.command.exceptions.GlobalExceptionHandler;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 import com.shopping.query.command.mapper.MappersClass;
 import com.shopping.query.command.service.PdfGeneratorService;
 
@@ -40,7 +40,7 @@ public class PdfGeneratorServiceImpl implements PdfGeneratorService {
 
 	@Override
 	public void generatePdf(HttpServletResponse response, OrdersDto ordersDto, OrdersEntity ordersEntity,
-			String totalAmount) throws DocumentException, IOException, UserNotFoundException {
+			String totalAmount) throws DocumentException, IOException, UserException {
 		if (Objects.nonNull(ordersEntity) && Objects.nonNull(ordersDto)) {
 			try {
 				Document document = new Document(PageSize.A4);

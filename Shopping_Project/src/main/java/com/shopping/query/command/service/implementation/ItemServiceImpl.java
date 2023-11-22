@@ -7,7 +7,7 @@ import com.shopping.query.command.entites.dto.SearchDto;
 import com.shopping.query.command.exceptions.GlobalExceptionHandler;
 import com.shopping.query.command.exceptions.ItemAlreadyException;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 import com.shopping.query.command.mapper.MappersClass;
 import com.shopping.query.command.repos.ItemsRepo;
 import com.shopping.query.command.service.ItemService;
@@ -18,7 +18,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -431,10 +430,10 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	private SearchDto getSearch(List<ItemsDto> actualResult, List<ItemsDto> relatedActualResult, UUID userId,
-			String query) throws UserNotFoundException {
+			String query) throws UserException {
 		if (mappersClass.userDetailDtoMapper(userId).getUserEmail().isEmpty()
 				|| Objects.isNull(mappersClass.userDetailDtoMapper(userId).getUserEmail())) {
-			throw new UserNotFoundException("No user presents with this Id " + userId);
+			throw new UserException("No user presents with this Id " + userId);
 		}
 		return SearchDto.builder().count(actualResult.size()).actualResult(actualResult)
 				.relatedResult(relatedActualResult.subList(0,

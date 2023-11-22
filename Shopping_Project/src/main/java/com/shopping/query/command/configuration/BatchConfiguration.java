@@ -6,11 +6,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import com.shopping.query.command.batch.*;
+import com.shopping.query.command.service.BatchUpdateOfOrderService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.job.flow.FlowExecutionStatus;
+import org.springframework.batch.core.job.flow.JobExecutionDecider;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -30,10 +34,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.shopping.query.command.batch.ItemBatchProcessor;
-import com.shopping.query.command.batch.JobCompleteNotificationListener;
-import com.shopping.query.command.batch.StepExecutionListener;
-import com.shopping.query.command.batch.WriterListener;
 import com.shopping.query.command.entites.ItemEntity;
 import com.shopping.query.command.entites.OrdersEntity;
 import com.shopping.query.command.exceptions.GlobalExceptionHandler;
@@ -80,6 +80,9 @@ public class BatchConfiguration {
 	@Autowired
 	private ItemBatchProcessor itemBatchProcesser;
 
+	@Autowired
+	private BatchUpdateOfOrderService batchUpdateOfOrderService;
+
 	@Bean
 	@StepScope
 	public RepositoryItemReader<OrdersEntity> reader() {
@@ -119,7 +122,8 @@ public class BatchConfiguration {
 	public Step step(PlatformTransactionManager platformTransactionManager) {
 		return new StepBuilder("orderupdatejob", jobRepository)
 				.<OrdersEntity, OrdersEntity>chunk(Batch_Process_Size, platformTransactionManager).reader(reader())
-				.writer(writer()).listener(writerListener).listener(stepExecutionListener).build();
+				.writer(writer()).listener(writerListener).listener(stepExecutionListener)
+				.build();
 	}
 
 	@Bean
@@ -153,8 +157,23 @@ public class BatchConfiguration {
 
 	@Bean
 	public Job ordersLoadJob(Step step) throws IOException {
-		return new JobBuilder("orderupdatejob", jobRepository).incrementer(new RunIdIncrementer())
-				.listener(jobCompleteNotificationListener).start(step).next(step1(null)).build();
+		return new JobBuilder("orderupdatejob", jobRepository)
+				.incrementer(new RunIdIncrementer())
+				.listener(jobCompleteNotificationListener)
+				.start(step1(null))
+				.next(ordersBatchDecider())
+				.on("PROCEED")
+				.to(step(null))
+				.end().build();
+	}
+
+	@Bean
+	public JobExecutionDecider ordersBatchDecider() {
+		return (jobExecution, stepExecution) -> {
+//			IF LAST ORDER JOB IS RUNNED LESS THAN 1 THAN IT IS FALSE IF IT IS GREATER THAN 1 IT IS TRUE
+			boolean haveToRun = batchUpdateOfOrderService.getLastRunnedTimeinHours();
+			return haveToRun ? new FlowExecutionStatus("PROCEED") : FlowExecutionStatus.COMPLETED;
+		};
 	}
 
 }

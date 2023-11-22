@@ -8,7 +8,7 @@ import com.shopping.query.command.entites.dto.ReviewImageDto;
 import com.shopping.query.command.exceptions.ItemNotFoundException;
 import com.shopping.query.command.exceptions.ItemReviewNotExistsException;
 import com.shopping.query.command.exceptions.RatingsOfUserNotFoundException;
-import com.shopping.query.command.exceptions.UserNotFoundException;
+import com.shopping.query.command.exceptions.UserException;
 
 public interface ReviewImagesService {
 	
@@ -16,7 +16,7 @@ public interface ReviewImagesService {
 
 	String saveAllImages(List<ReviewImages> reviewImages);
 	
-	List<ReviewImageDto> getAllImagesWithItemAndReviewId(UUID reviewId, int itemId) throws ItemNotFoundException, ItemReviewNotExistsException, UserNotFoundException, RatingsOfUserNotFoundException;
+	List<ReviewImageDto> getAllImagesWithItemAndReviewId(UUID reviewId, int itemId) throws ItemNotFoundException, ItemReviewNotExistsException, UserException, RatingsOfUserNotFoundException;
 	
 	List<ReviewImages> getAllImages();
 		
