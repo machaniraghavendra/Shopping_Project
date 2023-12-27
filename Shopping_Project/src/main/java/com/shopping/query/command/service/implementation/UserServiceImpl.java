@@ -2,15 +2,11 @@ package com.shopping.query.command.service.implementation;
 
 import java.util.*;
 
-import com.shopping.query.command.configuration.Constants;
 import com.shopping.query.command.entites.dto.EmailDto;
 import com.shopping.query.command.service.*;
-import com.twilio.rest.api.v2010.account.Message;
-import com.twilio.type.PhoneNumber;
-import com.twilio.Twilio;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import com.twilio.rest.verify.v2.Service;
 
 import com.shopping.query.command.entites.UserEntity;
 import com.shopping.query.command.entites.dto.UserDetailDto;
@@ -287,12 +283,5 @@ public class UserServiceImpl extends SecurityServiceImpl implements UserService 
         return findall().stream().filter(a -> a.getUserId().equals(userId)).findFirst()
                 .orElseThrow(() -> new UserException("Not present"));
     }
-
-    private boolean checkMobileNumberExists(String mobileNumber) throws UserException {
-        String existingMobileNumber = userRepo.findByMobileNumber(mobileNumber);
-        if (Objects.nonNull(existingMobileNumber)){
-            throw new UserException("User already present");
-        }
-        return false;
-    }
+    
 }
