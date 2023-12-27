@@ -260,11 +260,13 @@ export default function View(props) {
                                 </div>
                                 <div className="col-lg-8 my-3" id='verticalLine'>
                                     <div className='row'>
-                                        <div className='col-5 justify-content-start text-start gap-1 d-flex'>
+                                        <div className='col-3 justify-content-start text-start gap-1 d-flex'>
                                         {item.trending&& <span className='text-warning '><i className="bi bi-stars fa-beat-fade">Trending  </i> | </span>}
                                             <Rating times={item.ratingOfItem} />
                                         </div>
-                                        <div className='col-7 justify-content-end text-end'>
+                                        <div className='col-3'><span className='text-warning '> {item.totalReviews==0?"No Reviews": "Item Reviews : "+item.totalReviews}</span></div>
+                                        <div className='col-3'><span className='text-warning '> {item.totalOrders==0?"No orders on this item": "Total orders : "+item.totalReviews}</span></div>
+                                        <div className='col-3 justify-content-end text-end'>
                                             <button className='btn  m-2' onClick={() => {
                                                 if (localStorage.getItem("currentuser")) {
                                                     axios.post("http://localhost:8083/cart/", {

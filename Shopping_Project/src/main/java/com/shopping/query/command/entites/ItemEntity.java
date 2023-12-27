@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = ItemEntity.tableName)
@@ -50,4 +51,8 @@ public class ItemEntity {
 	private LocalDateTime itemAddedOn;
 	private LocalDateTime itemUpdatedOn;
 	private float ratingOfItem;
+	@ColumnDefault("0")
+	private int totalReviews;
+	@ColumnDefault("0")
+	private int totalOrders;
 }

@@ -80,6 +80,6 @@ public class UserController {
 
     @PostMapping("/verifyotp/{useremail}/{otp}")
     public ResponseEntity<String> verifyOtpOfUser(@PathVariable("useremail") @NotNull String userEmail, @PathVariable("otp") @NotNull String otp) {
-        return ResponseEntity.ok(userServiceImpl.verifyOtpOfUser(userEmail, otp));
+        return ResponseEntity.ok(userServiceImpl.verifyEmailOtpOfUser(userEmail, otp));
     }
 }

@@ -27,20 +27,14 @@ import java.util.Objects;
 public class OrdersUpdateScheduler {
 
     @Autowired
-    private OrderService orderService;
-
-    @Autowired
     private JobLauncher jobLauncher;
 
     @Autowired
     private Job job;
 
-    @Autowired
-    private GlobalExceptionHandler globalExceptionHandler;
-
     @Scheduled(fixedDelayString = "${interval}")
     @Async
-    public void updateOrders() throws InterruptedException, JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+    public void updateOrders() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
         var jobParameters = new JobParametersBuilder()
                 .addString("updateJob", String.valueOf(System.currentTimeMillis()))
                 .addLong("time",System.currentTimeMillis()).toJobParameters();

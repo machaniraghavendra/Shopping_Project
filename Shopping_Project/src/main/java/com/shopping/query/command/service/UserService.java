@@ -9,23 +9,23 @@ import com.shopping.query.command.exceptions.UserException;
 
 public interface UserService {
 
-	String save(UserEntity userEntity) throws UserException;
+     String save(UserEntity userEntity) throws UserException;
 
-	UserDetailDto find(String userEmail) throws UserException;
-	
-	UserDetailDto getUserWithId(UUID userId) throws UserException;
+     UserDetailDto find(String userEmail) throws UserException;
 
-	List<UserEntity> findall();
+     UserDetailDto getUserWithId(UUID userId) throws UserException;
 
-	String delete(UUID userId) throws UserException;
+     List<UserEntity> findall();
 
-	String update(UserEntity userEntity) throws UserException;
+     String delete(UUID userId) throws UserException;
 
-	boolean check(String userEmail, String Password) throws UserException;
-	
-	boolean checkIsAdmin(UUID userId) throws UserException;
+     String update(UserEntity userEntity) throws UserException;
 
-    String sendOtpToUserEmail(String userEmail, String userName);
+     boolean check(String userEmail, String Password) throws UserException;
 
-    String verifyOtpOfUser(String userEmail, String userName);
+     boolean checkIsAdmin(UUID userId) throws UserException;
+
+     String sendOtpToUserEmail(String userEmail, String userName);
+
+     String verifyEmailOtpOfUser(String userEmail, String otp);
 }
