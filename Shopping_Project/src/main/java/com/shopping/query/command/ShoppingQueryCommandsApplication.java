@@ -8,7 +8,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableScheduling
-@EnableAsync(proxyTargetClass = true)
 @Slf4j
 public class ShoppingQueryCommandsApplication {
 

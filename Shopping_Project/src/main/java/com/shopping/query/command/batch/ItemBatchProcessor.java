@@ -7,16 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ItemBatchProcessor implements ItemProcessor<ItemEntity,ItemEntity> {
+public class ItemBatchProcessor implements ItemProcessor<ItemEntity, ItemEntity> {
 
     @Autowired
     private ItemService itemService;
 
     @Override
     public ItemEntity process(ItemEntity item) throws Exception {
-        if (!itemService.existsItemWithId(item.getItemId())){
+        if (!itemService.existsItemWithId(item.getItemId())) {
             return item;
-        }else{
+        } else {
             return null;
         }
     }

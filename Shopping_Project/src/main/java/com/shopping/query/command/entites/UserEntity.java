@@ -31,6 +31,7 @@ public class UserEntity implements Serializable {
 	@NonNull
 	private String userPassword;
 //	@Pattern(regexp = "\\d{10}")
+	@Column(unique = true)
 	private String mobileNumber;
 	@Column(length = 23000)
 	private String profileImgUrl;

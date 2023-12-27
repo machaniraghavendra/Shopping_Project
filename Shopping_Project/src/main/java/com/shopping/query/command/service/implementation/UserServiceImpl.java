@@ -2,11 +2,15 @@ package com.shopping.query.command.service.implementation;
 
 import java.util.*;
 
+import com.shopping.query.command.configuration.Constants;
 import com.shopping.query.command.entites.dto.EmailDto;
 import com.shopping.query.command.service.*;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
+import com.twilio.Twilio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
+import com.twilio.rest.verify.v2.Service;
 
 import com.shopping.query.command.entites.UserEntity;
 import com.shopping.query.command.entites.dto.UserDetailDto;
@@ -16,7 +20,7 @@ import com.shopping.query.command.repos.UserRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
-@Service
+@org.springframework.stereotype.Service
 @Slf4j
 public class UserServiceImpl extends SecurityServiceImpl implements UserService {
 
@@ -246,7 +250,7 @@ public class UserServiceImpl extends SecurityServiceImpl implements UserService 
     }
 
     @Override
-    public String verifyOtpOfUser(String userEmail, String otp) {
+    public String verifyEmailOtpOfUser(String userEmail, String otp) {
         try {
             if (Objects.nonNull(userEmail) && StringUtils.hasLength(userEmail)) {
                 return otpService.verifyOtp(userEmail, otp);
@@ -256,7 +260,6 @@ public class UserServiceImpl extends SecurityServiceImpl implements UserService 
         }
         return "Verification failed";
     }
-
 
     private String generateSixDigitOtp() {
         return String.valueOf(new Random().nextInt(900000) + 100000);
@@ -285,4 +288,11 @@ public class UserServiceImpl extends SecurityServiceImpl implements UserService 
                 .orElseThrow(() -> new UserException("Not present"));
     }
 
+    private boolean checkMobileNumberExists(String mobileNumber) throws UserException {
+        String existingMobileNumber = userRepo.findByMobileNumber(mobileNumber);
+        if (Objects.nonNull(existingMobileNumber)){
+            throw new UserException("User already present");
+        }
+        return false;
+    }
 }

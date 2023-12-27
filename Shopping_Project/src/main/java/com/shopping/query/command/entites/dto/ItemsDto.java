@@ -23,4 +23,6 @@ public class ItemsDto {
 	private String ItemDimensions;
 	private boolean isTrending;
 	private float ratingOfItem;
+	private int totalReviews;
+	private int totalOrders;
 }

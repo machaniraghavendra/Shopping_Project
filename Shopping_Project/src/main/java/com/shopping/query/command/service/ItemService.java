@@ -38,4 +38,6 @@ public interface ItemService {
 	List<ItemsDto> getViewedHistory(UUID userId);
 	
 	SearchDto itemSearch(String searchword, UUID userId) throws ItemNotFoundException;
+
+     void updateItemData(Integer itemId, int operation, String updateType);
 }
