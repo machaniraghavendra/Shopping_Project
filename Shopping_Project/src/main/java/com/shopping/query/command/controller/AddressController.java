@@ -30,8 +30,8 @@ public class AddressController {
 	private AddressService service;
 
 	@PostMapping("/")
-	public ResponseEntity<List<Object>> saveAddress(@RequestBody AddressEntity addressEntity) {
-		return ResponseEntity.ok(service.saveAddress(addressEntity));
+	public ResponseEntity<List<Object>> saveAddress(@RequestBody AddressDto address) {
+		return ResponseEntity.ok(service.saveAddress(address));
 	}
 
 	@PutMapping("/")
@@ -44,9 +44,9 @@ public class AddressController {
 		return ResponseEntity.ok(service.deleteAddress(id));
 	}
 	
-	@DeleteMapping("/{userId}/{address}")
-	public ResponseEntity<String> deleteAddressWithUserIdAndAddress(@PathVariable UUID userId, @PathVariable String address) {
-		return ResponseEntity.ok(service.deleteAddressWithUserIdAndAddress(userId,address));
+	@DeleteMapping("withreference/{referenceid}")
+	public ResponseEntity<String> deleteAddressWithUserIdAndAddress(@PathVariable UUID referenceid) {
+		return ResponseEntity.ok(service.deleteAddressWithReferenceId(referenceid));
 	}
 
 	@GetMapping("/address/{id}")
@@ -70,7 +70,7 @@ public class AddressController {
 	}
 
 	@GetMapping("/{id}/{address}")
-	public ResponseEntity<AddressDto> findAddressWithUserId(@PathVariable UUID id, @PathVariable String address) {
+	public ResponseEntity<AddressDto> findAddressWithUserId(@PathVariable UUID id, @PathVariable UUID address) {
 		return ResponseEntity.ok(service.findAddressWithUserId(id, address));
 	}
 }

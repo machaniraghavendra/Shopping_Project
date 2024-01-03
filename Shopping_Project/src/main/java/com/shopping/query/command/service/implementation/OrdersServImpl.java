@@ -70,7 +70,7 @@ public class OrdersServImpl implements OrderService {
      public boolean saveOrderByCheckingAddress(OrdersEntity ordersEntity) throws UserException {
           AddressDto addressDto = mapper.mapAddressDtoWithOrdersEntity(ordersEntity);
           Optional<AddressEntity> entity = addressService.getAddressWithUserIdandAddress(
-               addressDto.getUserDetails().getUserId(), addressDto.getDeliveryAddress());
+               addressDto.getUserId(), addressDto.getDeliveryAddressUuid());
           if (entity.isPresent()) {
                return Boolean.TRUE;
           }
@@ -280,18 +280,20 @@ public class OrdersServImpl implements OrderService {
      @Override
      public void updateOrderStatus(UUID orderId) throws OrderNotFoundException, ItemNotFoundException {
           OrdersEntity order = getWithUUID(orderId);
-          LocalDate now = LocalDate.now();
-          LocalDate dateOfOrder = LocalDate.parse(order.getOrderedOn(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-          int days = (int) ChronoUnit.DAYS.between(dateOfOrder, now);
-          if (days != 0 && days >= 1) {
-               if (days == 1 || 3 > days) {
-                    updateOrder(orderId, STATUS_DISPATCH);
-               } else if (days < 2 && days == 3 || 5 > days) {
-                    updateOrder(orderId, STATUS_NEARBYHUB);
-               } else if (days == 5 || 5 < days) {
-                    updateOrder(orderId, STATUS_DELIVERED);
-               } else {
-                    updateOrder(orderId, order.getOrderStatus());
+          if (!order.getOrderStatus().equalsIgnoreCase(STATUS_CANCELLED)) {
+               LocalDate now = LocalDate.now();
+               LocalDate dateOfOrder = LocalDate.parse(order.getOrderedOn(), DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+               int days = (int) ChronoUnit.DAYS.between(dateOfOrder, now);
+               if (days != 0 && days >= 1) {
+                    if (days == 1 || 3 > days) {
+                         updateOrder(orderId, STATUS_DISPATCH);
+                    } else if (days < 2 && days == 3 || 5 > days) {
+                         updateOrder(orderId, STATUS_NEARBYHUB);
+                    } else if (days == 5 || 5 < days) {
+                         updateOrder(orderId, STATUS_DELIVERED);
+                    } else {
+                         updateOrder(orderId, order.getOrderStatus());
+                    }
                }
           }
      }

@@ -10,7 +10,7 @@ import com.shopping.query.command.exceptions.UserException;
 
 public interface AddressService {
 
-	List<Object> saveAddress(AddressEntity addressEntity);
+	List<Object> saveAddress(AddressDto address);
 
 	List<Object> updateAddress(AddressEntity addressEntity);
 
@@ -18,9 +18,9 @@ public interface AddressService {
 
 	AddressDto findAddress(Integer id) throws UserException;
 
-	AddressDto findAddressWithUserId(UUID userId, String address);
+	AddressDto findAddressWithUserId(UUID userId, UUID addressUuid);
 
-	String deleteAddressWithUserIdAndAddress(UUID userId, String address);
+	String deleteAddressWithReferenceId(UUID referenceId);
 
 	List<AddressEntity> viewAllAddress();
 
@@ -28,7 +28,7 @@ public interface AddressService {
 
 	List<Object> findAddressEntity(Integer id);
 
-	Optional<AddressEntity> getAddressWithUserIdandAddress(UUID userId, String address);
+	Optional<AddressEntity> getAddressWithUserIdandAddress(UUID userId, UUID addressId);
 
 	Optional<AddressEntity> findWIthReferenceId(UUID referenceId);
 

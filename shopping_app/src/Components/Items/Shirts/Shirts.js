@@ -80,11 +80,17 @@ export default function Shirts() {
                                                 <div className='col row' key={e.itemId}>
                                                     <div className="card" data-aos="zoom-in-right">
                                                         <div className='card-header row'>
-                                                            <div className='col-5 justify-content-start text-start gap-1 d-flex'>
+                                                            <div className='col-2'>
+                                                                <span className=' text-success'><i className="bi bi-bag-check"></i> {e.totalOrders}</span>
+                                                            </div>
+                                                            <div className='col-2'>
+                                                                <span className=' text-success'><i className="bi bi-chat-square-heart"></i> {e.totalReviews}</span>
+                                                            </div>
+                                                            <div className='col-4 justify-content-start text-start gap-1 d-flex'>
                                                                 <Rating times={e.ratingOfItem} />
                                                             </div>
-                                                            <div className='col-7 justify-content-end text-end'>
-                                                                <button className='btn  m-2' onClick={() => {
+                                                            <div className='col-4 justify-content-end text-end'>
+                                                                <button className='btn' onClick={() => {
                                                                     if (localStorage.getItem("currentuser")) {
                                                                         axios.post("http://localhost:8083/cart/", {
                                                                             "itemId": e.itemId,
@@ -153,11 +159,17 @@ export default function Shirts() {
                                                 <div className='col row' key={e.itemId}>
                                                     <div className="card" data-aos="zoom-in-right">
                                                         <div className='card-header row'>
-                                                            <div className='col-5 justify-content-start text-start gap-1 d-flex'>
+                                                            <div className='col-2'>
+                                                                <span className=' text-success'><i className="bi bi-bag-check"></i> {e.totalOrders}</span>
+                                                            </div>
+                                                            <div className='col-2'>
+                                                                <span className=' text-success'><i className="bi bi-chat-square-heart"></i> {e.totalReviews}</span>
+                                                            </div>
+                                                            <div className='col-4 justify-content-start text-start gap-1 d-flex'>
                                                                 <Rating times={e.ratingOfItem} />
                                                             </div>
-                                                            <div className='col-7 justify-content-end text-end'>
-                                                                <button className='btn  m-2' onClick={() => {
+                                                            <div className='col-4 justify-content-end text-end'>
+                                                                <button className='btn' onClick={() => {
                                                                     if (localStorage.getItem("currentuser")) {
                                                                         axios.post("http://localhost:8083/cart/", {
                                                                             "itemId": e.itemId,

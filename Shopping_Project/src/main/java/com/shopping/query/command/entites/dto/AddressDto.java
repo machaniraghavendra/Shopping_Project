@@ -14,13 +14,13 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AddressDto {
 
+	private UUID deliveryAddressUuid;
 	private String deliveryAddress;
-	private String pincode;
 	private String phoneNumber;
 	private String emailAddress;
 	private String lastName;
 	private String firstName;
 	private UUID referenceId;
-	private UserDetailDto userDetails;
+	private UUID userId;
 	private LocalDate addedOn;
 }

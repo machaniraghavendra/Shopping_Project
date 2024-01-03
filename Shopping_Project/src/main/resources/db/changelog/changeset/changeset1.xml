@@ -27,7 +27,7 @@
 
     <changeSet author="RAGHU" id="2" context="ddl"
                runInTransaction="false">
-        <preConditions>
+        <preConditions onFail="MARK_RAN">
             <not>
                 <columnExists columnName="BATCHNAME" tableName="UPDATEORDERSBATCH"/>
             </not>
@@ -36,5 +36,35 @@
         <addColumn tableName="UPDATEORDERSBATCH">
             <column name="BATCHNAME" type="VARCHAR(20)"/>
         </addColumn>
+    </changeSet>
+
+    <changeSet id="3" author="RAGHU">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="CITY_PINCODE"/>
+            </not>
+        </preConditions>
+        <comment>Creating table : CITY_PINCODE</comment>
+        <createTable tableName="CITY_PINCODE">
+            <column name="UUID" type="binary(16)" defaultValueComputed="RANDOM_UUID()">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CITY_PINCODE"/>
+            </column>
+            <column name="CIRCLE_NAME" type="VARCHAR(50)"/>
+            <column name="REGION_NAME" type="VARCHAR(50)"/>
+            <column name="DIVISION_NAME" type="VARCHAR(50)"/>
+            <column name="OFFICE_NAME" type="VARCHAR(50)"/>
+            <column name="STATE_NAME" type="VARCHAR(50)"/>
+            <column name="DISTRICT" type="VARCHAR(50)"/>
+            <column name="PINCODE" type="INTEGER"/>
+            <column name="OFFICE_TYPE" type="VARCHAR(50)"/>
+            <column name="DELIVERY" type="BOOLEAN"/>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="4" author="RAGHU">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="CITY_PINCODE"/>
+        </preConditions>
+        <sqlFile path="sqlfiles/citypincode.sql" relativeToChangelogFile="true"/>
     </changeSet>
 </databaseChangeLog>

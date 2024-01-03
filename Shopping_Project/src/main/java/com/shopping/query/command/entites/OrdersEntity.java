@@ -31,7 +31,7 @@ public class OrdersEntity {
 	@NonNull
 	private String pincode;
 	@NonNull
-	private String deliveryAddress;
+	private UUID deliveryAddress;
 	private String lastName;
 	private String emailAddress;
 	private String phoneNumber;

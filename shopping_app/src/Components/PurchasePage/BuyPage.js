@@ -14,9 +14,9 @@ export default function Buypage(props) {
 
     const [item, setItem] = useState([]);
 
-    const [details, setDetails] = useState({ firstName: "", lastName: "", emailAddress: "", phoneNumber: "", pincode: "", address: "", paymentOption: "", orderQuantity: "" });
+    const [details, setDetails] = useState({ firstName: "", lastName: "", emailAddress: "", phoneNumber: "", address: "", paymentOption: "", orderQuantity: "", addressString: "" });
 
-    const [errors, setErrors] = useState({ firstName: "", phoneNumber: "", pincode: "", address: "", paymentOption: "" });
+    const [errors, setErrors] = useState({ firstName: "", phoneNumber: "", address: "", paymentOption: "" });
 
     const [showToast, setShowToast] = useState(false);
 
@@ -35,6 +35,16 @@ export default function Buypage(props) {
     const [errorMessage, setErrorMessage] = useState("");
 
     const [orderButtonEnabled, setOrderButtonEnabled] = useState(true);
+
+    const [deliveryAddress, setDeliveryAddress] = useState({ stateName: "", district: "", officeName: "", pincode: "" })
+
+    const [stateNames, setStateNames] = useState([]);
+
+    const [districtNames, setDistrictNames] = useState([]);
+
+    const [officeNames, setOfficeNames] = useState([]);
+
+    const [showAddressSelectBar, setShowAddressSelectBar] = useState(false)
 
     var number = 1;
 
@@ -63,7 +73,7 @@ export default function Buypage(props) {
                 "firstName": details.firstName,
                 "lastName": details.lastName,
                 "emailAddress": details.emailAddress,
-                "pincode": details.pincode,
+                "pincode": deliveryAddress.pincode,
                 "deliveryAddress": details.address,
                 "phoneNumber": details.phoneNumber,
                 "paymentType": details.paymentOption,
@@ -114,8 +124,8 @@ export default function Buypage(props) {
     const saveAddress = () => {
         axios.post("http://localhost:8083/address/", {
             "userId": props.user,
-            "deliveryAddress": details.address,
-            "pincode": details.pincode,
+            "deliveryAddressUuid": details.address,
+            "pincode": deliveryAddress.pincode,
             "phoneNumber": details.phoneNumber,
             "emailAddress": details.emailAddress,
             "lastName": details.lastName,
@@ -140,7 +150,7 @@ export default function Buypage(props) {
             "firstName": details.firstName,
             "lastName": details.lastName,
             "emailAddress": details.emailAddress,
-            "pincode": details.pincode,
+            "pincode": deliveryAddress.pincode,
             "deliveryAddress": details.address,
             "phoneNumber": details.phoneNumber,
             "paymentType": details.paymentOption,
@@ -185,9 +195,12 @@ export default function Buypage(props) {
             lastName: a.lastName,
             emailAddress: a.emailAddress,
             phoneNumber: a.phoneNumber,
-            pincode: a.pincode,
-            address: a.deliveryAddress
+            address: a.deliveryAddressUuid,
+            addressString: a.deliveryAddress,
+            paymentOption:details.paymentOption,
+            orderQuantity:details.orderQuantity
         })
+        setShowAddressSelectBar(true);
     }
 
     const setPaymentOptions = (type) => {
@@ -215,16 +228,6 @@ export default function Buypage(props) {
         } else {
             errors.phoneNumber = ""
         }
-        if (details.pincode == "") {
-            errors.pincode = "Zip code required"
-        } else {
-            errors.pincode = ""
-        }
-        if (details.address == "") {
-            errors.address = "Address required"
-        } else {
-            errors.address = ""
-        }
         if (details.paymentOption == "") {
             errors.paymentOption = "Select any one payment type"
         } else {
@@ -233,11 +236,68 @@ export default function Buypage(props) {
         setErrors(errors);
     }
 
+    const getStateNames = () => {
+        axios.get("http://localhost:8083/city-pincode/state-name").then(a => {
+            return (setStateNames(a.data))
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
+    }
+
+    const getDistrictNames = (name) => {
+        axios.get("http://localhost:8083/city-pincode/district-name?statename=" + name).then(a => {
+            return (setDistrictNames(a.data))
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
+    }
+
+    const getOfficeNames = (name) => {
+        axios.get("http://localhost:8083/city-pincode/office-name?district=" + name).then(a => {
+            return (setOfficeNames(a.data))
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
+    }
+
+    const getPincode = () => {
+        let pincode = officeNames
+            .filter(a => a.officeName == deliveryAddress.officeName)
+            .map(a => { return (a.pincode) })[0];
+        return pincode;
+    }
+
+    const getAddressUuid = () => {
+        let uuid = officeNames
+            .filter(a => a.officeName == deliveryAddress.officeName)
+            .map(a => { return (a.uuid) })[0];
+        return uuid;
+    }
+
     const timeout = () => {
         setTimeout(() => {
             setShowToast(false);
         }, 4000);
     }
+
+    const setAddressAsString = () => [
+        setDetails({ address: details.address, firstName: details.firstName, lastName: details.lastName, emailAddress: details.emailAddress, phoneNumber: details.phoneNumber, orderQuantity: details.orderQuantity, paymentOption: details.paymentOption })
+    ]
 
     useEffect(() => {
         sessionStorage.getItem("dark") === "true" ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
@@ -261,6 +321,7 @@ export default function Buypage(props) {
         }
         fetchUser();
         fetchAddress();
+        getStateNames();
     }, [])
 
     return (
@@ -406,8 +467,7 @@ export default function Buypage(props) {
                                                                 Name : {a.firstName + " " + a.lastName},
                                                                 Address : {a.deliveryAddress},
                                                                 Email address : {a.emailAddress},
-                                                                Mobile Number : {a.phoneNumber},
-                                                                Pincode : {a.pincode}
+                                                                Mobile Number : {a.phoneNumber}
                                                             </span>
                                                         </div>
                                                     </div>
@@ -417,7 +477,7 @@ export default function Buypage(props) {
                             </ul>
                         </div>
                         <div className="row text-black" >
-                            <div className="col-md g-4">
+                            <div className="col-md-3 col-12 g-3">
                                 <div className="form-floating">
                                     <input className="form-control" name="firstName" placeholder="First name here" type={"text"} id="floatingInput" required
                                         onChange={setDetailsValues}
@@ -427,7 +487,7 @@ export default function Buypage(props) {
                                     <span className="mx-3 text-danger">{errors.firstName}</span>
                                 </div>
                             </div>
-                            <div className="col-md g-4">
+                            <div className="col-md-3 col-12 g-3">
                                 <div className="form-floating">
                                     <input className="form-control" name="lastName" placeholder="Last name here"
                                         value={details.lastName}
@@ -435,7 +495,7 @@ export default function Buypage(props) {
                                     <label htmlFor="floatingTextarea">Last Name (Optional)</label>
                                 </div>
                             </div>
-                            <div className="col-md g-4">
+                            <div className="col-md-3  col-12 g-3">
                                 <div className="form-floating">
                                     <input className="form-control" name="emailAddress"
                                         value={details.emailAddress}
@@ -443,9 +503,7 @@ export default function Buypage(props) {
                                     <label htmlFor="floatingTextarea">Email address (Optional)</label>
                                 </div>
                             </div>
-                        </div>
-                        <div className="row my-md-4 text-black">
-                            <div className="col-md g-4">
+                            <div className="col-md-3 col-12 g-3">
                                 <div className="form-floating">
                                     <input className="form-control" name="phoneNumber"
                                         value={details.phoneNumber}
@@ -454,27 +512,63 @@ export default function Buypage(props) {
                                     <span className="mx-3 text-danger">{errors.phoneNumber}</span>
                                 </div>
                             </div>
-                            <div className="col-md g-4">
-                                <div className="form-floating">
-                                    <textarea className="form-control" name="address"
-                                        value={details.address}
-                                        onChange={setDetailsValues} placeholder="Address here" id="floatingTextarea"></textarea>
-                                    <label htmlFor="floatingTextarea">Address </label>
-                                    <span className="mx-3 text-danger">{errors.address}</span>
-                                </div>
-                            </div>
-                            <div className="col-md g-4">
-                                <div className="form-floating">
-                                    <input className="form-control" name="pincode"
-                                        value={details.pincode}
-                                        onChange={setDetailsValues} placeholder="Pincode here" id="floatingInput"></input>
-                                    <label htmlFor="floatingTextarea">Pincode </label>
-                                    <span className="mx-3 text-danger">{errors.pincode}</span>
-                                </div>
-                            </div>
                         </div>
-                        <div style={{ fontSize: "15px" }} className="row">
-                            <div className="col-6">
+                        {details.addressString ? 
+                        <div className="input-group input-group-sm mb-3">
+                            <span className="input-group-text" id="inputGroup-sizing">Address</span>
+                            <input type="text" className="form-control" value={details.addressString} disabled/>
+                        </div> :
+                            <div className="row text-black">
+                                <div className="col-md-3 col-12 g-4">
+                                    <select className="form-select" disabled={false} onChange={(name) => { return (getDistrictNames(name.target.value), setDeliveryAddress({ stateName: name.target.value, district: deliveryAddress.district, officeName: deliveryAddress.officeName, pincode: deliveryAddress.pincode })) }}>
+                                        <option >Select State name</option>
+                                        {stateNames.map((a, i) => {
+                                            return (
+                                                <option value={a} key={i}>{a}</option>
+                                            )
+                                        })}
+                                    </select>
+                                </div>
+                                <div className="col-md-3 col-12 g-4">
+                                    <select className="form-select" disabled={deliveryAddress.stateName == "" ? true : false}
+                                        onChange={(name) => {
+                                            return (getOfficeNames(name.target.value),
+                                                setDeliveryAddress({ district: name.target.value, officeName: deliveryAddress.officeName, pincode: deliveryAddress.pincode, stateName: deliveryAddress.stateName })
+                                                , setAddressAsString()
+                                            )
+                                        }}>
+                                        <option>Select District name</option>
+                                        {districtNames.map((a, i) => {
+                                            return (
+                                                <option value={a} key={i}>{a}</option>
+                                            )
+                                        })}
+                                    </select>
+                                </div>
+                                <div className="col-md-3 col-12 g-4">
+                                    <select className="form-select" disabled={deliveryAddress.district == "" ? true : false} onChange={(name) => { return (setDeliveryAddress({ officeName: name.target.value, pincode: deliveryAddress.pincode, stateName: deliveryAddress.stateName, district: deliveryAddress.district }), getPincode()) }}>
+                                        <option>Select City/Town/Village name</option>
+                                        {officeNames.map((a, i) => {
+                                            return (
+                                                <>
+                                                    <option value={a.officeName} key={i} >{a.officeName}</option>
+                                                    <option hidden>{deliveryAddress.pincode = getPincode()}</option>
+                                                    <option hidden>{details.address = getAddressUuid()}</option>
+                                                </>
+                                            )
+                                        })}
+                                    </select>
+                                </div>
+
+                                <div className="col-md-3 col-12 g-4">
+                                    <div className="input-group input-group-sm mb-3" >
+                                        <span className="input-group-text" id="inputGroup-sizing-sm">Pincode</span>
+                                        <input type="text" className="form-control" value={deliveryAddress.officeName == "" ? "Select City/Town/Village" : deliveryAddress.pincode} disabled />
+                                    </div>
+                                </div>
+                            </div>}
+                        <div style={{ fontSize: "15px" }} className="row my-3">
+                            <div className="col-6 ">
                                 <h6>Payment Options : <span className="mx-3 text-danger" style={{ fontSize: "10px" }}>{errors.paymentOption}</span></h6>
                                 <div className="px-3" >
                                     <input className="form-check-input" type={"radio"} name={"paymentButtons"} id="payment_cards" onClick={() => { setPaymentOptions("Cards") }} value={"cards"}></input>
@@ -494,14 +588,15 @@ export default function Buypage(props) {
                                 </div>
                             </div>
                         </div>
+                        {console.log(details)}
                         <div className="text-center">
                             <button className="btn btn-outline-warning btn-lg  m-auto  orderButton" disabled={!orderButtonEnabled} onClick={(e) => {
-                                if (details.firstName != "" && details.phoneNumber != "" && details.pincode != "" && details.address != "" && details.paymentOption != "") {
+                                if (details.firstName != "" && details.phoneNumber != "" && details.address != "" && details.paymentOption != "") {
                                     return (checkAddress(e))
                                 } else {
                                     validate(e)
                                 }
-                            }}>{orderButtonEnabled&&"Place Order Now"} {!orderButtonEnabled&&"Making order wait a min..."}</button>
+                            }}>{orderButtonEnabled && "Place Order Now"} {!orderButtonEnabled && "Making order wait a min..."}</button>
                         </div>
                     </section>
                 </div>
@@ -518,53 +613,58 @@ export default function Buypage(props) {
                 <LogOut user={props.user} />
 
                 {/* Address popup */}
-                {showAddressToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div className="d-flex">
-                        <div className="toast-body">
-                            <p>Looks like this address not in your saved list want to add ?</p>
-                            <div className="mt-2 pt-2">
-                                <button type="button" className="btn btn-outline-danger" data-bs-dismiss="modal" onClick={() => {
-                                    return (sendOrderData(), setShowAddressToast(false))
-                                }}>No</button>&nbsp;&nbsp;
-                                <button type="button" className="btn btn-outline-success"
-                                    onClick={() => {
-                                        return (saveAddress(), setShowAddressToast(false))
-                                    }}
-                                >Yes</button>
+                {
+                    showAddressToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div className="d-flex">
+                            <div className="toast-body">
+                                <p>Looks like this address not in your saved list want to add ?</p>
+                                <div className="mt-2 pt-2">
+                                    <button type="button" className="btn btn-outline-danger"  onClick={() => {
+                                        return (sendOrderData(), setShowAddressToast(false))
+                                    }}>No</button>&nbsp;&nbsp;
+                                    <button type="button" className="btn btn-outline-success"
+                                        onClick={() => {
+                                            return (saveAddress(), setShowAddressToast(false))
+                                        }}
+                                    >Yes</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>}
+                }
 
-                {showToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div className="d-flex">
-                        <div className="toast-body">
-                            <p>{message}</p>
-                            <div className="mt-2 pt-2">
-                                <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast">Ok</button>
+                {
+                    showToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div className="d-flex">
+                            <div className="toast-body">
+                                <p>{message}</p>
+                                <div className="mt-2 pt-2">
+                                    <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast">Ok</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>}
+                }
                 <br></br>
-            </div>
+            </div >
 
             {/* Error pop */}
-            {error && <>
-                <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div className="d-flex">
-                        <div className="toast-body text-danger text-center">
-                            <h6>Error !</h6>
-                            {errorMessage}
-                            <div className="mt-2 pt-2">
-                                <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { setError(false); setErrorMessage("") }}>Ok</button>
+            {
+                error && <>
+                    <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div className="d-flex">
+                            <div className="toast-body text-danger text-center">
+                                <h6>Error !</h6>
+                                {errorMessage}
+                                <div className="mt-2 pt-2">
+                                    <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { setError(false); setErrorMessage("") }}>Ok</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </>
+                </>
             }
             <ChatBot />
-        </div>
+        </div >
     )
 }

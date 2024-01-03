@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.shopping.query.command.batch.*;
+import com.shopping.query.command.entites.CityAndPincode;
+import com.shopping.query.command.repos.ItemsRepo;
 import com.shopping.query.command.service.BatchUpdateOfOrderService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -50,134 +52,172 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BatchConfiguration {
 
-    @Autowired
-    private JobCompleteNotificationListener jobCompleteNotificationListener;
+     @Autowired
+     private JobCompleteNotificationListener jobCompleteNotificationListener;
 
-    @Autowired
-    private StepExecutionListener stepExecutionListener;
+     @Autowired
+     private StepExecutionListener stepExecutionListener;
 
-    @Autowired
-    private WriterListener writerListener;
+     @Autowired
+     private WriterListener writerListener;
 
-    @Autowired
-    private OrderRepo orderRepo;
+     @Autowired
+     private OrderRepo orderRepo;
 
-    @Autowired
-    private OrderService orderService;
+     @Autowired
+     private ItemsRepo itemsRepo;
 
-    @Autowired
-    private GlobalExceptionHandler globalExceptionHandler;
+     @Autowired
+     private OrderService orderService;
 
-    @Value("${batchprocesssize}")
-    private static int Batch_Process_Size;
+     @Autowired
+     private GlobalExceptionHandler globalExceptionHandler;
 
-    @Autowired
-    private JobRepository jobRepository;
+     @Value("${batchprocesssize}")
+     private static int Batch_Process_Size;
 
-    @Autowired
-    private ItemService itemService;
+     @Autowired
+     private JobRepository jobRepository;
 
-    @Autowired
-    private ItemBatchProcessor itemBatchProcesser;
+     @Autowired
+     private ItemService itemService;
 
-    @Autowired
-    private OrdersBatchProcessor ordersBatchProcessor;
+     @Autowired
+     private ItemBatchProcessor itemBatchProcesser;
 
-    @Autowired
-    private BatchUpdateOfOrderService batchUpdateOfOrderService;
+     @Autowired
+     private OrdersBatchProcessor ordersBatchProcessor;
 
-    @Bean
-    @StepScope
-    public RepositoryItemReader<OrdersEntity> reader() {
-        RepositoryItemReader<OrdersEntity> reader = new RepositoryItemReader<>();
-        reader.setName("Orders reader");
-        reader.setRepository(orderRepo);
-        reader.setMethodName("findAll");
-        Map<String, Sort.Direction> sort = new HashMap<>();
-        sort.put("orderedOn", Sort.Direction.DESC);
-        reader.setSort(sort);
-        return reader;
-    }
+     @Autowired
+     private BatchUpdateOfOrderService batchUpdateOfOrderService;
 
-    @Bean
-    public ItemWriter<? super OrdersEntity> writer() {
-        return list -> {
-            for (OrdersEntity order : list) {
-                try {
-                    log.info("Updating order : {} at {}", order.getOrderUUIDId(), LocalDateTime.now());
-                    orderService.updateOrderStatus(order.getOrderUUIDId());
-                    log.info("Updated order : {} at {}", order.getOrderUUIDId(), LocalDateTime.now());
-                } catch (OrderNotFoundException | ItemNotFoundException e) {
-                    if (e instanceof OrderNotFoundException)
-                        log.error(Objects.requireNonNull(globalExceptionHandler
+     @Autowired
+     private ItemUpdatingAsTrendingProcessor itemUpdatingAsTrendingProcessor;
+
+     @Bean
+     @StepScope
+     public RepositoryItemReader<OrdersEntity> reader() {
+          RepositoryItemReader<OrdersEntity> reader = new RepositoryItemReader<>();
+          reader.setName("Orders reader");
+          reader.setRepository(orderRepo);
+          reader.setMethodName("findAll");
+          Map<String, Sort.Direction> sort = new HashMap<>();
+          sort.put("orderedOn", Sort.Direction.DESC);
+          reader.setSort(sort);
+          return reader;
+     }
+
+     @Bean
+     public ItemWriter<? super OrdersEntity> writer() {
+          return list -> {
+               for (OrdersEntity order : list) {
+                    try {
+                         log.info("Updating order : {} at {}", order.getOrderUUIDId(), LocalDateTime.now());
+                         orderService.updateOrderStatus(order.getOrderUUIDId());
+                         log.info("Updated order : {} at {}", order.getOrderUUIDId(), LocalDateTime.now());
+                    } catch (OrderNotFoundException | ItemNotFoundException e) {
+                         if (e instanceof OrderNotFoundException)
+                              log.error(Objects.requireNonNull(globalExceptionHandler
                                         .orderNotFoundException((OrderNotFoundException) e).getBody())
-                                .getErrorMessage());
-                    if (e instanceof ItemNotFoundException)
-                        log.error(Objects.requireNonNull(
+                                   .getErrorMessage());
+                         if (e instanceof ItemNotFoundException)
+                              log.error(Objects.requireNonNull(
                                         globalExceptionHandler.itemNotFoundException((ItemNotFoundException) e).getBody())
-                                .getErrorMessage());
-                }
+                                   .getErrorMessage());
+                    }
+               }
+          };
+     }
+
+     @Bean
+     @StepScope
+     public JsonItemReader<ItemEntity> itemEntityReader() {
+          ObjectMapper objectMapper = new ObjectMapper();
+          JacksonJsonObjectReader<ItemEntity> reader = new JacksonJsonObjectReader<>(ItemEntity.class);
+          objectMapper.registerModule(new JavaTimeModule());
+          objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+          reader.setMapper(objectMapper);
+          return new JsonItemReaderBuilder<ItemEntity>().name("Items_File")
+               .resource(new ClassPathResource("files/Items_API.json")).jsonObjectReader(reader).build();
+     }
+
+     @Bean
+     public ItemWriter<? super ItemEntity> itemwriter() {
+          return list -> {
+               for (ItemEntity item : list) {
+                    itemService.addItem(item);
+               }
+          };
+     }
+
+     @Bean
+     public Step step(PlatformTransactionManager platformTransactionManager) {
+          return new StepBuilder("orderupdatejob", jobRepository)
+               .<OrdersEntity, OrdersEntity>chunk(Batch_Process_Size, platformTransactionManager).reader(reader())
+               .writer(writer()).listener(writerListener).listener(stepExecutionListener)
+               .processor(ordersBatchProcessor)
+               .build();
+     }
+
+     @Bean
+     public Step step1(PlatformTransactionManager platformTransactionManager) throws IOException {
+          return new StepBuilder("itemsInstaller", jobRepository)
+               .<ItemEntity, ItemEntity>chunk(Batch_Process_Size, platformTransactionManager)
+               .reader(itemEntityReader()).processor(itemBatchProcesser).writer(itemwriter()).listener(writerListener)
+               .listener(stepExecutionListener).build();
+     }
+
+     @Bean
+     public Step step2(PlatformTransactionManager platformTransactionManager) {
+          return new StepBuilder("itemUpdateAsTrending", jobRepository)
+               .<ItemEntity, ItemEntity>chunk(Batch_Process_Size, platformTransactionManager)
+               .reader(getAllItemsForReading()).processor(itemUpdatingAsTrendingProcessor).writer(itemUpdateAsTrending())
+               .listener(stepExecutionListener).build();
+
+     }
+
+     @Bean
+     public ItemWriter<? super ItemEntity> itemUpdateAsTrending() {
+          return list->{
+            for (ItemEntity item : list){
+                 item.setTrending(Boolean.TRUE);
+                 itemService.updateItem(item);
             }
-        };
-    }
+          };
+     }
 
-    @Bean
-    @StepScope
-    public JsonItemReader<ItemEntity> itemEntityReader() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JacksonJsonObjectReader<ItemEntity> reader = new JacksonJsonObjectReader<>(ItemEntity.class);
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        reader.setMapper(objectMapper);
-        return new JsonItemReaderBuilder<ItemEntity>().name("Items_File")
-                .resource(new ClassPathResource("files/Items_API.json")).jsonObjectReader(reader).build();
-    }
+     @Bean
+     @StepScope
+     public RepositoryItemReader<ItemEntity> getAllItemsForReading() {
+          RepositoryItemReader<ItemEntity> reader = new RepositoryItemReader<>();
+          reader.setName("Items reader");
+          reader.setRepository(itemsRepo);
+          reader.setMethodName("findAll");
+          Map<String, Sort.Direction> sort = new HashMap<>();
+          sort.put("itemUpdatedOn", Sort.Direction.DESC);
+          reader.setSort(sort);
+          return reader;
+     }
+     @Bean
+     public Job ordersLoadJob(Step step) throws IOException {
+          return new JobBuilder("orderupdatejob", jobRepository)
+               .incrementer(new RunIdIncrementer())
+               .listener(jobCompleteNotificationListener)
+               .start(step1(null))
+               .next(step2(null))
+               .next(ordersBatchDecider())
+               .on("PROCEED")
+               .to(step(null))
+               .end().build();
+     }
 
-    @Bean
-    public ItemWriter<? super ItemEntity> itemwriter() {
-        return list -> {
-            for (ItemEntity item : list) {
-                itemService.addItem(item);
-            }
-        };
-    }
-
-    @Bean
-    public Step step(PlatformTransactionManager platformTransactionManager) {
-        return new StepBuilder("orderupdatejob", jobRepository)
-                .<OrdersEntity, OrdersEntity>chunk(Batch_Process_Size, platformTransactionManager).reader(reader())
-                .writer(writer()).listener(writerListener).listener(stepExecutionListener)
-                .processor(ordersBatchProcessor)
-                .build();
-    }
-
-    @Bean
-    public Step step1(PlatformTransactionManager platformTransactionManager) throws IOException {
-        return new StepBuilder("itemsInstaller", jobRepository)
-                .<ItemEntity, ItemEntity>chunk(Batch_Process_Size, platformTransactionManager)
-                .reader(itemEntityReader()).processor(itemBatchProcesser).writer(itemwriter()).listener(writerListener)
-                .listener(stepExecutionListener).build();
-    }
-
-    @Bean
-    public Job ordersLoadJob(Step step) throws IOException {
-        return new JobBuilder("orderupdatejob", jobRepository)
-                .incrementer(new RunIdIncrementer())
-                .listener(jobCompleteNotificationListener)
-                .start(step1(null))
-                .next(ordersBatchDecider())
-                .on("PROCEED")
-                .to(step(null))
-                .end().build();
-    }
-
-    @Bean
-    public JobExecutionDecider ordersBatchDecider() {
-        return (jobExecution, stepExecution) -> {
+     @Bean
+     public JobExecutionDecider ordersBatchDecider() {
+          return (jobExecution, stepExecution) -> {
 //			IF LAST ORDER JOB IS RUNNED LESS THAN 1 THAN IT IS FALSE IF IT IS GREATER THAN 1 IT IS TRUE
-            boolean haveToRun = batchUpdateOfOrderService.getLastRunnedTimeinHours();
-            return haveToRun ? new FlowExecutionStatus("PROCEED") : FlowExecutionStatus.COMPLETED;
-        };
-    }
+               boolean haveToRun = batchUpdateOfOrderService.getLastRunnedTimeinHours();
+               return haveToRun ? new FlowExecutionStatus("PROCEED") : FlowExecutionStatus.COMPLETED;
+          };
+     }
 
 }

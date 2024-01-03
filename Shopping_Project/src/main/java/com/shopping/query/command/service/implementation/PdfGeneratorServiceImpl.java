@@ -120,7 +120,7 @@ public class PdfGeneratorServiceImpl implements PdfGeneratorService {
 				table.addCell(ordersDto.getPhoneNumber());
 				table.addCell(String.valueOf(4));
 				table.addCell("Address");
-				table.addCell(ordersDto.getDeliveryAddress());
+				table.addCell(mapper.getAddress(ordersDto.getDeliveryAddress()));
 				table.addCell(String.valueOf(5));
 				table.addCell("Pincode");
 				table.addCell(ordersDto.getPincode());

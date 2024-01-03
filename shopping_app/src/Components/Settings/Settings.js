@@ -47,6 +47,8 @@ export default function Settings(props) {
 
     const [isCustom, setIsCustom] = useState(false);
 
+    const [deliveryAddress, setDeliveryAddress] = useState({ stateName: "", district: "", officeName: "", pincode: "" })
+
     const check = (mode) => {
         getTheme(mode)
         // updateTheme(mode)
@@ -195,7 +197,7 @@ export default function Settings(props) {
     }
 
     const deleteAddress = (e) => {
-        axios.delete("http://localhost:8083/address/" + props.user + "/" + e).then(() => { fetchAddress() }).catch((error) => {
+        axios.delete("http://localhost:8083/address/withreference/" +  e).then(() => { fetchAddress() }).catch((error) => {
             setError(true);
             if (error.response.data === undefined) {
                 setErrorMessage("Something went wrong")
@@ -653,7 +655,7 @@ export default function Settings(props) {
                                                             </div>
                                                         </div>
                                                         <div className="text-center deleteButtonofAddress">
-                                                            <span className='my-1 btn btn-sm btn-danger buttonAddress' onClick={() => deleteAddress(a.deliveryAddress)}>  Remove address  </span>
+                                                            <span className='my-1 btn btn-sm btn-danger buttonAddress' onClick={() => deleteAddress(a.referenceId)}>  Remove address  </span>
                                                         </div>
                                                     </div>
                                                 </div>

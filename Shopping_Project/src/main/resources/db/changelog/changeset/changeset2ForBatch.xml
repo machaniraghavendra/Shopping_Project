@@ -9,7 +9,7 @@
         http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
     <changeSet author="RAGHU" id="2" context="ddl"
                runInTransaction="false" dbms="h2">
-        <preConditions>
+        <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="BATCH_JOB_EXECUTION" />
             </not>

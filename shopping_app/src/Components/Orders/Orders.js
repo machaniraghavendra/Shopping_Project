@@ -225,9 +225,9 @@ export default function Orders(props) {
                                             return item;
                                         }
                                     })
-                                    .map(item => {
+                                    .map((item,i) => {
                                         return (
-                                            <div className={!(deliveryItemsView || sessionStorage.getItem("showDeliveryItems") === "true" ? true : false) ? 'py-2 d-block col-lg-6' : 'py-2 d-none col-lg-6'} key={item.item.itemId}>
+                                            <div className={!(deliveryItemsView || sessionStorage.getItem("showDeliveryItems") === "true" ? true : false) ? 'py-2 d-block col-lg-6' : 'py-2 d-none col-lg-6'} key={i}>
                                                 {/* <div className='col-lg-6'> */}
                                                 <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
                                                     <div className="row g-0" >

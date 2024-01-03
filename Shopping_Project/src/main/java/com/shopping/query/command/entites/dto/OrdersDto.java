@@ -20,7 +20,7 @@ public class OrdersDto {
 	private String emailAddress;
 	private String phoneNumber;
 	private String pincode;
-	private String deliveryAddress;
+	private UUID deliveryAddress;
 	private String paymentType;
 	private String orderedOn;
 	private String orderedAt;

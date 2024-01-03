@@ -45,10 +45,10 @@ public class ItemReviewController {
 		return ResponseEntity.ok(reviewService.updateComment(itemReview));
 	}
 
-	@DeleteMapping("/")
-	public ResponseEntity<String> deleteAllReviews() {
-		return ResponseEntity.ok(reviewService.deleteAllReviews());
-	}
+//	@DeleteMapping("/")
+//	public ResponseEntity<String> deleteAllReviews() {
+//		return ResponseEntity.ok(reviewService.deleteAllReviews());
+//	}
 
 	@DeleteMapping("/{reviewId}")
 	public ResponseEntity<List<Object>> deleteComment(@PathVariable UUID reviewId) {

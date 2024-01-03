@@ -37,7 +37,7 @@ export default function ItemsList(props) {
 
     const [informationPop, setInformationPop] = useState("");
 
-    const [sortitems, setSortItems] = useState({ NameSort: false, DescSort: false, SpecSort: false, TypeSort: false, PriceSort: false, TrendingSort: true, DimensionsSort: false, ratingSort: false })
+    const [sortitems, setSortItems] = useState({ NameSort: false, DescSort: false, SpecSort: false, TypeSort: false, PriceSort: false, TrendingSort: true, DimensionsSort: false, ratingSort: false, totalOrders: false, totalReviews: false })
 
     const [itemsLimit, setItemsLimit] = useState(10);
 
@@ -133,28 +133,34 @@ export default function ItemsList(props) {
 
     const sortItems = (a) => {
         if (a === "name") {
-            setSortItems({ NameSort: !sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort, TrendingSort: sortitems.TrendingSort, ratingSort: sortitems.ratingSort })
+            setSortItems({ NameSort: !sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort, TrendingSort: sortitems.TrendingSort, ratingSort: sortitems.ratingSort, totalOrders: sortitems.totalOrders, totalReviews:  sortitems.totalReviews })
         }
         if (a === "trending") {
-            setSortItems({ TrendingSort: !sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort, ratingSort: sortitems.ratingSort })
+            setSortItems({ TrendingSort: !sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort, ratingSort: sortitems.ratingSort,totalOrders: sortitems.totalOrders, totalReviews:  sortitems.totalReviews })
         }
         if (a === "dimensions") {
-            setSortItems({ DimensionsSort: !sortitems.DimensionsSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, ratingSort: sortitems.ratingSort })
+            setSortItems({ DimensionsSort: !sortitems.DimensionsSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, ratingSort: sortitems.ratingSort,totalOrders: sortitems.totalOrders, totalReviews:  sortitems.totalReviews })
         }
         if (a === "price") {
-            setSortItems({ PriceSort: !sortitems.PriceSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, DimensionsSort: sortitems.DimensionsSort, ratingSort: sortitems.ratingSort })
+            setSortItems({ PriceSort: !sortitems.PriceSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, DimensionsSort: sortitems.DimensionsSort, ratingSort: sortitems.ratingSort,totalOrders: sortitems.totalOrders, totalReviews:  sortitems.totalReviews })
         }
         if (a === "type") {
-            setSortItems({ TypeSort: !sortitems.TypeSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort, ratingSort: sortitems.ratingSort })
+            setSortItems({ TypeSort: !sortitems.TypeSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, SpecSort: sortitems.SpecSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort, ratingSort: sortitems.ratingSort,totalOrders: sortitems.totalOrders, totalReviews:  sortitems.totalReviews })
         }
         if (a === "spec") {
-            setSortItems({ SpecSort: !sortitems.SpecSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort, ratingSort: sortitems.ratingSort })
+            setSortItems({ SpecSort: !sortitems.SpecSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, DescSort: sortitems.DescSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort, ratingSort: sortitems.ratingSort,totalOrders: sortitems.totalOrders, totalReviews:  sortitems.totalReviews })
         }
         if (a === "rating") {
-            setSortItems({ ratingSort: !sortitems.ratingSort, DescSort: sortitems.DescSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort })
+            setSortItems({ ratingSort: !sortitems.ratingSort, DescSort: sortitems.DescSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort,totalOrders: sortitems.totalOrders, totalReviews:  sortitems.totalReviews })
         }
         if (a === "desc") {
-            setSortItems({ DescSort: !sortitems.DescSort, ratingSort: sortitems.ratingSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort })
+            setSortItems({ DescSort: !sortitems.DescSort, ratingSort: sortitems.ratingSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort,totalOrders: sortitems.totalOrders, totalReviews:  sortitems.totalReviews })
+        }
+        if (a === "totalOrders") {
+            setSortItems({ totalOrders: !sortitems.totalOrders,DescSort: sortitems.DescSort, ratingSort: sortitems.ratingSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort, totalReviews:  sortitems.totalReviews })
+        }
+        if (a === "totalReviews") {
+            setSortItems({ totalReviews: !sortitems.totalReviews,DescSort: sortitems.DescSort, ratingSort: sortitems.ratingSort, TrendingSort: sortitems.TrendingSort, NameSort: sortitems.NameSort, SpecSort: sortitems.SpecSort, TypeSort: sortitems.TypeSort, PriceSort: sortitems.PriceSort, DimensionsSort: sortitems.DimensionsSort, totalOrders:  sortitems.totalOrders })
         }
     }
 
@@ -457,6 +463,8 @@ export default function ItemsList(props) {
                                     <th scope="col" onClick={() => { return (sortItems("dimensions")) }}>Dimensions {sortitems.DimensionsSort ? <i className="bi bi-sort-down-alt"></i> : <i className="bi bi-sort-up"></i>}</th>
                                     <th scope="col" onClick={() => { return (sortItems("rating")) }}>Rating {sortitems.ratingSort ? <i className="bi bi-sort-down-alt"></i> : <i className="bi bi-sort-up"></i>}</th>
                                     <th scope="col" onClick={() => { return (sortItems("trending")) }}>Trending {!sortitems.TrendingSort ? <i className="bi bi-sort-down-alt"></i> : <i className="bi bi-sort-up"></i>}</th>
+                                    <th scope="col" onClick={() => { return (sortItems("totalOrders")) }}>T-Orders {!sortitems.totalOrders ? <i className="bi bi-sort-down-alt"></i> : <i className="bi bi-sort-up"></i>}</th>
+                                    <th scope="col" onClick={() => { return (sortItems("totalReviews")) }}>T-Reviews {!sortitems.totalReviews ? <i className="bi bi-sort-down-alt"></i> : <i className="bi bi-sort-up"></i>}</th>
                                 </tr>
                             </thead>
                             {fetchDone ?
@@ -505,6 +513,16 @@ export default function ItemsList(props) {
                                             return b.ratingOfItem - a.ratingOfItem
                                         }
                                     })
+                                    .sort((a, b) => {
+                                        if (sortitems.totalOrders) {
+                                            return b.totalOrders - a.totalOrders
+                                        }
+                                    })
+                                    .sort((a, b) => {
+                                        if (sortitems.totalReviews) {
+                                            return b.totalReviews - a.totalReviews
+                                        }
+                                    })
                                     .filter(a => {
                                         if (search === "") {
                                             return a;
@@ -542,6 +560,8 @@ export default function ItemsList(props) {
                                                     <td className="text-truncate">{a.itemDimensions.length > 15 ? a.itemDimensions.substring(0, 15) + "..." : a.itemDimensions}</td>
                                                     <td className="text-truncate"><Rating times={a.ratingOfItem} /></td>
                                                     <td className="text-truncate">{a.trending ? <span className=" badge text-bg-success">Yes</span> : <span className=" badge text-bg-danger">No</span>}</td>
+                                                    <td className="text-truncate">{a.totalOrders}</td>
+                                                    <td className="text-truncate">{a.totalReviews}</td>
                                                 </tr>
                                             </tbody>
                                         )

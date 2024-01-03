@@ -9,7 +9,7 @@ import com.shopping.query.command.entites.BatchUpdateOfOrder;
 @Repository
 public interface BatchUpdateOfOrderRepo extends JpaRepository<BatchUpdateOfOrder, Integer>{
 
-    @Query(value = "SELECT * FROM UPDATEORDERSBATCH where BATCH_RUNID = (SELECT MAX(BATCH_RUNID) FROM UPDATEORDERSBATCH WHERE BATCHNAME = 'orderupdatejob')", nativeQuery = true)
+    @Query(value = "SELECT * FROM UPDATEORDERSBATCH where BATCH_RUN_ID = (SELECT MAX(BATCH_RUN_ID) FROM UPDATEORDERSBATCH WHERE BATCH_NAME = 'orderupdatejob')", nativeQuery = true)
     BatchUpdateOfOrder getLastRunJobOfOrders();
 
 }
