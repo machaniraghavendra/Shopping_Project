@@ -260,13 +260,13 @@ export default function View(props) {
                                 </div>
                                 <div className="col-lg-8 my-3" id='verticalLine'>
                                     <div className='row'>
-                                        <div className='col-3 justify-content-start text-start gap-1 d-flex'>
-                                        {item.trending&& <span className='text-warning '><i className="bi bi-stars fa-beat-fade">Trending  </i> | </span>}
+                                        <div className='col-lg-3 col-sm-6 justify-content-start text-start gap-1 d-flex'>
+                                            {item.trending && <span className='text-warning '><i className="bi bi-stars fa-beat-fade">Trending  </i> | </span>}
                                             <Rating times={item.ratingOfItem} />
                                         </div>
-                                        <div className='col-3'><span className='text-warning '> {item.totalReviews==0?"No Reviews": "Item Reviews : "+item.totalReviews}</span></div>
-                                        <div className='col-3'><span className='text-warning '> {item.totalOrders==0?"No orders on this item": "Total orders : "+item.totalReviews}</span></div>
-                                        <div className='col-3 justify-content-end text-end'>
+                                        <div className='col-lg-3 col-sm-6'><span className='text-warning '><i class="bi bi-chat-square-heart"></i> {item.totalReviews == 0 ? "No Reviews" : "Item Reviews : " + item.totalReviews}</span></div>
+                                        <div className='col-lg-3 col-sm-6'><span className='text-warning '> <i class="bi bi-bag-check"></i> {item.totalOrders == 0 ? "No orders on this item" : "Total orders : " + item.totalOrders}</span></div>
+                                        <div className='col-lg-3 col-sm-6 justify-content-lg-end justify-content-start text-lg-end'>
                                             <button className='btn  m-2' onClick={() => {
                                                 if (localStorage.getItem("currentuser")) {
                                                     axios.post("http://localhost:8083/cart/", {
@@ -310,8 +310,8 @@ export default function View(props) {
                                     <div className='mx-3'>
                                         <p>Price : <b> ₹{item.itemPrice}</b></p>
                                         {item.itemSpec != "" && <p>Specifications : <ShowFullComments comment={item.itemSpec} /></p>}
-                                        {item.itemDimensions != null && item.itemDimensions != "" &&<>
-                                            Dimensions : <ShowFullComments comment={item.itemDimensions}/></>}
+                                        {item.itemDimensions != null && item.itemDimensions != "" && <>
+                                            Dimensions : <ShowFullComments comment={item.itemDimensions} /></>}
                                         <p>Type : {item.itemType}</p>
                                         <p>Description : <ShowFullComments comment={item.itemDesc} /></p>
                                     </div>
@@ -387,7 +387,7 @@ export default function View(props) {
                         :
                         <div className='text-light container mx-4 my-2 mx-4 fs-6'>No reviews for this item</div>}
                     {reviewsOfItem.length > 3 && <div className='d-flex justify-content-center m-1 my-2'>
-                        <span className='btn btn-dark btn-sm' onClick={() => { nav("/view/review?item=" + num) }}>View more...+{reviewsOfItem.length-3}</span>
+                        <span className='btn btn-dark btn-sm' onClick={() => { nav("/view/review?item=" + num) }}>View more...+{reviewsOfItem.length - 3}</span>
                     </div>}
 
                 </div>

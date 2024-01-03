@@ -14,9 +14,10 @@ import com.shopping.query.command.exceptions.UserException;
 import com.shopping.query.command.repos.UserRepo;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-@org.springframework.stereotype.Service
+@Service
 @Slf4j
 public class UserServiceImpl extends SecurityServiceImpl implements UserService {
 
@@ -283,5 +284,5 @@ public class UserServiceImpl extends SecurityServiceImpl implements UserService 
         return findall().stream().filter(a -> a.getUserId().equals(userId)).findFirst()
                 .orElseThrow(() -> new UserException("Not present"));
     }
-    
+
 }

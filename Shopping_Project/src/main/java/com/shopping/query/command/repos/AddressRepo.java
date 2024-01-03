@@ -17,4 +17,5 @@ public interface AddressRepo extends JpaRepository<AddressEntity, Integer>{
     AddressEntity getAddressWithUserIdandAddress(UUID userId, String address);
 
 
+     AddressEntity findByReferenceId(UUID referenceId);
 }

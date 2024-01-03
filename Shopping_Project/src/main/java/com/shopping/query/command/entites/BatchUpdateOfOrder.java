@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = BatchUpdateOfOrder.TABLE_NAME)
@@ -18,16 +19,18 @@ public class BatchUpdateOfOrder {
 	final static String TABLE_NAME = "UPDATEORDERSBATCH";
 
 	@Id
-	@Column(name = "BatchRunID")
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private UUID uuid;
+	@Column(name = "BATCH_RUN_ID")
 	private int BatchRunID;
-	@Column(name = "TOTALORDERSUPDATED")
+	@Column(name = "TOTAL_ORDERS_UPDATED")
 	private int TotalOrdersUpdated;
-	@Column(name = "BATCHNAME")
+	@Column(name = "BATCH_NAME")
 	private String batchName;
-	@Column(name = "STARTDATE")
+	@Column(name = "START_DATE")
 	@NonNull
 	private Date StartDate;
-	@Column(name = "ENDDATE")
+	@Column(name = "END_DATE")
 	@NonNull
 	private Date EndDate;
 }

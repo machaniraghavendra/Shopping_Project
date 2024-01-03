@@ -41,12 +41,15 @@ export default function OrderDetails(props) {
 
     const [selectedMail, setSelectedEmail] = useState("");
 
+    const [address, setAddress] = useState("");
+
     const nav = useNavigate();
 
     const fetchOrders = () => {
         axios.get("http://localhost:8083/orders/").then((res) => {
             setOrder(res.data);
             getAllMailsOfUser();
+            getAddress(res.data.map(a=>{return(a.deliveryAddress)}));
             Promise.resolve(getRatingOfUserForItem(res.data))
         }).catch((error) => {
             setError(true);
@@ -146,6 +149,21 @@ export default function OrderDetails(props) {
                 }
             });
         }
+    }
+
+    const getAddress = (a) => {
+        axios.get("http://localhost:8083/city-pincode/get-string/" + a)
+            .then(a => {
+              setAddress(a.data)
+            })
+            .catch(error => {
+                setError(true);
+                if (error.response.data === undefined) {
+                    setErrorMessage("Something went wrong")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
+            })
     }
 
     useEffect(() => {
@@ -287,12 +305,11 @@ export default function OrderDetails(props) {
                                                         <div className="col-12 col-md-4">  <p><b>Mobile Number</b> : {a.phoneNumber}</p></div>
                                                     </div>
                                                     <div className='row'>
-                                                        {a.pincode != null && <div className="col-12 col-md-4"> <p><b>Pincode</b> : {a.pincode}</p></div>}
                                                         {a.orderQuantity != null && <div className="col-12 col-md-4">  <p><b>Quantity</b> : {a.orderQuantity}</p></div>}
                                                         {a.paymentType != null && <div className="col-12 col-md-4"> <p><b>Payment type</b> : {a.paymentType.toUpperCase()}</p></div>}
                                                     </div>
                                                     <div className='row'>
-                                                        {a.deliveryAddress != null && <div className="col-12 col-md-6"> <p><b>Delivery Address</b> : {a.deliveryAddress}</p></div>}
+                                                        {a.deliveryAddress != null && <div className="col-12 col-md-6"> <p><b>Delivery Address</b> : {address}</p></div>}
                                                         {(a.totalOrderAmount != null && a.totalOrderAmount !== "") && <div className="col-12 col-md-6 fs-6 text-center "> <p><b>Total amount : ₹{a.item.itemPrice} x {a.orderQuantity} = ₹ {a.totalOrderAmount}.00</b></p></div>}
                                                     </div>
                                                 </div>

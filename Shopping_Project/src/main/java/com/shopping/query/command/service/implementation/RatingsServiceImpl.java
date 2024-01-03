@@ -225,7 +225,7 @@ public class RatingsServiceImpl implements RatingsService {
 		if (Objects.nonNull(userId) && itemId > 0) {
 			try {
 				RatingsOfUser ratingsOfUser = getRatingOfUserWithuserIdAndItemId(userId, itemId);
-				return mappersClass.mapRatingsOfUserWithdto(ratingsOfUser);
+				return mappersClass.mapRatingsOfUserWithDto(ratingsOfUser);
 			} catch (Exception e) {
 				if (e instanceof RatingsOfUserNotFoundException) {
 					exceptionHandler.ratingsOfUserNotFoundException(new RatingsOfUserNotFoundException(e.getMessage()));
@@ -250,7 +250,7 @@ public class RatingsServiceImpl implements RatingsService {
 				if (Objects.nonNull(userDto)) {
 					getAllRatings().stream().filter(rating -> Objects.equals(rating.getUserId(), userId))
 							.collect(Collectors.toList())
-							.forEach(rating -> ratingDto.add(mappersClass.mapRatingsOfUserWithdto(rating)));
+							.forEach(rating -> ratingDto.add(mappersClass.mapRatingsOfUserWithDto(rating)));
 					if (!ratingDto.isEmpty()) {
 						return ratingDto;
 					} else {

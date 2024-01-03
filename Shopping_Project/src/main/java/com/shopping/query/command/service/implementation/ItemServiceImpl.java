@@ -46,24 +46,6 @@ public class ItemServiceImpl implements ItemService {
 
      private Map<UUID, List<ItemsDto>> history = new HashMap<>();
 
-     //	public String save(ItemEntity itemEntity) throws ItemAlreadyException {
-//		try {
-//			if (itemsRepo.existsById(itemEntity.getItemId()))
-//				throw new ItemAlreadyException("The item " + itemEntity.getItemName() + " already there");
-//			else {
-//				if (!itemEntity.getItemPrice().contains(",")) {
-//					itemEntity.setItemPrice(String.format("%,.2f", Double.valueOf(itemEntity.getItemPrice())));
-//				}
-////				itemEntity.setItemAddedOn(LocalDateTime.now());
-////				addItemIntoFile(itemEntity);
-//				itemsRepo.save(itemEntity);
-//				return "Added !";
-//			}
-//		} catch (ItemAlreadyException e) {
-//			log.error("The item " + itemEntity.getItemName() + " already there");
-//		}
-//		return "The item " + itemEntity.getItemName() + " already there";
-//	}
      @Override
      public String addItem(ItemEntity itemEntity) throws ItemAlreadyException {
           try {
@@ -115,33 +97,6 @@ public class ItemServiceImpl implements ItemService {
                log.error(e.getMessage());
           }
      }
-
-//	public String update(ItemEntity itemEntity) throws ItemNotFoundException {
-//		boolean check = false;
-//		try {
-//			if (!itemsRepo.existsById(itemEntity.getItemId()))
-//				throw new ItemNotFoundException("The item " + itemEntity.getItemName() + " not exists");
-//			else {
-//				if (itemEntity.isTrending()) {
-////					check = true;
-//				} else {
-//					if (!getTrendingItems().isEmpty() && getTrendingItems().size() <= 9 && !itemEntity.isTrending()) {
-//						check = true;
-//					} else {
-//						return "Trending items are enough more";
-//					}
-//				}
-//				if (check) {
-//					itemEntity.setItemUpdatedOn(LocalDateTime.now());
-//					itemsRepo.save(itemEntity);
-//					return "Updated !";
-//				}
-//			}
-//		} catch (ItemNotFoundException e) {
-//			e.printStackTrace();
-//		}
-//		return "The item " + itemEntity.getItemName() + " not exists";
-//	}
 
      @Override
      public String updateItem(ItemEntity itemEntity) throws ItemNotFoundException {
@@ -210,6 +165,7 @@ public class ItemServiceImpl implements ItemService {
                .sorted(Comparator.comparing(ItemEntity::getItemUpdatedOn, Comparator.reverseOrder()))
                .sorted(Comparator.comparing(ItemEntity::isTrending, Comparator.reverseOrder())).toList());
           listToShow.sort(Comparator.comparing(ItemEntity::getRatingOfItem, Comparator.reverseOrder()));
+          listToShow.sort(Comparator.comparing(ItemEntity::getTotalOrders, Comparator.reverseOrder()));
           return listToShow;
      }
 
@@ -228,7 +184,7 @@ public class ItemServiceImpl implements ItemService {
                }
                return "Saved list of Items";
           } catch (ItemAlreadyException e) {
-               e.printStackTrace();
+               log.error(e.getMessage());
           }
           return "Already " + val + " exists in data";
      }
@@ -287,7 +243,6 @@ public class ItemServiceImpl implements ItemService {
                     itemsDtos.add(dto);
                }
           }
-
           return history;
      }
 
@@ -307,7 +262,6 @@ public class ItemServiceImpl implements ItemService {
                return Collections.emptyList();
           }
      }
-
 
      public List<ItemsDto> getItemsWithPagination(final Integer page, final Integer size) {
           Pageable pageable = PageRequest.of(page, size);
@@ -373,10 +327,12 @@ public class ItemServiceImpl implements ItemService {
                     var result = find(itemId);
                     if (result.get(0) instanceof ItemEntity item) {
                          if (updateType.equalsIgnoreCase(ORDER)) {
-                              item.setTotalOrders(item.getTotalOrders() + operation);
+                              if (operation == -1 && item.getTotalOrders() != 0)
+                                   item.setTotalOrders(item.getTotalOrders() + operation);
                          }
                          if (updateType.equalsIgnoreCase(REVIEW)) {
-                              item.setTotalReviews(item.getTotalReviews() + operation);
+                              if (operation == -1 && item.getTotalReviews() != 0)
+                                   item.setTotalReviews(item.getTotalReviews() + operation);
                          }
                          updateItem(item);
                     }

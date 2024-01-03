@@ -17,7 +17,7 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
 
   datasource:
-    url: jdbc:h2:file:/data/shopping
+    url: jdbc:h2:file:/data/shopping-app
     driverClassName: org.h2.Driver
     username: shopping
     password: raghu
