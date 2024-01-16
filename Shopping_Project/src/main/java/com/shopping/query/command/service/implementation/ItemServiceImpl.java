@@ -327,11 +327,11 @@ public class ItemServiceImpl implements ItemService {
                     var result = find(itemId);
                     if (result.get(0) instanceof ItemEntity item) {
                          if (updateType.equalsIgnoreCase(ORDER)) {
-                              if (operation == -1 && item.getTotalOrders() != 0)
+                              if ((operation == -1 && item.getTotalOrders() != 0)||operation==1)
                                    item.setTotalOrders(item.getTotalOrders() + operation);
                          }
                          if (updateType.equalsIgnoreCase(REVIEW)) {
-                              if (operation == -1 && item.getTotalReviews() != 0)
+                              if ((operation == -1 && item.getTotalReviews() != 0)||operation==1)
                                    item.setTotalReviews(item.getTotalReviews() + operation);
                          }
                          updateItem(item);
