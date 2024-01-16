@@ -215,7 +215,7 @@ export default function UsersList(props) {
                                                 <td>{a.mobileNumber}</td>
                                                 <td><ShowFullComments comment={a.userPassword} /></td>
                                                 <td>{a.admin ? <span className=" badge text-bg-success">Yes</span> : <span className=" badge text-bg-danger">No</span>}</td>
-                                                <td>{a.loggedIn?<span className=" badge text-bg-success">Active</span> : <span className=" badge text-bg-danger">In-Active</span>}</td>
+                                                <td>{a.loggedIn?<span className=" badge text-bg-success">L-In</span> : <span className=" badge text-bg-danger">L-Off</span>}</td>
                                                 <td>{a.userId === user.userId ? <span className="text-info">Not to be done</span> :
                                                     <i className="fa-solid fa-trash-can fa-sm" style={{ color: "#f81616", cursor: "pointer" }} onClick={() => { setShowDeletePop(true); setdeletingEmail(a.userId); setInfo("Want to delete user " + a.userName) }}></i>
                                                 }</td>
@@ -234,9 +234,13 @@ export default function UsersList(props) {
                                     <td>  <span className="placeholder col-7"></span></td>
                                     <td>  <span className="placeholder col-7"></span></td>
                                     <td>  <span className="placeholder col-7"></span></td>
+                                    <td>  <span className="placeholder col-7"></span></td>
+                                    <td>  <span className="placeholder col-7"></span></td>
                                 </tr>
                                 <tr className="placeholder-glow">
                                     <th scope="row"> <span className="placeholder col-7"></span></th>
+                                    <td>  <span className="placeholder col-7"></span></td>
+                                    <td>  <span className="placeholder col-7"></span></td>
                                     <td>  <span className="placeholder col-7"></span></td>
                                     <td>  <span className="placeholder col-7"></span></td>
                                     <td>  <span className="placeholder col-7"></span></td>
@@ -253,9 +257,13 @@ export default function UsersList(props) {
                                     <td>  <span className="placeholder col-7"></span></td>
                                     <td>  <span className="placeholder col-7"></span></td>
                                     <td>  <span className="placeholder col-7"></span></td>
+                                    <td>  <span className="placeholder col-7"></span></td>
+                                    <td>  <span className="placeholder col-7"></span></td>
                                 </tr>
                                 <tr className="placeholder-glow">
                                     <th scope="row"> <span className="placeholder col-7"></span></th>
+                                    <td>  <span className="placeholder col-7"></span></td>
+                                    <td>  <span className="placeholder col-7"></span></td>
                                     <td>  <span className="placeholder col-7"></span></td>
                                     <td>  <span className="placeholder col-7"></span></td>
                                     <td>  <span className="placeholder col-7"></span></td>
@@ -268,7 +276,7 @@ export default function UsersList(props) {
 
                         {i == 0 && <tbody >
                             <tr className="text-center">
-                                <td colSpan="9" className="h5">
+                                <td colSpan="10" className="h5">
                                     No User(s) found
                                 </td>
                             </tr>

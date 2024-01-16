@@ -553,11 +553,11 @@ export default function ItemsList(props) {
                                                     <th scope="row">{filters || search ? index + 1 : Number.parseInt(prevRange++) + 1}</th>
                                                     <td>{a.itemImgUrl ? <img src={a.itemImgUrl} width="30" height="30" /> : <i className='fa-solid fa-user'></i>}</td>
                                                     <td className="text-truncate"><Link to={"/admin/updateitem/" + a.itemId} className="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">{a.itemName.length > 15 ? a.itemName.substring(0, 15) + "..." : a.itemName}</Link></td>
-                                                    <td className="text-truncate">{a.itemDesc.length > 15 ? a.itemDesc.substring(0, 15) + "..." : a.itemDesc}</td>
-                                                    <td className="text-truncate">{a.itemSpec.length > 15 ? a.itemSpec.substring(0, 15) + "..." : a.itemSpec}</td>
-                                                    <td className="text-truncate">{a.itemType.length > 15 ? a.itemType.substring(0, 15) + "..." : a.itemType}</td>
+                                                    <td className="text-truncate">{a.itemDesc&&a.itemDesc.length > 15 ? a.itemDesc.substring(0, 15) + "..." : a.itemDesc}</td>
+                                                    <td className="text-truncate">{a.itemSpec&&a.itemSpec.length > 15 ? a.itemSpec.substring(0, 15) + "..." : a.itemSpec}</td>
+                                                    <td className="text-truncate">{a.itemType&&a.itemType.length > 15 ? a.itemType.substring(0, 15) + "..." : a.itemType}</td>
                                                     <td className="text-truncate text-warning">₹{a.itemPrice}</td>
-                                                    <td className="text-truncate">{a.itemDimensions.length > 15 ? a.itemDimensions.substring(0, 15) + "..." : a.itemDimensions}</td>
+                                                    <td className="text-truncate">{a.itemDimensions&&a.itemDimensions.length > 15 ? a.itemDimensions.substring(0, 15) + "..." : a.itemDimensions}</td>
                                                     <td className="text-truncate"><Rating times={a.ratingOfItem} /></td>
                                                     <td className="text-truncate">{a.trending ? <span className=" badge text-bg-success">Yes</span> : <span className=" badge text-bg-danger">No</span>}</td>
                                                     <td className="text-truncate">{a.totalOrders}</td>
@@ -577,9 +577,17 @@ export default function ItemsList(props) {
                                         <td>  <span className="placeholder col-7"></span></td>
                                         <td>  <span className="placeholder col-7"></span></td>
                                         <td>  <span className="placeholder col-7"></span></td>
+                                        <td>  <span className="placeholder col-7"></span></td>
+                                        <td>  <span className="placeholder col-7"></span></td>
+                                        <td>  <span className="placeholder col-7"></span></td>
+                                        <td>  <span className="placeholder col-7"></span></td>
                                     </tr>
                                     <tr className="placeholder-glow">
                                         <th scope="row"> <span className="placeholder col-7"></span></th>
+                                        <td>  <span className="placeholder col-7"></span></td>
+                                        <td>  <span className="placeholder col-7"></span></td>
+                                        <td>  <span className="placeholder col-7"></span></td>
+                                        <td>  <span className="placeholder col-7"></span></td>
                                         <td>  <span className="placeholder col-7"></span></td>
                                         <td>  <span className="placeholder col-7"></span></td>
                                         <td>  <span className="placeholder col-7"></span></td>
@@ -596,9 +604,17 @@ export default function ItemsList(props) {
                                         <td>  <span className="placeholder col-7"></span></td>
                                         <td>  <span className="placeholder col-7"></span></td>
                                         <td>  <span className="placeholder col-7"></span></td>
+                                        <td>  <span className="placeholder col-7"></span></td>
+                                        <td>  <span className="placeholder col-7"></span></td>
+                                        <td>  <span className="placeholder col-7"></span></td>
+                                        <td>  <span className="placeholder col-7"></span></td>
                                     </tr>
                                     <tr className="placeholder-glow">
                                         <th scope="row"> <span className="placeholder col-7"></span></th>
+                                        <td>  <span className="placeholder col-7"></span></td>
+                                        <td>  <span className="placeholder col-7"></span></td>
+                                        <td>  <span className="placeholder col-7"></span></td>
+                                        <td>  <span className="placeholder col-7"></span></td>
                                         <td>  <span className="placeholder col-7"></span></td>
                                         <td>  <span className="placeholder col-7"></span></td>
                                         <td>  <span className="placeholder col-7"></span></td>
@@ -610,7 +626,7 @@ export default function ItemsList(props) {
                                 </tbody>}
                             {i == 0 && <tbody >
                                 <tr className="text-center">
-                                    <td colSpan="10" className="h5">
+                                    <td colSpan="12" className="h5">
                                         No items found
                                     </td>
                                 </tr>

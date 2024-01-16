@@ -25,7 +25,7 @@ export default function Settings(props) {
 
     const [address, setAddress] = useState([]);
 
-    const [details, setDetails] = useState({ firstName: "", lastName: "", emailAddress: "", phoneNumber: "", pincode: "", address: "", referenceId: "" });
+    const [details, setDetails] = useState({ firstName: "", lastName: "", emailAddress: "", phoneNumber: "", pincode: "", address: "", referenceId: "", addressString: "" });
 
     const [errors, setErrors] = useState({ firstName: "", phoneNumber: "", pincode: "", address: "", paymentOption: "" });
 
@@ -128,14 +128,14 @@ export default function Settings(props) {
     }
 
     const addAddress = (e) => {
-        if (details.firstName == "" || details.phoneNumber == "" || details.pincode == "" || details.address == "") {
+        if (details.firstName == "" || details.phoneNumber == "" || deliveryAddress.pincode == "" || details.address == "") {
             validateAddress(e)
             setClose("modals")
         } else {
             axios.post("http://localhost:8083/address/", {
                 "userId": props.user,
-                "deliveryAddress": details.address,
-                "pincode": details.pincode,
+                "deliveryAddressUuid": details.address,
+                "pincode": deliveryAddress.pincode,
                 "phoneNumber": details.phoneNumber,
                 "emailAddress": details.emailAddress,
                 "lastName": details.lastName,
@@ -197,7 +197,7 @@ export default function Settings(props) {
     }
 
     const deleteAddress = (e) => {
-        axios.delete("http://localhost:8083/address/withreference/" +  e).then(() => { fetchAddress() }).catch((error) => {
+        axios.delete("http://localhost:8083/address/withreference/" + e).then(() => { fetchAddress() }).catch((error) => {
             setError(true);
             if (error.response.data === undefined) {
                 setErrorMessage("Something went wrong")
@@ -339,10 +339,89 @@ export default function Settings(props) {
         }
     }
 
+    const getStateNames = () => {
+        axios.get("http://localhost:8083/city-pincode/state-name").then(a => {
+            return (setStateNames(a.data))
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
+    }
+
+    const getDistrictNames = (name) => {
+        axios.get("http://localhost:8083/city-pincode/district-name?statename=" + name).then(a => {
+            return (setDistrictNames(a.data))
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
+    }
+
+    const getOfficeNames = (name) => {
+        axios.get("http://localhost:8083/city-pincode/office-name?district=" + name).then(a => {
+            return (setOfficeNames(a.data))
+        }).catch((error) => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
+    }
+
+    const getPincode = () => {
+        let pincode = officeNames
+            .filter(a => a.officeName == deliveryAddress.officeName)
+            .map(a => { return (a.pincode) })[0];
+        return pincode;
+    }
+
+    const getAddressUuid = () => {
+        let uuid = officeNames
+            .filter(a => a.officeName == deliveryAddress.officeName)
+            .map(a => { return (a.uuid) })[0];
+        return uuid;
+    }
+
+    const setAddressAsString = () => [
+        setDetails({ address: details.address, firstName: details.firstName, lastName: details.lastName, emailAddress: details.emailAddress, phoneNumber: details.phoneNumber, orderQuantity: details.orderQuantity, paymentOption: details.paymentOption })
+    ]
+
+    const selectedAddressStore = (a) => {
+        setDetails({
+            firstName: a.firstName,
+            lastName: a.lastName,
+            emailAddress: a.emailAddress,
+            phoneNumber: a.phoneNumber,
+            address: a.deliveryAddressUuid,
+            addressString: a.deliveryAddress,
+            paymentOption: details.paymentOption,
+            orderQuantity: details.orderQuantity
+        })
+        setShowAddressSelectBar(true);
+    }
+    const [showAddressSelectBar, setShowAddressSelectBar] = useState(false)
+
+    const [stateNames, setStateNames] = useState([]);
+
+    const [districtNames, setDistrictNames] = useState([]);
+
+    const [officeNames, setOfficeNames] = useState([]);
+
     useEffect(() => {
         currentuser();
         fetchAddress();
         checkSystemTheme();
+        getStateNames();
         // axios.get("http://localhost:8083/user/theme/" + props.user).then(a => setTheme(a.data)).catch((error) => {
         //     setError(true);
         //     if (error.response.data === undefined) {
@@ -631,7 +710,13 @@ export default function Settings(props) {
                         </div>
 
                         <div className='container-md data text-light p-3'>
-                            <h6>Saved Address : </h6><hr></hr>
+                            <div className='row text-center text-sm-start'>
+                                <h6 className='col-sm-6'>Saved Address : </h6>
+                                <button type="button" className="col-sm-6 btn btn-warning btn-sm " data-bs-toggle="modal" data-bs-target="#popupforaddress">
+                                    Add new address +
+                                </button>
+                            </div>
+                            <hr></hr>
                             <div className='address'>
                                 {fetchAddressDone ?
                                     address.length == 0 ?
@@ -649,7 +734,7 @@ export default function Settings(props) {
                                                                 Address : {a.deliveryAddress}<br></br>
                                                             </div>
                                                             <div className='col-md'>
-                                                                Pincode : {a.pincode}<br></br>
+                                                                Pincode : {a.deliveryAddress.substr(a.deliveryAddress.indexOf('-') + 1)}<br></br>
                                                                 Mobile Number : {a.phoneNumber}<br></br>
                                                                 Email address : {a.emailAddress}<br></br>
                                                             </div>
@@ -688,11 +773,6 @@ export default function Settings(props) {
                                         </div>
                                     </div>
                                 }
-                                <div className='text-center justify-content-center'>
-                                    <button type="button" className="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#popupforaddress">
-                                        Add new address +
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -757,26 +837,59 @@ export default function Settings(props) {
                                         </div>
                                         <div className='row'>
                                             <div className="col-md g-4">
-                                                <div className="form-floating">
-                                                    <textarea className="form-control" name="address"
-                                                        value={details.address}
-                                                        onChange={setDetailsValues} placeholder="Address here" id="floatingTextarea"></textarea>
-                                                    <label htmlFor="floatingTextarea">Address </label>
-                                                    <span className="text-danger">{errors.address}</span>
-                                                </div>
+                                                <select className="form-select" disabled={false} onChange={(name) => { return (getDistrictNames(name.target.value), setDeliveryAddress({ stateName: name.target.value, district: deliveryAddress.district, officeName: deliveryAddress.officeName, pincode: deliveryAddress.pincode })) }}>
+                                                    <option >Select State name</option>
+                                                    {stateNames.map((a, i) => {
+                                                        return (
+                                                            <option value={a} key={i}>{a}</option>
+                                                        )
+                                                    })}
+                                                </select>
                                             </div>
                                         </div>
                                         <div className='row'>
                                             <div className="col-md g-4">
-                                                <div className="form-floating">
-                                                    <input className="form-control" name="pincode"
-                                                        value={details.pincode}
-                                                        onChange={setDetailsValues} placeholder="Pincode here" id="floatingInput"></input>
-                                                    <label htmlFor="floatingTextarea">Pincode </label>
-                                                    <span className="text-danger">{errors.pincode}</span>
+                                                <select className="form-select" disabled={deliveryAddress.stateName == "" ? true : false}
+                                                    onChange={(name) => {
+                                                        return (getOfficeNames(name.target.value),
+                                                            setDeliveryAddress({ district: name.target.value, officeName: deliveryAddress.officeName, pincode: deliveryAddress.pincode, stateName: deliveryAddress.stateName })
+                                                            , setAddressAsString()
+                                                        )
+                                                    }}>
+                                                    <option>Select District name</option>
+                                                    {districtNames.map((a, i) => {
+                                                        return (
+                                                            <option value={a} key={i}>{a}</option>
+                                                        )
+                                                    })}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className='row'>
+                                            <div className="col-md g-4">
+                                                <select className="form-select" disabled={deliveryAddress.district == "" ? true : false} onChange={(name) => { return (setDeliveryAddress({ officeName: name.target.value, pincode: deliveryAddress.pincode, stateName: deliveryAddress.stateName, district: deliveryAddress.district }), getPincode()) }}>
+                                                    <option>Select City/Town/Village name</option>
+                                                    {officeNames.map((a, i) => {
+                                                        return (
+                                                            <>
+                                                                <option value={a.officeName} key={i} >{a.officeName}</option>
+                                                                <option hidden>{deliveryAddress.pincode = getPincode()}</option>
+                                                                <option hidden>{details.address = getAddressUuid()}</option>
+                                                            </>
+                                                        )
+                                                    })}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className='row'>
+                                            <div className="col-md g-4">
+                                                <div className="input-group input-group-sm mb-3" >
+                                                    <span className="input-group-text" id="inputGroup-sizing-sm">Pincode</span>
+                                                    <input type="text" className="form-control" value={deliveryAddress.officeName == "" ? "Select City/Town/Village" : deliveryAddress.pincode} disabled />
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </section>
                             </div>
@@ -845,15 +958,15 @@ export default function Settings(props) {
                                         <div className='row'>
                                             <div className="col-md g-4">
                                                 <div className="form-floating">
-                                                    <textarea className="form-control" name="address"
+                                                    <textarea className="form-control h-auto" name="address"
                                                         value={details.address}
-                                                        onChange={setDetailsValues} placeholder="Address here" id="floatingTextarea"></textarea>
+                                                        onChange={setDetailsValues} placeholder="Address here" id="floatingTextarea" ></textarea>
                                                     <label htmlFor="floatingTextarea">Address </label>
                                                     <span className="text-danger">{errors.address}</span>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className='row'>
+                                        {/* <div className='row'>
                                             <div className="col-md g-4">
                                                 <div className="form-floating">
                                                     <input className="form-control" name="pincode"
@@ -863,13 +976,13 @@ export default function Settings(props) {
                                                     <span className="text-danger">{errors.pincode}</span>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </section>
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-sm btn-secondary" data-bs-dismiss="modal" onClick={() => { clearDetails() }}>Close</button>
-                                <button type="button" className="btn  btn-sm btn-primary" data-bs-dismiss={close} onClick={(e) => { return (updateAddress(e)) }}>Update</button>
+                                <button type="button" className="btn  btn-sm btn-primary" disabled="true" data-bs-dismiss={close} onClick={(e) => { return (updateAddress(e)) }}>Update</button>
                             </div>
                         </div>
                     </div>

@@ -105,7 +105,7 @@ public class UserServiceImpl extends SecurityServiceImpl implements UserService 
     @Override
     public UserDetailDto getUserWithId(UUID userId) throws UserException {
         if (Objects.nonNull(userId)) {
-            return mappingToUserDetailDto(findall().stream().filter(user -> Objects.equals(user.getUserId(), userId))
+            return mappingToUserDetailDto(userRepo.findAll().stream().filter(user -> Objects.equals(user.getUserId(), userId))
                     .findFirst().orElseThrow(() -> new UserException("No user Found")));
         }
         return null;
@@ -281,7 +281,7 @@ public class UserServiceImpl extends SecurityServiceImpl implements UserService 
     }
 
     private UserEntity getUserEntity(UUID userId) throws UserException {
-        return findall().stream().filter(a -> a.getUserId().equals(userId)).findFirst()
+        return userRepo.findAll().stream().filter(a -> a.getUserId().equals(userId)).findFirst()
                 .orElseThrow(() -> new UserException("Not present"));
     }
 
