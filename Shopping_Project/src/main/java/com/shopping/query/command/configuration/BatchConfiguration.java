@@ -12,6 +12,7 @@ import com.shopping.query.command.repos.ItemsRepo;
 import com.shopping.query.command.service.BatchUpdateOfOrderService;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -20,6 +21,7 @@ import org.springframework.batch.core.job.flow.JobExecutionDecider;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.data.RepositoryItemReader;
 import org.springframework.batch.item.json.JacksonJsonObjectReader;
@@ -50,7 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 @EnableBatchProcessing
 @Configuration
 @Slf4j
-public class BatchConfiguration {
+public class BatchConfiguration implements org.springframework.batch.core.StepExecutionListener {
 
      @Autowired
      private JobCompleteNotificationListener jobCompleteNotificationListener;
@@ -94,6 +96,9 @@ public class BatchConfiguration {
      @Autowired
      private ItemUpdatingAsTrendingProcessor itemUpdatingAsTrendingProcessor;
 
+     @Autowired
+     OrdersWriter ordersWriter;
+
      @Bean
      @StepScope
      public RepositoryItemReader<OrdersEntity> reader() {
@@ -105,28 +110,6 @@ public class BatchConfiguration {
           sort.put("orderedOn", Sort.Direction.DESC);
           reader.setSort(sort);
           return reader;
-     }
-
-     @Bean
-     public ItemWriter<? super OrdersEntity> writer() {
-          return list -> {
-               for (OrdersEntity order : list) {
-                    try {
-                         log.info("Updating order : {} at {}", order.getOrderUUIDId(), LocalDateTime.now());
-                         orderService.updateOrderStatus(order.getOrderUUIDId());
-                         log.info("Updated order : {} at {}", order.getOrderUUIDId(), LocalDateTime.now());
-                    } catch (OrderNotFoundException | ItemNotFoundException e) {
-                         if (e instanceof OrderNotFoundException)
-                              log.error(Objects.requireNonNull(globalExceptionHandler
-                                        .orderNotFoundException((OrderNotFoundException) e).getBody())
-                                   .getErrorMessage());
-                         if (e instanceof ItemNotFoundException)
-                              log.error(Objects.requireNonNull(
-                                        globalExceptionHandler.itemNotFoundException((ItemNotFoundException) e).getBody())
-                                   .getErrorMessage());
-                    }
-               }
-          };
      }
 
      @Bean
@@ -154,7 +137,7 @@ public class BatchConfiguration {
      public Step step(PlatformTransactionManager platformTransactionManager) {
           return new StepBuilder("orderupdatejob", jobRepository)
                .<OrdersEntity, OrdersEntity>chunk(Batch_Process_Size, platformTransactionManager).reader(reader())
-               .writer(writer()).listener(writerListener).listener(stepExecutionListener)
+               .writer(ordersWriter).listener(writerListener).listener(stepExecutionListener)
                .processor(ordersBatchProcessor)
                .build();
      }

@@ -26,17 +26,17 @@ public class JobCompleteNotificationListener implements JobExecutionListener {
 	@Override
 	public void beforeJob(JobExecution jobExecution) {
 		if (jobExecution.getStatus()==BatchStatus.STARTED) {
-			log.info("The job updating job is started");
+			log.info("The updating job is started");
 		}
 	}
 
 	@Override
 	public void afterJob(JobExecution jobExecution) {
 		if (jobExecution.getStatus()==BatchStatus.FAILED) {
-			log.info("The job updating job is failed and now updated batch status table");
+			log.info("The updating job is failed and now updated batch status table");
 		}
 		if (jobExecution.getStatus()==BatchStatus.COMPLETED) {
-			log.info("The job updating job is completed and now updated batch status table");
+			log.info("The updating job is completed and now updated batch status table");
 		}
 	}
 
