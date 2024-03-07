@@ -194,7 +194,7 @@ export default function Cartpage(props) {
             </header >
 
             <div className='container-fluid middle'>
-                <div className='cart-aside d-lg-block'>
+                <div className='cart-aside d-lg-block d-none'>
                     <aside className=' '>
                         <div className="offcanvas-lg offcanvas-start alert alert-info" tabIndex="-1" id="offcanvasResponsive" aria-labelledby="offcanvasResponsiveLabel">
                             <div className="alert alert-warning d-none d-lg-block"><i className='fa-solid fa-circle-dot'></i> Browse Contents </div>
@@ -292,7 +292,7 @@ export default function Cartpage(props) {
                                         {data.map(a => {
                                             return (
                                                 a.map(e => {
-                                                    total += parseInt(e.itemPrice.substr(1).replaceAll(",", ""));
+                                                    total += parseInt(e.itemPrice.replaceAll(",", ""));
                                                     totalAmount = Intl.NumberFormat('hi-IN', { style: "currency", currency: "INR" }).format(total)
                                                     return (
                                                         <div key={e.itemId}>
@@ -300,12 +300,11 @@ export default function Cartpage(props) {
                                                                 {e.itemName} =  ₹{e.itemPrice} -&gt;
                                                                 <button className='btn btn-outline-danger m-2' onClick={() => {
                                                                     setfetchDone(false);
-                                                                    axios.delete("http://localhost:8083/cart/" + e.itemName + "?" + "userEmail=" + localStorage.getItem("currentuser")).then((res) => { return (setInfo(res.data), fetch(), setShowToast(true), timeout()) }).catch((error) => {
+                                                                    axios.delete("http://localhost:8083/cart/" + e.itemName + "?" + "userId=" + localStorage.getItem("currentuser")).then((res) => { return (setInfo(res.data), fetch(), setShowToast(true), timeout()) }).catch((error) => {
                                                                         setError(true);
                                                                         setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
                                                                     })
-                                                                }}
-                                                                    data-bs-toggle="modal" data-bs-target="#exampleModal2" data-bs-whatever="@mdo">
+                                                                }}>
                                                                     <i className='fa-solid fa-trash '></i></button>
                                                                 <Link className='btn btn-warning' to={"/purchase"} onClick={() => {
                                                                     axios.post("http://localhost:8083/purchase/" + e.itemId + "?userId=" + props.user);
