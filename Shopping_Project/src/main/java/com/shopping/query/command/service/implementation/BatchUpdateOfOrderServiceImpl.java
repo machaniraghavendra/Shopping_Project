@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Objects;
@@ -47,11 +48,20 @@ public class BatchUpdateOfOrderServiceImpl implements BatchUpdateOfOrderService 
                var lastOrderBatch = updateOfOrderRepo.getLastRunJobOfOrders();
                if (Objects.nonNull(lastOrderBatch)) {
                     int diffHours = (int) (Math.abs(ChronoUnit.HOURS.between(lastOrderBatch.getEndDate().toInstant(), new Date().toInstant())));
-                    log.info(diffHours + " hours back the orders batch runned");
+                    if (diffHours < 24) {
+                         long secondsDiff = ChronoUnit.SECONDS.between(lastOrderBatch.getEndDate().toInstant(), Instant.now());
+                         long days = secondsDiff / (24 * 3600);
+                         long hours = (secondsDiff % (24 * 3600)) / 3600;
+                         long minutes = ((secondsDiff % (24 * 3600)) % 3600) / 60;
+                         long seconds = ((secondsDiff % (24 * 3600)) % 3600) % 60;
+                         log.info("Total {} days, {} hours, {} minutes, {} seconds the orders batch ran", days, hours, minutes, seconds);
+                    } else {
+                         log.info(diffHours + " hours the orders batch ran");
+                    }
                     if (diffHours >= Integer.parseInt(constants.BATCH_JOB_TIME)) {
                          return true;
                     }
-               }else return true;
+               } else return true;
           } catch (Exception e) {
                log.error(e.getMessage());
           }
