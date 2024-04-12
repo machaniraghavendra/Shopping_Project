@@ -33,7 +33,7 @@ public class UserEntity implements Serializable {
 //	@Pattern(regexp = "\\d{10}")
 	@Column(unique = true)
 	private String mobileNumber;
-	@Column(length = 23000)
+	@Lob
 	private String profileImgUrl;
 	private boolean isLoggedIn;
 	private boolean admin;

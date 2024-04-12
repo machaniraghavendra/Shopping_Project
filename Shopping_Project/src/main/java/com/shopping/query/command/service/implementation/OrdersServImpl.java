@@ -1,37 +1,27 @@
 package com.shopping.query.command.service.implementation;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.*;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shopping.query.command.configuration.OrderScheduler;
+import com.shopping.query.command.entites.dto.*;
 import com.shopping.query.command.exceptions.*;
+import com.shopping.query.command.repos.OrderSchedulerRepo;
 import com.shopping.query.command.service.ItemService;
 import jakarta.annotation.Nonnull;
+import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import com.shopping.query.command.entites.AddressEntity;
 import com.shopping.query.command.entites.OrdersEntity;
-import com.shopping.query.command.entites.dto.AddressDto;
-import com.shopping.query.command.entites.dto.EmailDto;
-import com.shopping.query.command.entites.dto.ItemsDto;
-import com.shopping.query.command.entites.dto.OrdersDto;
 import com.shopping.query.command.mapper.MappersClass;
 import com.shopping.query.command.repos.OrderRepo;
 import com.shopping.query.command.service.AddressService;
@@ -65,6 +55,12 @@ public class OrdersServImpl implements OrderService {
 
      @Autowired
      private ItemService itemService;
+
+     @Autowired
+     private Scheduler scheduler;
+
+     @Autowired
+     OrderSchedulerRepo orderSchedulerRepo;
 
      @Override
      public boolean saveOrderByCheckingAddress(OrdersEntity ordersEntity) throws UserException {
@@ -328,6 +324,61 @@ public class OrdersServImpl implements OrderService {
      @Override
      public OrdersEntity getWithUUID(UUID uuid) {
           return getAllOrders().stream().filter(a -> a.getOrderUUIDId().equals(uuid)).findFirst().get();
+     }
+
+     @Override
+     public OrderSchedulerResponseDto scheduleOrder(OrdersEntity order, LocalDateTime scheduleAt, ZoneId zoneId)  {
+          ZonedDateTime triggerTime = ZonedDateTime.of(scheduleAt, zoneId);
+          JobDetail jobDetail = null;
+          try {
+          if(triggerTime.isBefore(ZonedDateTime.of(LocalDateTime.now(), zoneId))){
+               log.error("Failed to schedule Order: Selected date and time should be after current date and time");
+               return OrderSchedulerResponseDto.builder().orderScheduled(Boolean.FALSE).message("Failed to schedule Order: Selected date and time should be after current date and time").build();
+          }
+               jobDetail = buildJobDetail(order, triggerTime);
+               scheduler.addJob(jobDetail, true);
+               Trigger trigger = buildTrigger(jobDetail, triggerTime);
+               scheduler.scheduleJob(trigger);
+               log.info("Scheduled order for "+scheduleAt);
+               orderSchedulerRepo.save(mapper.getOrderSchedulerEntity(UUID.fromString(jobDetail.getKey().getName()), order, Boolean.FALSE, scheduleAt, Boolean.FALSE));
+               ItemsDto item = mapper.getItemDtoById(order.getItemId());
+               emailService.sendSimplemail(EmailDto.builder().
+                    subject("Scheduled order for item "+getItemNameWith30Chars(item.getItemName()))
+                    .recipient(order.getEmailAddress())
+                    .msgBody("Hi " + order.getFirstName() + ",\n" + "\t Your order of " + item.getItemName()
+                         + " has been scheduled for "+ triggerTime).build());
+          }catch (Exception e){
+               log.error("Failed to schedule Order");
+               return OrderSchedulerResponseDto.builder().orderScheduled(Boolean.FALSE).message("Failed to schedule Order").build();
+          }
+          return OrderSchedulerResponseDto.builder()
+               .orderScheduled(Boolean.TRUE)
+               .message("Scheduled order for "+scheduleAt).jobId(UUID.fromString(jobDetail.getKey().getName()))
+               .groupId(jobDetail.getKey().getGroup())
+               .build();
+     }
+
+     private Trigger buildTrigger(JobDetail jobDetail, ZonedDateTime triggerTime) {
+          return TriggerBuilder.newTrigger()
+               .forJob(jobDetail)
+               .usingJobData(jobDetail.getJobDataMap())
+               .withIdentity(jobDetail.getKey().getName(), "Order jobs")
+               .withDescription("Placed Order for scheduled time")
+               .startAt(Date.from(triggerTime.toInstant()))
+               .withSchedule(SimpleScheduleBuilder.simpleSchedule().withMisfireHandlingInstructionFireNow())
+               .build();
+     }
+
+     private JobDetail buildJobDetail(OrdersEntity order, ZonedDateTime scheduledAt) throws JsonProcessingException {
+          JobDataMap jobDataMap = new JobDataMap();
+          jobDataMap.put("orderEntity", new ObjectMapper().writeValueAsString(order));
+
+          return JobBuilder.newJob(OrderScheduler.class)
+               .usingJobData(jobDataMap)
+               .storeDurably()
+               .withIdentity(UUID.randomUUID().toString(),"Order jobs")
+               .withDescription("Scheduled order for "+ scheduledAt)
+               .build();
      }
 
      @Override

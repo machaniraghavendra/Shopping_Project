@@ -146,7 +146,10 @@ export default function Orders(props) {
                 </header>
 
                 <div className='container my-4'>
-                    <h2 className='align-items-center d-flex justify-content-center text-info'>Your Orders </h2>
+                    <div className='row'>
+                        <h2 className='col-12 col-md-6 align-items-center d-flex justify-content-center text-info'>Your Orders </h2>
+                        <Link to={"/orders/scheduled"} className='col-12 col-md-4 btn text-info nav-link'><h2><i className="bi bi-stopwatch"></i> Scheduled Orders</h2></Link>
+                    </div>
                     {fetchDone ?
                         <div className='row rounded-5 justify-content-center d-flex g-3 '>
 

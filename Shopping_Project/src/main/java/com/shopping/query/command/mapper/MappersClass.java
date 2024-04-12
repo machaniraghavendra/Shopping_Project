@@ -1,17 +1,15 @@
 package com.shopping.query.command.mapper;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
+import com.shopping.query.command.entites.*;
 import com.shopping.query.command.exceptions.AddressNotFoundException;
 import com.shopping.query.command.service.CityPincodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.shopping.query.command.entites.AddressEntity;
-import com.shopping.query.command.entites.ItemEntity;
-import com.shopping.query.command.entites.OrdersEntity;
-import com.shopping.query.command.entites.RatingsOfUser;
 import com.shopping.query.command.entites.dto.AddressDto;
 import com.shopping.query.command.entites.dto.ItemsDto;
 import com.shopping.query.command.entites.dto.OrdersDto;
@@ -143,5 +141,9 @@ public class MappersClass {
 
      public String getAddress(UUID uuid){
           return pincodeService.getDeliveryAddressAsStringWithId(uuid);
+     }
+
+     public OrderSchedulerEntity getOrderSchedulerEntity(UUID jobId, OrdersEntity orderDetails, Boolean jobCompleted, LocalDateTime scheduledOn, Boolean isDeleted){
+          return OrderSchedulerEntity.builder().uuid(jobId).scheduledOn(scheduledOn).isDeleted(isDeleted).orderDetails(orderDetails).jobCompleted(jobCompleted).build();
      }
 }

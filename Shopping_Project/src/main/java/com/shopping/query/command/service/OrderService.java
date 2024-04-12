@@ -1,12 +1,15 @@
 package com.shopping.query.command.service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
 import com.shopping.query.command.entites.OrdersEntity;
+import com.shopping.query.command.entites.dto.OrderSchedulerResponseDto;
 import com.shopping.query.command.entites.dto.OrdersDto;
 import com.shopping.query.command.exceptions.*;
+import org.quartz.SchedulerException;
 
 public interface OrderService {
 
@@ -44,4 +47,6 @@ public interface OrderService {
 	OrdersDto getOrderDtowithOrderUUID(UUID orderId) throws ItemNotFoundException;
 	
 	OrdersEntity getWithUUID(UUID uuid);
+
+	OrderSchedulerResponseDto scheduleOrder(OrdersEntity order, LocalDateTime scheduleAt, ZoneId zoneId);
 }

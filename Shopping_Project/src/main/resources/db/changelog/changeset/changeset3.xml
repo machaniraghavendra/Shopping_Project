@@ -1,0 +1,75 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet id="1" author="M Raghu">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="ORDER_SCHEDULER"/>
+            </not>
+        </preConditions>
+        <comment>Creating new table ORDER SCHEDULER</comment>
+        <createTable tableName="ORDER_SCHEDULER">
+            <column name="ID" type="INT" autoIncrement="true" generationType="BY DEFAULT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="UUID" type="BINARY(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORDER_DETAILS" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="JOB_COMPLETED" type="NUMBER(1,0)" defaultOnNull="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_ON" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="MODIFIED_BY" type="VARCHAR(255)"/>
+            <column name="MODIFIED_ON" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="2" author="M Raghu">
+        <preConditions>
+            <not>
+                <columnExists tableName="ORDER_SCHEDULER" columnName="SCHEDULED_TIME"/>
+            </not>
+        </preConditions>
+        <comment>Adding new column SCHEDULED_TIME in ORDER_SCHEDULER</comment>
+        <addColumn tableName="ORDER_SCHEDULER">
+            <column name="SCHEDULED_ON" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="3" author="M Raghu">
+        <preConditions>
+            <not>
+                <tableExists tableName="QRTZ_CALENDARS"/>
+            </not>
+        </preConditions>
+        <comment>Creating tables for Quartz scheduler</comment>
+        <sqlFile path="classpath:/org/quartz/impl/jdbcjobstore/tables_h2.sql"/>
+    </changeSet>
+
+    <changeSet id="4" author="M Raghu">
+        <preConditions>
+            <not>
+                <columnExists tableName="ORDER_SCHEDULER" columnName="IS_DELETED"/>
+            </not>
+        </preConditions>
+        <comment>Adding new column IS_DELETED in ORDER_SCHEDULER</comment>
+        <addColumn tableName="ORDER_SCHEDULER">
+            <column name="IS_DELETED" type="NUMBER(1,0)" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

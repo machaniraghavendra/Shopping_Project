@@ -26,6 +26,9 @@ public class BatchUpdateOfOrderServiceImpl implements BatchUpdateOfOrderService 
 
      @Override
      public BatchUpdateOfOrder save(BatchUpdateOfOrder updateOfOrder) {
+//          if (null==updateOfOrder.getBatchRunID()){
+//
+//          }
           return updateOfOrderRepo.save(updateOfOrder);
      }
 
@@ -48,15 +51,18 @@ public class BatchUpdateOfOrderServiceImpl implements BatchUpdateOfOrderService 
                var lastOrderBatch = updateOfOrderRepo.getLastRunJobOfOrders();
                if (Objects.nonNull(lastOrderBatch)) {
                     int diffHours = (int) (Math.abs(ChronoUnit.HOURS.between(lastOrderBatch.getEndDate().toInstant(), new Date().toInstant())));
-                    if (diffHours < 24) {
-                         long secondsDiff = ChronoUnit.SECONDS.between(lastOrderBatch.getEndDate().toInstant(), Instant.now());
+                    long secondsDiff = ChronoUnit.SECONDS.between(lastOrderBatch.getEndDate().toInstant(), Instant.now());
+                    long minutes = ((secondsDiff % (24 * 3600)) % 3600) / 60;
+                    long seconds = ((secondsDiff % (24 * 3600)) % 3600) % 60;
+                    if (diffHours > 24) {
                          long days = secondsDiff / (24 * 3600);
                          long hours = (secondsDiff % (24 * 3600)) / 3600;
-                         long minutes = ((secondsDiff % (24 * 3600)) % 3600) / 60;
-                         long seconds = ((secondsDiff % (24 * 3600)) % 3600) % 60;
-                         log.info("Total {} days, {} hours, {} minutes, {} seconds the orders batch ran", days, hours, minutes, seconds);
+                         log.info("Total {} days, {} hours, {} minutes, {} seconds ago orders batch ran", days, hours, minutes, seconds);
                     } else {
-                         log.info(diffHours + " hours the orders batch ran");
+                         if (diffHours==0){
+                              log.info("{} hours, {} minutes, {} seconds ago orders batch ran", diffHours, minutes, seconds);
+                         }else
+                              log.info(diffHours + " hour(s) ago orders batch ran");
                     }
                     if (diffHours >= Integer.parseInt(constants.BATCH_JOB_TIME)) {
                          return true;
