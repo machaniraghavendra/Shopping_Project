@@ -35,6 +35,7 @@ import ItemsList from "./Components/AdminPages/ItemsList";
 import UpdateItem from "./Components/AdminPages/UpdateItem";
 import AllReviewOfItem from "./Components/View/AllReviewOfItem";
 import SearchScreen from "./Components/MainPage/SearchScreen";
+import ScheduledOrders from "./Components/Orders/ScheduledOrders";
 
 function App() {
   let user = localStorage.getItem("currentuser");
@@ -119,6 +120,7 @@ function App() {
               } />
               <Route path="/mart/search" element={<SearchScreen user={user}/>}/>
               <Route path="/*" element={<ErrorPage />} />
+              <Route path="/orders/scheduled" element={<ScheduledOrders user={user} />} />
             </Routes>
           </Router>
         </div>

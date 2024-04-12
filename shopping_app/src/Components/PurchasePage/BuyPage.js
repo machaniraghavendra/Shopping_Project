@@ -36,6 +36,8 @@ export default function Buypage(props) {
 
     const [orderButtonEnabled, setOrderButtonEnabled] = useState(true);
 
+    const [disableOrderButton, setDisableOrderButton] = useState(true);
+
     const [deliveryAddress, setDeliveryAddress] = useState({ stateName: "", district: "", officeName: "", pincode: "" })
 
     const [stateNames, setStateNames] = useState([]);
@@ -44,8 +46,11 @@ export default function Buypage(props) {
 
     const [officeNames, setOfficeNames] = useState([]);
 
-    const [showAddressSelectBar, setShowAddressSelectBar] = useState(false)
+    const [showAddressSelectBar, setShowAddressSelectBar] = useState(false);
 
+    const [selectedDateAndTime, setSelectedDateAndTime] = useState("");
+
+    const [isScheduleMode, setIsScheduleMode] = useState(false);
     var number = 1;
 
     let itemId = "";
@@ -64,10 +69,49 @@ export default function Buypage(props) {
     }
 
     const sendOrderData = (e) => {
-        if (details.firstName == "" || details.phoneNumber == "" || details.pincode == "" || details.address == "" || details.paymentOption == "") {
-            validate(e)
-        } else {
-            axios.post("http://localhost:8083/orders/", {
+        if (!isScheduleMode) {
+            if (details.firstName == "" || details.phoneNumber == "" || details.pincode == "" || details.address == "" || details.paymentOption == "") {
+                validate(e)
+            } else {
+                axios.post("http://localhost:8083/orders/", {
+                    "userId": props.user,
+                    "itemId": itemId,
+                    "firstName": details.firstName,
+                    "lastName": details.lastName,
+                    "emailAddress": details.emailAddress,
+                    "pincode": deliveryAddress.pincode,
+                    "deliveryAddress": details.address,
+                    "phoneNumber": details.phoneNumber,
+                    "paymentType": details.paymentOption,
+                    "orderQuantity": details.orderQuantity
+                }).then((res) => {
+                    if (res.data === "Saved order") {
+                        setMessage("Order already placed on this item")
+                        let pop = document.getElementById("successPop-Parent")
+                        pop.classList.remove("d-none")
+                        setTimeout(() => {
+                            return (
+                                setOrderButtonEnabled(true),
+                                nav("/orders")
+                            )
+                        }, 3000)
+                    }
+                }).catch(() => { return (setMessage("Order not placed due to some error"), setShowToast(true), timeout()) })
+                    .catch((error) => {
+                        setError(true);
+                        if (error.response.data === undefined) {
+                            setErrorMessage("Something went wrong")
+                        } else {
+                            setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                        }
+                    })
+            }
+        }
+    }
+
+    const scheduleOrder = () => {
+        if (selectedDateAndTime) {
+            axios.post("http://localhost:8083/orders/schedule/order?scheduleAt=" + selectedDateAndTime + ":00", {
                 "userId": props.user,
                 "itemId": itemId,
                 "firstName": details.firstName,
@@ -79,26 +123,21 @@ export default function Buypage(props) {
                 "paymentType": details.paymentOption,
                 "orderQuantity": details.orderQuantity
             }).then((res) => {
-                if (res.data === "Saved order") {
-                    setMessage("Order already placed on this item")
-                    let pop = document.getElementById("successPop-Parent")
-                    pop.classList.remove("d-none")
+                if (res.data.orderScheduled === true) {
+                    setMessage(res.data.message)
                     setTimeout(() => {
                         return (
-                            setOrderButtonEnabled(true),
-                            nav("/orders")
+                            setMessage(''),
+                            nav("/orders/scheduled"),
+                            window.location.reload()
                         )
                     }, 3000)
                 }
-            }).catch(() => { return (setMessage("Order not placed due to some error"), setShowToast(true), timeout()) })
-                .catch((error) => {
-                    setError(true);
-                    if (error.response.data === undefined) {
-                        setErrorMessage("Something went wrong")
-                    } else {
-                        setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
-                    }
-                })
+            }).catch(res => {
+                if (res.response.data.orderScheduled === false) {
+                    setErrorMessage(res.response.data.message);
+                }
+            })
         }
     }
 
@@ -131,7 +170,9 @@ export default function Buypage(props) {
             "lastName": details.lastName,
             "firstName": details.firstName
         }).then(() => {
-            sendOrderData()
+            if (!isScheduleMode) {
+                sendOrderData()
+            }
         }).catch((error) => {
             setError(true);
             if (error.response.data === undefined) {
@@ -142,7 +183,7 @@ export default function Buypage(props) {
         })
     }
 
-    const checkAddress = () => {
+    const checkAddress = (isSchedule) => {
         setOrderButtonEnabled(false)
         axios.post("http://localhost:8083/orders/check/", {
             "userId": props.user,
@@ -157,10 +198,18 @@ export default function Buypage(props) {
             "orderQuantity": details.orderQuantity
         }).then(res => {
             if (!res.data) {
-                setShowAddressToast(true)
+                if (!isSchedule) {
+                    setShowAddressToast(true)
+                }else{
+                    setIsScheduleMode(false)
+                }
             } else {
                 setShowAddressToast(false)
-                sendOrderData();
+                if (!isSchedule) {
+                    sendOrderData();
+                }else{
+                    setIsScheduleMode(false)
+                }
             }
         }).catch((error) => {
             setError(true);
@@ -197,8 +246,8 @@ export default function Buypage(props) {
             phoneNumber: a.phoneNumber,
             address: a.deliveryAddressUuid,
             addressString: a.deliveryAddress,
-            paymentOption:details.paymentOption,
-            orderQuantity:details.orderQuantity
+            paymentOption: details.paymentOption,
+            orderQuantity: details.orderQuantity
         })
         setShowAddressSelectBar(true);
     }
@@ -228,12 +277,27 @@ export default function Buypage(props) {
         } else {
             errors.phoneNumber = ""
         }
+        if (details.emailAddress == "") {
+            errors.emailAddress = "Email Address required"
+        } else {
+            errors.emailAddress = ""
+        }
         if (details.paymentOption == "") {
             errors.paymentOption = "Select any one payment type"
         } else {
             errors.paymentOption = ""
         }
+        if (details.address == "") {
+            errors.address = "Address required"
+        } else {
+            errors.address = ""
+        }
         setErrors(errors);
+        if (errors.address == "" && errors.firstName == "" && errors.paymentOption == "" && errors.phoneNumber == "" && errors.emailAddress == "") {
+            setDisableOrderButton(false)
+        } else {
+            setDisableOrderButton(true)
+        }
     }
 
     const getStateNames = () => {
@@ -298,6 +362,11 @@ export default function Buypage(props) {
     const setAddressAsString = () => [
         setDetails({ address: details.address, firstName: details.firstName, lastName: details.lastName, emailAddress: details.emailAddress, phoneNumber: details.phoneNumber, orderQuantity: details.orderQuantity, paymentOption: details.paymentOption })
     ]
+
+    const clearAllDetails = () => {
+        setDetails({ address: "", firstName: "", lastName: "", emailAddress: "", phoneNumber: "", orderQuantity: "", paymentOption: "", addressString: "" })
+        setDisableOrderButton(true)
+    }
 
     useEffect(() => {
         sessionStorage.getItem("dark") === "true" ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
@@ -451,30 +520,37 @@ export default function Buypage(props) {
                 {/* Form for details */}
                 <div className="container-fluid my-1">
                     <section className="card-color p-3">
-                        <div className="dropdown dropend container-fluid" >
-                            <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Select from your saved address
-                            </button>
-                            <ul className="dropdown-menu bg-dark text-light container-fluid" style={{ width: "auto" }}>
-                                {
-                                    address.length == 0 ? <p className="px-5"> No address in your list </p> :
-                                        address.map(a => {
-                                            return (
-                                                <li className="dropdown-item" key={a.deliveryAddress} style={{ cursor: "pointer" }}>
-                                                    <div className='container-fluid border m-2 bg-info '>
-                                                        <div className='container-fluid p-2 py-3 ' onClick={() => { selectedAddressStore(a) }}>
-                                                            <span className="text-truncate">
-                                                                Name : {a.firstName + " " + a.lastName},
-                                                                Address : {a.deliveryAddress},
-                                                                Email address : {a.emailAddress},
-                                                                Mobile Number : {a.phoneNumber}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            )
-                                        })}
-                            </ul>
+                        <div className="row">
+                            <div className="col-10">
+                                <div className="dropdown dropend container-fluid" >
+                                    <button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Select from your saved address
+                                    </button>
+                                    <ul className="dropdown-menu bg-dark text-light container-fluid" style={{ width: "auto" }}>
+                                        {
+                                            address.length == 0 ? <p className="px-5"> No address in your list </p> :
+                                                address.map(a => {
+                                                    return (
+                                                        <li className="dropdown-item" key={a.deliveryAddress} style={{ cursor: "pointer" }}>
+                                                            <div className='container-fluid border m-2 bg-info '>
+                                                                <div className='container-fluid p-2 py-3 ' onClick={() => { selectedAddressStore(a) }}>
+                                                                    <span className="text-truncate">
+                                                                        Name : {a.firstName + " " + a.lastName},
+                                                                        Address : {a.deliveryAddress},
+                                                                        Email address : {a.emailAddress},
+                                                                        Mobile Number : {a.phoneNumber}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    )
+                                                })}
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className="col-2">
+                                {details.addressString && <button className="btn btn-danger" onClick={() => { clearAllDetails() }}>Clear address</button>}
+                            </div>
                         </div>
                         <div className="row text-black" >
                             <div className="col-md-3 col-12 g-3">
@@ -500,7 +576,8 @@ export default function Buypage(props) {
                                     <input className="form-control" name="emailAddress"
                                         value={details.emailAddress}
                                         onChange={setDetailsValues} placeholder="Email address here" type={"email"} id="floatingInput"></input>
-                                    <label htmlFor="floatingTextarea">Email address (Optional)</label>
+                                    <label htmlFor="floatingTextarea">Email address</label>
+                                    <span className="mx-3 text-danger">{errors.emailAddress}</span>
                                 </div>
                             </div>
                             <div className="col-md-3 col-12 g-3">
@@ -513,11 +590,12 @@ export default function Buypage(props) {
                                 </div>
                             </div>
                         </div>
-                        {details.addressString ? 
-                        <div className="input-group input-group-sm mb-3">
-                            <span className="input-group-text" id="inputGroup-sizing">Address</span>
-                            <input type="text" className="form-control" value={details.addressString} disabled/>
-                        </div> :
+                        {details.addressString ?
+                            <div className="input-group input-group-sm mb-3">
+                                <span className="input-group-text" id="inputGroup-sizing">Address</span>
+                                <input type="text" className="form-control" value={details.addressString} disabled />
+                                <span className="mx-3 text-danger">{errors.address}</span>
+                            </div> :
                             <div className="row text-black">
                                 <div className="col-md-3 col-12 g-4">
                                     <select className="form-select" disabled={false} onChange={(name) => { return (getDistrictNames(name.target.value), setDeliveryAddress({ stateName: name.target.value, district: deliveryAddress.district, officeName: deliveryAddress.officeName, pincode: deliveryAddress.pincode })) }}>
@@ -528,6 +606,7 @@ export default function Buypage(props) {
                                             )
                                         })}
                                     </select>
+                                    <span className="mx-3 text-danger">{errors.address}</span>
                                 </div>
                                 <div className="col-md-3 col-12 g-4">
                                     <select className="form-select" disabled={deliveryAddress.stateName == "" ? true : false}
@@ -588,15 +667,23 @@ export default function Buypage(props) {
                                 </div>
                             </div>
                         </div>
-                        {console.log(details)}
-                        <div className="text-center">
-                            <button className="btn btn-outline-warning btn-lg  m-auto  orderButton" disabled={!orderButtonEnabled} onClick={(e) => {
+                        <div className="text-center justify-content-around d-flex">
+                            <button className="btn btn-outline-warning btn-lg  m-auto  orderButton" disabled={disableOrderButton} onClick={(e) => {
+                                 setIsScheduleMode(false);
                                 if (details.firstName != "" && details.phoneNumber != "" && details.address != "" && details.paymentOption != "") {
-                                    return (checkAddress(e))
+                                    return (checkAddress(false))
                                 } else {
                                     validate(e)
                                 }
                             }}>{orderButtonEnabled && "Place Order Now"} {!orderButtonEnabled && "Making order wait a min..."}</button>
+                            <button className="btn btn-outline-info btn-lg  m-auto  scheduleOrderButton" data-bs-toggle="modal" data-bs-target="#scheduleBackDrop" disabled={disableOrderButton} onClick={(e) => {
+                              setIsScheduleMode(true);
+                              if (details.firstName != "" && details.phoneNumber != "" && details.address != "" && details.paymentOption != "") {
+                                    return (checkAddress(true))
+                                } else {
+                                    validate(e)
+                                }
+                            }}>{orderButtonEnabled && "Schedule Order Now"} {!orderButtonEnabled && "Making order wait a min..."}</button>
                         </div>
                     </section>
                 </div>
@@ -619,7 +706,7 @@ export default function Buypage(props) {
                             <div className="toast-body">
                                 <p>Looks like this address not in your saved list want to add ?</p>
                                 <div className="mt-2 pt-2">
-                                    <button type="button" className="btn btn-outline-danger"  onClick={() => {
+                                    <button type="button" className="btn btn-outline-danger" onClick={() => {
                                         return (sendOrderData(), setShowAddressToast(false))
                                     }}>No</button>&nbsp;&nbsp;
                                     <button type="button" className="btn btn-outline-success"
@@ -664,6 +751,43 @@ export default function Buypage(props) {
                     </div>
                 </>
             }
+
+            {/* Schedule Pop up */}
+            <div className="modal fade" id="scheduleBackDrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className={sessionStorage.getItem("dark") == "true" ? "modal-content bg-dark text-light" : "modal-content"}>
+                        <div className="modal-header">
+                            <h1 className="modal-title fs-5" id="staticBackdropLabel">Schedule Order</h1>
+                            <button type="button" className="btn-close bg-light" data-bs-dismiss="modal" aria-label="Close" onClick={() => { setOrderButtonEnabled(true); setIsScheduleMode(false);  document.getElementById("dateInput").value=''; setErrorMessage(''); setSelectedDateAndTime('')}}></button>
+                        </div>
+                        <div className="modal-body">
+                            <label for="dateInput" className="form-label">Select Date and Time</label>
+                            <input type="datetime-local" className="form-control form-control-date" id="dateInput" onChange={(a) => { setSelectedDateAndTime(a.target.value); setErrorMessage("") }}
+                                min={new Date().toISOString().substring(0, new Date().toISOString().length - 8)} title="Choose your Date" />
+                            {errorMessage != '' && <span className="mx-1 text-danger">{errorMessage}</span>}
+                            {message!=''&&<span  className="mx-1 text-info text-center d-flex justify-content-center fs-5 my-2 fw-bold">{message.replace('T', " ")}</span>}
+                            {isScheduleMode &&
+                                <div className="container-fluid bg-warning text-dark my-2">
+                                    <p>Looks like this address not in your saved list want to add ?</p>
+                                    <div className="my-2 mt-2 pt-2">
+                                        <button type="button" className="btn btn-outline-danger" onClick={() => {
+                                            return (sendOrderData(), setShowAddressToast(false),  setIsScheduleMode(false))
+                                        }}>No</button>&nbsp;&nbsp;
+                                        <button type="button" className="btn btn-outline-success"
+                                            onClick={() => {
+                                                return (saveAddress(), setShowAddressToast(false), setIsScheduleMode(false))
+                                            }}
+                                        >Yes</button>
+                                    </div>
+                                </div>}
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => { setOrderButtonEnabled(true); setIsScheduleMode(false);  document.getElementById("dateInput").value=''; setErrorMessage(''); setSelectedDateAndTime('')}}>Cancel</button>
+                            <button type="button" className="btn btn-primary" onClick={() => { scheduleOrder();  setErrorMessage(''); setSelectedDateAndTime('')  }} disabled={selectedDateAndTime==''}>Schedule Order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <ChatBot />
         </div >
     )

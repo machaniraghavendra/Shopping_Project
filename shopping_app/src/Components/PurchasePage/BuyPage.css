@@ -1,8 +1,8 @@
-.orderButton{
+.orderButton, .scheduleOrderButton{
     width: 30%;
     transition: 0.3s;
 }
-.orderButton:hover{
+.orderButton:hover, .scheduleOrderButton:hover{
     width: 50%;
 }
 .successPop-Parent{

@@ -143,7 +143,7 @@ export default function Books() {
               }
             </div><br></br>
             <Link className='btn btn-info' to={'/viewmore/Books'}>View More Books....</Link><br></br>
-            & nbsp;
+            &nbsp;
           </div>
         :
         <div className='container-fluid justify-content-center text-center' id='back-card-bg-mob' >

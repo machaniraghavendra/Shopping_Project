@@ -1,8 +1,11 @@
 package com.shopping.query.command.controller;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
+import com.shopping.query.command.entites.dto.OrderSchedulerResponseDto;
 import com.shopping.query.command.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -88,5 +91,11 @@ public class OrdersController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteDetailsWithId(@PathVariable("id") Integer id) {
 		return ResponseEntity.ok(ordersServImpl.deleteDetailsWithId(id));
+	}
+
+	@PostMapping("/schedule/order")
+	public ResponseEntity<OrderSchedulerResponseDto> scheduleOrder(@RequestParam("scheduleAt") LocalDateTime scheduleAt, @RequestParam(value = "zoneId", required = false) ZoneId zoneId, @RequestBody OrdersEntity order){
+		var response = ordersServImpl.scheduleOrder(order, scheduleAt, zoneId==null?ZoneId.systemDefault():zoneId);
+		return response.getOrderScheduled()?ResponseEntity.ok(response): ResponseEntity.badRequest().body(response);
 	}
 }
