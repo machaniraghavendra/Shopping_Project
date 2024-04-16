@@ -3,12 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import axios from "axios"
 import ChatBot from '../ChatBot/ChatBot';
-import timePeriodCalculator from './TimePeriodCalculator';
+import loadingImg from "../Loading_Card.png";
+import "../Orders/Orders.css"
 
 export default function ScheduledOrders(props) {
     const [user, setUser] = useState([]);
 
-    const [orders, setOrders] = useState([]);
+    const [showToast, setShowToast] = useState(false);
 
     const [fetchDone, setfetchDone] = useState(false);
 
@@ -17,6 +18,10 @@ export default function ScheduledOrders(props) {
     const [errorMessage, setErrorMessage] = useState("");
 
     const [scheduledOrders, setScheduledOrders] = useState([]);
+
+    const [info, setInfo] = useState("");
+
+    const options = { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
 
     const fetchScheduledOrders = () => {
         axios.get("http://localhost:8083/scheduled/orders?userId=" + props.user).then(a => {
@@ -33,6 +38,28 @@ export default function ScheduledOrders(props) {
             }
         })
     }
+
+    const unScheduleJob = (scheduledId) => {
+        axios.delete("http://localhost:8083/scheduled/delete/order?scheduledId=" + scheduledId).then(a => {
+            if (a.status == 200) {
+                setInfo("Unscheduled order")
+                setShowToast(true);
+                fetchScheduledOrders();
+                setTimeout(() => {
+                    setShowToast(false);
+                    setInfo("");
+                }, 3000)
+            }
+        }).catch(a => {
+            setError(true);
+            if (error.response.data === undefined) {
+                setErrorMessage("Something went wrong")
+            } else {
+                setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+            }
+        })
+    }
+
     useEffect(() => {
         sessionStorage.getItem("dark") === "true" ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
             : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
@@ -48,6 +75,32 @@ export default function ScheduledOrders(props) {
 
         fetchScheduledOrders();
     }, []);
+
+    const check = () => {
+        let card = document.getElementsByClassName("card-color");
+        if (sessionStorage.getItem("dark") === "true") {
+            for (const cards of card) {
+                cards.classList.add("bg-dark")
+                cards.classList.add("text-light")
+                cards.classList.remove("bg-light")
+                cards.classList.remove("text-dark")
+            }
+        }
+        if (!sessionStorage.getItem("dark") === "true") {
+            for (const cards of card) {
+                cards.classList.remove("bg-dark")
+                cards.classList.add("bg-light")
+                cards.classList.add("text-dark")
+                cards.classList.remove("text-light")
+            }
+        }
+    }
+
+    setTimeout(() => {
+        if (fetchDone) {
+            check();
+        }
+    }, 10);
 
     return (
         <div className='container-fluid'>
@@ -94,18 +147,326 @@ export default function ScheduledOrders(props) {
                     </div>
                 </header>
 
-                <div className='container-fluid'>
+                <div className='container my-4'>
                     <div>
                         <h2 className='text-info'>Scheduled Orders</h2>
                     </div>
-                    <div className=''>
-                        {scheduledOrders != [] ? scheduledOrders.map(order => {
-                            return (
-                                <div className="card mb-3 orderCard card-color" style={{ height: "100%" }}>
-                                    <div>Scheduled On : {order.scheduledOn}</div>
+                    <div className="row g-4">
+                        {fetchDone ?
+                            scheduledOrders.filter(order => { return (!order.orderScheduler.isDeleted) }).length > 0 ? scheduledOrders.filter(order => { return (!order.orderScheduler.isDeleted) }).map(order => {
+                                return (
+                                    <div className="col-lg-6 mb-3 mb-sm-0">
+                                        <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                            <div className="row g-0" >
+                                                <div className="col-md-2 d-none d-md-flex justify-content-center">
+                                                    <img src={order.item.itemImgUrl} className="img-fluid rounded-start d-md-block d-none w-50 h-100 d-block" alt={order.item.itemName} style={{ marginLeft: "auto", marginRight: "auto" }} />
+                                                </div>
+                                                <div className="col-md-10 ">
+                                                    <div className="card-body">
+                                                        <div className='row'>
+                                                            <h5 className="card-title float-start col-6 text-truncate text-capitalize">{order.item.itemName} </h5>
+                                                            <h5 className={order.orderScheduler.jobCompleted == true ? 'col-4 text-center  badge text-bg-info py-2' : 'col-4 text-center  badge text-bg-warning py-2'}>Task completed: {order.orderScheduler.jobCompleted == true ? "Yes" : "No"}</h5>
+                                                        </div>
+                                                        <h5>Scheduled for : {new Date(order.orderScheduler.scheduledOn).toLocaleString('en-US', options)}</h5>
+                                                        {order.orderScheduler.isDeleted == true && <h6 className='text-warning'>This order is Unscheduled</h6>}
+                                                        {(order.orderScheduler.isDeleted == false && order.orderScheduler.jobCompleted == false) && <div className='justify-content-end d-flex'><button className='btn btn-danger' onClick={() => { unScheduleJob(order.orderScheduler.uuid) }}>Unschedule</button></div>}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })
+                                :
+                                <div className='container justify-content-center d-flex g-3 w-100 h-100 '>
+                                    <div className='text-center card-color p-3 m-2 '>
+                                        <h5 className='text-light'>No Scheduled orders found !</h5>
+                                        <Link to={"/mart"} className="btn btn-outline-primary m-2 ">View products</Link>
+                                    </div>
+                                </div> :
+                            <div className="row g-4">
+                                <div className="col-sm-6 mb-3 mb-sm-0">
+                                    <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                        <div className="row g-0" >
+                                            <div className="col-md-4 d-none d-lg-flex justify-content-center">
+                                                <img src={loadingImg} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt="loading..." />
+                                            </div>
+                                            <div className="col-md-8 ">
+                                                <div className="card-body">
+                                                    <p className="card-text placeholder-glow">
+                                                        <span className="placeholder col-7"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-6"></span>
+                                                        <span className="placeholder col-8"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            )
-                        }) : "No Scheduled Orders"}
+                                <div className="col-sm-6 mb-3 mb-sm-0">
+                                    <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                        <div className="row g-0" >
+                                            <div className="col-md-4 d-none d-lg-flex justify-content-center">
+                                                <img src={loadingImg} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt="loading..." />
+                                            </div>
+                                            <div className="col-md-8 ">
+                                                <div className="card-body">
+                                                    <p className="card-text placeholder-glow">
+                                                        <span className="placeholder col-7"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-6"></span>
+                                                        <span className="placeholder col-8"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6 mb-3 mb-sm-0">
+                                    <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                        <div className="row g-0" >
+                                            <div className="col-md-4 d-none d-lg-flex justify-content-center">
+                                                <img src={loadingImg} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt="loading..." />
+                                            </div>
+                                            <div className="col-md-8 ">
+                                                <div className="card-body">
+                                                    <p className="card-text placeholder-glow">
+                                                        <span className="placeholder col-7"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-6"></span>
+                                                        <span className="placeholder col-8"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6 mb-3 mb-sm-0">
+                                    <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                        <div className="row g-0" >
+                                            <div className="col-md-4 d-none d-lg-flex justify-content-center">
+                                                <img src={loadingImg} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt="loading..." />
+                                            </div>
+                                            <div className="col-md-8 ">
+                                                <div className="card-body">
+                                                    <p className="card-text placeholder-glow">
+                                                        <span className="placeholder col-7"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-6"></span>
+                                                        <span className="placeholder col-8"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6 mb-3 mb-sm-0">
+                                    <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                        <div className="row g-0" >
+                                            <div className="col-md-4 d-none d-lg-flex justify-content-center">
+                                                <img src={loadingImg} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt="loading..." />
+                                            </div>
+                                            <div className="col-md-8 ">
+                                                <div className="card-body">
+                                                    <p className="card-text placeholder-glow">
+                                                        <span className="placeholder col-7"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-6"></span>
+                                                        <span className="placeholder col-8"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6 mb-3 mb-sm-0">
+                                    <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                        <div className="row g-0" >
+                                            <div className="col-md-4 d-none d-lg-flex justify-content-center">
+                                                <img src={loadingImg} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt="loading..." />
+                                            </div>
+                                            <div className="col-md-8 ">
+                                                <div className="card-body">
+                                                    <p className="card-text placeholder-glow">
+                                                        <span className="placeholder col-7"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-6"></span>
+                                                        <span className="placeholder col-8"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div className='my-3'>
+                        <h2 className='text-info'>Unscheduled Orders</h2>
+                    </div>
+                    <div className="row g-4">
+                        {fetchDone ?
+                            scheduledOrders.filter(order => { return (order.orderScheduler.isDeleted) }).length > 0 ? scheduledOrders.filter(order => { return (order.orderScheduler.isDeleted) }).map(order => {
+                                return (
+                                    <div className="col-lg-6 mb-3 mb-sm-0">
+                                        <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                            <div className="row g-0" >
+                                                <div className="col-md-2 d-none d-md-flex justify-content-center">
+                                                    <img src={order.item.itemImgUrl} className="img-fluid rounded-start d-md-block d-none w-50 h-100 d-block" alt={order.item.itemName} style={{ marginLeft: "auto", marginRight: "auto" }} />
+                                                </div>
+                                                <div className="col-md-10 ">
+                                                    <div className="card-body">
+                                                        <div className='row'>
+                                                            <h5 className="card-title float-start col-6 text-truncate text-capitalize">{order.item.itemName} </h5>
+                                                            <h5 className={order.orderScheduler.jobCompleted == true ? 'col-4 text-center  badge text-bg-info py-2' : 'col-4 text-center  badge text-bg-warning py-2'}>Task completed: {order.orderScheduler.jobCompleted == true ? "Yes" : "No"}</h5>
+                                                        </div>
+                                                        <h5 className='text-decoration-line-through'>Scheduled for : {new Date(order.orderScheduler.scheduledOn).toLocaleString('en-US', options)}</h5>
+                                                        {order.orderScheduler.isDeleted == true && <h6 className='text-warning'>This order is unscheduled</h6>}
+                                                        {(order.orderScheduler.isDeleted == false && order.orderScheduler.jobCompleted == false) && <div className='justify-content-end d-flex'><button className='btn btn-danger' onClick={() => { unScheduleJob(order.orderScheduler.uuid) }}>Unschedule</button></div>}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )
+                            })
+                                :
+                                <div className='container justify-content-center d-flex g-3 w-100 h-100 '>
+                                    <div className='text-center card-color p-3 m-2 '>
+                                        <h5 className='text-light'>No Unscheduled orders found !</h5>
+                                        <Link to={"/mart"} className="btn btn-outline-primary m-2 ">View products</Link>
+                                    </div>
+                                </div> :
+                            <div className="row g-4">
+                                <div className="col-sm-6 mb-3 mb-sm-0">
+                                    <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                        <div className="row g-0" >
+                                            <div className="col-md-4 d-none d-lg-flex justify-content-center">
+                                                <img src={loadingImg} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt="loading..." />
+                                            </div>
+                                            <div className="col-md-8 ">
+                                                <div className="card-body">
+                                                    <p className="card-text placeholder-glow">
+                                                        <span className="placeholder col-7"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-6"></span>
+                                                        <span className="placeholder col-8"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6 mb-3 mb-sm-0">
+                                    <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                        <div className="row g-0" >
+                                            <div className="col-md-4 d-none d-lg-flex justify-content-center">
+                                                <img src={loadingImg} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt="loading..." />
+                                            </div>
+                                            <div className="col-md-8 ">
+                                                <div className="card-body">
+                                                    <p className="card-text placeholder-glow">
+                                                        <span className="placeholder col-7"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-6"></span>
+                                                        <span className="placeholder col-8"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6 mb-3 mb-sm-0">
+                                    <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                        <div className="row g-0" >
+                                            <div className="col-md-4 d-none d-lg-flex justify-content-center">
+                                                <img src={loadingImg} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt="loading..." />
+                                            </div>
+                                            <div className="col-md-8 ">
+                                                <div className="card-body">
+                                                    <p className="card-text placeholder-glow">
+                                                        <span className="placeholder col-7"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-6"></span>
+                                                        <span className="placeholder col-8"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6 mb-3 mb-sm-0">
+                                    <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                        <div className="row g-0" >
+                                            <div className="col-md-4 d-none d-lg-flex justify-content-center">
+                                                <img src={loadingImg} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt="loading..." />
+                                            </div>
+                                            <div className="col-md-8 ">
+                                                <div className="card-body">
+                                                    <p className="card-text placeholder-glow">
+                                                        <span className="placeholder col-7"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-6"></span>
+                                                        <span className="placeholder col-8"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6 mb-3 mb-sm-0">
+                                    <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                        <div className="row g-0" >
+                                            <div className="col-md-4 d-none d-lg-flex justify-content-center">
+                                                <img src={loadingImg} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt="loading..." />
+                                            </div>
+                                            <div className="col-md-8 ">
+                                                <div className="card-body">
+                                                    <p className="card-text placeholder-glow">
+                                                        <span className="placeholder col-7"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-6"></span>
+                                                        <span className="placeholder col-8"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-6 mb-3 mb-sm-0">
+                                    <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
+                                        <div className="row g-0" >
+                                            <div className="col-md-4 d-none d-lg-flex justify-content-center">
+                                                <img src={loadingImg} className="img-fluid rounded-start d-lg-block d-none h-75 w-75" alt="loading..." />
+                                            </div>
+                                            <div className="col-md-8 ">
+                                                <div className="card-body">
+                                                    <p className="card-text placeholder-glow">
+                                                        <span className="placeholder col-7"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-4"></span>
+                                                        <span className="placeholder col-6"></span>
+                                                        <span className="placeholder col-8"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -125,6 +486,18 @@ export default function ScheduledOrders(props) {
                 </div>
             </>
             }
+
+            {/* Message pop */}
+            {showToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                <div className="d-flex">
+                    <div className="toast-body">
+                        {info}
+                        <div className="mt-2 pt-2">
+                            <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast">Ok</button>
+                        </div>
+                    </div>
+                </div>
+            </div>}
             <ChatBot />
         </div>
     );

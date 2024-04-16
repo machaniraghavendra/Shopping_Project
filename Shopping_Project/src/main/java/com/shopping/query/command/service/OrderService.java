@@ -9,7 +9,6 @@ import com.shopping.query.command.entites.OrdersEntity;
 import com.shopping.query.command.entites.dto.OrderSchedulerResponseDto;
 import com.shopping.query.command.entites.dto.OrdersDto;
 import com.shopping.query.command.exceptions.*;
-import org.quartz.SchedulerException;
 
 public interface OrderService {
 
@@ -49,4 +48,5 @@ public interface OrderService {
 	OrdersEntity getWithUUID(UUID uuid);
 
 	OrderSchedulerResponseDto scheduleOrder(OrdersEntity order, LocalDateTime scheduleAt, ZoneId zoneId);
+	void unScheduleOrder(String jobName, String groupName);
 }

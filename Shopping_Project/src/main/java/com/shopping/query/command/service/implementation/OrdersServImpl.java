@@ -358,6 +358,17 @@ public class OrdersServImpl implements OrderService {
                .build();
      }
 
+     @Override
+     public void unScheduleOrder(String jobName, String groupName) {
+          try{
+               JobKey jobKey = new JobKey(jobName, groupName);
+               Boolean value = scheduler.deleteJob(jobKey);
+               System.out.println(value);
+          }catch (Exception e){
+               log.error(e.getMessage());
+          }
+     }
+
      private Trigger buildTrigger(JobDetail jobDetail, ZonedDateTime triggerTime) {
           return TriggerBuilder.newTrigger()
                .forJob(jobDetail)
