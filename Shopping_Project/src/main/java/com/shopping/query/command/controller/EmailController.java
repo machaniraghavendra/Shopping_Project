@@ -31,6 +31,6 @@ public class EmailController {
 	public String sendMailWithAttachment(@RequestBody EmailDto mail, @RequestParam String url,
 			@RequestParam String itemName) throws IOException {
 		itemName = itemName.replace(" ", "_").replace("-", "");
-		return emailimpl.sendMailWithAttachment(mail, url, itemName);
+		return emailimpl.sendMailWithImageUrl(mail, url, itemName);
 	}
 }

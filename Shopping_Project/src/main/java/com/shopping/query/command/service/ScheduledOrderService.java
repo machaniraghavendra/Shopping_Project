@@ -12,4 +12,6 @@ public interface ScheduledOrderService {
 
      OrderSchedulerEntity deleteScheduledOrder(UUID scheduledId);
 
+     OrderScheduleResponseDto getScheduledOrderDetailsByUuid(UUID scheduledId);
+
 }

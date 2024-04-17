@@ -5,6 +5,7 @@ import axios from "axios"
 import ChatBot from '../ChatBot/ChatBot';
 import loadingImg from "../Loading_Card.png";
 import "../Orders/Orders.css"
+import LogOut from '../Login/LogOut';
 
 export default function ScheduledOrders(props) {
     const [user, setUser] = useState([]);
@@ -159,7 +160,9 @@ export default function ScheduledOrders(props) {
                                         <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
                                             <div className="row g-0" >
                                                 <div className="col-md-2 d-none d-md-flex justify-content-center">
-                                                    <img src={order.item.itemImgUrl} className="img-fluid rounded-start d-md-block d-none w-50 h-100 d-block" alt={order.item.itemName} style={{ marginLeft: "auto", marginRight: "auto" }} />
+                                                    <Link to={"/orders/scheduled/" + order.orderScheduler.uuid} >
+                                                        <img src={order.item.itemImgUrl} className="img-fluid rounded-start d-md-block d-none w-50 h-100 d-block" alt={order.item.itemName} style={{ marginLeft: "auto", marginRight: "auto" }} />
+                                                    </Link>
                                                 </div>
                                                 <div className="col-md-10 ">
                                                     <div className="card-body">
@@ -319,7 +322,9 @@ export default function ScheduledOrders(props) {
                                         <div className="card mb-3 orderCard card-color" style={{ height: "100%" }} >
                                             <div className="row g-0" >
                                                 <div className="col-md-2 d-none d-md-flex justify-content-center">
-                                                    <img src={order.item.itemImgUrl} className="img-fluid rounded-start d-md-block d-none w-50 h-100 d-block" alt={order.item.itemName} style={{ marginLeft: "auto", marginRight: "auto" }} />
+                                                    <Link to={"/orders/scheduled/" + order.orderScheduler.uuid} className='link-info  stretched-link'>
+                                                        <img src={order.item.itemImgUrl} className="img-fluid rounded-start d-md-block d-none w-50 h-100 d-block" alt={order.item.itemName} style={{ marginLeft: "auto", marginRight: "auto" }} />
+                                                    </Link>
                                                 </div>
                                                 <div className="col-md-10 ">
                                                     <div className="card-body">
@@ -472,33 +477,39 @@ export default function ScheduledOrders(props) {
             </div>
 
             {/* Error pop */}
-            {error && <>
-                <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+            {
+                error && <>
+                    <div className="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div className="d-flex">
+                            <div className="toast-body text-danger text-center">
+                                <h6>Error !</h6>
+                                {errorMessage}
+                                <div className="mt-2 pt-2">
+                                    <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { setError(false); setErrorMessage("") }}>Ok</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            }
+
+            {/* Message pop */}
+            {
+                showToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">
                     <div className="d-flex">
-                        <div className="toast-body text-danger text-center">
-                            <h6>Error !</h6>
-                            {errorMessage}
+                        <div className="toast-body">
+                            {info}
                             <div className="mt-2 pt-2">
-                                <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast" onClick={() => { setError(false); setErrorMessage("") }}>Ok</button>
+                                <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast">Ok</button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </>
             }
-
-            {/* Message pop */}
-            {showToast && <div className="toast  fade show" role="alert" aria-live="assertive" aria-atomic="true">
-                <div className="d-flex">
-                    <div className="toast-body">
-                        {info}
-                        <div className="mt-2 pt-2">
-                            <button type="button" className="btn btn-outline-light btn-sm" data-bs-dismiss="toast">Ok</button>
-                        </div>
-                    </div>
-                </div>
-            </div>}
             <ChatBot />
-        </div>
+
+            {/* Logout popup */}
+            <LogOut user={props.user} />
+        </div >
     );
 }
