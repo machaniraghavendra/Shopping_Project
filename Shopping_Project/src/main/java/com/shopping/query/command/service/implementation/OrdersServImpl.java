@@ -188,13 +188,13 @@ public class OrdersServImpl implements OrderService {
           try {
                ItemsDto item = mapper.getItemDtoById(order.getItemId());
                EmailDto emailDto = EmailDto.builder()
-                    .msgBody("Hi "+order.getFirstName()+" "+order.getLastName()+",\n" +
-                    "\tHere is the invoice bill attached to this mail you can use it for reference.\n" +
-                    "\t\tThank you for shopping with us.")
-                    .subject("Order details of "+ getItemNameWith30Chars(item.getItemName()))
+                    .msgBody("Hi " + order.getFirstName() + " " + order.getLastName() + ",\n" +
+                         "\tHere is the invoice bill attached to this mail you can use it for reference.\n" +
+                         "\t\tThank you for shopping with us.")
+                    .subject("Order details of " + getItemNameWith30Chars(item.getItemName()))
                     .recipient(order.getEmailAddress()).build();
-               emailService.sendMailWithAttachment(emailDto,"http://localhost:8083/pdf/generate/"+order.getOrderUUIDId(), item.getItemName());
-               log.info("Sent order e-bill mail to user "+order.getEmailAddress());
+               emailService.sendMailWithImageUrl(emailDto, "http://localhost:8083/pdf/generate/" + order.getOrderUUIDId(), item.getItemName());
+               log.info("Sent order e-bill mail to user " + order.getEmailAddress());
           } catch (ItemNotFoundException | IOException e) {
                log.error(e.getMessage());
           }
@@ -327,44 +327,43 @@ public class OrdersServImpl implements OrderService {
      }
 
      @Override
-     public OrderSchedulerResponseDto scheduleOrder(OrdersEntity order, LocalDateTime scheduleAt, ZoneId zoneId)  {
+     public OrderSchedulerResponseDto scheduleOrder(OrdersEntity order, LocalDateTime scheduleAt, ZoneId zoneId) {
           ZonedDateTime triggerTime = ZonedDateTime.of(scheduleAt, zoneId);
           JobDetail jobDetail = null;
           try {
-          if(triggerTime.isBefore(ZonedDateTime.of(LocalDateTime.now(), zoneId))){
-               log.error("Failed to schedule Order: Selected date and time should be after current date and time");
-               return OrderSchedulerResponseDto.builder().orderScheduled(Boolean.FALSE).message("Failed to schedule Order: Selected date and time should be after current date and time").build();
-          }
+               if (triggerTime.isBefore(ZonedDateTime.of(LocalDateTime.now(), zoneId))) {
+                    log.error("Failed to schedule Order: Selected date and time should be after current date and time");
+                    return OrderSchedulerResponseDto.builder().orderScheduled(Boolean.FALSE).message("Failed to schedule Order: Selected date and time should be after current date and time").build();
+               }
                jobDetail = buildJobDetail(order, triggerTime);
                scheduler.addJob(jobDetail, true);
                Trigger trigger = buildTrigger(jobDetail, triggerTime);
                scheduler.scheduleJob(trigger);
-               log.info("Scheduled order for "+scheduleAt);
+               log.info("Scheduled order for " + scheduleAt);
                orderSchedulerRepo.save(mapper.getOrderSchedulerEntity(UUID.fromString(jobDetail.getKey().getName()), order, Boolean.FALSE, scheduleAt, Boolean.FALSE));
                ItemsDto item = mapper.getItemDtoById(order.getItemId());
                emailService.sendSimplemail(EmailDto.builder().
-                    subject("Scheduled order for item "+getItemNameWith30Chars(item.getItemName()))
+                    subject("Scheduled order for item " + getItemNameWith30Chars(item.getItemName()))
                     .recipient(order.getEmailAddress())
                     .msgBody("Hi " + order.getFirstName() + ",\n" + "\t Your order of " + item.getItemName()
-                         + " has been scheduled for "+ triggerTime).build());
-          }catch (Exception e){
+                         + " has been scheduled for " + triggerTime).build());
+          } catch (Exception e) {
                log.error("Failed to schedule Order");
                return OrderSchedulerResponseDto.builder().orderScheduled(Boolean.FALSE).message("Failed to schedule Order").build();
           }
           return OrderSchedulerResponseDto.builder()
                .orderScheduled(Boolean.TRUE)
-               .message("Scheduled order for "+scheduleAt).jobId(UUID.fromString(jobDetail.getKey().getName()))
+               .message("Scheduled order for " + scheduleAt).jobId(UUID.fromString(jobDetail.getKey().getName()))
                .groupId(jobDetail.getKey().getGroup())
                .build();
      }
 
      @Override
      public void unScheduleOrder(String jobName, String groupName) {
-          try{
+          try {
                JobKey jobKey = new JobKey(jobName, groupName);
-               Boolean value = scheduler.deleteJob(jobKey);
-               System.out.println(value);
-          }catch (Exception e){
+               scheduler.deleteJob(jobKey);
+          } catch (Exception e) {
                log.error(e.getMessage());
           }
      }
@@ -387,8 +386,8 @@ public class OrdersServImpl implements OrderService {
           return JobBuilder.newJob(OrderScheduler.class)
                .usingJobData(jobDataMap)
                .storeDurably()
-               .withIdentity(UUID.randomUUID().toString(),"Order jobs")
-               .withDescription("Scheduled order for "+ scheduledAt)
+               .withIdentity(UUID.randomUUID().toString(), "Order jobs")
+               .withDescription("Scheduled order for " + scheduledAt)
                .build();
      }
 

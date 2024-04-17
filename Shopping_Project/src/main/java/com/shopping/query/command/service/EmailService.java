@@ -6,7 +6,10 @@ import com.shopping.query.command.entites.dto.EmailDto;
 
 public interface EmailService {
 
-	String sendSimplemail(EmailDto email);
+     String sendSimplemail(EmailDto email);
 
-	String sendMailWithAttachment(EmailDto email, String url, String itemName) throws  IOException;
+     String sendMailWithImageUrl(EmailDto email, String url, String itemName) throws IOException;
+
+     String sendMailWithImageUrlandName(EmailDto email, String fileName);
+
 }
