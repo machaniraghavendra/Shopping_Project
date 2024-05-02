@@ -26,20 +26,20 @@ import jakarta.servlet.http.HttpServletResponse;
 @Tag(name = "Pdf generating Api's", description = "Get's, delete and post operations will be done here")
 public class PdfGeneratorController {
 
-	@Autowired
-	private OrderService orderService;
-	
-	@Autowired
-	private PdfGeneratorService pdfGeneratorService;
+     @Autowired
+     private OrderService orderService;
 
-	@GetMapping("/{orderId}")
-	public void generatePdf(HttpServletResponse response,@PathVariable UUID orderId) throws ItemNotFoundException, DocumentException, IOException, UserException {
-		response.setContentType("application/pdf");
-		OrdersEntity order = orderService.getWithUUID(orderId);
-		OrdersDto  ordersDto = orderService.getOrderDtowithOrderUUID(orderId);
-		String headerkey = "Content-Disposition";
-		String headervalue = "attachment; filename=" + ordersDto.getItem().getItemName()+"-"+ LocalDateTime.now().toString().replace("T"," ") + ".pdf";
-		response.setHeader(headerkey, headervalue);
-		pdfGeneratorService.generatePdf(response, ordersDto,order,ordersDto.getTotalOrderAmount());
-	}
+     @Autowired
+     private PdfGeneratorService pdfGeneratorService;
+
+     @GetMapping("/{orderId}")
+     public void generatePdf(HttpServletResponse response, @PathVariable UUID orderId) throws ItemNotFoundException, DocumentException, IOException, UserException {
+          response.setContentType("application/pdf");
+          OrdersEntity order = orderService.getWithUUID(orderId);
+          OrdersDto ordersDto = orderService.getOrderDtowithOrderUUID(orderId);
+          String headerkey = "Content-Disposition";
+          String headervalue = "attachment; filename=" + ordersDto.getItem().getItemName() + "-" + LocalDateTime.now().toString().replace("T", " ") + ".pdf";
+          response.setHeader(headerkey, headervalue);
+          pdfGeneratorService.generatePdfForOrder(response, ordersDto, order, ordersDto.getTotalOrderAmount());
+     }
 }

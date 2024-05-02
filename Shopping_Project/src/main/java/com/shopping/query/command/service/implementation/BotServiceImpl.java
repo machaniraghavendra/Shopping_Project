@@ -82,7 +82,7 @@ public class BotServiceImpl implements BotService {
 				}
 			}
 		} catch(Exception e){
-			botListAdder(botBulider(incomeBot, gptService.getResponse(incomeBot.getUserMessage())));
+			botListAdder(botBulider(incomeBot, gptService.getGptResponse(incomeBot.getUserMessage())));
 		}
 	}
 

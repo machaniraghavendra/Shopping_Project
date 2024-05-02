@@ -72,4 +72,40 @@
             </column>
         </addColumn>
     </changeSet>
+
+    <changeSet id="5" author="M Raghu">
+        <preConditions>
+            <not>
+                <tableExists tableName="NOTIFICATION"/>
+            </not>
+        </preConditions>
+        <comment>Creating table Notification</comment>
+        <createTable tableName="NOTIFICATION">
+            <column name="UUID" type="BINARY(16)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="USER_EMAIL" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NOTIFICATION_TYPE" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MESSAGE" type="VARCHAR(255)"/>
+            <column name="LINK" type="TEXT"/>
+            <column name="NOTIFICATION_VIEWED" type="NUMBER(1,0)" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_ON" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="MODIFIED_BY" type="VARCHAR(255)"/>
+            <column name="MODIFIED_ON" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="6" author="Raghu M">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="USER_STORY" columnName="PROFILE_IMG_URL"/>
+        </preConditions>
+        <modifyDataType tableName="USER_STORY" columnName="PROFILE_IMG_URL" newDataType="TEXT"/>
+    </changeSet>
 </databaseChangeLog>

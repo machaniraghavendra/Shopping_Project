@@ -9,13 +9,17 @@ import java.util.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shopping.query.command.configuration.OrderScheduler;
+import com.shopping.query.command.entites.Notification;
 import com.shopping.query.command.entites.dto.*;
+import com.shopping.query.command.entites.enums.NotificationType;
 import com.shopping.query.command.exceptions.*;
 import com.shopping.query.command.repos.OrderSchedulerRepo;
-import com.shopping.query.command.service.ItemService;
+import com.shopping.query.command.service.*;
 import jakarta.annotation.Nonnull;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -24,9 +28,6 @@ import com.shopping.query.command.entites.AddressEntity;
 import com.shopping.query.command.entites.OrdersEntity;
 import com.shopping.query.command.mapper.MappersClass;
 import com.shopping.query.command.repos.OrderRepo;
-import com.shopping.query.command.service.AddressService;
-import com.shopping.query.command.service.EmailService;
-import com.shopping.query.command.service.OrderService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,6 +62,9 @@ public class OrdersServImpl implements OrderService {
 
      @Autowired
      OrderSchedulerRepo orderSchedulerRepo;
+
+     @Autowired
+     NotificationService notificationService;
 
      @Override
      public boolean saveOrderByCheckingAddress(OrdersEntity ordersEntity) throws UserException {
@@ -172,6 +176,7 @@ public class OrdersServImpl implements OrderService {
                               break;
                     }
                     orderRepo.save(detailsEntity);
+                    sendNotificationToUser(detailsEntity, detailsEntity.getOrderStatus());
                     value.add(detailsEntity);
                } else {
                     throw new OrderNotFoundException("There is no order with id " + orderUUID);
@@ -183,6 +188,20 @@ public class OrdersServImpl implements OrderService {
           return value;
      }
 
+     private void sendNotificationToUser(OrdersEntity order, String orderStatus){
+          log.info("Sending notification to user");
+          try {
+               var item = mapper.getItemDtoById(order.getItemId());
+               var notification = Notification.builder().isNotificationViewed(Boolean.FALSE).notificationType(NotificationType.INFO).link("http://localhost:3000/orderdetails")
+                    .message("Your order status changed to "+orderStatus+" for item " + getItemNameWith30Chars(item.getItemName(), 20))
+                    .userUuid(String.valueOf(order.getUserId())).build();
+               notificationService.sendNotification(notification);
+               saveOrderToView(order.getOrderUUIDId());
+          }catch (Exception e){
+               log.error(e.getMessage());
+          }
+     }
+
      private void sendEBillOfOrderToUser(OrdersEntity order) {
           log.info("Sending order e-bill mail to user");
           try {
@@ -191,7 +210,7 @@ public class OrdersServImpl implements OrderService {
                     .msgBody("Hi " + order.getFirstName() + " " + order.getLastName() + ",\n" +
                          "\tHere is the invoice bill attached to this mail you can use it for reference.\n" +
                          "\t\tThank you for shopping with us.")
-                    .subject("Order details of " + getItemNameWith30Chars(item.getItemName()))
+                    .subject("Order details of " + getItemNameWith30Chars(item.getItemName(), 30))
                     .recipient(order.getEmailAddress()).build();
                emailService.sendMailWithImageUrl(emailDto, "http://localhost:8083/pdf/generate/" + order.getOrderUUIDId(), item.getItemName());
                log.info("Sent order e-bill mail to user " + order.getEmailAddress());
@@ -206,7 +225,7 @@ public class OrdersServImpl implements OrderService {
           DateTimeFormatter fromFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
           DateTimeFormatter toFormat = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
           try {
-               emailService.sendSimplemail(EmailDto.builder().subject("Update for order of " + getItemNameWith30Chars(item.getItemName()))
+               emailService.sendSimplemail(EmailDto.builder().subject("Update for order of " + getItemNameWith30Chars(item.getItemName(), 30))
                     .msgBody("Hi " + order.getFirstName() + ",\n" + "\t Your order of " + item.getItemName()
                          + " has updated with status of " + status.toUpperCase() + " and its order id is "
                          + order.getOrderUUIDId() + ", the payment type is " + order.getPaymentType()
@@ -224,8 +243,8 @@ public class OrdersServImpl implements OrderService {
           }
      }
 
-     private static String getItemNameWith30Chars(@Nonnull String itemName) {
-          return itemName.length() > 30 ? itemName.substring(0, 30) + "..." : itemName;
+     private static String getItemNameWith30Chars(@Nonnull String itemName, int charsCount) {
+          return itemName.length() > charsCount ? itemName.substring(0, charsCount) + "..." : itemName;
      }
 
      @Override
@@ -340,13 +359,20 @@ public class OrdersServImpl implements OrderService {
                Trigger trigger = buildTrigger(jobDetail, triggerTime);
                scheduler.scheduleJob(trigger);
                log.info("Scheduled order for " + scheduleAt);
-               orderSchedulerRepo.save(mapper.getOrderSchedulerEntity(UUID.fromString(jobDetail.getKey().getName()), order, Boolean.FALSE, scheduleAt, Boolean.FALSE));
+               var scheduledOrder = orderSchedulerRepo.save(mapper.getOrderSchedulerEntity(UUID.fromString(jobDetail.getKey().getName()), order, Boolean.FALSE, scheduleAt, Boolean.FALSE));
                ItemsDto item = mapper.getItemDtoById(order.getItemId());
                emailService.sendSimplemail(EmailDto.builder().
-                    subject("Scheduled order for item " + getItemNameWith30Chars(item.getItemName()))
+                    subject("Scheduled order for item " + getItemNameWith30Chars(item.getItemName(), 30))
                     .recipient(order.getEmailAddress())
                     .msgBody("Hi " + order.getFirstName() + ",\n" + "\t Your order of " + item.getItemName()
                          + " has been scheduled for " + triggerTime).build());
+
+               notificationService.sendNotification(Notification.builder()
+                    .notificationType(NotificationType.INFO)
+                    .message("Scheduled order for item " + getItemNameWith30Chars(item.getItemName(), 30))
+                    .userUuid(String.valueOf(order.getUserId()))
+                    .link("http://localhost:3000/orders/scheduled/" + scheduledOrder.getUuid())
+                    .isNotificationViewed(Boolean.FALSE).build());
           } catch (Exception e) {
                log.error("Failed to schedule Order");
                return OrderSchedulerResponseDto.builder().orderScheduled(Boolean.FALSE).message("Failed to schedule Order").build();

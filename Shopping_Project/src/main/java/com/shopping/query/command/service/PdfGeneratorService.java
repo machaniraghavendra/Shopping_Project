@@ -11,5 +11,5 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public interface PdfGeneratorService {
 
-	void generatePdf(HttpServletResponse response, OrdersDto ordersDto, OrdersEntity ordersEntity,String totalAmount) throws DocumentException, IOException, UserException;
+     void generatePdfForOrder(HttpServletResponse response, OrdersDto ordersDto, OrdersEntity ordersEntity, String totalAmount) throws DocumentException, IOException, UserException;
 }
