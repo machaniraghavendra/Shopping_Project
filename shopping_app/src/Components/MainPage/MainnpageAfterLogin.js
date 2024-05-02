@@ -5,8 +5,6 @@ import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import { Link, useNavigate } from "react-router-dom";
 import ChatBot from "../ChatBot/ChatBot";
 import LogOut from "../Login/LogOut";
-import Rating from "../Items/Rating/Rating";
-import SearchScreen from "./SearchScreen";
 
 export default function MainPageAfterlogin(props) {
 
@@ -38,6 +36,9 @@ export default function MainPageAfterlogin(props) {
 
     const [scroll, setScroll] = useState(false);
 
+    const [notifications, setNotifications] = useState([]);
+
+    const [viewNotifications, setViewNotifications] = useState(false);
 
     const fetch = () => {
         axios.get("http://localhost:8083/items/")
@@ -91,6 +92,30 @@ export default function MainPageAfterlogin(props) {
         }
     }
 
+    const getNotifications = () => {
+        axios.get("http://localhost:8083/notifications?userId=" + props.user)
+            .then((res) => { return (setNotifications(res.data)) })
+            .catch((error) => {
+                setError(true);
+                if (error.response.data === undefined) {
+                    setErrorMessage("Something went wrong")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
+            })
+    }
+
+    const markasViewed = (uuid) => {
+        axios.put("http://localhost:8083/notifications?userId=" + props.user + "&uuid=" + uuid)
+            .catch((error) => {
+                setError(true);
+                if (error.response.data === undefined) {
+                    setErrorMessage("Something went wrong")
+                } else {
+                    setErrorMessage(error.response.data.message + " of status = '" + error.response.data.status + "'");
+                }
+            })
+    }
     setTimeout(() => {
         checkPresentUser();
     }, 400);
@@ -105,7 +130,8 @@ export default function MainPageAfterlogin(props) {
                 nav("/login")
             }
         }, 1000);
-        return (fetch())
+        getNotifications();
+        return (fetch());
     }, [])
 
     if (localStorage.getItem("currentuser")) {
@@ -180,6 +206,29 @@ export default function MainPageAfterlogin(props) {
                                         </li>
                                         <li className="nav-item">
                                             <Link className="nav-link text-dark" to="/orders"><h5><i className="fa-solid fa-bag-shopping fa-fade text-warning"></i>  My Orders ({fetchDone ? user.totalOrdersCountOfUser != 0 ? user.totalOrdersCountOfUser : "No orders" : "Loading.."})</h5></Link>
+                                        </li>
+                                        <li className="nav-item">
+                                            <div type="button" className="nav-link position-relative" onMouseOver={() => setViewNotifications(true)} onMouseOut={() => setViewNotifications(false)}>
+                                                <i className="fa-solid fa-bell fs-4"> </i>
+                                                {notifications.length != 0 &&
+                                                    <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                        {notifications.length}
+                                                        <span className="visually-hidden">unread messages</span>
+                                                    </span>
+                                                }
+                                            </div>
+                                            {(viewNotifications) &&
+                                                <div className="position-absolute mx-4 top-0 bg-dark px-1" style={{ zIndex: "10" }} onMouseOver={() => setViewNotifications(true)} onMouseOut={() => setViewNotifications(false)}>
+                                                    {notifications.length != 0?
+                                                    <ul className="list-group">
+                                                        {notifications.map(a => {
+                                                            return (
+                                                                <li key={a.uuid} className="list-group-item list-group-item-info" onClick={() => { markasViewed(a.uuid) }}><Link to={a.link} className="text-decoration-none text-dark">{a.message}</Link></li>
+                                                            )
+                                                        })}
+                                                    </ul>:<div className="text-light p-1">No new notifications</div>}
+                                                </div>
+                                            }
                                         </li>
                                     </ul>
 

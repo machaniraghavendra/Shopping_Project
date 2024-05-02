@@ -24,7 +24,7 @@ public class GptServiceImpl extends SecurityServiceImpl implements GptService {
     private Constants constants;
 
     @Override
-    public String getResponse(String query) {
+    public String getGptResponse(String query) {
         try {
             Message message = Message.builder().role("user").content(query).build();
             RequestBody requestBody = RequestBody.builder().model(decrypt(constants.GPT_MODEL))

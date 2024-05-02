@@ -201,7 +201,7 @@ export default function Buypage(props) {
                 if (!isSchedule) {
                     setShowAddressToast(true)
                 }else{
-                    setIsScheduleMode(false)
+                    // setIsScheduleMode(false)
                 }
             } else {
                 setShowAddressToast(false)
@@ -758,7 +758,7 @@ export default function Buypage(props) {
                     <div className={sessionStorage.getItem("dark") == "true" ? "modal-content bg-dark text-light" : "modal-content"}>
                         <div className="modal-header">
                             <h1 className="modal-title fs-5" id="staticBackdropLabel">Schedule Order</h1>
-                            <button type="button" className="btn-close bg-light" data-bs-dismiss="modal" aria-label="Close" onClick={() => { setOrderButtonEnabled(true); setIsScheduleMode(false);  document.getElementById("dateInput").value=''; setErrorMessage(''); setSelectedDateAndTime('')}}></button>
+                            <button type="button" className="btn-close bg-light" data-bs-dismiss="modal" aria-label="Close" onClick={() => { setOrderButtonEnabled(true); setIsScheduleMode(true);  document.getElementById("dateInput").value=''; setErrorMessage(''); setSelectedDateAndTime('')}}></button>
                         </div>
                         <div className="modal-body">
                             <label for="dateInput" className="form-label">Select Date and Time</label>
@@ -771,11 +771,11 @@ export default function Buypage(props) {
                                     <p>Looks like this address not in your saved list want to add ?</p>
                                     <div className="my-2 mt-2 pt-2">
                                         <button type="button" className="btn btn-outline-danger" onClick={() => {
-                                            return (sendOrderData(), setShowAddressToast(false),  setIsScheduleMode(false))
+                                            return ( setShowAddressToast(false),  setIsScheduleMode(false))
                                         }}>No</button>&nbsp;&nbsp;
                                         <button type="button" className="btn btn-outline-success"
                                             onClick={() => {
-                                                return (saveAddress(), setShowAddressToast(false), setIsScheduleMode(false))
+                                                return (setIsScheduleMode(false), saveAddress(), setShowAddressToast(false))
                                             }}
                                         >Yes</button>
                                     </div>

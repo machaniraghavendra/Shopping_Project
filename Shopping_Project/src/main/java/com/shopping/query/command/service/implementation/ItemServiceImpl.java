@@ -126,7 +126,7 @@ public class ItemServiceImpl implements ItemService {
                     return "The item " + itemId + " has been removed ";
                }
           } catch (ItemNotFoundException e) {
-               e.printStackTrace();
+              log.error(e.getMessage());
           }
           return String.format(ITEM_NOT_EXISTS, itemId);
      }
@@ -201,7 +201,7 @@ public class ItemServiceImpl implements ItemService {
           if (!itemType.isEmpty() && Objects.nonNull(itemType)) {
                Optional.ofNullable(viewall()).ifPresentOrElse(items -> {
                     items.stream().filter(item -> item.getItemType().toLowerCase().contains(itemType.trim().toLowerCase()))
-                         .collect(Collectors.toList()).forEach(i -> {
+                         .toList().forEach(i -> {
                               try {
                                    itemsOfGivenType.add(mappersClass.convertItemEntityToDto(i));
                               } catch (ItemNotFoundException e) {
@@ -416,7 +416,7 @@ public class ItemServiceImpl implements ItemService {
           }
           return SearchDto.builder().count(actualResult.size()).actualResult(actualResult)
                .relatedResult(relatedActualResult.subList(0,
-                    relatedActualResult.size() > 15 ? 15 : relatedActualResult.size()))
+                    Math.min(relatedActualResult.size(), 15)))
                .suggestions(history.isEmpty() || history.get(userId).isEmpty() ? Collections.emptyList()
                     : history.get(userId))
                .query(query).build();

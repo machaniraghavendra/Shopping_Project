@@ -27,262 +27,262 @@ import com.shopping.query.command.service.UserService;
 @Service
 public class RatingsServiceImpl implements RatingsService {
 
-	@Autowired
-	private RatingsOfUserRepo repo;
+     @Autowired
+     private RatingsOfUserRepo repo;
 
-	@Autowired
-	private UserService userService;
+     @Autowired
+     private UserService userService;
 
-	@Autowired
-	private ItemService itemService;
+     @Autowired
+     private ItemService itemService;
 
-	@Autowired
-	private GlobalExceptionHandler exceptionHandler;
+     @Autowired
+     private GlobalExceptionHandler exceptionHandler;
 
-	private MappersClass mappersClass = new MappersClass();
+     private MappersClass mappersClass = new MappersClass();
 
-	private List<Object> returnList = new ArrayList<>();
+     private List<Object> returnList = new ArrayList<>();
 
-	@Override
-	public Object saveRating(RatingsOfUser ratings) throws RatingsOfUserAlreadyExistsException,
-			RatingsOfUserNotFoundException, UserException, ItemNotFoundException {
-		returnList = new ArrayList<>();
-		if (Objects.nonNull(ratings.getUserId())) {
-			RatingsOfUser ratingsOfUser = getRatingOfUserWithuserIdAndItemId(ratings.getUserId(), ratings.getItemId());
-			if (Objects.isNull(ratingsOfUser)) {
-				ratings.setRatingId(UUID.randomUUID());
-				try {
-					UserDetailDto userDto = userService.getUserWithId(ratings.getUserId());
-					ItemEntity item = (ItemEntity) itemService.find(ratings.getItemId()).get(0);
-					if (Objects.nonNull(userDto) && Objects.nonNull(item)) {
-						repo.save(ratings);
-						updateRatingOfItem(ratings.getItemId());
-						returnList.clear();
-						returnList.add("Rating added to item " + item.getItemName());
-					}
-				} catch (Exception e) {
-					returnList.clear();
-					if (e instanceof RatingsOfUserNotFoundException) {
-						returnList.add(exceptionHandler
-								.ratingsOfUserNotFoundException(new RatingsOfUserNotFoundException(e.getMessage())));
-					} else if (e instanceof UserException) {
-						returnList
-								.add(exceptionHandler.usernotfoundexception(new UserException(e.getMessage())));
-					} else if (e instanceof ItemNotFoundException) {
-						returnList
-								.add(exceptionHandler.itemNotFoundException(new ItemNotFoundException(e.getMessage())));
-					} else {
-						returnList.add(exceptionHandler.globalException(e));
-					}
-				}
-			} else {
-				ratings.setRatingId(ratingsOfUser.getRatingId());
-				return updateRating(ratings);
-			}
-		}
-		return returnList.get(0);
-	}
+     @Override
+     public Object saveRating(RatingsOfUser ratings) throws RatingsOfUserAlreadyExistsException,
+          RatingsOfUserNotFoundException, UserException, ItemNotFoundException {
+          returnList = new ArrayList<>();
+          if (Objects.nonNull(ratings.getUserId())) {
+               RatingsOfUser ratingsOfUser = getRatingOfUserWithuserIdAndItemId(ratings.getUserId(), ratings.getItemId());
+               if (Objects.isNull(ratingsOfUser)) {
+                    ratings.setRatingId(UUID.randomUUID());
+                    try {
+                         UserDetailDto userDto = userService.getUserWithId(ratings.getUserId());
+                         ItemEntity item = (ItemEntity) itemService.find(ratings.getItemId()).get(0);
+                         if (Objects.nonNull(userDto) && Objects.nonNull(item)) {
+                              repo.save(ratings);
+                              updateRatingOfItem(ratings.getItemId());
+                              returnList.clear();
+                              returnList.add("Rating added to item " + item.getItemName());
+                         }
+                    } catch (Exception e) {
+                         returnList.clear();
+                         if (e instanceof RatingsOfUserNotFoundException) {
+                              returnList.add(exceptionHandler
+                                   .ratingsOfUserNotFoundException(new RatingsOfUserNotFoundException(e.getMessage())));
+                         } else if (e instanceof UserException) {
+                              returnList
+                                   .add(exceptionHandler.usernotfoundexception(new UserException(e.getMessage())));
+                         } else if (e instanceof ItemNotFoundException) {
+                              returnList
+                                   .add(exceptionHandler.itemNotFoundException(new ItemNotFoundException(e.getMessage())));
+                         } else {
+                              returnList.add(exceptionHandler.globalException(e));
+                         }
+                    }
+               } else {
+                    ratings.setRatingId(ratingsOfUser.getRatingId());
+                    return updateRating(ratings);
+               }
+          }
+          return returnList.get(0);
+     }
 
-	@Override
-	public Object updateRating(RatingsOfUser ratings) throws RatingsOfUserNotFoundException {
-		returnList = new ArrayList<>();
-		if (Objects.nonNull(ratings.getUserId())) {
-			try {
-				if (repo.existsById(ratings.getRatingId())) {
-					UserDetailDto userDto = userService.getUserWithId(ratings.getUserId());
-					ItemEntity item = (ItemEntity) itemService.find(ratings.getItemId()).get(0);
-					if (Objects.nonNull(userDto) && Objects.nonNull(item)) {
-						RatingsOfUser ratingsOfUser = (RatingsOfUser) getRatingOfUserWithuserIdAndItemId(
-								ratings.getUserId(), ratings.getItemId());
-						returnList.clear();
-						if (Objects.nonNull(ratingsOfUser)) {
-							repo.save(ratings);
-							updateRatingOfItem(ratings.getItemId());
-							returnList.add("Rating added to item " + item.getItemName());
-						} else {
-							returnList.add("Not added");
-						}
-					}
-				}
-			} catch (Exception e) {
-				returnList.clear();
-				if (e instanceof RatingsOfUserNotFoundException) {
-					returnList.add(exceptionHandler
-							.ratingsOfUserNotFoundException(new RatingsOfUserNotFoundException(e.getMessage())));
-				} else if (e instanceof UserException) {
-					returnList.add(exceptionHandler.usernotfoundexception(new UserException(e.getMessage())));
-				} else if (e instanceof ItemNotFoundException) {
-					returnList.add(exceptionHandler.itemNotFoundException(new ItemNotFoundException(e.getMessage())));
-				} else {
-					returnList.add(exceptionHandler.globalException(e));
-				}
-			}
-		}
-		return returnList.get(0);
-	}
+     @Override
+     public Object updateRating(RatingsOfUser ratings) throws RatingsOfUserNotFoundException {
+          returnList = new ArrayList<>();
+          if (Objects.nonNull(ratings.getUserId())) {
+               try {
+                    if (repo.existsById(ratings.getRatingId())) {
+                         UserDetailDto userDto = userService.getUserWithId(ratings.getUserId());
+                         ItemEntity item = (ItemEntity) itemService.find(ratings.getItemId()).get(0);
+                         if (Objects.nonNull(userDto) && Objects.nonNull(item)) {
+                              RatingsOfUser ratingsOfUser = (RatingsOfUser) getRatingOfUserWithuserIdAndItemId(
+                                   ratings.getUserId(), ratings.getItemId());
+                              returnList.clear();
+                              if (Objects.nonNull(ratingsOfUser)) {
+                                   repo.save(ratings);
+                                   updateRatingOfItem(ratings.getItemId());
+                                   returnList.add("Rating added to item " + item.getItemName());
+                              } else {
+                                   returnList.add("Not added");
+                              }
+                         }
+                    }
+               } catch (Exception e) {
+                    returnList.clear();
+                    if (e instanceof RatingsOfUserNotFoundException) {
+                         returnList.add(exceptionHandler
+                              .ratingsOfUserNotFoundException(new RatingsOfUserNotFoundException(e.getMessage())));
+                    } else if (e instanceof UserException) {
+                         returnList.add(exceptionHandler.usernotfoundexception(new UserException(e.getMessage())));
+                    } else if (e instanceof ItemNotFoundException) {
+                         returnList.add(exceptionHandler.itemNotFoundException(new ItemNotFoundException(e.getMessage())));
+                    } else {
+                         returnList.add(exceptionHandler.globalException(e));
+                    }
+               }
+          }
+          return returnList.get(0);
+     }
 
-	private void updateRatingOfItem(int itemId) throws ItemNotFoundException {
-		List<Integer> ratingsOfItems = getAllRatings().stream().filter(rating -> rating.getItemId() == itemId)
-				.map(rating -> rating.getRating()).collect(Collectors.toList());
+     private void updateRatingOfItem(int itemId) throws ItemNotFoundException {
+          List<Integer> ratingsOfItems = getAllRatings().stream().filter(rating -> rating.getItemId() == itemId)
+               .map(RatingsOfUser::getRating).toList();
 
-		float totalAmount_Of_Ratings = 0, totalAmountOf1starRating = 0, totalAmountOf2starRating = 0,
-				totalAmountOf3starRating = 0, totalAmountOf4starRating = 0, totalAmountOf5starRating = 0;
+          float totalAmount_Of_Ratings = 0, totalAmountOf1starRating = 0, totalAmountOf2starRating = 0,
+               totalAmountOf3starRating = 0, totalAmountOf4starRating = 0, totalAmountOf5starRating = 0;
 
-		totalAmountOf1starRating = ratingsOfItems.stream().filter(rating -> rating == 1).collect(Collectors.toList())
-				.size();
-		totalAmountOf2starRating = ratingsOfItems.stream().filter(rating -> rating == 2).collect(Collectors.toList())
-				.size();
-		totalAmountOf3starRating = ratingsOfItems.stream().filter(rating -> rating == 3).collect(Collectors.toList())
-				.size();
-		totalAmountOf4starRating = ratingsOfItems.stream().filter(rating -> rating == 4).collect(Collectors.toList())
-				.size();
-		totalAmountOf5starRating = ratingsOfItems.stream().filter(rating -> rating == 5).collect(Collectors.toList())
-				.size();
+          totalAmountOf1starRating = ratingsOfItems.stream().filter(rating -> rating == 1).toList()
+               .size();
+          totalAmountOf2starRating = ratingsOfItems.stream().filter(rating -> rating == 2).toList()
+               .size();
+          totalAmountOf3starRating = ratingsOfItems.stream().filter(rating -> rating == 3).toList()
+               .size();
+          totalAmountOf4starRating = ratingsOfItems.stream().filter(rating -> rating == 4).toList()
+               .size();
+          totalAmountOf5starRating = ratingsOfItems.stream().filter(rating -> rating == 5).toList()
+               .size();
 
-		ItemEntity itemEntity = (ItemEntity) itemService.find(itemId).get(0);
+          ItemEntity itemEntity = (ItemEntity) itemService.find(itemId).get(0);
 
-		totalAmount_Of_Ratings = (5 * totalAmountOf5starRating + 4 * totalAmountOf4starRating
-				+ 3 * totalAmountOf3starRating + 2 * totalAmountOf2starRating + 1 * totalAmountOf1starRating)
-				/ (totalAmountOf1starRating + totalAmountOf2starRating + totalAmountOf3starRating
-						+ totalAmountOf4starRating + totalAmountOf5starRating);
+          totalAmount_Of_Ratings = (5 * totalAmountOf5starRating + 4 * totalAmountOf4starRating
+               + 3 * totalAmountOf3starRating + 2 * totalAmountOf2starRating + 1 * totalAmountOf1starRating)
+               / (totalAmountOf1starRating + totalAmountOf2starRating + totalAmountOf3starRating
+               + totalAmountOf4starRating + totalAmountOf5starRating);
 
-		itemEntity.setRatingOfItem(totalAmount_Of_Ratings);
-		itemService.updateItem(itemEntity);
-	}
+          itemEntity.setRatingOfItem(totalAmount_Of_Ratings);
+          itemService.updateItem(itemEntity);
+     }
 
-	@Override
-	public String delete(UUID userId, int itemId)
-			throws RatingsOfUserNotFoundException, UserException, ItemNotFoundException {
-		if (Objects.nonNull(userId) && itemId > 0) {
-			try {
-				UserDetailDto userDto = userService.getUserWithId(userId);
-				ItemEntity item = (ItemEntity) itemService.find(itemId).get(0);
-				if (Objects.nonNull(userDto) && Objects.nonNull(item)) {
-					RatingsOfUser rating = getRatingOfUserWithuserIdAndItemId(userId, itemId);
-					repo.delete(rating);
-					return "Deleted rating of id " + rating.getRatingId();
-				}
-			} catch (Exception e) {
-				if (e instanceof RatingsOfUserNotFoundException) {
-					exceptionHandler.ratingsOfUserNotFoundException(new RatingsOfUserNotFoundException(e.getMessage()));
-				} else if (e instanceof UserException) {
-					exceptionHandler.usernotfoundexception(new UserException(e.getMessage()));
-				} else if (e instanceof ItemNotFoundException) {
-					exceptionHandler.itemNotFoundException(new ItemNotFoundException(e.getMessage()));
-				} else {
-					exceptionHandler.globalException(e);
-				}
-			}
-		}
-		return "Not deleted";
-	}
+     @Override
+     public String delete(UUID userId, int itemId)
+          throws RatingsOfUserNotFoundException, UserException, ItemNotFoundException {
+          if (Objects.nonNull(userId) && itemId > 0) {
+               try {
+                    UserDetailDto userDto = userService.getUserWithId(userId);
+                    ItemEntity item = (ItemEntity) itemService.find(itemId).get(0);
+                    if (Objects.nonNull(userDto) && Objects.nonNull(item)) {
+                         RatingsOfUser rating = getRatingOfUserWithuserIdAndItemId(userId, itemId);
+                         repo.delete(rating);
+                         return "Deleted rating of id " + rating.getRatingId();
+                    }
+               } catch (Exception e) {
+                    if (e instanceof RatingsOfUserNotFoundException) {
+                         exceptionHandler.ratingsOfUserNotFoundException(new RatingsOfUserNotFoundException(e.getMessage()));
+                    } else if (e instanceof UserException) {
+                         exceptionHandler.usernotfoundexception(new UserException(e.getMessage()));
+                    } else if (e instanceof ItemNotFoundException) {
+                         exceptionHandler.itemNotFoundException(new ItemNotFoundException(e.getMessage()));
+                    } else {
+                         exceptionHandler.globalException(e);
+                    }
+               }
+          }
+          return "Not deleted";
+     }
 
-	@Override
-	public RatingsOfUser getRatingWithRatingId(UUID ratingId) throws RatingsOfUserNotFoundException {
-		try {
-			if (Objects.nonNull(ratingId) && repo.existsById(ratingId)) {
-				return repo.findById(ratingId).get();
-			} else {
-				throw new RatingsOfUserNotFoundException("Rating with user this not found");
-			}
-		} catch (RatingsOfUserNotFoundException e) {
-			exceptionHandler.ratingsOfUserNotFoundException(e);
-		}
-		return null;
-	}
+     @Override
+     public RatingsOfUser getRatingWithRatingId(UUID ratingId) throws RatingsOfUserNotFoundException {
+          try {
+               if (Objects.nonNull(ratingId) && repo.existsById(ratingId)) {
+                    return repo.findById(ratingId).get();
+               } else {
+                    throw new RatingsOfUserNotFoundException("Rating with user this not found");
+               }
+          } catch (RatingsOfUserNotFoundException e) {
+               exceptionHandler.ratingsOfUserNotFoundException(e);
+          }
+          return null;
+     }
 
-	@Override
-	public RatingsOfUser getRatingOfUserWithuserIdAndItemId(UUID userId, int itemId)
-			throws RatingsOfUserNotFoundException, UserException, ItemNotFoundException {
-		if (Objects.nonNull(userId) && itemId > 0) {
-			try {
-				UserDetailDto userDto = userService.getUserWithId(userId);
-				ItemEntity item = (ItemEntity) itemService.find(itemId).get(0);
-				if (Objects.nonNull(userDto) && Objects.nonNull(item)) {
-					return getAllRatings().stream().filter(rating -> rating.getUserId().equals(userId))
-							.filter(rating -> Integer.compare(rating.getItemId(), itemId) == 0)
-							.collect(Collectors.toList()).get(0);
-				}
-			} catch (Exception e) {
-				if (e instanceof RatingsOfUserNotFoundException) {
-					exceptionHandler.ratingsOfUserNotFoundException(new RatingsOfUserNotFoundException(e.getMessage()));
-				} else if (e instanceof UserException) {
-					exceptionHandler.usernotfoundexception(new UserException(e.getMessage()));
-				} else if (e instanceof ItemNotFoundException) {
-					exceptionHandler.itemNotFoundException(new ItemNotFoundException(e.getMessage()));
-				} else {
-					exceptionHandler.globalException(e);
-				}
-			}
-		}
-		return null;
-	}
+     @Override
+     public RatingsOfUser getRatingOfUserWithuserIdAndItemId(UUID userId, int itemId)
+          throws RatingsOfUserNotFoundException, UserException, ItemNotFoundException {
+          if (Objects.nonNull(userId) && itemId > 0) {
+               try {
+                    UserDetailDto userDto = userService.getUserWithId(userId);
+                    ItemEntity item = (ItemEntity) itemService.find(itemId).get(0);
+                    if (Objects.nonNull(userDto) && Objects.nonNull(item)) {
+                         return getAllRatings().stream().filter(rating -> rating.getUserId().equals(userId))
+                              .filter(rating -> Integer.compare(rating.getItemId(), itemId) == 0)
+                              .toList().get(0);
+                    }
+               } catch (Exception e) {
+                    if (e instanceof RatingsOfUserNotFoundException) {
+                         exceptionHandler.ratingsOfUserNotFoundException(new RatingsOfUserNotFoundException(e.getMessage()));
+                    } else if (e instanceof UserException) {
+                         exceptionHandler.usernotfoundexception(new UserException(e.getMessage()));
+                    } else if (e instanceof ItemNotFoundException) {
+                         exceptionHandler.itemNotFoundException(new ItemNotFoundException(e.getMessage()));
+                    } else {
+                         exceptionHandler.globalException(e);
+                    }
+               }
+          }
+          return null;
+     }
 
-	@Override
-	public RatingDto getRatingWithuserIdAndItemId(UUID userId, int itemId)
-			throws RatingsOfUserNotFoundException, UserException, ItemNotFoundException {
-		returnList = new ArrayList<>();
-		if (Objects.nonNull(userId) && itemId > 0) {
-			try {
-				RatingsOfUser ratingsOfUser = getRatingOfUserWithuserIdAndItemId(userId, itemId);
-				return mappersClass.mapRatingsOfUserWithDto(ratingsOfUser);
-			} catch (Exception e) {
-				if (e instanceof RatingsOfUserNotFoundException) {
-					exceptionHandler.ratingsOfUserNotFoundException(new RatingsOfUserNotFoundException(e.getMessage()));
-				} else if (e instanceof UserException) {
-					exceptionHandler.usernotfoundexception(new UserException(e.getMessage()));
-				} else if (e instanceof ItemNotFoundException) {
-					exceptionHandler.itemNotFoundException(new ItemNotFoundException(e.getMessage()));
-				} else {
-					exceptionHandler.globalException(e);
-				}
-			}
-		}
-		return null;
-	}
+     @Override
+     public RatingDto getRatingWithuserIdAndItemId(UUID userId, int itemId)
+          throws RatingsOfUserNotFoundException, UserException, ItemNotFoundException {
+          returnList = new ArrayList<>();
+          if (Objects.nonNull(userId) && itemId > 0) {
+               try {
+                    RatingsOfUser ratingsOfUser = getRatingOfUserWithuserIdAndItemId(userId, itemId);
+                    return mappersClass.mapRatingsOfUserWithDto(ratingsOfUser);
+               } catch (Exception e) {
+                    if (e instanceof RatingsOfUserNotFoundException) {
+                         exceptionHandler.ratingsOfUserNotFoundException(new RatingsOfUserNotFoundException(e.getMessage()));
+                    } else if (e instanceof UserException) {
+                         exceptionHandler.usernotfoundexception(new UserException(e.getMessage()));
+                    } else if (e instanceof ItemNotFoundException) {
+                         exceptionHandler.itemNotFoundException(new ItemNotFoundException(e.getMessage()));
+                    } else {
+                         exceptionHandler.globalException(e);
+                    }
+               }
+          }
+          return null;
+     }
 
-	@Override
-	public List<Object> getRatingWithuserId(UUID userId) throws RatingsOfUserNotFoundException, UserException {
-		List<Object> ratingDto = new ArrayList<>();
-		if (Objects.nonNull(userId)) {
-			try {
-				UserDetailDto userDto = userService.getUserWithId(userId);
-				if (Objects.nonNull(userDto)) {
-					getAllRatings().stream().filter(rating -> Objects.equals(rating.getUserId(), userId))
-							.collect(Collectors.toList())
-							.forEach(rating -> ratingDto.add(mappersClass.mapRatingsOfUserWithDto(rating)));
-					if (!ratingDto.isEmpty()) {
-						return ratingDto;
-					} else {
-						throw new RatingsOfUserNotFoundException("No ratings found for the user " + userId);
-					}
-				} else {
-					throw new UserException("No user with this Id" + userId);
-				}
-			} catch (Exception e) {
-				ratingDto.clear();
-				if (e instanceof RatingsOfUserNotFoundException) {
-					ratingDto.add(exceptionHandler
-							.ratingsOfUserNotFoundException(new RatingsOfUserNotFoundException(e.getMessage())));
-				} else if (e instanceof UserException) {
-					ratingDto.add(exceptionHandler.usernotfoundexception(new UserException(e.getMessage())));
-				} else {
-					ratingDto.add(exceptionHandler.globalException(e));
-				}
-			}
-		}
-		return ratingDto;
-	}
+     @Override
+     public List<Object> getRatingWithuserId(UUID userId) throws RatingsOfUserNotFoundException, UserException {
+          List<Object> ratingDto = new ArrayList<>();
+          if (Objects.nonNull(userId)) {
+               try {
+                    UserDetailDto userDto = userService.getUserWithId(userId);
+                    if (Objects.nonNull(userDto)) {
+                         getAllRatings().stream().filter(rating -> Objects.equals(rating.getUserId(), userId))
+                              .toList()
+                              .forEach(rating -> ratingDto.add(mappersClass.mapRatingsOfUserWithDto(rating)));
+                         if (!ratingDto.isEmpty()) {
+                              return ratingDto;
+                         } else {
+                              throw new RatingsOfUserNotFoundException("No ratings found for the user " + userId);
+                         }
+                    } else {
+                         throw new UserException("No user with this Id" + userId);
+                    }
+               } catch (Exception e) {
+                    ratingDto.clear();
+                    if (e instanceof RatingsOfUserNotFoundException) {
+                         ratingDto.add(exceptionHandler
+                              .ratingsOfUserNotFoundException(new RatingsOfUserNotFoundException(e.getMessage())));
+                    } else if (e instanceof UserException) {
+                         ratingDto.add(exceptionHandler.usernotfoundexception(new UserException(e.getMessage())));
+                    } else {
+                         ratingDto.add(exceptionHandler.globalException(e));
+                    }
+               }
+          }
+          return ratingDto;
+     }
 
-	@Override
-	public List<RatingsOfUser> getAllRatings() {
-		return repo.findAll();
-	}
+     @Override
+     public List<RatingsOfUser> getAllRatings() {
+          return repo.findAll();
+     }
 
-	@Override
-	public String deleteAllratings() {
-		repo.deleteAll();
-		return "Deleted all Ratings";
-	}
+     @Override
+     public String deleteAllratings() {
+          repo.deleteAll();
+          return "Deleted all Ratings";
+     }
 
 }

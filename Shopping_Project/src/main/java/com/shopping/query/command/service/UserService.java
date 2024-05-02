@@ -1,11 +1,13 @@
 package com.shopping.query.command.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.shopping.query.command.entites.UserEntity;
 import com.shopping.query.command.entites.dto.UserDetailDto;
 import com.shopping.query.command.exceptions.UserException;
+//import org.springframework.security.core.userdetails.UserDetails;
 
 public interface UserService {
 
@@ -28,4 +30,8 @@ public interface UserService {
      String sendOtpToUserEmail(String userEmail, String userName);
 
      String verifyEmailOtpOfUser(String userEmail, String otp);
+
+//     Optional<UserDetails> findByUserName(String userName);
+
+//     String userAuthenticate(String userEmail, String password);
 }

@@ -46,7 +46,7 @@ public class ItemReviewServiceImpl implements ItemReviewService, ReviewImagesSer
      @Autowired
      private ReviewImagesRepo imagesRepo;
 
-     private OrdersServImpl orderService = new OrdersServImpl();
+     private final OrdersServImpl orderService = new OrdersServImpl();
 
      @Autowired
      private GlobalExceptionHandler exceptionHandler;

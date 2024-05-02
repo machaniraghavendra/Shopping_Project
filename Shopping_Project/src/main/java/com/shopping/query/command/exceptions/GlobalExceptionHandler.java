@@ -182,4 +182,15 @@ public class GlobalExceptionHandler {
 				.errorDescription(e.getStatusCode().getReasonPhrase()).correlationId(MDC.get("correltionId")).build();
 		return new ResponseEntity<>(traceError, e.getStatusCode());
 	}
+
+	@ExceptionHandler(value = NotificationException.class)
+	public ResponseEntity<TraceableError> notificationException(NotificationException e){
+		if (e.getStatusCode() == null) {
+			e.setStatusCode(HttpStatus.BAD_REQUEST);
+		}
+		TraceableError traceError = TraceableError.builder().errorMessage(e.getMessage())
+			.errorCode(String.valueOf(e.getStatusCode().value())).exceptionType(e.getClass().getSimpleName())
+			.errorDescription(e.getStatusCode().getReasonPhrase()).correlationId(MDC.get("correltionId")).build();
+		return new ResponseEntity<>(traceError, e.getStatusCode());
+	}
 }
