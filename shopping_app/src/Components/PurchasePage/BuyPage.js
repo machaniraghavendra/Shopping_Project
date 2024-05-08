@@ -7,6 +7,8 @@ import ChatBot from '../ChatBot/ChatBot';
 import loadingImg from "../Loading_Card.png";
 import LogOut from "../Login/LogOut";
 import Rating from "../Items/Rating/Rating";
+import FormatAmount from "../Utils/FormatAmount";
+import ConvertToNumber from "../Utils/ConvertToNumber";
 
 export default function Buypage(props) {
 
@@ -200,14 +202,14 @@ export default function Buypage(props) {
             if (!res.data) {
                 if (!isSchedule) {
                     setShowAddressToast(true)
-                }else{
+                } else {
                     // setIsScheduleMode(false)
                 }
             } else {
                 setShowAddressToast(false)
                 if (!isSchedule) {
                     sendOrderData();
-                }else{
+                } else {
                     setIsScheduleMode(false)
                 }
             }
@@ -256,13 +258,15 @@ export default function Buypage(props) {
         details.paymentOption = type;
     }
 
-    const increaseNumber = () => {
-        document.getElementById("quantityNumbers").innerHTML = number
+    const increaseNumber = (adding) => {
+        if (adding) {
+            number == 5 ? number = number : number = number + 1
+        } else {
+            number == 1 ? number = number : number = number - 1
+        }
+        document.getElementById("quantityNumbers").textContent = number
+        document.getElementById("totalOrderAmount").textContent = FormatAmount(number * item.map(itemData => { return (ConvertToNumber(itemData.itemPrice)) }))
         details.orderQuantity = number
-        // let orderButtons=document.getElementsByClassName("orderButton")
-        // for (const orderButton of orderButtons) {
-        //     orderButton.innerHTML="Place Order Now of ₹"+totalAmountOfPurchase*number
-        // }
     }
 
     const validate = (e) => {
@@ -658,18 +662,26 @@ export default function Buypage(props) {
                                     <label className="form-check-label" htmlFor="payment_upi" >&nbsp;UPI</label><br></br>
                                 </div>
                             </div>
-                            <div className="col-6" style={{ fontSize: "20px" }}>
+                            <div className="col-3" style={{ fontSize: "20px" }}>
                                 <h6>Quantity</h6>
                                 <div>
-                                    <span className="btn btn-outline-secondary" onClick={() => { increaseNumber(); return (number == 1 ? number = number : number = number - 1) }}>-</span>
-                                    <span id="quantityNumbers" className="mx-3">{number}</span>
-                                    <span className="btn btn-outline-secondary" onClick={() => { increaseNumber(); return (number == 5 ? number = number : number = number + 1) }}>+</span>
+                                    <button className="btn btn-outline-secondary" onClick={() => { increaseNumber(false); }}>-</button>
+                                    <span id="quantityNumbers" className="mx-3">1</span>
+                                    <button className="btn btn-outline-secondary" onClick={() => { increaseNumber(true); }}>+</button>
+                                </div>
+                            </div>
+                            <div className="col-3">
+                                <h6>Total amount : </h6>
+                                <div>
+                                    {item.map(itemData => {
+                                        return (<span id="totalOrderAmount" className="fw-bold">₹{itemData.itemPrice}</span>)
+                                    })}
                                 </div>
                             </div>
                         </div>
                         <div className="text-center justify-content-around d-flex">
                             <button className="btn btn-outline-warning btn-lg  m-auto  orderButton" disabled={disableOrderButton} onClick={(e) => {
-                                 setIsScheduleMode(false);
+                                setIsScheduleMode(false);
                                 if (details.firstName != "" && details.phoneNumber != "" && details.address != "" && details.paymentOption != "") {
                                     return (checkAddress(false))
                                 } else {
@@ -677,8 +689,8 @@ export default function Buypage(props) {
                                 }
                             }}>{orderButtonEnabled && "Place Order Now"} {!orderButtonEnabled && "Making order wait a min..."}</button>
                             <button className="btn btn-outline-info btn-lg  m-auto  scheduleOrderButton" data-bs-toggle="modal" data-bs-target="#scheduleBackDrop" disabled={disableOrderButton} onClick={(e) => {
-                              setIsScheduleMode(true);
-                              if (details.firstName != "" && details.phoneNumber != "" && details.address != "" && details.paymentOption != "") {
+                                setIsScheduleMode(true);
+                                if (details.firstName != "" && details.phoneNumber != "" && details.address != "" && details.paymentOption != "") {
                                     return (checkAddress(true))
                                 } else {
                                     validate(e)
@@ -758,20 +770,20 @@ export default function Buypage(props) {
                     <div className={sessionStorage.getItem("dark") == "true" ? "modal-content bg-dark text-light" : "modal-content"}>
                         <div className="modal-header">
                             <h1 className="modal-title fs-5" id="staticBackdropLabel">Schedule Order</h1>
-                            <button type="button" className="btn-close bg-light" data-bs-dismiss="modal" aria-label="Close" onClick={() => { setOrderButtonEnabled(true); setIsScheduleMode(true);  document.getElementById("dateInput").value=''; setErrorMessage(''); setSelectedDateAndTime('')}}></button>
+                            <button type="button" className="btn-close bg-light" data-bs-dismiss="modal" aria-label="Close" onClick={() => { setOrderButtonEnabled(true); setIsScheduleMode(true); document.getElementById("dateInput").value = ''; setErrorMessage(''); setSelectedDateAndTime('') }}></button>
                         </div>
                         <div className="modal-body">
                             <label for="dateInput" className="form-label">Select Date and Time</label>
                             <input type="datetime-local" className="form-control form-control-date" id="dateInput" onChange={(a) => { setSelectedDateAndTime(a.target.value); setErrorMessage("") }}
                                 min={new Date().toISOString().substring(0, new Date().toISOString().length - 8)} title="Choose your Date" />
                             {errorMessage != '' && <span className="mx-1 text-danger">{errorMessage}</span>}
-                            {message!=''&&<span  className="mx-1 text-info text-center d-flex justify-content-center fs-5 my-2 fw-bold">{message.replace('T', " ")}</span>}
+                            {message != '' && <span className="mx-1 text-info text-center d-flex justify-content-center fs-5 my-2 fw-bold">{message.replace('T', " ")}</span>}
                             {isScheduleMode &&
                                 <div className="container-fluid bg-warning text-dark my-2">
                                     <p>Looks like this address not in your saved list want to add ?</p>
                                     <div className="my-2 mt-2 pt-2">
                                         <button type="button" className="btn btn-outline-danger" onClick={() => {
-                                            return ( setShowAddressToast(false),  setIsScheduleMode(false))
+                                            return (setShowAddressToast(false), setIsScheduleMode(false))
                                         }}>No</button>&nbsp;&nbsp;
                                         <button type="button" className="btn btn-outline-success"
                                             onClick={() => {
@@ -782,8 +794,8 @@ export default function Buypage(props) {
                                 </div>}
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => { setOrderButtonEnabled(true); setIsScheduleMode(false);  document.getElementById("dateInput").value=''; setErrorMessage(''); setSelectedDateAndTime('')}}>Cancel</button>
-                            <button type="button" className="btn btn-primary" onClick={() => { scheduleOrder();  setErrorMessage(''); setSelectedDateAndTime('')  }} disabled={selectedDateAndTime==''}>Schedule Order</button>
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => { setOrderButtonEnabled(true); setIsScheduleMode(false); document.getElementById("dateInput").value = ''; setErrorMessage(''); setSelectedDateAndTime('') }}>Cancel</button>
+                            <button type="button" className="btn btn-primary" onClick={() => { scheduleOrder(); setErrorMessage(''); setSelectedDateAndTime('') }} disabled={selectedDateAndTime == ''}>Schedule Order</button>
                         </div>
                     </div>
                 </div>

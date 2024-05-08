@@ -11,7 +11,8 @@ spring:
       WRITE_DATES_AS_TIMESTAMPS: false
     date-format: "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
 
-#  jpa:
+  jpa:
+    generate-ddl: true
 #    show-sql: true
     hibernate:
       ddl-auto: update

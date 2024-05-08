@@ -6,7 +6,9 @@ import img from "../imgbin_shopping-bag-shopping-cart-computer-icons-png.png"
 import ChatBot from '../ChatBot/ChatBot';
 import loadingImg from "../Loading_Card.png";
 import LogOut from '../Login/LogOut';
-import timePeriodCalculator from './TimePeriodCalculator';
+import timePeriodCalculator from '../Utils/TimePeriodCalculator';
+import ConvertToNumber from '../Utils/ConvertToNumber';
+import FormatAmount from '../Utils/FormatAmount';
 
 export default function Orders(props) {
 
@@ -248,7 +250,7 @@ export default function Orders(props) {
                                                                     {item.orderStatus == "near by hub" && <p className='col-3 text-center  badge text-bg-info'><b>Near by Hub</b></p>}
                                                                     {item.orderStatus == "cancelled" && <p className='col-3 text-center  badge text-bg-danger'><b>Cancelled</b></p>}
                                                                     {item.orderStatus == "delivered" && <p className='col-3 text-center  badge text-bg-warning'><b><i className="bi bi-check-circle-fill"></i> Delivered</b></p>}
-                                                                    <p className="card-title float-end col-3 text-end text-truncate"><b> ₹{item.item.itemPrice}</b></p>
+                                                                    <p className="card-title float-end col-3 text-end text-truncate"><b>{FormatAmount(item.totalOrderAmount)}</b></p>
                                                                 </div>
                                                                 <div className='row py-2'> <p className="card-text">Ordered on {item.orderedOn}</p></div>
                                                                 <div className='row'>
