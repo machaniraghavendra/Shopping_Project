@@ -4,8 +4,8 @@ import loadingImg from "../Loading_Card.png";
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Rating from '../Items/Rating/Rating';
-import timePeriodCalculator from '../Orders/TimePeriodCalculator';
 import ShowFullComments from './ShowFullComments';
+import timePeriodCalculator from '../Utils/TimePeriodCalculator';
 
 export default function AllReviewOfItem(props) {
 

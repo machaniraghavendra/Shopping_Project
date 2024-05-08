@@ -9,7 +9,8 @@ import loadingImg from "../Loading_Card.png";
 import LogOut from '../Login/LogOut';
 import Rating from '../Items/Rating/Rating';
 import Review from './Review';
-import timePeriodCalculator from './TimePeriodCalculator';
+import timePeriodCalculator from '../Utils/TimePeriodCalculator';
+import FormatAmount from '../Utils/FormatAmount';
 
 export default function OrderDetails(props) {
 
@@ -310,7 +311,7 @@ export default function OrderDetails(props) {
                                                     </div>
                                                     <div className='row'>
                                                         {a.deliveryAddress != null && <div className="col-12 col-md-6"> <p><b>Delivery Address</b> : {address}</p></div>}
-                                                        {(a.totalOrderAmount != null && a.totalOrderAmount !== "") && <div className="col-12 col-md-6 fs-6 text-center "> <p><b>Total amount : ₹{a.item.itemPrice} x {a.orderQuantity} = ₹ {a.totalOrderAmount}.00</b></p></div>}
+                                                        {(a.totalOrderAmount != null && a.totalOrderAmount !== "") && <div className="col-12 col-md-6 fs-6 text-center "> <p><b>Total amount : ₹{a.item.itemPrice} x {a.orderQuantity} = {FormatAmount(a.totalOrderAmount)}</b></p></div>}
                                                     </div>
                                                 </div>
                                                 {a.orderStatus != "cancelled" && a.orderStatus != "near by hub" && a.orderStatus != "delivered" && <>

@@ -8,8 +8,8 @@ import ChatBot from '../ChatBot/ChatBot';
 import loadingImg from "../Loading_Card.png";
 import LogOut from '../Login/LogOut';
 import Rating from '../Items/Rating/Rating';
-import timePeriodCalculator from '../Orders/TimePeriodCalculator';
 import ShowFullComments from './ShowFullComments';
+import timePeriodCalculator from '../Utils/TimePeriodCalculator';
 
 export default function View(props) {
 

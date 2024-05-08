@@ -2,8 +2,8 @@ import { useEffect, useState } from "react"
 import Avatar from "react-avatar-edit";
 import axios from "axios";
 import Rating from "../Items/Rating/Rating";
-import timePeriodCalculator from "./TimePeriodCalculator";
 import ShowFullComments from "../View/ShowFullComments";
+import timePeriodCalculator from "../Utils/TimePeriodCalculator";
 
 export default function Review(item) {
     const [images, setImages] = useState([]);

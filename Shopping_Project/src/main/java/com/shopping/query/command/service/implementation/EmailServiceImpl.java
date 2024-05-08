@@ -74,7 +74,7 @@ public class EmailServiceImpl implements EmailService {
                          if (imageData != null) {
                               mimeMessageHelper.addAttachment(fileName, imageData);
                               javaMailSender.send(mimeMessage);
-                         }else{
+                         } else {
                               throw new MessagingException("Error while getting image");
                          }
                     } catch (MessagingException e) {

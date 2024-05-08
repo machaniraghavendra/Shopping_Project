@@ -26,9 +26,6 @@ public class BatchUpdateOfOrderServiceImpl implements BatchUpdateOfOrderService 
 
      @Override
      public BatchUpdateOfOrder save(BatchUpdateOfOrder updateOfOrder) {
-//          if (null==updateOfOrder.getBatchRunID()){
-//
-//          }
           return updateOfOrderRepo.save(updateOfOrder);
      }
 
