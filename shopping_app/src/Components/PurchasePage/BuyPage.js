@@ -53,6 +53,15 @@ export default function Buypage(props) {
     const [selectedDateAndTime, setSelectedDateAndTime] = useState("");
 
     const [isScheduleMode, setIsScheduleMode] = useState(false);
+
+    const [showCaptcha, setShowCaptcha] = useState(false);
+
+    const [isValidCaptcha, setIsValidCaptcha] = useState(false);
+
+    const [captcha, setCaptcha] = useState("");
+
+    const [userEnteredCaptcha, setUserEnteredCaptcha] = useState("");
+
     var number = 1;
 
     let itemId = "";
@@ -372,6 +381,19 @@ export default function Buypage(props) {
         setDisableOrderButton(true)
     }
 
+    const generateCaptcha = () => {
+        var captchaText = '';
+        var possibleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        for (var i = 0; i < 6; i++) {
+            captchaText += possibleChars.charAt(Math.floor(Math.random() * possibleChars.length));
+        }
+        setCaptcha(captchaText);
+    }
+    const restrictToCopy = (e) => {
+        e.preventDefault();
+        alert('Copying is not allowed for this text.');
+    }
+
     useEffect(() => {
         sessionStorage.getItem("dark") === "true" ? document.body.style = " background: linear-gradient(140deg, #050505 60%, rgb(22, 14, 132) 0%)"
             : document.body.style = "background: radial-gradient( #f5ff37, rgb(160, 255, 97))"
@@ -651,7 +673,7 @@ export default function Buypage(props) {
                                 </div>
                             </div>}
                         <div style={{ fontSize: "15px" }} className="row my-3">
-                            <div className="col-6 ">
+                            <div className="col-12 col-sm-6">
                                 <h6>Payment Options : <span className="mx-3 text-danger" style={{ fontSize: "10px" }}>{errors.paymentOption}</span></h6>
                                 <div className="px-3" >
                                     <input className="form-check-input" type={"radio"} name={"paymentButtons"} id="payment_cards" onClick={() => { setPaymentOptions("Cards") }} value={"cards"}></input>
@@ -662,7 +684,7 @@ export default function Buypage(props) {
                                     <label className="form-check-label" htmlFor="payment_upi" >&nbsp;UPI</label><br></br>
                                 </div>
                             </div>
-                            <div className="col-3" style={{ fontSize: "20px" }}>
+                            <div className="col-12 col-sm-3 my-3 my-sm-0" style={{ fontSize: "20px" }}>
                                 <h6>Quantity</h6>
                                 <div>
                                     <button className="btn btn-outline-secondary" onClick={() => { increaseNumber(false); }}>-</button>
@@ -670,7 +692,7 @@ export default function Buypage(props) {
                                     <button className="btn btn-outline-secondary" onClick={() => { increaseNumber(true); }}>+</button>
                                 </div>
                             </div>
-                            <div className="col-3">
+                            <div className="col-12 col-md-3 my-3 my-md-0">
                                 <h6>Total amount : </h6>
                                 <div>
                                     {item.map(itemData => {
@@ -679,15 +701,11 @@ export default function Buypage(props) {
                                 </div>
                             </div>
                         </div>
-                        <div className="text-center justify-content-around d-flex">
+
+                        {!showCaptcha && <div className="text-center justify-content-around d-flex">
                             <button className="btn btn-outline-warning btn-lg  m-auto  orderButton" disabled={disableOrderButton} onClick={(e) => {
-                                setIsScheduleMode(false);
-                                if (details.firstName != "" && details.phoneNumber != "" && details.address != "" && details.paymentOption != "") {
-                                    return (checkAddress(false))
-                                } else {
-                                    validate(e)
-                                }
-                            }}>{orderButtonEnabled && "Place Order Now"} {!orderButtonEnabled && "Making order wait a min..."}</button>
+                                setShowCaptcha(true); setIsScheduleMode(false); setDisableOrderButton(true); generateCaptcha();
+                            }}>{orderButtonEnabled ? "Place Order Now" : "Making order wait a min..."}</button>
                             <button className="btn btn-outline-info btn-lg  m-auto  scheduleOrderButton" data-bs-toggle="modal" data-bs-target="#scheduleBackDrop" disabled={disableOrderButton} onClick={(e) => {
                                 setIsScheduleMode(true);
                                 if (details.firstName != "" && details.phoneNumber != "" && details.address != "" && details.paymentOption != "") {
@@ -696,7 +714,30 @@ export default function Buypage(props) {
                                     validate(e)
                                 }
                             }}>{orderButtonEnabled && "Schedule Order Now"} {!orderButtonEnabled && "Making order wait a min..."}</button>
-                        </div>
+                        </div>}
+                        {/* {CAPTCHA } */}
+                        {showCaptcha &&
+                            <div className="container-fluid  my-5">
+                                <h4>Verify to order :</h4>
+                                <div className="d-flex justify-content-center">
+                                    <div className="bg-warning text-dark border-5 py-1 px-5 align-content-center fs-2" onCopy={(e) => restrictToCopy(e)} id="restrictedText" style={{ lineHeight: "50px", font: "30px Arial" }}>{captcha}</div>
+                                    <button className="btn btn-light mx-3" onClick={() => generateCaptcha()}><i className="bi bi-arrow-clockwise"></i></button>
+                                </div>
+                                {isValidCaptcha && <span className="d-flex justify-content-center my-3 fs-6 text-danger">Not a valid captcha</span>}
+                                <div className="d-flex justify-content-center my-3">
+                                    <input type="text" className="form-control w-25" id="floatingInput" placeholder="Enter CAPTCHA here" onChange={(a) => { setUserEnteredCaptcha(a.target.value); setIsValidCaptcha(false) }} />
+                                    <button className="btn btn-outline-info mx-2" onClick={(e) => {
+                                        if (userEnteredCaptcha === captcha) {
+                                            setIsScheduleMode(false);
+                                            if (details.firstName != "" && details.phoneNumber != "" && details.address != "" && details.paymentOption != "") {
+                                                return (checkAddress(false))
+                                            } else {
+                                                validate(e)
+                                            }
+                                        } else setIsValidCaptcha(true);
+                                    }}>Verify and Order</button>
+                                </div>
+                            </div>}
                     </section>
                 </div>
 

@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.ToString;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RevisionEntity;
 
 @Data
 @ToString
@@ -17,6 +19,7 @@ import lombok.ToString;
 @Builder
 @Entity
 @Table(name = "Orders")
+@Audited(withModifiedFlag = true)
 public class OrdersEntity {
 
 	@Id
