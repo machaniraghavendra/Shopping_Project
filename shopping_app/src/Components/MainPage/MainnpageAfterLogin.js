@@ -218,12 +218,12 @@ export default function MainPageAfterlogin(props) {
                                                 }
                                             </div>
                                             {(viewNotifications) &&
-                                                <div className="position-absolute mx-4 top-0 bg-dark px-1" style={{ zIndex: "10" }} onMouseOver={() => setViewNotifications(true)} onMouseOut={() => setViewNotifications(false)}>
+                                                <div className="position-absolute mx-4 top-0 bg-dark px-1 overflow-scroll" style={{ zIndex: "10", maxHeight:"300%", minHeight:"0%" }} onMouseOver={() => setViewNotifications(true)} onMouseOut={() => setViewNotifications(false)}>
                                                     {notifications.length != 0?
                                                     <ul className="list-group">
                                                         {notifications.map(a => {
                                                             return (
-                                                                <li key={a.uuid} className="list-group-item list-group-item-info" onClick={() => { markasViewed(a.uuid) }}><Link to={a.link} className="text-decoration-none text-dark">{a.message}</Link></li>
+                                                                <li key={a.uuid} className="list-group-item list-group-item-info my-1" onClick={() => { markasViewed(a.uuid) }}><Link to={a.link} className="text-decoration-none text-dark">{a.message}</Link></li>
                                                             )
                                                         })}
                                                     </ul>:<div className="text-light p-1">No new notifications</div>}
