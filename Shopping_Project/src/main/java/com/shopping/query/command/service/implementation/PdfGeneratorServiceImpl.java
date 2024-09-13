@@ -2,6 +2,7 @@ package com.shopping.query.command.service.implementation;
 
 import java.util.Objects;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +45,7 @@ public class PdfGeneratorServiceImpl implements PdfGeneratorService {
                     Document document = new Document(PageSize.A4);
                     UserDetailDto user = mapper.userDetailDtoMapper(ordersEntity.getUserId());
                     ItemsDto item = ordersDto.getItem();
+                    var orderedAddress = mapper.getAddress(ordersDto.getDeliveryAddress());
 
                     PdfWriter.getInstance(document, response.getOutputStream());
                     document.open();
@@ -118,10 +120,10 @@ public class PdfGeneratorServiceImpl implements PdfGeneratorService {
                     table.addCell(ordersDto.getPhoneNumber());
                     table.addCell(String.valueOf(4));
                     table.addCell("Address");
-                    table.addCell(mapper.getAddress(ordersDto.getDeliveryAddress()));
+                    table.addCell(orderedAddress);
                     table.addCell(String.valueOf(5));
                     table.addCell("Pin-code");
-                    table.addCell(ordersDto.getPincode());
+                    table.addCell(getPincodeFromAddress(orderedAddress));
                     table.addCell(String.valueOf(4));
                     table.addCell("Delivered Date&Time");
                     table.addCell("( IST ) " + ordersDto.getDeliveryDate() + " at " + ordersDto.getOrderedAt());
@@ -181,6 +183,10 @@ public class PdfGeneratorServiceImpl implements PdfGeneratorService {
                     exceptionHandler.globalException(e);
                }
           }
+     }
+
+     private String getPincodeFromAddress(@NotNull String orderedAddress) {
+          return orderedAddress.substring(orderedAddress.length()-6);
      }
 
 }

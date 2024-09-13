@@ -108,4 +108,14 @@
         </preConditions>
         <modifyDataType tableName="USER_STORY" columnName="PROFILE_IMG_URL" newDataType="TEXT"/>
     </changeSet>
+
+    <changeSet id="7" author="Raghu M">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="Orders"/>
+        </preConditions>
+        <addColumn tableName="Orders">
+            <column name="ORDER_PLACED_LOCATION" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

@@ -30,4 +30,5 @@ public class OrdersDto {
 	private UUID orderUUIDId;
 	private String totalOrderAmount;
 	private ItemsDto item;
+	private String orderPlacedLocation;
 }

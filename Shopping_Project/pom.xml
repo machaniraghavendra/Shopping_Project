@@ -149,6 +149,13 @@
             <version>3.2.5</version>
         </dependency>
 
+        <!--Location Latitude and Longitude-->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+        </dependency>
+
+
         <!--Redis Cache-->
         <!--        <dependency>-->
         <!--            <groupId>org.springframework.boot</groupId>-->
