@@ -86,7 +86,8 @@ public class MappersClass {
                .orderedOn(ordersEntity.getOrderedOn()).orderQuantity(ordersEntity.getOrderQuantity())
                .orderStatus(ordersEntity.getOrderStatus()).paymentType(ordersEntity.getPaymentType())
                .phoneNumber(ordersEntity.getPhoneNumber()).pincode(ordersEntity.getPincode())
-               .orderUUIDId(ordersEntity.getOrderUUIDId()).totalOrderAmount(ordersEntity.getTotalOrderAmount()).build();
+               .orderUUIDId(ordersEntity.getOrderUUIDId()).totalOrderAmount(ordersEntity.getTotalOrderAmount())
+               .orderPlacedLocation(ordersEntity.getOrderPlacedLocation()).build();
      }
 
      public AddressDto addressDtoMapper(AddressEntity addressEntity) throws UserException {

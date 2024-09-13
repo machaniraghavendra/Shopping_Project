@@ -78,10 +78,8 @@ public class OrdersServImpl implements OrderService {
      }
 
      @Override
-     public String saveOrderDetails(OrdersEntity ordersEntity)
-          throws OrderNotFoundException, ItemNotFoundException, OrderWithSameItemExistsException, MailingException {
-          boolean exists = getAllOrders().stream().filter(a -> a.getOrderId().equals(ordersEntity.getOrderId()))
-               .findFirst().isPresent();
+     public String saveOrderDetails(OrdersEntity ordersEntity) throws ItemNotFoundException, MailingException {
+          boolean exists = getAllOrders().stream().filter(a -> a.getOrderId().equals(ordersEntity.getOrderId())).findFirst().isPresent();
           if (!exists) {
                OrdersEntity detailsEntity = OrdersEntity.builder().deliveryAddress(ordersEntity.getDeliveryAddress())
                     .emailAddress(ordersEntity.getEmailAddress()).firstName(ordersEntity.getFirstName())
@@ -138,7 +136,7 @@ public class OrdersServImpl implements OrderService {
 
      @Override
      public List<Object> updateOrder(UUID orderUUID, String orderStatus)
-          throws OrderNotFoundException, ItemNotFoundException {
+          throws ItemNotFoundException {
           List<Object> value = new ArrayList<>();
           try {
                OrdersEntity detailsEntity = getWithUUID(orderUUID);
@@ -188,16 +186,16 @@ public class OrdersServImpl implements OrderService {
           return value;
      }
 
-     private void sendNotificationToUser(OrdersEntity order, String orderStatus){
+     private void sendNotificationToUser(OrdersEntity order, String orderStatus) {
           log.info("Sending notification to user");
           try {
                var item = mapper.getItemDtoById(order.getItemId());
                var notification = Notification.builder().isNotificationViewed(Boolean.FALSE).notificationType(NotificationType.INFO).link("http://localhost:3000/orderdetails")
-                    .message("Your order status changed to "+orderStatus+" for item " + getItemNameWith30Chars(item.getItemName(), 20))
+                    .message("Your order status changed to " + orderStatus + " for item " + getItemNameWith30Chars(item.getItemName(), 20))
                     .userUuid(String.valueOf(order.getUserId())).build();
                notificationService.sendNotification(notification);
                saveOrderToView(order.getOrderUUIDId());
-          }catch (Exception e){
+          } catch (Exception e) {
                log.error(e.getMessage());
           }
      }
@@ -293,7 +291,7 @@ public class OrdersServImpl implements OrderService {
      }
 
      @Override
-     public void updateOrderStatus(UUID orderId) throws OrderNotFoundException, ItemNotFoundException {
+     public void updateOrderStatus(UUID orderId) throws ItemNotFoundException {
           OrdersEntity order = getWithUUID(orderId);
           if (!order.getOrderStatus().equalsIgnoreCase(STATUS_CANCELLED)) {
                LocalDate now = LocalDate.now();
@@ -361,8 +359,8 @@ public class OrdersServImpl implements OrderService {
                log.info("Scheduled order for " + scheduleAt);
                var scheduledOrder = orderSchedulerRepo.save(mapper.getOrderSchedulerEntity(UUID.fromString(jobDetail.getKey().getName()), order, Boolean.FALSE, scheduleAt, Boolean.FALSE));
                ItemsDto item = mapper.getItemDtoById(order.getItemId());
-               emailService.sendSimplemail(EmailDto.builder().
-                    subject("Scheduled order for item " + getItemNameWith30Chars(item.getItemName(), 30))
+               emailService.sendSimplemail(EmailDto.builder()
+                    .subject("Scheduled order for item " + getItemNameWith30Chars(item.getItemName(), 30))
                     .recipient(order.getEmailAddress())
                     .msgBody("Hi " + order.getFirstName() + ",\n" + "\t Your order of " + item.getItemName()
                          + " has been scheduled for " + triggerTime).build());
