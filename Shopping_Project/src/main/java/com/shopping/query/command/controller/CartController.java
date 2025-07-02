@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,7 +37,7 @@ public class CartController {
 	private CartService cartServiceImpl;
 
 	@PostMapping("/")
-	public ResponseEntity<String> save(@RequestBody CartEntity cartEntity)
+	public ResponseEntity<String> save(@RequestBody @Valid CartEntity cartEntity)
 			throws ItemAlreadyInCartException, ItemNotFoundException {
 		return ResponseEntity.ok(cartServiceImpl.save(cartEntity));
 	}

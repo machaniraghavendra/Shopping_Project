@@ -28,7 +28,7 @@ import com.shopping.query.command.service.CartService;
 @Service
 public class CartServiceImpl implements CartService {
 
-     private static final Logger log = LoggerFactory.getLogger(CartServiceImpl.class);
+     private static final Logger log = LoggerFactory.getLogger(AdminServiceImpl.class);
 
      @Autowired
      private CartRepo cartRepo;
